@@ -1,0 +1,14 @@
+{
+	"CQ1": {
+		"query": "What is the average salary of instructors in departments with a budget greater than the average budget of all departments?",
+		"attributes": ["instructor.salary", "instructor.dept_name", "department.dept_name", "department.budget"],
+		"sql": "SELECT AVG(i.salary) AS avg_salary FROM instructor i JOIN department d ON i.dept_name = d.dept_name WHERE d.budget > (SELECT AVG(d2.budget) FROM department d2);",
+		"diffculty": "4"
+	},
+	"CQ2": {
+		"query": "Show the total budget and the count of instructors for each department.",
+		"attributes": ["instructor.name", "instructor.dept_name", "department.dept_name", "department.budget"],
+		"sql": "SELECT d.dept_name, COUNT(i.name) AS instructor_count, d.budget FROM department d LEFT JOIN instructor i ON d.dept_name = i.dept_name GROUP BY d.dept_name, d.budget;",
+		"diffculty": "4"
+	}
+}

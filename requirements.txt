@@ -1,0 +1,9 @@
+numpy
+scipy
+scikit-learn
+tqdm
+pandas
+PyYAML
+openai==1.39.0
+transformers==4.46.3
+accelerate>=0.26.0

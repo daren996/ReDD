@@ -1,0 +1,51 @@
+
+default_settings: &default
+  data_main: "dataset/"
+  spider_path: "dataset/spider_update/"
+  exp_dn_list: null
+  exp_fn_list: null
+
+spider_4d0_1:                                 # general, no query
+  <<: *default
+  mode: "cgpt"
+  trial: 1
+  out_main: "output/schema_gen/spider_cgpt_1/"
+  llm_model: "gpt-4o"
+  exp_dn_list: ["store_1"]                    # exp dir names
+  exp_fn_list: ["albums"]                     # exp file names
+  cgpt:
+    prompt_path: "prompts/schemagen_4_0.txt"  # prompt path
+    prompt_version: "4d0"                     # prompt version
+    temperature: 1.0
+    top_p: 1.0
+  in_fields: 
+    doc: "Document"
+    log: "Record of Schema"
+  out_fields: 
+    res: "Assignment"
+    log: "Updated Record of Schema"
+    reason: "Reasoning"
+
+spider_4d1_1:                                 # query-specific, general schema as context
+  <<: *default
+  mode: "cgpt"
+  trial: 1
+  out_main: "output/schema_gen/spider_dsv2lite_1/"
+  llm_model: "gpt-4o"
+  exp_dn_list: ["store_1"]                    # exp dir names
+  exp_fn_list: ["albums"]                     # exp file names
+  cgpt:
+    prompt_path: "prompts/schemagen_4_1.txt"  # prompt path
+    prompt_version: "4d1"                     # prompt version
+    temperature: 1.0
+    top_p: 1.0
+    general_prompt_version: "4d0"             # prompt version 
+  in_fields: 
+    doc: "Document"
+    query: "Query"
+    log: "Record of Query-specific Schema"
+    general_schema: "General Schema"
+  out_fields: 
+    res: "Assignment"
+    log: "Updated Record of Query-specific Schema"
+    reason: "Reasoning"

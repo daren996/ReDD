@@ -1,0 +1,7 @@
+{
+	"CQ1": {
+		"query": "List each department's name, building, budget, along with the total credits of all students and total salary of all instructors in that department.",
+		"attributes": ["department.dept_name", "department.building", "department.budget", "student.tot_cred", "student.dept_name", "instructor.salary", "instructor.dept_name"],
+		"sql": "SELECT d.dept_name, d.building, d.budget, SUM(s.tot_cred) AS total_student_credits, SUM(i.salary) AS total_instructor_salary FROM department d JOIN student s ON d.dept_name = s.dept_name JOIN instructor i ON d.dept_name = i.dept_name GROUP BY d.dept_name, d.building, d.budget;"
+	}
+}

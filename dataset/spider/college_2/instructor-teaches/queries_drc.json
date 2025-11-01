@@ -1,0 +1,14 @@
+{
+	"CQ1": {
+		"query": "Retrieve the maximum salary of instructors for each course they teach, along with the course title.",
+		"attributes": ["instructor.salary", "instructor.name", "teaches.course_title", "teaches.instructor_name"],
+		"sql": "SELECT MAX(i.salary) AS max_salary, t.course_title FROM instructor i JOIN teaches t ON i.name = t.instructor_name GROUP BY t.course_title;",
+		"diffculty": "4"
+	},
+	"CQ2": {
+		"query": "Show me the names and salaries of instructors teaching the 'Introduction to Databases' course in the Fall semester of 2023.",
+		"attributes": ["instructor.name", "instructor.salary", "teaches.instructor_name", "teaches.course_title", "teaches.semester", "teaches.year"],
+		"sql": "SELECT i.name, i.salary FROM instructor i JOIN teaches t ON i.name = t.instructor_name WHERE t.course_title = 'Introduction to Databases' AND t.semester = 'Fall' AND t.year = 2023;",
+		"diffculty": "4"
+	}
+}

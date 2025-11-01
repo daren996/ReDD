@@ -1,0 +1,22 @@
+{
+	"CQ1": {
+		"query": "Show me the names of wines from a specific winery--Chateau Montelena, along with their grape color.",
+		"attributes": ["winery.name", "winery.winery", "winery.grape", "grape.color", "grape.grape"],
+		"sql": "SELECT w.name, g.color FROM wine w JOIN grapes g ON w.grape = g.grape WHERE w.winery = 'Chateau Montelena';"
+	},
+	"CQ2": {
+		"query": "List all wines that have a rating score above 90, along with their grape color.",
+		"attributes": ["winery.name", "winery.grape", "winery.score", "grape.color", "grape.grape"],
+		"sql": "SELECT w.name, g.color FROM wine w JOIN grapes g ON w.grape = g.grape WHERE w.score > 90;"
+	},
+	"CQ3": {
+		"query": "Find the average price of wines by grape color.",
+		"attributes": ["winery.price", "winery.grape", "grape.color", "grape.grape"],
+		"sql": "SELECT g.color, AVG(w.price) AS Average_Price FROM wine w JOIN grapes g ON w.grape = g.grape GROUP BY g.color;"
+	},
+	"CQ4": {
+		"query": "Show me the total cases produced for each grape type and their colors from wines that are ready to drink by 2025.",
+		"attributes": ["winery.cases", "winery.grape", "winery.drink", "grape.color", "grape.grape"],
+		"sql": "SELECT g.grape, g.color, SUM(w.cases) AS Total_Cases FROM wine w JOIN grapes g ON w.grape = g.grape WHERE w.drink <= '2025' GROUP BY g.grape, g.color;"
+	}
+}

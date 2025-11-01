@@ -1,0 +1,71 @@
+dst_ap,src_ap,codeshare,dst_ap_name,dst_ap_country,src_ap_name,src_ap_country,airline_name
+KZ,AER,,Kazan International Airport,Russia,Sochi International Airport,Russia,Aerocondor
+KZ,ASF,,Kazan International Airport,Russia,Astrakhan Airport,Russia,Aerocondor
+MRV,ASF,,Mineralnyye Vody Airport,Russia,Astrakhan Airport,Russia,Aerocondor
+KZ,CEK,,Kazan International Airport,Russia,Chelyabinsk Balandino Airport,Russia,Aerocondor
+OVB,CEK,,Tolmachevo Airport,Russia,Chelyabinsk Balandino Airport,Russia,Aerocondor
+KZ,DME,,Kazan International Airport,Russia,Domodedovo International Airport,Russia,Aerocondor
+BC,DME,,Begishevo Airport,Russia,Domodedovo International Airport,Russia,Aerocondor
+A,DME,,Bugulma Airport,Russia,Domodedovo International Airport,Russia,Aerocondor
+KGD,EGO,,Khrabrovo Airport,Russia,Belgorod International Airport,Russia,Aerocondor
+KZ,EGO,,Kazan International Airport,Russia,Belgorod International Airport,Russia,Aerocondor
+BC,GYD,,Begishevo Airport,Russia,Heydar Aliyev International Airport,Azerbaijan,Aerocondor
+EGO,KGD,,Belgorod International Airport,Russia,Khrabrovo Airport,Russia,Aerocondor
+AER,KZ,,Sochi International Airport,Russia,Kazan International Airport,Russia,Aerocondor
+ASF,KZ,,Astrakhan Airport,Russia,Kazan International Airport,Russia,Aerocondor
+CEK,KZ,,Chelyabinsk Balandino Airport,Russia,Kazan International Airport,Russia,Aerocondor
+DME,KZ,,Domodedovo International Airport,Russia,Kazan International Airport,Russia,Aerocondor
+EGO,KZ,,Belgorod International Airport,Russia,Kazan International Airport,Russia,Aerocondor
+ED,KZ,,Pulkovo Airport,Russia,Kazan International Airport,Russia,Aerocondor
+SVX,KZ,,Koltsovo Airport,Russia,Kazan International Airport,Russia,Aerocondor
+BC,ED,,Begishevo Airport,Russia,Pulkovo Airport,Russia,Aerocondor
+A,ED,,Bugulma Airport,Russia,Pulkovo Airport,Russia,Aerocondor
+ASF,MRV,,Astrakhan Airport,Russia,Mineralnyye Vody Airport,Russia,Aerocondor
+DME,BC,,Domodedovo International Airport,Russia,Begishevo Airport,Russia,Aerocondor
+GYD,BC,,Heydar Aliyev International Airport,Azerbaijan,Begishevo Airport,Russia,Aerocondor
+ED,BC,,Pulkovo Airport,Russia,Begishevo Airport,Russia,Aerocondor
+SVX,BC,,Koltsovo Airport,Russia,Begishevo Airport,Russia,Aerocondor
+SVX,JC,,Koltsovo Airport,Russia,Nizhnevartovsk Airport,Russia,Aerocondor
+A,JC,,Bugulma Airport,Russia,Nizhnevartovsk Airport,Russia,Aerocondor
+CEK,OVB,,Chelyabinsk Balandino Airport,Russia,Tolmachevo Airport,Russia,Aerocondor
+SVX,OVB,,Koltsovo Airport,Russia,Tolmachevo Airport,Russia,Aerocondor
+KZ,SVX,,Kazan International Airport,Russia,Koltsovo Airport,Russia,Aerocondor
+BC,SVX,,Begishevo Airport,Russia,Koltsovo Airport,Russia,Aerocondor
+JC,SVX,,Nizhnevartovsk Airport,Russia,Koltsovo Airport,Russia,Aerocondor
+OVB,SVX,,Tolmachevo Airport,Russia,Koltsovo Airport,Russia,Aerocondor
+DME,A,,Domodedovo International Airport,Russia,Bugulma Airport,Russia,Aerocondor
+ED,A,,Pulkovo Airport,Russia,Bugulma Airport,Russia,Aerocondor
+IKT,BTK,,Irkutsk Airport,Russia,Bratsk Airport,Russia,Cargoitalia
+OVB,BTK,,Tolmachevo Airport,Russia,Bratsk Airport,Russia,Cargoitalia
+OVB,CEK,,Tolmachevo Airport,Russia,Chelyabinsk Balandino Airport,Russia,Cargoitalia
+IKT,HTA,,Irkutsk Airport,Russia,Chita-Kadala Airport,Russia,Cargoitalia
+BTK,IKT,,Bratsk Airport,Russia,Irkutsk Airport,Russia,Cargoitalia
+HTA,IKT,,Chita-Kadala Airport,Russia,Irkutsk Airport,Russia,Cargoitalia
+OVB,IKT,,Tolmachevo Airport,Russia,Irkutsk Airport,Russia,Cargoitalia
+KX,IKT,,Ust-Kut Airport,Russia,Irkutsk Airport,Russia,Cargoitalia
+K,IKT,,Lensk Airport,Russia,Irkutsk Airport,Russia,Cargoitalia
+YKS,IKT,,Yakutsk Airport,Russia,Irkutsk Airport,Russia,Cargoitalia
+OVB,MJZ,,Tolmachevo Airport,Russia,Mirny Airport,Russia,Cargoitalia
+IKT,ODO,,Irkutsk Airport,Russia,Bodaybo Airport,Russia,Cargoitalia
+BTK,OVB,,Bratsk Airport,Russia,Tolmachevo Airport,Russia,Cargoitalia
+CEK,OVB,,Chelyabinsk Balandino Airport,Russia,Tolmachevo Airport,Russia,Cargoitalia
+IKT,OVB,,Irkutsk Airport,Russia,Tolmachevo Airport,Russia,Cargoitalia
+IKT,KX,,Irkutsk Airport,Russia,Ust-Kut Airport,Russia,Cargoitalia
+IKT,YKS,,Irkutsk Airport,Russia,Yakutsk Airport,Russia,Cargoitalia
+IM,CZ,,Jorge Chávez International Airport,Peru,Alejandro Velasco Astete International Airport,Peru,Star Peru (2I)
+IQT,PC,,Coronel FAP Francisco Secada Vignetta International Airport,Peru,Cap FAP David Abenzur Rengifo International Airport,Peru,Star Peru (2I)
+BOY,ABJ,,Bobo Dioulasso Airport,Burkina Faso,Port Bouet Airport,Cote d'Ivoire,Air Burkina
+OA,ABJ,,Ouagadougou Airport,Burkina Faso,Port Bouet Airport,Cote d'Ivoire,Air Burkina
+OA,ACC,,Ouagadougou Airport,Burkina Faso,Kotoka International Airport,Ghana,Air Burkina
+ABJ,BKO,,Port Bouet Airport,Cote d'Ivoire,Senou Airport,Mali,Air Burkina
+DKR,BKO,,Léopold Sédar Senghor International Airport,Senegal,Senou Airport,Mali,Air Burkina
+OA,BKO,,Ouagadougou Airport,Burkina Faso,Senou Airport,Mali,Air Burkina
+ABJ,BOY,,Port Bouet Airport,Cote d'Ivoire,Bobo Dioulasso Airport,Burkina Faso,Air Burkina
+OA,BOY,,Ouagadougou Airport,Burkina Faso,Bobo Dioulasso Airport,Burkina Faso,Air Burkina
+OA,COO,,Ouagadougou Airport,Burkina Faso,Cadjehoun Airport,Benin,Air Burkina
+OA,IM,,Ouagadougou Airport,Burkina Faso,Diori Hamani International Airport,Niger,Air Burkina
+ABJ,OA,,Port Bouet Airport,Cote d'Ivoire,Ouagadougou Airport,Burkina Faso,Air Burkina
+BKO,OA,,Senou Airport,Mali,Ouagadougou Airport,Burkina Faso,Air Burkina
+COO,OA,,Cadjehoun Airport,Benin,Ouagadougou Airport,Burkina Faso,Air Burkina
+FW,OA,,Lomé-Tokoin Airport,Togo,Ouagadougou Airport,Burkina Faso,Air Burkina
+GYE,BOG,,José Joaquín de Olmedo International Airport,Ecuador,El Dorado International Airport,Colombia,Aerolineas Galapagos (Aerogal)

@@ -1,0 +1,12 @@
+{
+	"CQ1": {
+		"query": "List all course names along with their credits and the capacity of the rooms they are scheduled in for the Spring semester of 2024.",
+		"attributes": ["course.title", "course.credits", "section.course_title", "section.building", "section.room_number", "section.semester", "section.year", "classroom.capacity", "classroom.building", "classroom.room_number"],
+		"sql": "SELECT c.title, c.credits, cl.capacity FROM course c JOIN section s ON c.title = s.course_title JOIN classroom cl ON s.building = cl.building AND s.room_number = cl.room_number WHERE s.semester = 'Spring' AND s.year = 2024;"
+	},
+	"CQ2": {
+		"query": "Determine which courses from the 'Computer Science' department are offered in rooms with more than 50 seats during the Fall 2023 semester.",
+		"attributes": ["course.title", "course.dept_name", "section.course_title", "section.building", "section.room_number", "section.semester", "section.year", "classroom.capacity", "classroom.building", "classroom.room_number"],
+		"sql": "SELECT c.title, cl.capacity FROM course c JOIN section s ON c.title = s.course_title JOIN classroom cl ON s.building = cl.building AND s.room_number = cl.room_number WHERE c.dept_name = 'Computer Science' AND cl.capacity > 50 AND s.semester = 'Fall' AND s.year = 2023;"
+	}
+}

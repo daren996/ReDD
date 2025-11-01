@@ -1,0 +1,49 @@
+date,buildUpPlaySpeed,buildUpPlaySpeedClass,buildUpPlayPassing,buildUpPlayPassingClass,buildUpPlayPositioningClass,chanceCreationPassing,chanceCreationPassingClass,chanceCreationCrossing,chanceCreationCrossingClass,chanceCreationShooting,chanceCreationShootingClass,chanceCreationPositioningClass,defencePressure,defencePressureClass,defenceAggression,defenceAggressionClass,defenceTeamWidth,defenceTeamWidthClass,defenceDefenderLineClass,team_long_name
+2010-02-22 00:00:00,60,Balanced,50,Mixed,Organised,60,Normal,65,Normal,55,Normal,Organised,50,Medium,55,Press,45,Normal,Cover,FC Aarau
+2014-09-19 00:00:00,52,Balanced,56,Mixed,Organised,54,Normal,63,Normal,64,Normal,Organised,47,Medium,44,Press,54,Normal,Cover,FC Aarau
+2015-09-10 00:00:00,47,Balanced,54,Mixed,Organised,54,Normal,63,Normal,64,Normal,Organised,47,Medium,44,Press,54,Normal,Cover,FC Aarau
+2010-02-22 00:00:00,70,Fast,70,Long,Organised,70,Risky,70,Lots,70,Lots,Organised,60,Medium,70,Double,70,Wide,Cover,Aberdeen
+2011-02-22 00:00:00,47,Balanced,52,Mixed,Organised,53,Normal,48,Normal,52,Normal,Organised,47,Medium,47,Press,52,Normal,Cover,Aberdeen
+2012-02-22 00:00:00,58,Balanced,62,Mixed,Organised,45,Normal,70,Lots,55,Normal,Organised,40,Medium,40,Press,60,Normal,Cover,Aberdeen
+2013-09-20 00:00:00,62,Balanced,45,Mixed,Organised,40,Normal,50,Normal,55,Normal,Organised,42,Medium,42,Press,60,Normal,Cover,Aberdeen
+2014-09-19 00:00:00,58,Balanced,62,Mixed,Organised,56,Normal,68,Lots,57,Normal,Organised,41,Medium,42,Press,60,Normal,Cover,Aberdeen
+2015-09-10 00:00:00,59,Balanced,53,Mixed,Organised,51,Normal,72,Lots,63,Normal,Free Form,49,Medium,45,Press,63,Normal,Cover,Aberdeen
+2010-02-22 00:00:00,60,Balanced,40,Mixed,Organised,45,Normal,35,Normal,55,Normal,Organised,30,Deep,70,Double,30,Narrow,Offside Trap,AC Ajaccio
+2011-02-22 00:00:00,65,Balanced,45,Mixed,Organised,65,Normal,65,Normal,50,Normal,Organised,45,Medium,45,Press,50,Normal,Cover,AC Ajaccio
+2012-02-22 00:00:00,59,Balanced,52,Mixed,Organised,48,Normal,34,Normal,52,Normal,Organised,38,Medium,47,Press,53,Normal,Cover,AC Ajaccio
+2013-09-20 00:00:00,59,Balanced,52,Mixed,Organised,48,Normal,34,Normal,52,Normal,Organised,38,Medium,47,Press,53,Normal,Cover,AC Ajaccio
+2014-09-19 00:00:00,59,Balanced,52,Mixed,Organised,48,Normal,38,Normal,52,Normal,Organised,38,Medium,47,Press,53,Normal,Cover,AC Ajaccio
+2015-09-10 00:00:00,59,Balanced,52,Mixed,Organised,48,Normal,38,Normal,52,Normal,Organised,38,Medium,47,Press,53,Normal,Cover,AC Ajaccio
+2010-02-22 00:00:00,45,Balanced,30,Short,Free Form,55,Normal,45,Normal,70,Lots,Free Form,30,Deep,35,Press,60,Normal,Offside Trap,Milan
+2011-02-22 00:00:00,65,Balanced,50,Mixed,Organised,50,Normal,60,Normal,50,Normal,Free Form,50,Medium,50,Press,50,Normal,Offside Trap,Milan
+2012-02-22 00:00:00,45,Balanced,50,Mixed,Organised,65,Normal,20,Little,50,Normal,Free Form,45,Medium,45,Press,50,Normal,Cover,Milan
+2013-09-20 00:00:00,48,Balanced,54,Mixed,Organised,51,Normal,53,Normal,64,Normal,Free Form,48,Medium,49,Press,53,Normal,Cover,Milan
+2014-09-19 00:00:00,48,Balanced,52,Mixed,Organised,66,Normal,36,Normal,75,Lots,Organised,58,Medium,57,Press,49,Normal,Cover,Milan
+2015-09-10 00:00:00,48,Balanced,52,Mixed,Organised,66,Normal,36,Normal,69,Lots,Organised,58,Medium,57,Press,49,Normal,Cover,Milan
+2011-02-22 00:00:00,30,Slow,50,Mixed,Organised,50,Normal,50,Normal,55,Normal,Organised,30,Deep,45,Press,65,Normal,Cover,Académica de Coimbra
+2012-02-22 00:00:00,45,Balanced,44,Mixed,Organised,55,Normal,57,Normal,60,Normal,Organised,52,Medium,38,Press,61,Normal,Cover,Académica de Coimbra
+2013-09-20 00:00:00,45,Balanced,44,Mixed,Organised,55,Normal,57,Normal,60,Normal,Organised,52,Medium,38,Press,61,Normal,Cover,Académica de Coimbra
+2014-09-19 00:00:00,52,Balanced,44,Mixed,Organised,55,Normal,51,Normal,60,Normal,Organised,39,Medium,38,Press,61,Normal,Cover,Académica de Coimbra
+2015-09-10 00:00:00,53,Balanced,44,Mixed,Organised,55,Normal,51,Normal,60,Normal,Organised,39,Medium,38,Press,61,Normal,Cover,Académica de Coimbra
+2011-02-22 00:00:00,53,Balanced,53,Mixed,Organised,48,Normal,67,Lots,66,Normal,Organised,46,Medium,62,Press,65,Normal,Cover,ADO Den Haag
+2012-02-22 00:00:00,38,Balanced,44,Mixed,Organised,55,Normal,60,Normal,44,Normal,Organised,50,Medium,58,Press,62,Normal,Cover,ADO Den Haag
+2013-09-20 00:00:00,38,Balanced,47,Mixed,Organised,55,Normal,55,Normal,44,Normal,Organised,50,Medium,58,Press,52,Normal,Cover,ADO Den Haag
+2014-09-19 00:00:00,58,Balanced,55,Mixed,Organised,55,Normal,52,Normal,44,Normal,Organised,57,Medium,50,Press,52,Normal,Cover,ADO Den Haag
+2015-09-10 00:00:00,56,Balanced,66,Mixed,Organised,55,Normal,52,Normal,38,Normal,Organised,40,Medium,50,Press,52,Normal,Cover,ADO Den Haag
+2010-02-22 00:00:00,30,Slow,30,Short,Free Form,50,Normal,60,Normal,70,Lots,Organised,30,Deep,30,Contain,30,Narrow,Cover,Ajax
+2011-02-22 00:00:00,40,Balanced,38,Mixed,Free Form,67,Risky,65,Normal,67,Lots,Organised,65,Medium,57,Press,63,Normal,Cover,Ajax
+2012-02-22 00:00:00,31,Slow,33,Short,Organised,39,Normal,64,Normal,46,Normal,Free Form,68,High,65,Press,60,Normal,Cover,Ajax
+2013-09-20 00:00:00,35,Balanced,33,Short,Free Form,39,Normal,52,Normal,46,Normal,Free Form,68,High,65,Press,50,Normal,Cover,Ajax
+2014-09-19 00:00:00,40,Balanced,30,Short,Organised,51,Normal,55,Normal,39,Normal,Free Form,64,Medium,53,Press,64,Normal,Cover,Ajax
+2015-09-10 00:00:00,35,Balanced,39,Mixed,Organised,58,Normal,55,Normal,30,Little,Free Form,64,Medium,53,Press,59,Normal,Cover,Ajax
+2010-02-22 00:00:00,65,Balanced,45,Mixed,Organised,45,Normal,45,Normal,70,Lots,Organised,70,High,65,Press,30,Narrow,Cover,UD Almería
+2011-02-22 00:00:00,55,Balanced,53,Mixed,Organised,57,Normal,54,Normal,69,Lots,Organised,58,Medium,68,Double,67,Wide,Cover,UD Almería
+2012-02-22 00:00:00,42,Balanced,70,Long,Organised,57,Normal,54,Normal,40,Normal,Organised,37,Medium,53,Press,45,Normal,Cover,UD Almería
+2013-09-20 00:00:00,46,Balanced,65,Mixed,Organised,57,Normal,54,Normal,40,Normal,Organised,37,Medium,53,Press,45,Normal,Cover,UD Almería
+2014-09-19 00:00:00,46,Balanced,65,Mixed,Organised,57,Normal,54,Normal,40,Normal,Organised,37,Medium,53,Press,45,Normal,Cover,UD Almería
+2015-09-10 00:00:00,46,Balanced,65,Mixed,Organised,57,Normal,54,Normal,40,Normal,Organised,37,Medium,53,Press,45,Normal,Cover,UD Almería
+2010-02-22 00:00:00,50,Balanced,35,Mixed,Organised,70,Risky,50,Normal,60,Normal,Organised,70,High,50,Press,70,Wide,Cover,RSC Anderlecht
+2011-02-22 00:00:00,50,Balanced,52,Mixed,Free Form,70,Risky,50,Normal,60,Normal,Organised,70,High,50,Press,70,Wide,Offside Trap,RSC Anderlecht
+2012-02-22 00:00:00,52,Balanced,41,Mixed,Organised,53,Normal,57,Normal,47,Normal,Organised,45,Medium,43,Press,52,Normal,Cover,RSC Anderlecht
+2013-09-20 00:00:00,52,Balanced,41,Mixed,Organised,68,Risky,67,Lots,47,Normal,Organised,60,Medium,43,Press,65,Normal,Cover,RSC Anderlecht
+2014-09-19 00:00:00,52,Balanced,51,Mixed,Organised,60,Normal,53,Normal,47,Normal,Organised,60,Medium,50,Press,65,Normal,Cover,RSC Anderlecht

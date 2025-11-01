@@ -1,0 +1,14 @@
+{
+	"CQ1": {
+		"query": "List all instructors, their department names, and the total credits of the courses they are teaching in the Spring 2024 semester.",
+		"attributes": ["teaches.semester", "teaches.year", "teaches.instructor_name", "teaches.course_title", "instructor.name", "instructor.dept_name", "course.title", "course.credits"],
+		"sql": "SELECT i.name, i.dept_name, SUM(c.credits) AS total_credits FROM teaches t JOIN instructor i ON t.instructor_name = i.name JOIN course c ON t.course_title = c.title WHERE t.semester = 'Spring' AND t.year = 2024 GROUP BY i.name, i.dept_name;",
+		"diffculty": "4"
+	},
+	"CQ2": {
+		"query": "Retrieve the salary of instructors, along with the titles of the courses they teach, for those who teach in more than one department during the entire 2023 year. Note: In this context, 'department' refers to the ones that courses belong to, not instructors.",
+		"attributes": ["teaches.year", "teaches.instructor_name", "teaches.course_title", "instructor.name", "instructor.salary", "course.title", "course.dept_name"],
+		"sql": "SELECT DISTINCT i.name, i.salary, t.course_title FROM teaches t JOIN instructor i ON t.instructor_name = i.name JOIN course c ON t.course_title = c.title WHERE t.year = 2023 AND i.name IN ( SELECT t.instructor_name FROM teaches t JOIN course c ON t.course_title = c.title GROUP BY t.instructor_name HAVING COUNT(DISTINCT c.dept_name) > 1 );",
+		"diffculty": "5"
+	}
+}

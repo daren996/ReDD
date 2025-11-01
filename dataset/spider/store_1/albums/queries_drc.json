@@ -1,0 +1,17 @@
+{
+	"CQ1": {
+		"query": "How many unique album titles are in the database?",
+		"attributes": ["Album Title"],
+		"diffculty": "0"
+	},
+	"CQ2": {
+		"query": "How many artists are listed in the database?",
+		"attributes": ["Artist Name"],
+		"diffculty": "0"
+	},
+	"CQ3": {
+		"query": "Who is the artist of the album 'Dark Side of the Moon'?",
+		"attributes": ["Album Title", "Artist Name"],
+		"diffculty": "0"
+	}
+}

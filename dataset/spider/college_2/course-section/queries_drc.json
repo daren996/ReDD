@@ -1,0 +1,14 @@
+{
+	"CQ1": {
+		"query": "Show me the list of courses in department Computer Science along with their locations (building and room_number) for the Fall 2023 semester.",
+		"attributes": ["course.title", "course.dept_name", "section.building", "section.room_number", "section.course_title", "section.semester", "section.year"],
+		"sql": "SELECT course.title, section.building, section.room_number FROM course JOIN section ON course.title = section.course_title WHERE section.semester = 'Fall' AND section.year = 2023 AND course.dept_name = 'Computer Science';",
+		"diffculty": "4"
+	},
+	"CQ2": {
+		"query": "List all the course titles in the Computer Science department along with the number of semesters each course is offered.",
+		"attributes": ["course.title", "course.dept_name", "section.semester", "section.course_title"],
+		"sql": "SELECT course.title, COUNT(section.semester) AS section_count FROM course JOIN section ON course.title = section.course_title WHERE course.dept_name = 'Computer Science' GROUP BY course.title;",
+		"diffculty": "4"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"CQ1": {
+		"query": "Find all active airlines that operate routes between cities in the United States and Europe (United Kingdom, France, Germany, Italy, Spain), including the airline's call sign and the names of both the origin and destination airports.",
+		"attributes": ["airlines.name", "airlines.callsign", "airlines.active", "airports.name", "airports.country", "airports.iata", "routes.airline_name", "routes.src_ap", "routes.dst_ap"],
+		"sql": "SELECT a.name AS airline_name, a.callsign AS airline_callsign, ap1.name AS origin_airport, ap2.name AS destination_airport FROM routes r JOIN airlines a ON r.airline_name = a.name JOIN airports ap1 ON r.src_ap = ap1.iata JOIN airports ap2 ON r.dst_ap = ap2.iata WHERE a.active = 'Y' AND ap1.country = 'United States' AND ap2.country IN ('United Kingdom', 'France', 'Germany', 'Italy', 'Spain')"
+	},
+	"CQ2": {
+		"query": "Show all routes where the source and destination airports are in the same country, including the airline's ICAO code and the elevation of both airports.",
+		"attributes": ["airlines.icao", "airlines.name", "airports.name", "airports.elevation", "airports.iata", "airports.country", "routes.airline_name", "routes.src_ap", "routes.dst_ap"],
+		"sql": "SELECT a.icao AS airline_icao, ap1.name AS src_airport, ap1.elevation AS src_elevation, ap2.name AS dst_airport, ap2.elevation AS dst_elevation FROM routes r JOIN airlines a ON r.airline_name = a.name JOIN airports ap1 ON r.src_ap = ap1.iata JOIN airports ap2 ON r.dst_ap = ap2.iata WHERE ap1.country = ap2.country"
+	}
+}

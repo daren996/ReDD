@@ -1,0 +1,14 @@
+{
+	"CQ1": {
+		"query": "What is the total number of routes for each country and airline in that country?",
+		"attributes": ["routes.airline_name", "airlines.country", "airlines.name"],
+		"sql": "SELECT a.country, a.name, count(*) FROM airlines AS a JOIN routes AS r ON a.name = r.airline_name GROUP BY a.country, a.name;",
+		"diffculty": "4"
+	},
+	"CQ2": {
+		"query": "List the source and destination airport names from routes where the airline operating the route is based in Russia.",
+		"attributes": ["routes.src_ap_name", "routes.dst_ap_name", "routes.airline_name", "airlines.name", "airlines.country"],
+		"sql": "SELECT r.src_ap_name, r.dst_ap_name FROM routes r JOIN airlines a ON r.airline_name = a.name WHERE a.country = 'Russia';",
+		"diffculty": "4"
+	}
+}

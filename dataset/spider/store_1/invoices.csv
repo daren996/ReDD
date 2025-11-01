@@ -1,0 +1,93 @@
+invoice_date,billing_address,billing_city,billing_country,total,customer_first_name,customer_last_name
+2007-01-01 00:00:00,Theodor-Heuss-Straße 34,Stuttgart,Germany,1.98,Leonie,Köhler
+2007-01-02 00:00:00,Ullevålsveien 14,Oslo,Norway,3.96,Bjørn,Hansen
+2007-01-03 00:00:00,Grétrystraat 63,Brussels,Belgium,5.94,Daan,Peeters
+2007-01-06 00:00:00,8210 111 ST NW,Edmonton,Canada,8.91,Mark,Philips
+2007-01-11 00:00:00,69 Salem Street,Boston,USA,13.86,John,Gordon
+2007-01-19 00:00:00,Berger Straße 10,Frankfurt,Germany,0.99,Fynn,Zimmermann
+2007-02-01 00:00:00,Barbarossastraße 19,Berlin,Germany,1.98,Niklas,Schröder
+2007-02-01 00:00:00,"8, Rue Hanovre",Paris,France,1.98,Dominique,Lefebvre
+2007-02-02 00:00:00,"9, Place Louis Barthou",Bordeaux,France,3.96,Wyatt,Girard
+2007-02-03 00:00:00,3 Chatham Street,Dublin,Ireland,5.94,Hugh,O'Reilly
+2007-02-06 00:00:00,202 Hoxton Street,London,United Kingdom,8.91,Emma,Jones
+2007-02-11 00:00:00,Theodor-Heuss-Straße 34,Stuttgart,Germany,13.86,Leonie,Köhler
+2007-02-19 00:00:00,1600 Amphitheatre Parkway,Mountain View,USA,0.99,Frank,Harris
+2007-03-04 00:00:00,1 Microsoft Way,Redmond,USA,1.98,Jack,Smith
+2007-03-04 00:00:00,1 Infinite Loop,Cupertino,USA,1.98,Tim,Goyer
+2007-03-05 00:00:00,801 W 4th Street,Reno,USA,3.96,Kathy,Chase
+2007-03-06 00:00:00,319 N. Frances Street,Madison,USA,5.94,Victor,Stevens
+2007-03-09 00:00:00,194A Chain Lake Drive,Halifax,Canada,8.91,Martha,Silk
+2007-03-14 00:00:00,"8, Rue Hanovre",Paris,France,13.86,Dominique,Lefebvre
+2007-04-04 00:00:00,421 Bourke Street,Sidney,Australia,1.98,Mark,Taylor
+2007-04-04 00:00:00,"Calle Lira, 198",Santiago,Chile,1.98,Luis,Rojas
+2007-04-06 00:00:00,Ullevålsveien 14,Oslo,Norway,5.94,Bjørn,Hansen
+2007-04-09 00:00:00,"Rua Dr. Falcão Filho, 155",São Paulo,Brazil,8.91,Eduardo,Martins
+2007-04-14 00:00:00,1 Infinite Loop,Cupertino,USA,13.86,Tim,Goyer
+2007-04-22 00:00:00,5112 48 Street,Yellowknife,Canada,0.99,Ellie,Sullivan
+2007-05-05 00:00:00,Rua da Assunção 53,Lisbon,Portugal,1.98,João,Fernandes
+2007-05-05 00:00:00,Tauentzienstraße 8,Berlin,Germany,1.98,Hannah,Schneider
+2007-05-06 00:00:00,Barbarossastraße 19,Berlin,Germany,3.96,Niklas,Schröder
+2007-05-07 00:00:00,"9, Place Louis Barthou",Bordeaux,France,5.94,Wyatt,Girard
+2007-05-10 00:00:00,Lijnbaansgracht 120bg,Amsterdam,Netherlands,8.91,Johannes,Van der Berg
+2007-05-15 00:00:00,"Calle Lira, 198",Santiago,Chile,13.86,Luis,Rojas
+2007-05-23 00:00:00,"Praça Pio X, 119",Rio de Janeiro,Brazil,0.99,Roberto,Almeida
+2007-06-05 00:00:00,Qe 7 Bloco G,Brasília,Brazil,1.98,Fernanda,Ramos
+2007-06-05 00:00:00,700 W Pender Street,Vancouver,Canada,1.98,Jennifer,Peterson
+2007-06-06 00:00:00,1 Microsoft Way,Redmond,USA,3.96,Jack,Smith
+2007-06-07 00:00:00,801 W 4th Street,Reno,USA,5.94,Kathy,Chase
+2007-06-10 00:00:00,1033 N Park Ave,Tucson,USA,8.91,Patrick,Gray
+2007-06-15 00:00:00,Tauentzienstraße 8,Berlin,Germany,13.86,Hannah,Schneider
+2007-06-23 00:00:00,C/ San Bernardo 85,Madrid,Spain,0.99,Enrique,Muñoz
+2007-07-06 00:00:00,Celsiusg. 9,Stockholm,Sweden,1.98,Joakim,Johansson
+2007-07-07 00:00:00,421 Bourke Street,Sidney,Australia,3.96,Mark,Taylor
+2007-07-11 00:00:00,Rilská 3174/6,Prague,Czech Republic,8.91,Helena,Holý
+2007-07-16 00:00:00,700 W Pender Street,Vancouver,Canada,13.86,Jennifer,Peterson
+2007-07-24 00:00:00,796 Dundas Street West,Toronto,Canada,0.99,Robert,Brown
+2007-08-06 00:00:00,230 Elgin Street,Ottawa,Canada,1.98,Edward,Francis
+2007-08-06 00:00:00,696 Osborne Street,Winnipeg,Canada,1.98,Aaron,Mitchell
+2007-08-07 00:00:00,Rua da Assunção 53,Lisbon,Portugal,3.96,João,Fernandes
+2007-08-08 00:00:00,Barbarossastraße 19,Berlin,Germany,5.94,Niklas,Schröder
+2007-08-11 00:00:00,Porthaninkatu 9,Helsinki,Finland,8.91,Terhi,Hämäläinen
+2007-08-24 00:00:00,Grétrystraat 63,Brussels,Belgium,0.99,Daan,Peeters
+2007-09-06 00:00:00,Sønder Boulevard 51,Copenhagen,Denmark,1.98,Kara,Nielsen
+2007-09-06 00:00:00,"Av. Paulista, 2022",São Paulo,Brazil,1.98,Alexandre,Rocha
+2007-09-07 00:00:00,Qe 7 Bloco G,Brasília,Brazil,3.96,Fernanda,Ramos
+2007-09-08 00:00:00,1 Microsoft Way,Redmond,USA,5.94,Jack,Smith
+2007-09-11 00:00:00,69 Salem Street,Boston,USA,8.91,John,Gordon
+2007-09-16 00:00:00,696 Osborne Street,Winnipeg,Canada,13.86,Aaron,Mitchell
+2007-09-24 00:00:00,3 Chatham Street,Dublin,Ireland,0.99,Hugh,O'Reilly
+2007-10-07 00:00:00,"Via Degli Scipioni, 43",Rome,Italy,1.98,Lucas,Mancini
+2007-10-07 00:00:00,Ordynacka 10,Warsaw,Poland,1.98,Stanisław,Wójcik
+2007-10-08 00:00:00,Celsiusg. 9,Stockholm,Sweden,3.96,Joakim,Johansson
+2007-10-09 00:00:00,421 Bourke Street,Sidney,Australia,5.94,Mark,Taylor
+2007-10-12 00:00:00,Theodor-Heuss-Straße 34,Stuttgart,Germany,8.91,Leonie,Köhler
+2007-10-17 00:00:00,"Av. Paulista, 2022",São Paulo,Brazil,13.86,Alexandre,Rocha
+2007-10-25 00:00:00,319 N. Frances Street,Madison,USA,0.99,Victor,Stevens
+2007-11-07 00:00:00,2211 W Berry Street,Fort Worth,USA,1.98,Richard,Cunningham
+2007-11-07 00:00:00,302 S 700 E,Salt Lake City,USA,1.98,Julia,Barnett
+2007-11-08 00:00:00,230 Elgin Street,Ottawa,Canada,3.96,Edward,Francis
+2007-11-09 00:00:00,Rua da Assunção 53,Lisbon,Portugal,5.94,João,Fernandes
+2007-11-12 00:00:00,"8, Rue Hanovre",Paris,France,8.91,Dominique,Lefebvre
+2007-11-17 00:00:00,Ordynacka 10,Warsaw,Poland,13.86,Stanisław,Wójcik
+2007-11-25 00:00:00,Ullevålsveien 14,Oslo,Norway,0.99,Bjørn,Hansen
+2007-12-08 00:00:00,Klanova 9/506,Prague,Czech Republic,1.98,František,Wichterlová
+2007-12-09 00:00:00,Sønder Boulevard 51,Copenhagen,Denmark,3.96,Kara,Nielsen
+2007-12-10 00:00:00,Qe 7 Bloco G,Brasília,Brazil,5.94,Fernanda,Ramos
+2007-12-13 00:00:00,1 Infinite Loop,Cupertino,USA,8.91,Tim,Goyer
+2007-12-18 00:00:00,302 S 700 E,Salt Lake City,USA,13.86,Julia,Barnett
+2007-12-26 00:00:00,"9, Place Louis Barthou",Bordeaux,France,0.99,Wyatt,Girard
+2008-01-08 00:00:00,"68, Rue Jouvence",Dijon,France,1.98,Isabelle,Mercier
+2008-01-08 00:00:00,Erzsébet krt. 58.,Budapest,Hungary,1.98,Ladislav,Kovács
+2008-01-09 00:00:00,"Via Degli Scipioni, 43",Rome,Italy,3.96,Lucas,Mancini
+2008-01-10 00:00:00,Celsiusg. 9,Stockholm,Sweden,6.94,Joakim,Johansson
+2008-01-13 00:00:00,"Calle Lira, 198",Santiago,Chile,17.91,Luis,Rojas
+2008-01-26 00:00:00,801 W 4th Street,Reno,USA,0.99,Kathy,Chase
+2008-02-08 00:00:00,120 S Orange Ave,Orlando,USA,1.98,Heather,Leacock
+2008-02-08 00:00:00,162 E Superior Street,Chicago,USA,1.98,Frank,Ralston
+2008-02-09 00:00:00,2211 W Berry Street,Fort Worth,USA,3.96,Richard,Cunningham
+2008-02-10 00:00:00,230 Elgin Street,Ottawa,Canada,5.94,Edward,Francis
+2008-02-13 00:00:00,Tauentzienstraße 8,Berlin,Germany,8.91,Hannah,Schneider
+2008-02-18 00:00:00,Erzsébet krt. 58.,Budapest,Hungary,21.86,Ladislav,Kovács
+2008-03-10 00:00:00,"Av. Brigadeiro Faria Lima, 2170",São José dos Campos,Brazil,3.98,Luís,Gonçalves
+2008-03-10 00:00:00,1498 rue Bélanger,Montréal,Canada,3.98,François,Tremblay
+2008-03-11 00:00:00,Klanova 9/506,Prague,Czech Republic,3.96,František,Wichterlová

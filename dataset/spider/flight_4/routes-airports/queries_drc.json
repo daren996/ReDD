@@ -1,0 +1,14 @@
+{
+	"CQ1": {
+		"query": "Which country is each source airport mentioned in routes located in? List all the unique source airports and the corresponding countries.",
+		"attributes": ["routes.src_ap_name", "airports.country", "airports.name"],
+		"sql": "SELECT DISTINCT(r.src_ap_name), ap.country AS airport_country FROM routes r INNER JOIN airports ap ON r.src_ap_name = ap.name;",
+		"diffculty": "5"
+	},
+	"CQ2": {
+		"query": "List all flights, including airline names, departing from New York City to Los Angeles, along with the names and elevation of the airports involved.",
+		"attributes": ["routes.src_ap_name", "routes.dst_ap_name", "routes.airline_name", "airports.name", "airports.city", "airports.elevation"],
+		"sql": "SELECT A1.name AS Source_Airport_Name, A1.elevation AS Source_Airport_Elevation, A2.name AS Destination_Airport_Name, A2.elevation AS Destination_Airport_Elevation, R.airline_name FROM routes R JOIN airports A1 ON R.src_ap_name = A1.name JOIN airports A2 ON R.dst_ap_name = A2.name WHERE A1.city = 'New York' AND A2.city = 'Los Angeles';",
+		"diffculty": "6"
+	}
+}

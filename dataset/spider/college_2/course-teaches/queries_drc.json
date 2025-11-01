@@ -1,0 +1,14 @@
+{
+	"CQ1": {
+		"query": "Which departments offered courses in the Spring semester between 2000 and 2010, and how many courses did each department offer?",
+		"attributes": ["course.dept_name", "course.title", "teaches.course_title", "teaches.semester", "teaches.year"],
+		"sql": "SELECT c.dept_name, COUNT(DISTINCT title) AS num_courses FROM course c JOIN teaches t ON c.title = t.course_title WHERE t.semester = 'Spring' AND t.year BETWEEN 2000 AND 2010 GROUP BY c.dept_name;",
+		"diffculty": "5"
+	},
+	"CQ2": {
+		"query": "List all courses, along with their credits and the instructors teaching them, organized by department name for the year 2024.",
+		"attributes": ["course.dept_name", "course.title", "course.credits", "teaches.course_title", "teaches.instructor_name", "teaches.year"],
+		"sql": "SELECT c.dept_name AS Department, c.title AS Course_Title, c.credits AS Credits, t.instructor_name AS Instructor FROM course c JOIN teaches t ON c.title = t.course_title WHERE t.year = 2024 ORDER BY c.dept_name;",
+		"diffculty": "5"
+	}
+}

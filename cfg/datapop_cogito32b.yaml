@@ -1,0 +1,81 @@
+default_settings: &default
+  data_main: "dataset/"
+  exp_dn_list: null
+  exp_fn_list: null
+
+base_model_config: &base_model
+  <<: *default
+  mode: "cogito32b"
+  trial: 1
+  torch_seed: 888
+  llm_model: "deepcogito/cogito-v1-preview-qwen-32B"
+  llm_model_path: "llm_models/deepcogito/cogito-v1-preview-qwen-32B"
+  res_param_str: "mdlcogito32b"
+  prompts:
+    prompt_table: "prompts/datapop_table_json.txt"
+    prompt_attr: "prompts/datapop_attr_json.txt"
+  eval:
+    mode: "deepseek"
+    llm_model: "deepseek-chat"
+    prompts:
+      datapop_cmp_str: "prompts/eval_datapop_cmp_str.txt"
+  num_layers: 65
+  hidden_size: 10240
+  exp_layers: [50, 55, 60, 61, 62, 63, 64]
+  train_sizes: [50]
+  trainer:
+    train_percentage: 0.8
+    batch_size: 128
+    epochs: 100
+    early_stop_patience: 10
+    learning_rate: 0.0003
+  classifier_threshold: 0.5
+
+# ----------------------------------------------------------------
+# ---------------------- Spider Experiments ----------------------
+# ----------------------------------------------------------------
+
+spider_common: &spider_common
+  <<: *base_model
+  out_main: "output/data_population/spider_cogito32b_1/"
+  schemagen:
+    out_main: "output/schema_gen/spider_cgpt_1/"
+    param_str: "mdlgpt-4o_prm4d1_tmp1.0_tpp1.0"
+
+flight:
+  <<: *spider_common
+  exp_dn_list: ["flight_4"]
+  exp_fn_list: ["routes-airports-airlines"]
+
+college:
+  <<: *spider_common
+  exp_dn_list: ["college_2"]
+  exp_fn_list: ["course-teaches-instructor"]
+
+wine:
+  <<: *spider_common
+  exp_dn_list: ["wine_1"]
+  exp_fn_list: ["wine-appellations"]
+  model_dn_fn_list: ["wine_1/wine-appellations"]
+  test_dn_fn: "wine_1/wine-appellations"
+
+soccer:
+  <<: *spider_common
+  exp_dn_list: ["soccer_1"]
+  exp_fn_list: ["all"]
+  model_dn_fn_list: ["soccer_1/all"]
+  test_dn_fn: "soccer_1/all"
+
+bike:
+  <<: *spider_common
+  exp_dn_list: ["bike_1"]
+  exp_fn_list: ["all"]
+  model_dn_fn_list: ["bike_1/all"]
+  test_dn_fn: "bike_1/all"
+
+apartment_rentals:
+  <<: *spider_common
+  exp_dn_list: ["apartment_rentals"]
+  exp_fn_list: ["all"]
+  model_dn_fn_list: ["apartment_rentals/all"]
+  test_dn_fn: "apartment_rentals/all"
