@@ -1,116 +1,142 @@
-# ReDD
+# ReDD: Relational Deep Dive
 
-Relational Deep Dive: Error-Aware Queries Over Unstructured Data
+**Error-Aware Queries Over Unstructured Data**
 
-## Getting Started
+ReDD is a research project that focuses on transforming unstructured natural language documents into structured relational schemas and populating them with extracted data using Large Language Models (LLMs). The system provides error-aware query processing capabilities over unstructured data collections.
 
-### Prerequisites
+## 📋 Prerequisites
 
-Ensure you have Python 3.7 or higher installed. 
-Additionally, install the required Python packages using:
+- **Python**: 3.10 or higher
+- **API Keys**: Required for cloud-based LLM providers (OpenAI, DeepSeek, etc.)
+
+## 🚀 Installation
+
+1. Clone the repository:
 ```bash
-bash set_up_env.sh
+git clone <repository-url>
+cd ReDD_Dev
+```
+
+2. Install required dependencies:
+```bash
 pip install -r requirements.txt
 ```
-s
-### Run Schema Genration
-
-Initialize Schema Generation
-```bash
-python main_schemagen.py --config cfg/schemagen.yaml --init
-```
-
-Run Experiments on `spider/store_1/albums`
-```bash
-python main_schemagen.py --config cfg/schemagen_deepseek.yaml --exp spider_4d0_1 --api-key <Your DeepSeek api-key>
-python main_schemagen.py --config cfg/schemagen_deepseek.yaml --exp spider_4d1_1 --api-key <Your DeepSeek api-key>
-```
-
-### Configuration
-Create configuration files in the `cfg/` directory to tune the parameters and API settings according to your project needs.
-
-
-
-
-
-# ReDD
-
-**Relational Deep Dive**: Error-Aware Queries Over Unstructured Data
-
-## Getting Started
-
-### Prerequisites
-
-Ensure you have Python 3.7 or higher installed.
-
-Install required Python packages:
-
-```bash
-bash set_up_env.sh
-pip install -r requirements.txt
-```
-
----
 
 ## 🔧 Configuration
 
-All experiments are controlled via YAML config files in the `cfg/` directory. These files contain model settings, experiment names, data sources, etc.
+Configuration files are located in the `configs/` directory. Each configuration file follows the pattern `{component}_{model}.yaml`:
 
----
+- `schemagen.yaml` - Schema generation with ChatGPT
+- `schemagen_deepseek.yaml` - Schema generation with DeepSeek
+- `datapop_deepseek.yaml` - Data population with DeepSeek
+- `datapop_qwen3.yaml` - Data population with Qwen models
 
-## 🏗️ Schema Generation
-
-### Step 1: Initialize Schema Generation
-
-```bash
-python main_schemagen.py --config cfg/schemagen.yaml --init
+### Example Configuration Structure
+```yaml
+default_settings: &default
+  data_main: "dataset/"
+  spider_path: "dataset/spider/"
+  mode: "cgpt"
+  out_main: "outputs/schema_gen/"
+  llm_model: "gpt-4o"
 ```
 
-### Step 2: Run Schema Experiments
+## 📊 Usage
+
+### Schema Generation
+
+Generate relational schemas from unstructured documents:
 
 ```bash
-python main_schemagen.py --config cfg/schemagen_deepseek.yaml --exp spider_4d0_1 --api-key <Your DeepSeek API key>
-python main_schemagen.py --config cfg/schemagen_deepseek.yaml --exp spider_4d1_1 --api-key <Your DeepSeek API key>
+# General schema generation (no specific query)
+python scripts/main_schemagen.py --config configs/schemagen.yaml --exp spider_4d0_1 --api-key <YOUR_API_KEY>
+
+# Query-specific schema generation
+python scripts/main_schemagen.py --config configs/schemagen.yaml --exp spider_4d1_1 --api-key <YOUR_API_KEY>
 ```
 
----
+### Data Population
 
-## 📊 Data Population
-
-Use `main_datapop.py` to run various data population methods (GPT, DeepSeek, Local).
-
-### Step 1: Initialize Dataset (Optional)
+Extract and populate data from documents into generated schemas:
 
 ```bash
-python main_datapop.py --config cfg/datapop_cogital32b.yaml --exp college --init
+# Run data population experiments
+python scripts/main_datapop.py --config configs/datapop.yaml --exp spider_1 --api-key <YOUR_API_KEY>
 ```
 
-### Step 2: Run Data Population
+### Supported LLM Providers
+
+| Provider | Mode | Models |
+|----------|------|---------|
+| OpenAI | `cgpt` | GPT-5, GPT-4o |
+| DeepSeek | `deepseek` | deepseek-chat |
+| TogetherAI | `together` | Various models |
+| SiliconFlow | `siliconflow` | Various models |
+| Local | `local` | Local model inference |
+
+## 📁 Project Structure
+
+```
+ReDD_Dev/
+├── configs/             # Configuration files
+├── core/                # Core functionality
+│   ├── data_population/  # Data extraction and population
+│   ├── schema_gen/       # Schema generation modules
+│   ├── evaluation/       # Evaluation frameworks
+│   ├── utils/            # Utility functions
+│   └── data_loader/      # Dataset loading utilities
+├── dataset/             # Dataset files (Spider, etc.)
+├── prompts/             # LLM prompt templates
+├── scripts/             # Entry point scripts
+├── outputs/             # Generated results
+└── logs/                # Execution logs
+```
+
+## 🗃️ Supported Datasets
+
+### Spider
+
+### 
+
+### 
+
+### 
+
+
+## 📈 Evaluation
+
+The project includes comprehensive evaluation tools:
 
 ```bash
-python main_datapop.py --config cfg/datapop_cogital32b.yaml --exp college
+# Run schema generation evaluation
+python scripts/main_schemagen.py --config configs/schemagen_deepseek.yaml --exp spider_4d0_1 --eval
+
+# Run data population evaluation
+python scripts/main_datapop.py --config configs/datapop_deepseek.yaml --exp spider_1 --eval
 ```
 
-You can specify the mode (`cgpt`, `deepseek`, `ds7b`, `dsv2lite`, `cogito32b`, `cogito70b`) inside the config file.
+Evaluation metrics include:
+- **Schema Generation**: 
+- **Data Population**: 
+- **Error Analysis**: 
 
-### Optional Flags:
+## 🔬 Demo
 
-* `--api-key`: Needed for GPT/DeepSeek modes
-* `--eval`: Run evaluation after data generation
-* `--train-classifier`: Train error classifier after data generation
 
-Example with evaluation and classifier training:
+## 📝 Example Workflow
 
-```bash
-python main_datapop.py --config cfg/datapop_cogital32b.yaml --exp college --api-key <Your API key> --eval --train-classifier
-```
 
----
+## 🛠️ Development
 
-## ✅ Error Correction
+### Adding New LLM Providers
 
-Use `main_correction.py` to test and ensemble error classifiers.
+1. Create a new module in `core/data_population/` or `core/schema_gen/`, which inherits from the appropriate base class
+2. Implement the class interface
+3. Add configuration support in YAML files
+4. Update the main scripts to handle the new provider
 
-```bash
-python main_correction.py --config cfg/datapop_cogital32b.yaml --exp college
-```
+### Custom Datasets
+
+1. Add dataset files to the `dataset/` directory
+2. 
+3. 
