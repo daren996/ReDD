@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "redd"
+version = "0.1.0"
+description = "ReDD package for schema discovery and data extraction over unstructured documents."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+  {name = "ReDD Contributors"}
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "numpy",
+  "scipy",
+  "scikit-learn",
+  "tqdm",
+  "pandas",
+  "PyYAML",
+  "openai==1.39.0",
+  "transformers==4.46.3",
+  "accelerate>=0.26.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/daren996/ReDD"
+Repository = "https://github.com/daren996/ReDD"
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2.2",
+  "mypy>=1.11.2",
+  "ruff>=0.6.9",
+  "types-PyYAML>=6.0.12",
+]
+
+[project.scripts]
+redd = "redd.cli.main:main"
+redd-schemagen = "redd.cli.schemagen:main"
+redd-datapop = "redd.cli.datapop:main"
+redd-correction = "redd.cli.correction:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+redd = ["resources/prompts/*.txt"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = "src"
+files = [
+  "src/redd/__init__.py",
+  "src/redd/api.py",
+  "src/redd/config.py",
+  "src/redd/runtime.py",
+  "src/redd/core/data_population/factory.py",
+  "src/redd/core/schema_gen/factory.py",
+  "src/redd/core/utils/prompt_utils.py",
+  "src/redd/core/llm/providers.py",
+  "tests",
+]
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true

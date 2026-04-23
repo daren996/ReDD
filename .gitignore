@@ -107,3 +107,7 @@ Desktop.ini
 *.swo
 
 .env
+.venv/
+.mypy_cache/
+.ruff_cache/
+api_keys.json

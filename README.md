@@ -1,142 +1,225 @@
-# ReDD: Relational Deep Dive
+# ReDD
 
-**Error-Aware Queries Over Unstructured Data**
+ReDD is a Python package for turning unstructured document collections into relational schema artifacts and structured extraction outputs.
 
-ReDD is a research project that focuses on transforming unstructured natural language documents into structured relational schemas and populating them with extracted data using Large Language Models (LLMs). The system provides error-aware query processing capabilities over unstructured data collections.
+The package is organized around stable pipeline stages:
 
-## 📋 Prerequisites
+- `preprocessing`
+- `schema_refinement`
+- `data_extraction`
+- `create_data_loader`
+- `run_pipeline`
 
-- **Python**: 3.10 or higher
-- **API Keys**: Required for cloud-based LLM providers (OpenAI, DeepSeek, etc.)
+## Installation
 
-## 🚀 Installation
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd ReDD_Dev
+python -m pip install -e .
 ```
 
-2. Install required dependencies:
+Requirements:
+
+- Python 3.10+
+- provider API keys for cloud-backed runs
+- optional CUDA for local-model and correction workflows
+
+## Quick Start
+
+Installable CLI entry points:
+
 ```bash
-pip install -r requirements.txt
+redd schemagen --config configs/schemagen.yaml --exp spider_4d1_1
+redd datapop --config configs/datapop_cogito32b.yaml --exp wine
+redd correction --config configs/datapop_cogito32b.yaml --exp wine
 ```
 
-## 🔧 Configuration
+Equivalent module/script entry points:
 
-Configuration files are located in the `configs/` directory. Each configuration file follows the pattern `{component}_{model}.yaml`:
+```bash
+python -m redd datapop --config configs/datapop_cogito32b.yaml --exp wine
+python scripts/main_datapop.py --config configs/datapop_cogito32b.yaml --exp wine
+```
 
-- `schemagen.yaml` - Schema generation with ChatGPT
-- `schemagen_deepseek.yaml` - Schema generation with DeepSeek
-- `datapop_deepseek.yaml` - Data population with DeepSeek
-- `datapop_qwen3.yaml` - Data population with Qwen models
+Repository scripts in `scripts/` are thin wrappers over the same CLI and follow the same argument contract.
 
-### Example Configuration Structure
+## Public Python API
+
+```python
+from redd import (
+    SchemaGenerator,
+    DataPopulator,
+    preprocessing,
+    schema_global,
+    schema_refine,
+    schema_refinement,
+    data_extraction,
+    create_data_loader,
+    run_pipeline,
+)
+```
+
+Example:
+
+```python
+from redd import DataPopulator, SchemaGenerator, run_pipeline
+
+schema = SchemaGenerator.from_experiment("configs/schemagen.yaml", "spider_4d1_1")
+datapop = DataPopulator.from_experiment("configs/datapop_cogito32b.yaml", "wine")
+
+results = run_pipeline(
+    schema_generator=schema,
+    data_populator=datapop,
+)
+```
+
+## Stage Responsibilities
+
+`preprocessing`
+
+- general schema discovery
+- adaptive sampling support
+- embeddings
+- retrieval index generation
+
+`schema_refinement`
+
+- query-aware schema generation
+- query-conditioned schema artifacts
+- optional `schema_tailor` refinement engine
+
+Schema helpers:
+
+- `schema_global`: direct query-independent schema extraction
+- `schema_refine`: query-specific schema extraction
+- `schema_tailor` is used as an internal refinement strategy under `schema_refine`
+
+`data_extraction`
+
+- optional doc filtering
+- table assignment
+- attribute extraction
+- result assembly
+- optional predicate proxy execution
+- optional proxy runtime orchestration
+- optional join-aware execution
+- optional alpha-allocation tuning
+- optional text-to-SQL adapter integration
+
+This division is intentional: `schema_refinement` owns schema-focused query conditioning, while execution-side optimizations such as doc filtering, predicate proxies, join resolution, proxy runtime orchestration, and alpha allocation live in `data_extraction`.
+
+Example datapop config knob:
+
 ```yaml
-default_settings: &default
-  data_main: "dataset/"
-  spider_path: "dataset/spider/"
-  mode: "cgpt"
-  out_main: "outputs/schema_gen/"
-  llm_model: "gpt-4o"
+doc_filter:
+  enabled: true
+  filter_type: schema_relevance
+  target_recall: 0.95
 ```
 
-## 📊 Usage
+Legacy config key `chunk_filter` is still accepted for backward compatibility, but new examples and outputs use `doc_filter` / `doc_filtering`.
 
-### Schema Generation
+## Stable Efficiency Module Surfaces
 
-Generate relational schemas from unstructured documents:
+The package exposes stable public surfaces for the first migration wave from `ReDD_Dev`:
+
+- `redd.embedding`
+- `redd.retrieval`
+- `redd.schema_global`
+- `redd.global_schema` (backward-compatible alias)
+- `redd.adaptive_sampling`
+- `redd.doc_filtering`
+- `redd.schema_refine`
+- `redd.schema_tailoring` (backward-compatible alias)
+- `redd.predicate_proxy`
+- `redd.join_resolution`
+- `redd.proxy_runtime`
+- `redd.parameter_optimization`
+- `redd.text_to_sql`
+
+`redd.text_to_sql` is an adapter boundary for external integrations, not a built-in text-to-SQL implementation.
+
+`ReDD_Dev` is still the incubator for future migrations such as evaluation, correction, and ablation-heavy research code, but the wave-1 efficiency surfaces above are now treated as stable package entry points.
+
+For internal organization, the repository now uses namespace packages that own these implementation areas directly:
+
+- `redd.optimizations.*` for optional efficiency modules only
+- `redd.proxy.*` for `predicate_proxy`, `join_resolution`, and `proxy_runtime`
+- `redd.correction` for correction and reliability workflows
+- `redd.exp.*` for evaluation and experiment-only families
+
+## Config Notes
+
+Configs live in `configs/` and are normalized through shared helpers in `src/redd/config.py`.
+
+Supported patterns:
+
+- legacy flat module configs
+- unified configs with shared top-level settings plus nested module sections
+
+For schema refinement, enabling:
+
+```yaml
+schema_tailor:
+  enabled: true
+```
+
+switches the refinement stage to the packaged schema-tailoring engine.
+
+For data extraction, enabling any of the following routes the run through the unified efficiency-aware datapop path:
+
+- `use_proxy_runtime: true`
+- `doc_filter.enabled: true`
+- `alpha_allocation.enabled: true`
+
+Stage-owned outputs and schema artifact injection are centralized in `src/redd/runtime.py`, so API calls and repository scripts resolve the same output directories and loader filemaps.
+
+## Repository Layout
+
+```text
+ReDD/
+├── configs/                 # experiment configs
+├── dataset/                 # local datasets
+├── papers/                  # papers and reports
+├── prompts/                 # source prompt templates
+├── scripts/                 # thin CLI wrappers
+├── src/redd/                # installable package
+│   ├── cli/                 # installable CLI entry points
+│   ├── core/                # remaining internal modules
+│   ├── optimizations/       # runtime home for optional optimizations
+│   ├── proxy/               # runtime home for proxy runtime modules
+│   ├── correction/          # correction/reliability namespace
+│   ├── exp/                 # evaluation/experiment namespace
+│   ├── resources/prompts/   # packaged prompt resources
+│   └── *.py                 # public stage/module surfaces
+├── tests/                   # package smoke tests
+└── pyproject.toml           # packaging metadata
+```
+
+## Development Notes
+
+- active package/library paths raise exceptions instead of terminating the interpreter
+- CLI wrappers are the only layer that should translate failures into process exit codes
+- prompt resolution supports packaged resources and no longer depends on the current working directory
+- `ReDD_Dev` remains the feature incubator for future migration waves; only the first package-ready wave is absorbed here
+
+## Development
+
+Install development tooling with:
 
 ```bash
-# General schema generation (no specific query)
-python scripts/main_schemagen.py --config configs/schemagen.yaml --exp spider_4d0_1 --api-key <YOUR_API_KEY>
-
-# Query-specific schema generation
-python scripts/main_schemagen.py --config configs/schemagen.yaml --exp spider_4d1_1 --api-key <YOUR_API_KEY>
+python -m pip install -e ".[dev]"
 ```
 
-### Data Population
-
-Extract and populate data from documents into generated schemas:
+Validation commands:
 
 ```bash
-# Run data population experiments
-python scripts/main_datapop.py --config configs/datapop.yaml --exp spider_1 --api-key <YOUR_API_KEY>
+python -m unittest discover -s tests -v
+ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_population/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/core/llm/providers.py tests
+mypy
+python -m build
 ```
 
-### Supported LLM Providers
+Additional project guidance lives in:
 
-| Provider | Mode | Models |
-|----------|------|---------|
-| OpenAI | `cgpt` | GPT-5, GPT-4o |
-| DeepSeek | `deepseek` | deepseek-chat |
-| TogetherAI | `together` | Various models |
-| SiliconFlow | `siliconflow` | Various models |
-| Local | `local` | Local model inference |
-
-## 📁 Project Structure
-
-```
-ReDD_Dev/
-├── configs/             # Configuration files
-├── core/                # Core functionality
-│   ├── data_population/  # Data extraction and population
-│   ├── schema_gen/       # Schema generation modules
-│   ├── evaluation/       # Evaluation frameworks
-│   ├── utils/            # Utility functions
-│   └── data_loader/      # Dataset loading utilities
-├── dataset/             # Dataset files (Spider, etc.)
-├── prompts/             # LLM prompt templates
-├── scripts/             # Entry point scripts
-├── outputs/             # Generated results
-└── logs/                # Execution logs
-```
-
-## 🗃️ Supported Datasets
-
-### Spider
-
-### 
-
-### 
-
-### 
-
-
-## 📈 Evaluation
-
-The project includes comprehensive evaluation tools:
-
-```bash
-# Run schema generation evaluation
-python scripts/main_schemagen.py --config configs/schemagen_deepseek.yaml --exp spider_4d0_1 --eval
-
-# Run data population evaluation
-python scripts/main_datapop.py --config configs/datapop_deepseek.yaml --exp spider_1 --eval
-```
-
-Evaluation metrics include:
-- **Schema Generation**: 
-- **Data Population**: 
-- **Error Analysis**: 
-
-## 🔬 Demo
-
-
-## 📝 Example Workflow
-
-
-## 🛠️ Development
-
-### Adding New LLM Providers
-
-1. Create a new module in `core/data_population/` or `core/schema_gen/`, which inherits from the appropriate base class
-2. Implement the class interface
-3. Add configuration support in YAML files
-4. Update the main scripts to handle the new provider
-
-### Custom Datasets
-
-1. Add dataset files to the `dataset/` directory
-2. 
-3. 
+- `CONTRIBUTING.md`
+- `docs/MODULE_CLASSIFICATION.md`
+- `docs/OPEN_SOURCE_READINESS.md`
