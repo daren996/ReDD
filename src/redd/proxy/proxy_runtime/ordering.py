@@ -59,7 +59,7 @@ class ProxyOrderingStats:
     different ordering strategies.
     """
 
-    num_guards: int
+    num_proxies: int
     average_cost: float
     average_pass_rate: float
 
@@ -104,13 +104,13 @@ def summarize_ordering(proxies: Iterable[ProxyLike]) -> ProxyOrderingStats:
     """
     proxy_list = list(proxies)
     if not proxy_list:
-        return ProxyOrderingStats(num_guards=0, average_cost=0.0, average_pass_rate=0.0)
+        return ProxyOrderingStats(num_proxies=0, average_cost=0.0, average_pass_rate=0.0)
 
     total_cost = sum(g.cost for g in proxy_list)
     total_pass_rate = sum(g.pass_rate for g in proxy_list)
 
     return ProxyOrderingStats(
-        num_guards=len(proxy_list),
+        num_proxies=len(proxy_list),
         average_cost=total_cost / len(proxy_list),
         average_pass_rate=total_pass_rate / len(proxy_list),
     )

@@ -183,7 +183,20 @@ def _extract_experiment_config(
     defaults = _extract_root_defaults(full_config, exp)
     module_name = canonicalize_module_name(module)
 
-    if module_name and isinstance(exp_config.get(module_name), Mapping):
+    module_section = None
+    if module_name:
+        candidate_keys = [
+            section_key
+            for section_key in MODULE_SECTION_KEYS
+            if canonicalize_module_name(section_key) == module_name
+        ]
+        for candidate_key in candidate_keys:
+            candidate_value = exp_config.get(candidate_key)
+            if isinstance(candidate_value, Mapping):
+                module_section = candidate_value
+                break
+
+    if module_section is not None:
         experiment_common = {
             key: deepcopy(value)
             for key, value in exp_config.items()
@@ -191,7 +204,7 @@ def _extract_experiment_config(
         }
         return _merge_dicts(
             _merge_dicts(defaults, experiment_common),
-            exp_config[module_name],
+            module_section,
         )
 
     return _merge_dicts(defaults, exp_config)

@@ -1,0 +1,52 @@
+{
+  "dataset": "spider_sqlite/apartment_rentals",
+  "task_db": "default_task/documents.db",
+  "schema_db": "default_task/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q1": {
+      "query": "",
+      "sql": "",
+      "tables": [
+        "Apartment_Bookings",
+        "Apartment_Buildings",
+        "Apartment_Facilities",
+        "Apartments",
+        "Guests",
+        "View_Unit_Status"
+      ],
+      "attributes": [
+        "Apartment_Bookings.booking_status_code",
+        "Apartment_Bookings.booking_start_date",
+        "Apartment_Bookings.booking_end_date",
+        "Apartment_Bookings.apt_number",
+        "Apartment_Bookings.guest_first_name",
+        "Apartment_Bookings.guest_last_name",
+        "Apartment_Buildings.building_short_name",
+        "Apartment_Buildings.building_full_name",
+        "Apartment_Buildings.building_description",
+        "Apartment_Buildings.building_address",
+        "Apartment_Buildings.building_manager",
+        "Apartment_Buildings.building_phone",
+        "Apartment_Facilities.facility_code",
+        "Apartment_Facilities.apt_number",
+        "Apartments.apt_type_code",
+        "Apartments.apt_number",
+        "Apartments.bathroom_count",
+        "Apartments.bedroom_count",
+        "Apartments.room_count",
+        "Apartments.building_short_name",
+        "Apartments.building_full_name",
+        "Guests.gender_code",
+        "Guests.guest_first_name",
+        "Guests.guest_last_name",
+        "Guests.date_of_birth",
+        "View_Unit_Status.status_date",
+        "View_Unit_Status.available_yn",
+        "View_Unit_Status.apt_number",
+        "View_Unit_Status.booking_start_date",
+        "View_Unit_Status.booking_end_date"
+      ]
+    }
+  }
+}

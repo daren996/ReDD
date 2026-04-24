@@ -1,0 +1,38 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "subscription_type == 'Subscriber'",
+        "zip_code == 94107",
+        "start_station_name contains 'Harry Bridges Plaza'"
+      ],
+      "optimal_order": [
+        "start_station_name contains 'Harry Bridges Plaza'",
+        "zip_code == 94107",
+        "subscription_type == 'Subscriber'"
+      ],
+      "token_cost": 87175,
+      "sql": "SELECT * FROM trip WHERE subscription_type = 'Subscriber' AND zip_code = 94107 AND start_station_name LIKE '%Harry Bridges Plaza%';",
+      "natural_language": "Find bike trips by subscribers from zip code 94107 that started at Harry Bridges Plaza.",
+      "attributes": ["subscription_type", "zip_code", "start_station_name"]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "subscription_type == 'Customer'",
+        "start_station_name contains 'Harry Bridges Plaza'",
+        "duration >= 600"
+      ],
+      "optimal_order": [
+        "start_station_name contains 'Harry Bridges Plaza'",
+        "subscription_type == 'Customer'",
+        "duration >= 600"
+      ],
+      "token_cost": 90037,
+      "sql": "SELECT * FROM trip WHERE subscription_type = 'Customer' AND start_station_name LIKE '%Harry Bridges Plaza%' AND duration >= 600;",
+      "natural_language": "Show customer (non-subscriber) trips from Harry Bridges Plaza that lasted at least 10 minutes.",
+      "attributes": ["subscription_type", "start_station_name", "duration"]
+    }
+  ]
+}

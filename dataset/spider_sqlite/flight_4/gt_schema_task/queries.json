@@ -1,0 +1,252 @@
+{
+  "dataset": "spider_sqlite/flight_4",
+  "task_db": "gt_schema_task/documents.db",
+  "schema_db": "gt_schema_task/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q1": {
+      "query": "List the names of all airlines that are active and operate routes from Amsterdam Airport Schiphol.",
+      "sql": "SELECT DISTINCT a.name FROM airlines a JOIN routes r ON a.name = r.airline_name WHERE a.active = 'Y' AND r.src_ap_name = 'Amsterdam Airport Schiphol';",
+      "tables": [
+        "airlines",
+        "routes"
+      ],
+      "attributes": [
+        "airlines.name",
+        "airlines.active",
+        "routes.airline_name",
+        "routes.src_ap_name"
+      ]
+    },
+    "Q2": {
+      "query": "Find all airports in Germany with an elevation greater than 100, and list their name, city, and elevation.",
+      "sql": "SELECT name, city, elevation FROM airports WHERE country = 'Germany' AND CAST(elevation AS INTEGER) > 100;",
+      "tables": [
+        "airports"
+      ],
+      "attributes": [
+        "airports.name",
+        "airports.city",
+        "airports.elevation",
+        "airports.country"
+      ]
+    },
+    "Q3": {
+      "query": "What are the names and ICAO codes of airports located in countries that also have active airlines?",
+      "sql": "SELECT DISTINCT a.name, a.icao FROM airports a WHERE a.country IN (SELECT DISTINCT al.country FROM airlines al WHERE al.active = 'Y');",
+      "tables": [
+        "airports",
+        "airlines"
+      ],
+      "attributes": [
+        "airports.name",
+        "airports.icao",
+        "airports.country",
+        "airlines.country",
+        "airlines.active"
+      ]
+    },
+    "Q4": {
+      "query": "Find the average elevation of airports for each country that has more than 5 airports.",
+      "sql": "SELECT country, AVG(CAST(elevation AS REAL)) AS avg_elevation FROM airports GROUP BY country HAVING COUNT(*) > 5;",
+      "tables": [
+        "airports"
+      ],
+      "attributes": [
+        "airports.country",
+        "airports.elevation"
+      ]
+    },
+    "Q5": {
+      "query": "List airlines which do not have an IATA code and are inactive.",
+      "sql": "SELECT name FROM airlines WHERE iata = '' AND active = 'N';",
+      "tables": [
+        "airlines"
+      ],
+      "attributes": [
+        "airlines.name",
+        "airlines.iata",
+        "airlines.active"
+      ]
+    },
+    "Q6": {
+      "query": "Find the destination airport names and countries for routes operated by 'KLM Royal Dutch Airlines' where the source airport country is 'Netherlands'.",
+      "sql": "SELECT dst_ap_name, dst_ap_country FROM routes WHERE airline_name = 'KLM Royal Dutch Airlines' AND src_ap_country = 'Netherlands';",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.dst_ap_name",
+        "routes.dst_ap_country",
+        "routes.airline_name",
+        "routes.src_ap_country"
+      ]
+    },
+    "Q7": {
+      "query": "What are the names of airports that serve as both source and destination airports for routes?",
+      "sql": "SELECT DISTINCT src_ap_name FROM routes INTERSECT SELECT DISTINCT dst_ap_name FROM routes;",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.src_ap_name",
+        "routes.dst_ap_name"
+      ]
+    },
+    "Q8": {
+      "query": "List the airlines that operate routes to both 'Philadelphia International Airport' and 'King Fahd International Airport'.",
+      "sql": "SELECT DISTINCT airline_name FROM routes WHERE dst_ap_name = 'Philadelphia International Airport' INTERSECT SELECT DISTINCT airline_name FROM routes WHERE dst_ap_name = 'King Fahd International Airport';",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.airline_name",
+        "routes.dst_ap_name"
+      ]
+    },
+    "Q9": {
+      "query": "Find the country with the most airports having an elevation greater than 500.",
+      "sql": "SELECT country FROM airports WHERE CAST(elevation AS INTEGER) > 500 GROUP BY country ORDER BY COUNT(*) DESC LIMIT 1;",
+      "tables": [
+        "airports"
+      ],
+      "attributes": [
+        "airports.country",
+        "airports.elevation"
+      ]
+    },
+    "Q10": {
+      "query": "Show the airline name and the number of routes where codeshare is 'Y' and the destination airport country is not the same as the source airport country.",
+      "sql": "SELECT airline_name, COUNT(*) FROM routes WHERE codeshare = 'Y' AND dst_ap_country != src_ap_country GROUP BY airline_name;",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.airline_name",
+        "routes.codeshare",
+        "routes.dst_ap_country",
+        "routes.src_ap_country"
+      ]
+    },
+    "Q11": {
+      "query": "Find the airlines that operate both international and domestic flights within 'China'.",
+      "sql": "SELECT DISTINCT airline_name FROM routes WHERE src_ap_country = 'China' AND dst_ap_country = 'China' INTERSECT SELECT DISTINCT airline_name FROM routes WHERE src_ap_country = 'China' AND dst_ap_country != 'China';",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.airline_name",
+        "routes.src_ap_country",
+        "routes.dst_ap_country"
+      ]
+    },
+    "Q12": {
+      "query": "List the city and airport name for airports that have a name containing the word 'International' and are located in 'United States'.",
+      "sql": "SELECT city, name FROM airports WHERE country = 'United States' AND name LIKE '%International%';",
+      "tables": [
+        "airports"
+      ],
+      "attributes": [
+        "airports.city",
+        "airports.name",
+        "airports.country"
+      ]
+    },
+    "Q13": {
+      "query": "Find airlines that have a callsign starting with 'A' and are active. Display their name and callsign.",
+      "sql": "SELECT name, callsign FROM airlines WHERE active = 'Y' AND callsign LIKE 'A%';",
+      "tables": [
+        "airlines"
+      ],
+      "attributes": [
+        "airlines.name",
+        "airlines.callsign",
+        "airlines.active"
+      ]
+    },
+    "Q14": {
+      "query": "List all the countries that have inactive airlines but active airports, displaying the country name.",
+      "sql": "SELECT DISTINCT a.country FROM airports a WHERE a.country IN (SELECT al.country FROM airlines al WHERE al.active = 'N') EXCEPT SELECT DISTINCT al.country FROM airlines al WHERE al.active = 'Y';",
+      "tables": [
+        "airports",
+        "airlines"
+      ],
+      "attributes": [
+        "airports.country",
+        "airlines.country",
+        "airlines.active"
+      ]
+    },
+    "Q15": {
+      "query": "Find the average elevation of airports that serve as a destination for routes originating from 'Amsterdam Airport Schiphol'.",
+      "sql": "SELECT AVG(CAST(a.elevation AS REAL)) FROM airports a JOIN routes r ON a.name = r.dst_ap_name WHERE r.src_ap_name = 'Amsterdam Airport Schiphol';",
+      "tables": [
+        "airports",
+        "routes"
+      ],
+      "attributes": [
+        "airports.elevation",
+        "airports.name",
+        "routes.dst_ap_name",
+        "routes.src_ap_name"
+      ]
+    },
+    "Q16": {
+      "query": "List the airline names that only operate routes where codeshare is 'Y'.",
+      "sql": "SELECT DISTINCT airline_name FROM routes EXCEPT SELECT DISTINCT airline_name FROM routes WHERE codeshare = 'None';",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.airline_name",
+        "routes.codeshare"
+      ]
+    },
+    "Q17": {
+      "query": "Find the number of routes for each airline, but only include airlines with a name that includes the word 'Air' and have more than 5 routes.",
+      "sql": "SELECT airline_name, COUNT(*) FROM routes WHERE airline_name LIKE '%Air%' GROUP BY airline_name HAVING COUNT(*) > 5;",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.airline_name"
+      ]
+    },
+    "Q18": {
+      "query": "Find the average X and Y coordinates of airports in countries that start with the letter 'U'.",
+      "sql": "SELECT AVG(CAST(x AS REAL)), AVG(CAST(y AS REAL)) FROM airports WHERE country LIKE 'U%';",
+      "tables": [
+        "airports"
+      ],
+      "attributes": [
+        "airports.x",
+        "airports.y",
+        "airports.country"
+      ]
+    },
+    "Q19": {
+      "query": "List the countries which have airports but no active airlines.",
+      "sql": "SELECT DISTINCT country FROM airports EXCEPT SELECT DISTINCT country FROM airlines WHERE active = 'Y';",
+      "tables": [
+        "airports",
+        "airlines"
+      ],
+      "attributes": [
+        "airports.country",
+        "airlines.country",
+        "airlines.active"
+      ]
+    },
+    "Q20": {
+      "query": "What are the names of the destination airports that have routes from both 'Netherlands' and 'China'?",
+      "sql": "SELECT DISTINCT dst_ap_name FROM routes WHERE src_ap_country = 'Netherlands' INTERSECT SELECT DISTINCT dst_ap_name FROM routes WHERE src_ap_country = 'China';",
+      "tables": [
+        "routes"
+      ],
+      "attributes": [
+        "routes.dst_ap_name",
+        "routes.src_ap_country"
+      ]
+    }
+  }
+}

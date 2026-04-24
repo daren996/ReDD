@@ -7,6 +7,11 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
+from redd.proxy.proxy_runtime.config import (
+    normalize_proxy_runtime_config,
+    resolve_proxy_flag,
+    resolve_proxy_threshold,
+)
 from ...utils.constants import (
     NULL_VALUE,
     RESULT_TABLE_KEY,
@@ -30,35 +35,6 @@ from redd.proxy.proxy_runtime.pipeline import ProxyPipeline
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
 
 __all__ = ["ProxyRuntimeExtractionStrategy"]
-
-
-def _resolve_proxy_flag(
-    proxy_cfg: Dict[str, Any],
-    primary_key: str,
-    legacy_key: str,
-    default: bool,
-) -> bool:
-    """Read proxy config while preserving legacy guard-key compatibility."""
-    return bool(proxy_cfg.get(primary_key, proxy_cfg.get(legacy_key, default)))
-
-
-def _resolve_proxy_threshold(
-    proxy_cfg: Dict[str, Any],
-    datapop_config: Dict[str, Any],
-) -> float:
-    """Prefer proxy-threshold naming while supporting guard-threshold aliases."""
-    return float(
-        proxy_cfg.get(
-            "proxy_threshold",
-            proxy_cfg.get(
-                "guard_threshold",
-                datapop_config.get(
-                    "proxy_threshold",
-                    datapop_config.get("guard_threshold", 0.5),
-                ),
-            ),
-        )
-    )
 
 
 class ProxyRuntimeExtractionStrategy:
@@ -86,11 +62,8 @@ class ProxyRuntimeExtractionStrategy:
         self.loader = loader
         self.api_key = api_key or datapop_config.get("api_key")
         self.train_doc_ids = list(train_doc_ids or [])
-        
-        proxy_cfg = datapop_config.get("proxy_runtime")
-        if not isinstance(proxy_cfg, dict):
-            legacy_proxy_config = datapop_config.get("ccg", {})
-            proxy_cfg = legacy_proxy_config if isinstance(legacy_proxy_config, dict) else {}
+
+        proxy_cfg = normalize_proxy_runtime_config(datapop_config)
         if "training_size" in proxy_cfg:
             raise ValueError(
                 "proxy_runtime.training_size is deprecated. "
@@ -104,30 +77,23 @@ class ProxyRuntimeExtractionStrategy:
             llm_model=proxy_cfg.get("llm_model", datapop_config.get("llm_model", "gemini-2.5-flash-lite")),
             api_key=self.api_key,
             embedding_model=proxy_cfg.get("embedding_model", "gemini-embedding-001"),
-            use_embedding_proxies=_resolve_proxy_flag(
-                proxy_cfg, "use_embedding_proxies", "use_embedding_guards", True
-            ),
-            use_learned_proxies=_resolve_proxy_flag(
-                proxy_cfg, "use_learned_proxies", "use_learned_guards", True
-            ),
-            use_finetuned_learned_proxies=_resolve_proxy_flag(
+            use_embedding_proxies=resolve_proxy_flag(proxy_cfg, "use_embedding_proxies", True),
+            use_learned_proxies=resolve_proxy_flag(proxy_cfg, "use_learned_proxies", True),
+            use_finetuned_learned_proxies=resolve_proxy_flag(
                 proxy_cfg,
                 "use_finetuned_learned_proxies",
-                "use_finetuned_learned_guards",
                 True,
             ),
             training_data_count=resolve_training_data_count(datapop_config),
             min_training_data=0,
             min_calibration_data=0,
-            proxy_threshold=_resolve_proxy_threshold(proxy_cfg, datapop_config),
+            proxy_threshold=resolve_proxy_threshold(proxy_cfg, datapop_config),
             target_recall=float(proxy_cfg.get("target_recall", datapop_config.get("target_recall", 0.95))),
             random_seed=int(proxy_cfg.get("random_seed", datapop_config.get("random_seed", 42))),
             save_hard_negatives=proxy_cfg.get("save_hard_negatives", False),
             verbose=proxy_cfg.get("verbose", False),
-            use_join_resolution=_resolve_proxy_flag(
-                proxy_cfg, "use_join_resolution", "use_join_guard", True
-            ),
-            join_extractor=proxy_cfg.get("join_extractor", proxy_cfg.get("join_guard_extractor", "llm")),
+            use_join_resolution=resolve_proxy_flag(proxy_cfg, "use_join_resolution", True),
+            join_extractor=proxy_cfg.get("join_extractor", "llm"),
             allow_train_test_overlap=proxy_cfg.get("allow_train_test_overlap", False),
             finetuned_model=proxy_cfg.get(
                 "finetuned_model", "knowledgator/gliclass-instruct-large-v1.0"

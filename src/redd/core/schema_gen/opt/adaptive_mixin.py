@@ -27,11 +27,11 @@ class AdaptiveSamplingMixin:
     - Statistics tracking and reporting
     
     Usage:
-        class SchemaGenWithAdaptive(AdaptiveSamplingMixin, SchemaGenGPT):
+        class SchemaGenWithAdaptive(AdaptiveSamplingMixin, SchemaGen):
             pass
     
-    Or simply add to existing class:
-        class SchemaGenGPT(SchemaGenBasic, AdaptiveSamplingMixin):
+    Or simply add to an existing schema generator:
+        class SchemaGen(AdaptiveSamplingMixin):
             ...
     """
     

@@ -56,7 +56,8 @@ class DataLoaderSQLite(DataLoaderBase):
         self, 
         data_root: str | Path, 
         *, 
-        filemap: Dict[str, str] | None = None
+        filemap: Dict[str, str] | None = None,
+        encoding: str = "utf-8",
     ):
         """
         Initialize the SQLite dataset loader.
@@ -67,14 +68,19 @@ class DataLoaderSQLite(DataLoaderBase):
         """
         super().__init__(data_root)
         self._filemap = {**self.DEFAULT_FILEMAP, **(filemap or {})}
+        self._encoding = encoding
 
         # Initialize SQLite mode
         self._init_sqlite_mode()
 
         # Load common data
         self._doc_info = self._read_json(self._path("doc_info"), self._encoding)
-        self._query_dict = self._read_json(self._path("queries"), self._encoding)
-        self._schema_general = self._read_json(self._path("schema_general"), self._encoding)
+        self._query_dict = self._normalize_query_dict(
+            self._read_json(self._path("queries"), self._encoding)
+        )
+        self._schema_general = self._normalize_schema_entries(
+            self._read_json(self._path("schema_general"), self._encoding)
+        )
 
     def _init_sqlite_mode(self):
         """Initialize for reading from SQLite database."""
@@ -237,7 +243,7 @@ class DataLoaderSQLite(DataLoaderBase):
 
     def load_schema_query(self, qid: str | int) -> List[Dict[str, Any]]:
         path = self._path("schema_query", qid=qid)
-        return self._read_json(path, self._encoding)
+        return self._normalize_schema_entries(self._read_json(path, self._encoding))
 
     # ---------------- SQLite-specific methods -------------------------
 
@@ -352,8 +358,64 @@ class DataLoaderSQLite(DataLoaderBase):
         """Re-read data from database (hot-reload support)."""
         self._init_sqlite_mode()
         self._doc_info = self._read_json(self._path("doc_info"), self._encoding)
-        self._query_dict = self._read_json(self._path("queries"), self._encoding)
-        self._schema_general = self._read_json(self._path("schema_general"), self._encoding)
+        self._query_dict = self._normalize_query_dict(
+            self._read_json(self._path("queries"), self._encoding)
+        )
+        self._schema_general = self._normalize_schema_entries(
+            self._read_json(self._path("schema_general"), self._encoding)
+        )
+
+    @staticmethod
+    def _normalize_query_dict(raw_query_dict: Any) -> Dict[str, Any]:
+        if isinstance(raw_query_dict, dict):
+            nested_queries = raw_query_dict.get("queries")
+            if isinstance(nested_queries, dict):
+                return nested_queries
+            return raw_query_dict
+        return {}
+
+    @staticmethod
+    def _normalize_schema_entries(raw_schema: Any) -> List[Dict[str, Any]]:
+        if isinstance(raw_schema, list):
+            return raw_schema
+
+        if isinstance(raw_schema, dict):
+            tables = raw_schema.get("tables")
+            if isinstance(tables, dict):
+                normalized: List[Dict[str, Any]] = []
+                for table_name, table_info in tables.items():
+                    if not isinstance(table_info, dict):
+                        continue
+
+                    raw_attributes = table_info.get("attributes") or {}
+                    attributes: List[Dict[str, Any]] = []
+                    if isinstance(raw_attributes, dict):
+                        for attr_name, attr_info in raw_attributes.items():
+                            description = ""
+                            if isinstance(attr_info, dict):
+                                description = str(attr_info.get("description", ""))
+                            elif attr_info is not None:
+                                description = str(attr_info)
+                            attributes.append(
+                                {
+                                    "Attribute Name": str(attr_name),
+                                    "Description": description,
+                                }
+                            )
+
+                    normalized.append(
+                        {
+                            "Schema Name": str(table_name),
+                            "Description": str(table_info.get("description", "")),
+                            "Attributes": attributes,
+                        }
+                    )
+                return normalized
+
+            if "Schema Name" in raw_schema:
+                return [raw_schema]
+
+        return []
 
     # ---------------- utility methods ---------------------------------
 

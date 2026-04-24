@@ -20,8 +20,7 @@ def validate_no_legacy_split_keys(config: Dict[str, Any]) -> None:
 
     Deprecated keys:
     - ``train_ratio`` (doc filtering)
-    - ``ccg.training_size`` (legacy proxy runtime)
-    - ``proxy_runtime.training_size`` (legacy proxy runtime)
+    - nested ``training_size`` keys inside legacy split sub-sections
     """
     legacy_paths: List[str] = []
 
@@ -31,7 +30,7 @@ def validate_no_legacy_split_keys(config: Dict[str, Any]) -> None:
                 cur_path = path + [str(key)]
                 if key == "train_ratio":
                     legacy_paths.append(".".join(cur_path))
-                if key == "training_size" and path and path[-1] in {"ccg", "proxy_runtime"}:
+                if key == "training_size" and path:
                     legacy_paths.append(".".join(cur_path))
                 _walk(value, cur_path)
         elif isinstance(node, list):

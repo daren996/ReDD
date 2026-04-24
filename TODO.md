@@ -18,7 +18,7 @@ This snapshot reflects the current repository state after the package/runtime bo
 - [x] `src/redd/` package root exists
 - [x] `pyproject.toml` exists
 - [x] installable CLI entry points exist through `pyproject.toml`
-- [x] public stage entry points exist:
+- [x] public package/API stage entry points exist:
   - `preprocessing`
   - `schema_refinement`
   - `data_extraction`
@@ -27,10 +27,12 @@ This snapshot reflects the current repository state after the package/runtime bo
 - [x] query-independent and query-specific schema entry points now exist explicitly as:
   - `schema_global`
   - `schema_refine`
-- [x] backward-compatible alias modules exist for old schema-facing names during the transition:
-  - `global_schema`
+- [x] backward-compatible schema-facing aliases remain available only at the public API/function layer during the transition:
   - `schema_refinement`
-  - `schema_tailoring`
+- [x] old module-level forwarding shims have been removed after the new naming propagated:
+  - `global_schema.py`
+  - `schema_refinement.py`
+  - `schema_tailoring.py`
 - [x] public package imports work at a basic level
 - [x] provider resolution is centralized behind a registry/factory
 - [x] prompt loading supports packaged resources instead of relying on the current working directory
@@ -51,7 +53,7 @@ This snapshot reflects the current repository state after the package/runtime bo
 
 - [ ] Treat the current package boundary cleanup as complete, but do **not** treat the internal module layout as final
 - [ ] Consolidate internals by **pipeline responsibility** rather than by provider, API vendor, or experiment lineage
-- [ ] Use `core/llm/` as the main home for provider-specific differences instead of scattering them across stage folders
+- [x] Use `src/redd/llm/` as the main home for provider-specific differences instead of scattering them across stage folders
 - [ ] Use backend adapters to separate `cloud` vs `local` execution, rather than separate stage implementations
 - [ ] Convert optional optimizations such as doc filtering, proxy execution, alpha allocation, and schema tailoring into composable strategies/plugins instead of alternate stage classes
 - [ ] Treat `ReDD_Dev` as the reference for useful algorithms, but not as the directory structure to copy literally
@@ -146,7 +148,7 @@ This section captures the next internal cleanup wave. The public package surface
 
 - one implementation per **stage**
 - optional optimizations as **composable submodules**
-- provider differences isolated in `core/llm/`
+- provider differences isolated in `src/redd/llm/`
 - dataset/storage differences isolated in `core/data_loader/`
 - evaluation/correction kept outside the primary runtime unless explicitly promoted
 
@@ -186,7 +188,7 @@ Layout rules:
 - [x] Stop creating separate stage modules just because the backend is `local` vs `API`
 - [ ] Stop encoding legacy research branches as peer stage implementations when they are really optional strategies inside a stage
 - [ ] Keep stage orchestrators thin: they should coordinate loaders, LLM backends, prompt runners, and optimization strategies instead of implementing backend-specific logic inline
-- [x] Move provider-specific request formatting, auth, retries, and model naming into `core/llm/`
+- [x] Move provider-specific request formatting, auth, retries, and model naming into `src/redd/llm/`
 - [ ] Keep future external integrations behind adapters, similar to `text_to_sql.py`, instead of letting third-party frameworks shape the package architecture
 
 ### Folder-by-folder consolidation plan
@@ -201,27 +203,27 @@ Current issue:
   - a thin factory: `factory.py`
   - a minimal internal export surface: `__init__.py`
   - support utilities and sub-strategies rather than provider-specific stage files
-- [ ] Keep the remaining work focused on making unified datapop thinner and more strategy-oriented, rather than continuing file proliferation
+- [x] Keep the remaining work focused on making unified datapop thinner and more strategy-oriented, rather than continuing file proliferation
 
 Desired direction:
 
 - [x] Make `datapop.py` the single canonical internal implementation of the data-extraction stage
 - [x] Keep `DataPopulator` and `data_extraction()` wired to that one orchestrator rather than conditionally selecting different stage classes
-- [x] Move provider choice entirely behind `core/llm/` and backend adapters
+- [x] Move provider choice entirely behind `src/redd/llm/` and backend adapters
 - [x] Treat `local` as a backend mode of unified datapop, not a separate `datapop_local.py` stage
 - [x] Treat legacy proxy execution as an optional extraction strategy, not a separate legacy branch file such as `datapop_ccg.py`
-- [ ] Treat `doc_filter`, `alpha_allocation`, and similar optimizations as optional pluggable strategies inside unified datapop
+- [x] Treat `doc_filter`, `alpha_allocation`, and similar optimizations as optional pluggable strategies inside unified datapop
 - [x] Reduce `factory.py` so it always returns the unified datapop orchestrator plus configured strategies/backends
 
 Concrete cleanup tasks:
 
-- [x] Collapse provider-specific datapop files into backend/provider configuration handled by `core/llm/`
+- [x] Collapse provider-specific datapop files into backend/provider configuration handled by `src/redd/llm/`
 - [x] Fold local execution into the unified datapop backend selection path
 - [x] Fold the legacy proxy branch into optional predicate-proxy / join-resolution / execution-policy hooks used by `datapop.py`
 - [x] Remove old base/API/provider datapop variants after the unified path stabilized
 - [x] Shrink `src/redd/core/data_population/__init__.py` so it no longer exports many legacy/populator-specific classes
 - [x] Treat `res_to_db.py` and other support helpers as utilities, not alternate datapop implementations
-- [ ] Continue extracting optional runtime features into explicit strategy modules under datapop instead of growing `datapop.py` further
+- [x] Continue extracting optional runtime features into explicit strategy modules under datapop instead of growing `datapop.py` further
 
 Desired end state:
 
@@ -234,31 +236,31 @@ Desired end state:
 
 Current issue:
 
-- [ ] Treat `schema_gen/` as a smaller version of the same problem seen in `data_population/`
-- [ ] Acknowledge that the folder still contains provider-split modules:
+- [x] Treat `schema_gen/` as a smaller version of the same problem seen in `data_population/`, then converge it on one canonical orchestrator
+- [x] Remove provider-split and base-class compatibility files so the folder is centered on:
   - one canonical implementation: `schemagen.py`
-  - one remaining compatibility alias: `schemagen_gpt.py`
-  - plus `schemagen_basic.py` and `factory.py`
+  - one thin factory: `factory.py`
+  - optional helpers under `opt/`
 
 Desired direction:
 
 - [x] Converge on one canonical schema-generation orchestrator, for example `schemagen.py` or a unified successor to the current main implementation
-- [x] Move provider-specific differences into `core/llm/` instead of `schema_gen/`
-- [ ] Keep adaptive semantic sampling as a composable optimization under schema generation, not a reason to fork provider-specific stage files
+- [x] Move provider-specific differences into `src/redd/llm/` instead of `schema_gen/`
+- [x] Keep adaptive semantic sampling as a composable optimization under schema generation, not a reason to fork provider-specific stage files
 - [x] Let `factory.py` resolve one generator implementation plus backend configuration, not one file per provider
 
 Concrete cleanup tasks:
 
-- [ ] Reduce schema-generation compatibility aliases to the minimum necessary set, then remove them after deprecation
-- [ ] Decide whether `schemagen_basic.py` is still needed as a reusable base class or should be replaced by a thinner internal protocol/base
+- [x] Reduce schema-generation compatibility aliases to the minimum necessary set, then remove them after deprecation
+- [x] Replace the old `schemagen_basic.py` split with a thinner unified `SchemaGen` implementation plus helpers
 - [x] Simplify `src/redd/core/schema_gen/__init__.py` so it stops exporting legacy/provider-specific generator classes
 - [x] Make the schema-generation folder match the same architectural rule as datapop: one stage orchestrator, many optional helpers
 
 Desired end state:
 
 - [x] One canonical schema-generation implementation
-- [x] Provider differences isolated in `core/llm/`
-- [ ] Adaptive sampling remains available without creating more generator variants
+- [x] Provider differences isolated in `src/redd/llm/`
+- [x] Adaptive sampling remains available without creating more generator variants
 
 #### Legacy proxy-module replacement plan
 
@@ -275,8 +277,8 @@ Current issue:
 
 Desired direction:
 
-- [ ] Remove the old `ccg` concept from public and internal architecture names
-- [ ] Remove the word `guard` from the product/runtime vocabulary
+- [x] Remove the old `ccg` concept from public and internal architecture names
+- [x] Remove legacy proxy-filter terminology from the product/runtime vocabulary
 - [x] Split the legacy proxy area into three clearer concepts:
   - `predicate_proxy`
   - `join_resolution`
@@ -290,21 +292,21 @@ Concrete cleanup tasks:
 - [x] Move predicate filtering/proxy logic under `predicate_proxy`
 - [x] Move join-aware logic under `join_resolution`
 - [x] Move execution ordering, calibration, orchestration, and runtime coordination under `proxy_runtime`
-- [x] Normalize `proxy_runtime` internals toward proxy naming and centralize legacy guard-key compatibility reads
+- [x] Normalize `proxy_runtime` internals toward proxy naming and centralize proxy configuration reads
 - [ ] Decide which legacy files are:
   - promotable into `predicate_proxy`
   - promotable into `join_resolution`
   - promotable into `proxy_runtime`
   - experiment-only and deletable from the package runtime path
-- [ ] Ensure public users think in terms of `predicate_proxy`, `join_resolution`, and `proxy_runtime`, never the old legacy label
+- [x] Ensure public users think in terms of `predicate_proxy`, `join_resolution`, and `proxy_runtime`, never the old legacy label
 - [x] Remove datapop-facing coupling to the old monolithic proxy branch path
-- [ ] Remove remaining legacy compatibility keys and comments such as `ccg`, `use_ccg`, `guard_threshold`, `use_embedding_guards`, and similar transitional wording
+- [ ] Remove remaining legacy compatibility keys and comments such as `proxy_threshold` aliases, old `ccg` toggles, and similar transitional wording
 - [x] Keep `gliclass_pretrain_data.py` and similar assets out of the stable runtime path unless explicitly needed for packaged training workflows
 
 Desired end state:
 
-- [ ] No `ccg` terminology remains in the product architecture
-- [ ] No `guard` terminology remains in the product architecture
+- [ ] No `ccg` terminology remains in configs, docs, comments, or compatibility keys
+- [ ] No legacy proxy-filter terminology remains in configs, docs, comments, or compatibility keys
 - [x] `predicate_proxy` owns predicate-level proxy logic
 - [x] `join_resolution` owns join-aware resolution logic
 - [x] `proxy_runtime` owns proxy orchestration, ordering, calibration, and runtime composition
@@ -351,7 +353,7 @@ Required cleanup:
   - dataset-layout differences
   - dataset-specific quirks that may not deserve a dedicated loader class
 - [ ] Decide whether loaders such as `data_loader_cuad.py` should remain standalone or become profiles/adapters over a more general loader
-- [ ] Keep `create_data_loader()` as the stable factory boundary
+- [x] Keep `create_data_loader()` as the stable factory boundary
 - [ ] Avoid letting loader proliferation turn into the same anti-pattern seen in provider-specific stage modules
 - [ ] Document which loaders are truly distinct and which exist only because of historical experiment setup
 
@@ -365,8 +367,8 @@ Desired end state:
 - [x] Treat `schema_tailor/` as a sub-strategy of query-specific schema refinement, not as a parallel stage family
 - [ ] Keep `schema_tailor.py` focused on refinement-specific transformations
 - [ ] Avoid expanding `schema_tailor/` into another provider/backend split area
-- [x] Route new public usage through `schema_refine` while keeping `schema_refinement` and `schema_tailoring` as backward-compatible compatibility layers
-- [ ] Remove compatibility forwarding layers once downstream imports have been migrated and documented deprecation windows have passed
+- [x] Route new public usage through `schema_refine` and remove the obsolete top-level forwarding layers
+- [x] Remove compatibility forwarding layers from the package once the new public names have stabilized
 
 #### `src/redd/core/doc_chunking/`
 
@@ -379,34 +381,34 @@ Current status:
 Follow-up cleanup:
 
 - [ ] Audit the repository for remaining user-facing docs or comments that still use the old `chunking` module path when they really mean `doc_chunking`
-- [ ] Decide whether doc chunking should stay a pure internal utility family or gain a stable public façade in a later wave
+- [x] Decide that doc chunking stays a pure internal utility family for now rather than gaining a stable public façade in this wave
 - [ ] Keep chunking-specific storage/output assumptions from leaking into unrelated stage APIs
 
-#### `src/redd/core/embedding/` and `src/redd/core/llm/`
+#### `src/redd/embedding/` and `src/redd/llm/`
 
 Desired role:
 
-- [ ] Treat `embedding/` and `llm/` as the right places for backend/provider normalization
-- [ ] Keep model/provider naming, auth, client creation, retry policy, and backend dispatch here instead of in stage folders
-- [ ] Use these folders to absorb the complexity that should be removed from `data_population/` and `schema_gen/`
+- [x] Treat `embedding/` and `llm/` as the right places for backend/provider normalization
+- [x] Keep model/provider naming, auth, client creation, retry policy, and backend dispatch here instead of in stage folders
+- [x] Use these folders to absorb the complexity that should be removed from `data_population/` and `schema_gen/`
 
 Concrete tasks:
 
-- [ ] Expand `core/llm/` so stage modules can depend on one normalized model-execution interface
+- [ ] Expand `src/redd/llm/` so stage modules can depend on one normalized model-execution interface
 - [ ] Decide whether embeddings and LLMs should share common backend/runtime helpers
 - [ ] Keep the public API provider-agnostic even if internal adapters vary significantly
 
-#### `src/redd/core/evaluation/` and `src/redd/core/correction/`
+#### `src/redd/exp/` and `src/redd/correction/`
 
 - [ ] Keep evaluation and correction modules out of the primary pipeline stage surface for now
 - [ ] Treat them as separate workflow families until they earn promotion into the stable package API
 - [ ] Prevent these folders from leaking research/training assumptions into runtime package dependencies
 - [ ] When promoting anything from these folders later, expose it as a clearly separate subsystem rather than bloating `preprocessing`, `schema_refinement`, or `data_extraction`
 - [x] Add forward-looking `src/redd/correction/` and `src/redd/exp/` namespaces so future migrations do not continue targeting `src/redd/core/`
-- [x] Move the main evaluation implementation behind `src/redd/exp/` and leave `src/redd/core/evaluation/` as a compatibility layer
-- [x] Move foundational correction modules toward `src/redd/correction/` and leave legacy `src/redd/core/correction/` imports as compatibility paths
-- [x] Move the main correction training/evaluation loaders behind `src/redd/correction/` and leave `src/redd/core/correction/` as compatibility paths
-- [x] Move ensemble-analysis helpers behind `src/redd/correction/` and leave `src/redd/core/correction/` as compatibility paths
+- [x] Move the main evaluation implementation behind `src/redd/exp/` and remove the obsolete `src/redd/core/evaluation/` compatibility layer
+- [x] Move foundational correction modules toward `src/redd/correction/` and remove the obsolete `src/redd/core/correction/` compatibility paths
+- [x] Move the main correction training/evaluation loaders behind `src/redd/correction/` and remove the obsolete `src/redd/core/correction/` compatibility paths
+- [x] Move ensemble-analysis helpers behind `src/redd/correction/` and remove the obsolete `src/redd/core/correction/` compatibility paths
 - [ ] Continue moving remaining correction-oriented modules toward `src/redd/correction/`
 - [ ] Move evaluation and experiment-oriented modules toward `src/redd/exp/`
 
@@ -458,10 +460,9 @@ Concrete tasks:
   - `doc_chunking`
   - `embedding`
   - `retrieval`
-  - `global_schema`
+  - `schema_global`
   - `adaptive_sampling`
   - `doc_filtering`
-  - `schema_tailoring`
   - `predicate_proxy`
   - `join_resolution`
   - `proxy_runtime`
@@ -473,10 +474,9 @@ Concrete tasks:
 - [x] Stable public package surfaces now exist for:
   - `embedding`
   - `retrieval`
-  - `global_schema`
+  - `schema_global`
   - `adaptive_sampling`
   - `doc_filtering`
-  - `schema_tailoring`
   - `predicate_proxy`
   - `join_resolution`
   - `proxy_runtime`
@@ -484,7 +484,7 @@ Concrete tasks:
   - `text_to_sql`
 - [x] `schema_global` exists as the explicit query-independent schema entry point
 - [x] `schema_refine` exists as the explicit query-specific schema entry point
-- [x] `schema_refinement` remains available as a backward-compatible alias during the transition
+- [x] `schema_refinement` remains available as a backward-compatible public API alias during the transition
 - [x] `data_extraction` is the stable stage that consumes execution-side optimization modules
 - [x] `ReDD_Dev` should still be treated as the source of future migration candidates, not as something already fully absorbed
 
@@ -498,7 +498,7 @@ Concrete tasks:
   - adaptive semantic sampling support
 - [x] Define `schema_global` as the direct helper API for query-independent schema extraction
 - [x] Define `schema_refine` as the direct helper API for query-aware schema extraction
-- [x] Keep `schema_refinement` as a compatibility alias over `schema_refine` during migration
+- [x] Keep `schema_refinement` as a public API compatibility alias over `schema_refine` during migration
 - [x] Define query-aware schema refinement as responsible for:
   - query-conditioned schema generation
   - query-conditioned schema artifacts
@@ -551,7 +551,7 @@ Concrete tasks:
 ### Source layout
 
 - [x] Move package code under `src/redd/`
-- [ ] Ensure imports work after installation, not only from repo root
+- [x] Ensure imports work after installation, not only from repo root
 - [x] Include prompts/templates/resources as package data
 
 ### CLI
@@ -575,59 +575,59 @@ Concrete tasks:
 
 ### Packaging validation
 
-- [ ] Verify `pip install -e .`
-- [ ] Verify `python -m build`
+- [x] Verify `pip install -e .`
+- [x] Verify `python -m build`
 - [ ] Verify wheel install in a clean environment
-- [ ] Verify package resources are available after installation
+- [x] Verify package resources are available after installation
 
 ## P1 Quality and Tests
 
 ### Test baseline
 
 - [ ] Create a consistent `tests/` layout
-- [x] Add `pytest`
+- [ ] Promote `pytest` to a first-class dev dependency and CI test runner
 - [x] Add a minimal smoke test for the main pipeline
 
 ### Priority test areas
 
-- [ ] Data loader tests
-- [ ] Config parsing tests
-- [ ] Prompt/resource loading tests
-- [ ] Provider factory tests
+- [x] Data loader tests
+- [x] Config parsing tests
+- [x] Prompt/resource loading tests
+- [x] Provider factory tests
 - [ ] Output format tests
-- [ ] Error handling tests
-- [ ] Preprocessing stage tests
-- [ ] Schema refinement stage tests
-- [ ] Data extraction stage tests
+- [x] Error handling tests
+- [x] Preprocessing stage tests
+- [x] Schema refinement stage tests
+- [x] Data extraction stage tests
 - [ ] Module migration regression tests for components imported from `ReDD_Dev`
 
 ### Tooling
 
-- [ ] Add formatting and linting tooling
-- [ ] Add basic type checking
-- [ ] Add CI to run lint, tests, and build checks
+- [x] Add formatting and linting tooling
+- [x] Add basic type checking
+- [x] Add CI to run lint, tests, and build checks
 
 ## P1 Open Source Readiness
 
 ### Repository health
 
-- [ ] Add `LICENSE`
-- [ ] Rewrite `README.md`
-- [ ] Add `CONTRIBUTING.md`
+- [x] Add `LICENSE`
+- [x] Rewrite `README.md`
+- [x] Add `CONTRIBUTING.md`
 - [ ] Add `SECURITY.md`
-- [ ] Add issue templates
-- [ ] Add pull request template
+- [x] Add issue templates
+- [x] Add pull request template
 - [ ] Add `.gitignore` cleanup if needed
 
 ### README content
 
-- [ ] Explain what ReDD does
-- [ ] Add quick start instructions
-- [ ] Add installation instructions
-- [ ] Add a minimal usage example
+- [x] Explain what ReDD does
+- [x] Add quick start instructions
+- [x] Add installation instructions
+- [x] Add a minimal usage example
 - [ ] Document supported providers and datasets
-- [ ] Document the pipeline stages and their responsibilities
-- [ ] Document which advanced efficiency modules are included from `ReDD_Dev`
+- [x] Document the pipeline stages and their responsibilities
+- [x] Document which advanced efficiency modules are included from `ReDD_Dev`
 - [ ] Document limitations and roadmap
 
 ### Open-source cleanup
@@ -635,7 +635,7 @@ Concrete tasks:
 - [ ] Audit the repository for secrets, local absolute paths, and personal environment assumptions
 - [ ] Decide what datasets, checkpoints, outputs, and generated artifacts can be public
 - [ ] Remove or relocate files that should not be shipped or published
-- [ ] Decide on the license before making the repository public
+- [x] Decide on the license before making the repository public
 
 ## P2 Web Demo
 
@@ -692,7 +692,7 @@ Concrete tasks:
 ### Versioning and release
 
 - [ ] Define versioning policy
-- [ ] Add GitHub Actions for test/build
+- [x] Add GitHub Actions for test/build
 - [ ] Add GitHub Actions for release
 - [ ] Test publishing on TestPyPI
 - [ ] Configure PyPI Trusted Publishing
@@ -705,24 +705,24 @@ These are the best next steps to execute first:
 - [x] Decide final package name
 - [x] Create `pyproject.toml`
 - [x] Create `src/redd/`
-- [x] Define the package stage entry points: `preprocessing`, `schema_refinement`, `data_extraction`, `create_data_loader`, `run_pipeline`
+- [x] Define the package/API stage entry points: `preprocessing`, `schema_refinement`, `data_extraction`, `create_data_loader`, `run_pipeline`
 - [x] Introduce explicit schema helper entry points: `schema_global`, `schema_refine`
 - [x] Rename `chunk_filtering` to `doc_filtering`
 - [x] Rename `chunking` to `doc_chunking`
 - [x] Create a provider factory
 - [x] Create a unified config loader
 - [x] Add baseline tests
-- [ ] Create the migration order for `ReDD_Dev` modules
-- [ ] Remove compatibility forwarding layers after the new schema/doc naming has fully propagated:
+- [x] Create the migration order for `ReDD_Dev` modules
+- [x] Remove compatibility forwarding layers after the new schema/doc naming has fully propagated:
   - `global_schema.py`
   - `schema_refinement.py`
   - `schema_tailoring.py`
-- [ ] Audit `src/redd/core/data_population/` and define the deletion/consolidation path toward one canonical `datapop.py`
-- [ ] Rewrite `src/redd/core/data_population/factory.py` so backend/strategy composition replaces provider-specific stage files
-- [ ] Shrink `src/redd/core/data_population/__init__.py` and stop exporting provider-specific/legacy datapop classes
-- [ ] Audit `src/redd/core/schema_gen/` and define the deletion/consolidation path toward one canonical schema-generation orchestrator
-- [ ] Rewrite `src/redd/core/schema_gen/factory.py` so provider resolution stays in `core/llm/`
-- [ ] Remove `ccg` naming entirely and split the remaining runtime into:
+- [x] Audit `src/redd/core/data_population/` and define the deletion/consolidation path toward one canonical `datapop.py`
+- [x] Rewrite `src/redd/core/data_population/factory.py` so backend/strategy composition replaces provider-specific stage files
+- [x] Shrink `src/redd/core/data_population/__init__.py` and stop exporting provider-specific/legacy datapop classes
+- [x] Audit `src/redd/core/schema_gen/` and define the deletion/consolidation path toward one canonical schema-generation orchestrator
+- [x] Rewrite `src/redd/core/schema_gen/factory.py` so provider resolution stays in `src/redd/llm/`
+- [x] Remove `ccg` naming entirely and split the remaining runtime into:
   - `predicate_proxy`
   - `join_resolution`
   - `proxy_runtime`

@@ -7,21 +7,13 @@ They are not a stable external API.
 from importlib import import_module
 
 __all__ = [
-    "SchemaGenBasic",
     "SchemaGen",
-    "AdaptiveSampler",
-    "SchemaEntropyCalculator",
-    "AdaptiveSamplingMixin",
     "create_schema_generator",
 ]
 
 
 _EXPORT_MAP = {
-    "SchemaGenBasic": ".schemagen_basic",
     "SchemaGen": ".schemagen",
-    "AdaptiveSampler": ".opt",
-    "SchemaEntropyCalculator": ".opt",
-    "AdaptiveSamplingMixin": ".opt",
     "create_schema_generator": ".factory",
 }
 

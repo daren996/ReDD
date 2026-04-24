@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from redd.config import resolve_repo_path
-from redd.core.llm import create_client, get_api_key, llm_completion, normalize_provider_name
+from redd.llm import create_client, get_api_key, llm_completion, normalize_provider_name
 
 
 def _get_package_prompt_root():

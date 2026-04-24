@@ -116,7 +116,7 @@ album_5d0_adaptive:
 Then run:
 
 ```bash
-python scripts/main_schemagen.py --config configs/schemagen_deepseek.yaml --exp album_5d0_adaptive
+python scripts/main_preprocessing.py --config configs/schemagen_deepseek.yaml --exp album_5d0_adaptive
 ```
 
 ### Integration into Custom Schema Generators
@@ -129,10 +129,10 @@ No code changes are needed - just enable it in the configuration!
 If you're creating a new schema generator, simply inherit from `AdaptiveSamplingMixin`:
 
 ```python
-from redd.core.schema_gen import SchemaGenBasic
+from redd.core.schema_gen import SchemaGen
 from redd.core.schema_gen.opt import AdaptiveSamplingMixin
 
-class MySchemaGen(AdaptiveSamplingMixin, SchemaGenBasic):
+class MySchemaGen(AdaptiveSamplingMixin, SchemaGen):
     def __init__(self, config):
         super().__init__(config)
         

@@ -3,7 +3,7 @@ Document Selector for Adaptive Sampling.
 
 This module implements efficient document selection using SQLite-backed embeddings.
 Uses farthest-from-mean strategy with an indexed embedding structure for O(1) lookups.
-Embeddings are loaded/generated via ``core.embedding.EmbeddingManager`` cache.
+Embeddings are loaded/generated via ``redd.embedding.EmbeddingManager`` cache.
 """
 
 import logging
@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional, Set
 
 import numpy as np
 
-from redd.core.embedding import EmbeddingManager
+from redd.embedding import EmbeddingManager
 
 
 class DocumentSelector:

@@ -1,26 +1,24 @@
 from copy import deepcopy
 import json
 import logging
+import os
 from pathlib import Path
 
 from redd.exceptions import ArtifactNotFoundError, ProcessingAbortedError, UnsupportedInputError
 
 from ..data_loader import create_data_loader
-from ..doc_clustering.doc_clustering import DocumentClustering
+from redd.embedding import DocumentClustering
 from ..utils import constants, output_utils
 from ..utils.constants import PATH_TEMPLATES
 from ..utils.progress import tqdm
 from ..utils.prompt_utils import create_prompt
 from .opt import AdaptiveSamplingMixin
-from .schemagen_basic import SchemaGenBasic
 
 
-class SchemaGen(AdaptiveSamplingMixin, SchemaGenBasic):
+class SchemaGen(AdaptiveSamplingMixin):
     """Canonical unified schema-generation orchestrator."""
 
     def __init__(self, config, api_key=None):
-        super().__init__(config)
-
         self.config = config
         self.mode = config["mode"]
 
@@ -233,6 +231,22 @@ class SchemaGen(AdaptiveSamplingMixin, SchemaGenBasic):
         logging.info(
             f"[{self.__class__.__name__}:process_documents] Finished processing documents in {res_path}"
         )
+
+    def save_results(self, res_path, res_dict, encoding="utf-8"):
+        os.makedirs(os.path.dirname(res_path), exist_ok=True)
+        with open(res_path, "w", encoding=encoding) as f:
+            json.dump(res_dict, f, indent=2)
+
+    def load_json(self, file_path, encoding="utf-8"):
+        with open(file_path, "r", encoding=encoding) as f:
+            return json.load(f)
+
+    def load_processed_res(self, res_path):
+        """Load processed results from <res_path>."""
+        res_dict = dict()
+        if os.path.exists(res_path):
+            res_dict = self.load_json(res_path)
+        return res_dict
 
     def process_single_document(self, input_json, retry_count, doc_index):
         """Process a single document and handle errors."""

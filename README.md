@@ -20,26 +20,41 @@ Requirements:
 
 - Python 3.10+
 - provider API keys for cloud-backed runs
-- optional CUDA for local-model and correction workflows
+- optional CUDA for local-model workflows
 
 ## Quick Start
 
 Installable CLI entry points:
 
 ```bash
-redd schemagen --config configs/schemagen.yaml --exp spider_4d1_1
-redd datapop --config configs/datapop_cogito32b.yaml --exp wine
-redd correction --config configs/datapop_cogito32b.yaml --exp wine
+redd preprocessing --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+redd schema-refinement --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+redd datapop --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
 ```
 
 Equivalent module/script entry points:
 
 ```bash
-python -m redd datapop --config configs/datapop_cogito32b.yaml --exp wine
-python scripts/main_datapop.py --config configs/datapop_cogito32b.yaml --exp wine
+python -m redd preprocessing --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+python scripts/main_preprocessing.py --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+python -m redd schema-refinement --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+python scripts/main_schema_refinement.py --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+python -m redd datapop --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+python scripts/main_datapop.py --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
 ```
 
 Repository scripts in `scripts/` are thin wrappers over the same CLI and follow the same argument contract.
+The primary CLI intentionally keeps the runtime path centered on the three pipeline stages above.
+
+Experiment-side and research-oriented workflows live under a separate namespace:
+
+```bash
+redd exp evaluation --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+python -m redd exp evaluation --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+python scripts/main_exp.py evaluation --config configs/siliconflow_qwen30B.yaml --exp wine_reddv0
+```
+
+This `redd exp ...` namespace is where future non-primary entry points such as text-to-SQL or query-execution workflows should be added.
 
 ## Public Python API
 
@@ -62,8 +77,8 @@ Example:
 ```python
 from redd import DataPopulator, SchemaGenerator, run_pipeline
 
-schema = SchemaGenerator.from_experiment("configs/schemagen.yaml", "spider_4d1_1")
-datapop = DataPopulator.from_experiment("configs/datapop_cogito32b.yaml", "wine")
+schema = SchemaGenerator.from_experiment("configs/siliconflow_qwen30B.yaml", "wine_reddv0")
+datapop = DataPopulator.from_experiment("configs/siliconflow_qwen30B.yaml", "wine_reddv0")
 
 results = run_pipeline(
     schema_generator=schema,
@@ -124,11 +139,9 @@ The package exposes stable public surfaces for the first migration wave from `Re
 - `redd.embedding`
 - `redd.retrieval`
 - `redd.schema_global`
-- `redd.global_schema` (backward-compatible alias)
 - `redd.adaptive_sampling`
 - `redd.doc_filtering`
 - `redd.schema_refine`
-- `redd.schema_tailoring` (backward-compatible alias)
 - `redd.predicate_proxy`
 - `redd.join_resolution`
 - `redd.proxy_runtime`
@@ -213,7 +226,7 @@ Validation commands:
 
 ```bash
 python -m unittest discover -s tests -v
-ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_population/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/core/llm/providers.py tests
+ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_population/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/llm/providers.py tests
 mypy
 python -m build
 ```

@@ -13,7 +13,7 @@ class PredicateProxyFilter(PredicateProxyBase):
         super().__init__(config)
 
     def filter(self, query_id: str, doc_ids: List[str], **kwargs) -> FilterResult:
-        # TODO: wire in actual CCG guard logic
+        # TODO: wire in actual predicate-proxy runtime logic
         return FilterResult(
             excluded_doc_ids=set(),
             metadata={

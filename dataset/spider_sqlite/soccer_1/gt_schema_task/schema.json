@@ -1,0 +1,671 @@
+{
+  "tables": {
+    "league": {
+      "description": "Football/soccer leagues from various European countries. Contains 8 leagues.",
+      "attributes": {
+        "country_name": {
+          "description": "Country where the league is based. Type: TEXT. Examples: 'Germany', 'England', 'Switzerland', 'Italy', 'Portugal'.",
+          "type": "TEXT",
+          "examples": [
+            "Germany",
+            "England",
+            "Switzerland",
+            "Italy",
+            "Portugal"
+          ]
+        },
+        "name": {
+          "description": "Full official name of the league. Type: TEXT. Examples: 'Germany 1. Bundesliga', 'England Premier League', 'Italy Serie A'.",
+          "type": "TEXT",
+          "examples": [
+            "Germany 1. Bundesliga",
+            "England Premier League",
+            "Switzerland Super League",
+            "Italy Serie A"
+          ]
+        }
+      }
+    },
+    "player": {
+      "description": "Basic biographical information about football/soccer players. Contains 98 players.",
+      "attributes": {
+        "birthday": {
+          "description": "Player's date of birth. Type: TEXT (YYYY-MM-DD HH:MM:SS format). Examples: '1980-11-25 00:00:00', '1992-03-30 00:00:00'.",
+          "type": "TEXT",
+          "examples": [
+            "1980-11-25 00:00:00",
+            "1983-04-29 00:00:00",
+            "1992-03-30 00:00:00"
+          ]
+        },
+        "height": {
+          "description": "Player's height in centimeters. Type: TEXT (decimal string). Examples: '182.88', '177.8', '187.96'.",
+          "type": "TEXT",
+          "examples": [
+            "182.88",
+            "177.8",
+            "187.96"
+          ]
+        },
+        "player_name": {
+          "description": "Full name of the player. Type: TEXT. Examples: 'Aaron Mokoena', 'Aco Stojkov', 'Abdoulaye Diallo'.",
+          "type": "TEXT",
+          "examples": [
+            "Aaron Mokoena",
+            "Aco Stojkov",
+            "Abdoulaye Diallo",
+            "Aaron Hughes"
+          ]
+        },
+        "weight": {
+          "description": "Player's weight in pounds. Type: TEXT (numeric string). Examples: '181', '165', '174', '154'.",
+          "type": "TEXT",
+          "examples": [
+            "181",
+            "165",
+            "174",
+            "187",
+            "154"
+          ]
+        }
+      }
+    },
+    "player_attributes": {
+      "description": "Detailed skill ratings and attributes for football/soccer players at a specific point in time, similar to FIFA game ratings. Contains 95 records.",
+      "attributes": {
+        "acceleration": {
+          "description": "Player's acceleration rating (0-100 scale). Type: TEXT (decimal string). How quickly the player reaches top speed.",
+          "type": "TEXT",
+          "examples": [
+            "50.0",
+            "60.0",
+            "82.0"
+          ]
+        },
+        "aggression": {
+          "description": "Player's aggression rating (0-100). Type: TEXT. Willingness to challenge for the ball.",
+          "type": "TEXT",
+          "examples": [
+            "69.0",
+            "63.0",
+            "59.0"
+          ]
+        },
+        "agility": {
+          "description": "Player's agility rating (0-100). Type: TEXT. Ability to change direction quickly.",
+          "type": "TEXT",
+          "examples": [
+            "63.0",
+            "59.0",
+            "81.0"
+          ]
+        },
+        "attacking_work_rate": {
+          "description": "Player's offensive work rate. Type: TEXT. Values include 'medium', 'high', 'low'.",
+          "type": "TEXT",
+          "examples": [
+            "medium"
+          ]
+        },
+        "balance": {
+          "description": "Player's balance rating (0-100). Type: TEXT. Ability to maintain stability under pressure.",
+          "type": "TEXT",
+          "examples": [
+            "45.0",
+            "65.0",
+            "92.0"
+          ]
+        },
+        "ball_control": {
+          "description": "Player's ball control rating (0-100). Type: TEXT. Ability to control and trap the ball.",
+          "type": "TEXT",
+          "examples": [
+            "62.0",
+            "49.0",
+            "67.0"
+          ]
+        },
+        "crossing": {
+          "description": "Player's crossing ability (0-100). Type: TEXT. Accuracy of crosses from wide positions.",
+          "type": "TEXT",
+          "examples": [
+            "57.0",
+            "49.0",
+            "65.0"
+          ]
+        },
+        "curve": {
+          "description": "Player's curve rating (0-100). Type: TEXT. Ability to curve the ball when passing or shooting.",
+          "type": "TEXT",
+          "examples": [
+            "38.0",
+            "45.0",
+            "68.0"
+          ]
+        },
+        "date": {
+          "description": "Date when these attribute ratings were recorded. Type: TEXT (YYYY-MM-DD HH:MM:SS). Examples: '2013-09-20 00:00:00'.",
+          "type": "TEXT",
+          "examples": [
+            "2013-09-20 00:00:00",
+            "2015-09-21 00:00:00",
+            "2014-12-12 00:00:00"
+          ]
+        },
+        "defensive_work_rate": {
+          "description": "Player's defensive work rate. Type: TEXT. Values include 'medium', 'high', 'low'.",
+          "type": "TEXT",
+          "examples": [
+            "medium"
+          ]
+        },
+        "dribbling": {
+          "description": "Player's dribbling ability (0-100). Type: TEXT. Skill at moving with the ball at feet.",
+          "type": "TEXT",
+          "examples": [
+            "56.0",
+            "51.0",
+            "66.0"
+          ]
+        },
+        "finishing": {
+          "description": "Player's finishing ability (0-100). Type: TEXT. Accuracy when shooting at goal from close range.",
+          "type": "TEXT",
+          "examples": [
+            "21.0",
+            "44.0",
+            "52.0"
+          ]
+        },
+        "free_kick_accuracy": {
+          "description": "Player's free kick accuracy (0-100). Type: TEXT. Precision when taking free kicks.",
+          "type": "TEXT",
+          "examples": [
+            "40.0",
+            "39.0",
+            "62.0"
+          ]
+        },
+        "gk_diving": {
+          "description": "Goalkeeper diving ability (0-100). Type: TEXT. Low values for non-goalkeepers.",
+          "type": "TEXT",
+          "examples": [
+            "14.0",
+            "6.0",
+            "15.0"
+          ]
+        },
+        "gk_handling": {
+          "description": "Goalkeeper handling ability (0-100). Type: TEXT. Ability to hold onto the ball after a save.",
+          "type": "TEXT",
+          "examples": [
+            "11.0",
+            "10.0"
+          ]
+        },
+        "gk_kicking": {
+          "description": "Goalkeeper kicking ability (0-100). Type: TEXT. Distance and accuracy of goal kicks.",
+          "type": "TEXT",
+          "examples": [
+            "12.0",
+            "10.0",
+            "11.0"
+          ]
+        },
+        "gk_positioning": {
+          "description": "Goalkeeper positioning ability (0-100). Type: TEXT. Ability to be in the right place.",
+          "type": "TEXT",
+          "examples": [
+            "11.0",
+            "8.0"
+          ]
+        },
+        "gk_reflexes": {
+          "description": "Goalkeeper reflexes (0-100). Type: TEXT. Reaction speed to close-range shots.",
+          "type": "TEXT",
+          "examples": [
+            "10.0",
+            "8.0",
+            "12.0"
+          ]
+        },
+        "heading_accuracy": {
+          "description": "Player's heading accuracy (0-100). Type: TEXT. Precision when heading the ball.",
+          "type": "TEXT",
+          "examples": [
+            "68.0",
+            "71.0",
+            "59.0",
+            "72.0"
+          ]
+        },
+        "interceptions": {
+          "description": "Player's interception ability (0-100). Type: TEXT. Ability to read and intercept passes.",
+          "type": "TEXT",
+          "examples": [
+            "62.0",
+            "41.0",
+            "54.0",
+            "77.0"
+          ]
+        },
+        "jumping": {
+          "description": "Player's jumping ability (0-100). Type: TEXT. Vertical leap height.",
+          "type": "TEXT",
+          "examples": [
+            "71.0",
+            "58.0",
+            "81.0"
+          ]
+        },
+        "long_passing": {
+          "description": "Player's long passing accuracy (0-100). Type: TEXT. Accuracy of long-range passes.",
+          "type": "TEXT",
+          "examples": [
+            "61.0",
+            "64.0",
+            "57.0"
+          ]
+        },
+        "long_shots": {
+          "description": "Player's long shot ability (0-100). Type: TEXT. Accuracy and power from distance.",
+          "type": "TEXT",
+          "examples": [
+            "29.0",
+            "35.0",
+            "56.0"
+          ]
+        },
+        "marking": {
+          "description": "Player's marking ability (0-100). Type: TEXT. Ability to track and stay close to opponents.",
+          "type": "TEXT",
+          "examples": [
+            "67.0",
+            "65.0",
+            "22.0",
+            "78.0"
+          ]
+        },
+        "overall_rating": {
+          "description": "Player's overall rating (0-100). Type: TEXT. Composite score of all abilities. Examples: '67.0', '62.0', '72.0'.",
+          "type": "TEXT",
+          "examples": [
+            "67.0",
+            "62.0",
+            "72.0"
+          ]
+        },
+        "penalties": {
+          "description": "Player's penalty kick taking ability (0-100). Type: TEXT.",
+          "type": "TEXT",
+          "examples": [
+            "37.0",
+            "48.0",
+            "60.0",
+            "44.0"
+          ]
+        },
+        "player_name": {
+          "description": "Full name of the player these attributes belong to. References player.player_name. Type: TEXT.",
+          "type": "TEXT",
+          "examples": [
+            "Aaron Galindo",
+            "Aaron Appindangoye",
+            "Aaron Doran",
+            "Aaron Hughes"
+          ]
+        },
+        "positioning": {
+          "description": "Player's attacking positioning (0-100). Type: TEXT. Ability to find space in the box.",
+          "type": "TEXT",
+          "examples": [
+            "26.0",
+            "45.0",
+            "67.0",
+            "28.0"
+          ]
+        },
+        "potential": {
+          "description": "Player's potential overall rating (0-100). Type: TEXT. Maximum rating the player could reach.",
+          "type": "TEXT",
+          "examples": [
+            "67.0",
+            "66.0",
+            "72.0"
+          ]
+        },
+        "preferred_foot": {
+          "description": "Player's preferred/dominant foot. Type: TEXT. Values: 'right' or 'left'.",
+          "type": "TEXT",
+          "examples": [
+            "right",
+            "left"
+          ]
+        },
+        "reactions": {
+          "description": "Player's reaction speed (0-100). Type: TEXT. How quickly the player responds to situations.",
+          "type": "TEXT",
+          "examples": [
+            "57.0",
+            "47.0",
+            "50.0",
+            "70.0"
+          ]
+        },
+        "short_passing": {
+          "description": "Player's short passing accuracy (0-100). Type: TEXT.",
+          "type": "TEXT",
+          "examples": [
+            "65.0",
+            "61.0",
+            "66.0",
+            "64.0"
+          ]
+        },
+        "shot_power": {
+          "description": "Player's shot power (0-100). Type: TEXT. Strength of shots.",
+          "type": "TEXT",
+          "examples": [
+            "65.0",
+            "55.0",
+            "60.0",
+            "47.0"
+          ]
+        },
+        "sliding_tackle": {
+          "description": "Player's sliding tackle ability (0-100). Type: TEXT.",
+          "type": "TEXT",
+          "examples": [
+            "66.0",
+            "69.0",
+            "21.0",
+            "74.0"
+          ]
+        },
+        "sprint_speed": {
+          "description": "Player's sprint speed (0-100). Type: TEXT. Maximum running speed.",
+          "type": "TEXT",
+          "examples": [
+            "48.0",
+            "64.0",
+            "80.0",
+            "40.0"
+          ]
+        },
+        "stamina": {
+          "description": "Player's stamina (0-100). Type: TEXT. Ability to maintain performance over full match.",
+          "type": "TEXT",
+          "examples": [
+            "39.0",
+            "54.0",
+            "72.0",
+            "62.0"
+          ]
+        },
+        "standing_tackle": {
+          "description": "Player's standing tackle ability (0-100). Type: TEXT.",
+          "type": "TEXT",
+          "examples": [
+            "69.0",
+            "66.0",
+            "21.0",
+            "72.0"
+          ]
+        },
+        "strength": {
+          "description": "Player's physical strength (0-100). Type: TEXT.",
+          "type": "TEXT",
+          "examples": [
+            "78.0",
+            "76.0",
+            "71.0",
+            "74.0"
+          ]
+        },
+        "vision": {
+          "description": "Player's vision (0-100). Type: TEXT. Ability to spot passing opportunities.",
+          "type": "TEXT",
+          "examples": [
+            "54.0",
+            "71.0",
+            "40.0"
+          ]
+        },
+        "volleys": {
+          "description": "Player's volley ability (0-100). Type: TEXT. Accuracy when striking the ball in mid-air.",
+          "type": "TEXT",
+          "examples": [
+            "48.0",
+            "44.0",
+            "51.0",
+            "32.0"
+          ]
+        }
+      }
+    },
+    "team": {
+      "description": "Football/soccer teams with short and long names. Contains 100 teams.",
+      "attributes": {
+        "team_long_name": {
+          "description": "Full official name of the team. Type: TEXT. Examples: 'Stoke City', 'Tottenham Hotspur', 'SC Bastia', 'Wolverhampton Wanderers'.",
+          "type": "TEXT",
+          "examples": [
+            "Stoke City",
+            "Tottenham Hotspur",
+            "SC Bastia",
+            "Wolverhampton Wanderers"
+          ]
+        },
+        "team_short_name": {
+          "description": "Abbreviated 3-letter code for the team. Type: TEXT. Examples: 'STK', 'TOT', 'BAS', 'WOL', 'MOU'.",
+          "type": "TEXT",
+          "examples": [
+            "STK",
+            "TOT",
+            "BAS",
+            "WOL",
+            "MOU"
+          ]
+        }
+      }
+    },
+    "team_attributes": {
+      "description": "Tactical and strategic attributes for football/soccer teams at a specific point in time, similar to FIFA game team ratings. Contains 22 records.",
+      "attributes": {
+        "buildUpPlayPassing": {
+          "description": "Build-up play passing rating (0-100). Type: TEXT (numeric string). How much the team relies on passing during build-up.",
+          "type": "TEXT",
+          "examples": [
+            "35",
+            "38",
+            "70",
+            "52"
+          ]
+        },
+        "buildUpPlayPassingClass": {
+          "description": "Classification of build-up passing style. Type: TEXT. Values: 'Mixed', 'Long', 'Short'.",
+          "type": "TEXT",
+          "examples": [
+            "Mixed",
+            "Long",
+            "Short"
+          ]
+        },
+        "buildUpPlayPositioningClass": {
+          "description": "Build-up play positional strategy. Type: TEXT. Values: 'Organised', 'Free Form'.",
+          "type": "TEXT",
+          "examples": [
+            "Organised",
+            "Free Form"
+          ]
+        },
+        "buildUpPlaySpeed": {
+          "description": "Build-up play speed rating (0-100). Type: TEXT (numeric string). How quickly the team transitions from defense to attack.",
+          "type": "TEXT",
+          "examples": [
+            "50",
+            "40",
+            "42",
+            "65"
+          ]
+        },
+        "buildUpPlaySpeedClass": {
+          "description": "Classification of build-up speed. Type: TEXT. Values: 'Balanced', 'Slow', 'Fast'.",
+          "type": "TEXT",
+          "examples": [
+            "Balanced",
+            "Slow",
+            "Fast"
+          ]
+        },
+        "chanceCreationCrossing": {
+          "description": "Chance creation crossing rating (0-100). Type: TEXT. Tendency to create chances via crosses.",
+          "type": "TEXT",
+          "examples": [
+            "50",
+            "65",
+            "54",
+            "45"
+          ]
+        },
+        "chanceCreationCrossingClass": {
+          "description": "Classification of crossing tendency. Type: TEXT. Values: 'Normal', 'Lots', 'Little'.",
+          "type": "TEXT",
+          "examples": [
+            "Normal",
+            "Lots",
+            "Little"
+          ]
+        },
+        "chanceCreationPassing": {
+          "description": "Chance creation passing rating (0-100). Type: TEXT. Tendency to create chances via passing.",
+          "type": "TEXT",
+          "examples": [
+            "70",
+            "67",
+            "57",
+            "45"
+          ]
+        },
+        "chanceCreationPassingClass": {
+          "description": "Classification of passing tendency in chance creation. Type: TEXT. Values: 'Normal', 'Risky', 'Safe'.",
+          "type": "TEXT",
+          "examples": [
+            "Normal",
+            "Risky",
+            "Safe"
+          ]
+        },
+        "chanceCreationPositioningClass": {
+          "description": "Positioning style in chance creation. Type: TEXT. Values: 'Organised', 'Free Form'.",
+          "type": "TEXT",
+          "examples": [
+            "Organised",
+            "Free Form"
+          ]
+        },
+        "chanceCreationShooting": {
+          "description": "Chance creation shooting rating (0-100). Type: TEXT. Tendency to shoot when creating chances.",
+          "type": "TEXT",
+          "examples": [
+            "60",
+            "67",
+            "40",
+            "70"
+          ]
+        },
+        "chanceCreationShootingClass": {
+          "description": "Classification of shooting tendency. Type: TEXT. Values: 'Normal', 'Lots', 'Little'.",
+          "type": "TEXT",
+          "examples": [
+            "Normal",
+            "Lots",
+            "Little"
+          ]
+        },
+        "date": {
+          "description": "Date when these team attributes were recorded. Type: TEXT (YYYY-MM-DD HH:MM:SS). Examples: '2010-02-22 00:00:00'.",
+          "type": "TEXT",
+          "examples": [
+            "2010-02-22 00:00:00",
+            "2011-02-22 00:00:00",
+            "2012-02-22 00:00:00"
+          ]
+        },
+        "defenceAggression": {
+          "description": "Defensive aggression rating (0-100). Type: TEXT. How aggressively the team defends.",
+          "type": "TEXT",
+          "examples": [
+            "50",
+            "57",
+            "53",
+            "65"
+          ]
+        },
+        "defenceAggressionClass": {
+          "description": "Classification of defensive aggression. Type: TEXT. Values: 'Press', 'Contain', 'Double'.",
+          "type": "TEXT",
+          "examples": [
+            "Press",
+            "Contain",
+            "Double"
+          ]
+        },
+        "defenceDefenderLineClass": {
+          "description": "Defender line strategy. Type: TEXT. Values: 'Cover', 'Offside Trap'.",
+          "type": "TEXT",
+          "examples": [
+            "Cover",
+            "Offside Trap"
+          ]
+        },
+        "defencePressure": {
+          "description": "Defensive pressure rating (0-100). Type: TEXT. How high up the pitch the team presses.",
+          "type": "TEXT",
+          "examples": [
+            "70",
+            "65",
+            "37"
+          ]
+        },
+        "defencePressureClass": {
+          "description": "Classification of defensive pressure level. Type: TEXT. Values: 'Medium', 'High', 'Deep'.",
+          "type": "TEXT",
+          "examples": [
+            "Medium",
+            "High",
+            "Deep"
+          ]
+        },
+        "defenceTeamWidth": {
+          "description": "Defensive team width rating (0-100). Type: TEXT. How wide the team spreads when defending.",
+          "type": "TEXT",
+          "examples": [
+            "70",
+            "63",
+            "45",
+            "30"
+          ]
+        },
+        "defenceTeamWidthClass": {
+          "description": "Classification of defensive width. Type: TEXT. Values: 'Normal', 'Wide', 'Narrow'.",
+          "type": "TEXT",
+          "examples": [
+            "Normal",
+            "Wide",
+            "Narrow"
+          ]
+        },
+        "team_long_name": {
+          "description": "Full name of the team these attributes belong to. References team.team_long_name. Type: TEXT.",
+          "type": "TEXT",
+          "examples": [
+            "RSC Anderlecht",
+            "Ajax",
+            "UD Almería"
+          ]
+        }
+      }
+    }
+  }
+}

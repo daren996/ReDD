@@ -426,6 +426,7 @@ class DataPopulator:
         config = deepcopy(self.config)
         impl = _build_data_populator_impl(config, api_key=self.api_key)
         summaries = []
+        schema_source = self._resolve_schema_source_mode(config)
 
         general_schema_root, general_schema_param = self._resolve_general_schema_source(
             schema_generator=schema_generator,
@@ -443,6 +444,7 @@ class DataPopulator:
         ):
             out_root.mkdir(parents=True, exist_ok=True)
             loader_config = self._build_loader_config(
+                schema_source=schema_source,
                 base_loader_config=config.get("data_loader_config"),
                 dataset=dataset,
                 general_schema_root=general_schema_root,
@@ -458,11 +460,23 @@ class DataPopulator:
                     "dataset": dataset,
                     "data_root": str(data_root),
                     "out_root": str(out_root),
+                    "schema_source": schema_source,
                     "loader_config": deepcopy(loader_config),
                 }
             )
 
         return summaries
+
+    @staticmethod
+    def _resolve_schema_source_mode(config: Mapping[str, Any]) -> str:
+        raw_value = str(config.get("schema_source", "generated")).strip().lower().replace("-", "_")
+        if raw_value in {"generated", "gen"}:
+            return "generated"
+        if raw_value in {"ground_truth", "gt"}:
+            return "ground_truth"
+        raise ValueError(
+            "Unsupported `schema_source`. Use `generated` or `ground_truth`."
+        )
 
     def _resolve_general_schema_source(
         self,
@@ -503,6 +517,7 @@ class DataPopulator:
     def _build_loader_config(
         self,
         *,
+        schema_source: str,
         base_loader_config: Mapping[str, Any] | None,
         dataset: str,
         general_schema_root: Path | None,
@@ -510,6 +525,14 @@ class DataPopulator:
         query_schema_root: Path | None,
         query_schema_param: str | None,
     ) -> dict[str, Any]:
+        if schema_source == "ground_truth":
+            loader_config = deepcopy(dict(base_loader_config or {}))
+            filemap = deepcopy(dict(loader_config.get("filemap") or {}))
+            filemap.setdefault("schema_general", "schema.json")
+            if filemap:
+                loader_config["filemap"] = filemap
+            return loader_config
+
         general_schema_source = None
         if general_schema_root and general_schema_param:
             general_schema_source = resolve_schema_artifact_source(

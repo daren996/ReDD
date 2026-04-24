@@ -45,7 +45,7 @@ from typing import (
 import numpy as np
 
 from redd.core.data_loader import DataLoaderBase, create_data_loader
-from redd.core.embedding import EmbeddingManager
+from redd.embedding import EmbeddingManager
 from redd.core.utils.sql_filter_parser import (
     SQLFilterParser,
     AttributePredicate,
@@ -116,13 +116,15 @@ class ProxyPipeline:
     def data_loader(self) -> DataLoaderBase:
         """Get or create data loader."""
         if self._data_loader is None:
-            doc_dir = self.config.dataset_path
+            dataset_root = Path(self.config.dataset_path)
             if self.config.task_db_name:
-                doc_dir = f"{doc_dir}/{self.config.task_db_name}"
+                dataset_root = dataset_root / self.config.task_db_name
+            if not dataset_root.is_absolute():
+                dataset_root = Path(self.config.data_main) / dataset_root
             self._data_loader = create_data_loader(
-                doc_dir=doc_dir,
+                data_root=dataset_root,
                 loader_type="sqlite",
-                config={"data_main": self.config.data_main}
+                loader_config={},
             )
             logging.info(f"[ProxyPipeline] Created data loader with "
                         f"{self._data_loader.num_docs} documents")
@@ -170,11 +172,6 @@ class ProxyPipeline:
             )
         return self._proxy_factory
 
-    @property
-    def guard_factory(self) -> PredicateProxyFactory:
-        """Backward-compatible alias for legacy proxy-factory naming."""
-        return self.proxy_factory
-    
     # ========================================================================
     # Loading Methods
     # ========================================================================
@@ -273,7 +270,7 @@ class ProxyPipeline:
         """
         Compute or load embeddings for a list of texts.
 
-        Uses the SQLite-backed EmbeddingManager from core.embedding.
+        Uses the SQLite-backed EmbeddingManager from `redd.embedding`.
         """
         del show_progress, use_cache  # kept for backward-compatible signature
 
@@ -391,7 +388,7 @@ class ProxyPipeline:
         
         # 10. Save results if output dir configured
         if self.config.output_dir:
-            output_path = Path(self.config.output_dir) / f"ccg_results_{self.config.query_id}.json"
+            output_path = Path(self.config.output_dir) / f"proxy_results_{self.config.query_id}.json"
             results.save(output_path)
         
         # Log summary
@@ -623,13 +620,13 @@ class ProxyPipeline:
         # Run proxy filtering
         proxy_start = time.time()
         if proxies:
-            executor = ProxyExecutor(guards=proxies, llm_oracle=None, config=ProxyRuntimeConfig(
+            executor = ProxyExecutor(proxies=proxies, llm_oracle=None, config=ProxyRuntimeConfig(
                 collect_hard_negatives=self.config.save_hard_negatives, verbose=self.config.verbose
             ))
             proxy_results, exec_stats = executor.process_batch(batch)
             results.execution_stats = exec_stats
             # Only documents that passed all configured proxies are in proxy_results.
-            passed_doc_ids = [r["doc_id"] for r in proxy_results if r.get("passed_guards", False)]
+            passed_doc_ids = [r["doc_id"] for r in proxy_results if r.get("passed_proxies", False)]
             learned_proxy_prefixes = ("learned_", "finetuned_", "llm_")
             has_learned_proxy = any(
                 str(getattr(proxy, "name", "")).startswith(learned_proxy_prefixes)
@@ -651,7 +648,7 @@ class ProxyPipeline:
 
                 if fallback_proxies:
                     fallback_executor = ProxyExecutor(
-                        guards=fallback_proxies,
+                        proxies=fallback_proxies,
                         llm_oracle=None,
                         config=ProxyRuntimeConfig(
                             collect_hard_negatives=self.config.save_hard_negatives,
@@ -661,7 +658,7 @@ class ProxyPipeline:
                     fallback_results, fallback_stats = fallback_executor.process_batch(batch)
                     results.execution_stats = fallback_stats
                     passed_doc_ids = [
-                        r["doc_id"] for r in fallback_results if r.get("passed_guards", False)
+                        r["doc_id"] for r in fallback_results if r.get("passed_proxies", False)
                     ]
                     logging.warning(
                         f"[ProxyPipeline] Fallback filtering kept {len(passed_doc_ids)}/{len(batch.doc_ids)} docs."
@@ -674,7 +671,7 @@ class ProxyPipeline:
             current_exec_stats = results.execution_stats
             if current_exec_stats and len(passed_doc_ids) != current_exec_stats.passed_to_oracle:
                 raise AssertionError(
-                    f"Guard filter mismatch: passed_doc_ids={len(passed_doc_ids)} "
+                    f"Proxy filter mismatch: passed_doc_ids={len(passed_doc_ids)} "
                     f"!= exec_stats.passed_to_oracle={current_exec_stats.passed_to_oracle}"
                 )
             if current_exec_stats and current_exec_stats.proxy_stats:
@@ -756,10 +753,6 @@ class ProxyPipeline:
                 return name[len(prefix):]
         return name
 
-    def _guard_attribute_name(self, proxy_name: str) -> str:
-        """Backward-compatible alias for the legacy helper name."""
-        return self._proxy_attribute_name(proxy_name)
-
     def _compute_per_proxy_target_recall(self, proxy_count: int) -> float:
         """
         Convert global target recall to per-proxy target recall.
@@ -779,10 +772,6 @@ class ProxyPipeline:
         alpha_i = alpha_global / count
         target_i = 1.0 - alpha_i
         return min(max(target_i, 0.0), 0.999)
-
-    def _compute_per_guard_target_recall(self, guard_count: int) -> float:
-        """Backward-compatible alias for the legacy helper name."""
-        return self._compute_per_proxy_target_recall(guard_count)
 
     def _recalibrate_learned_proxies(
         self,
@@ -869,25 +858,6 @@ class ProxyPipeline:
                 f"(positives={len(pos_scores)}, quantile={quantile:.4f})"
             )
 
-    def _recalibrate_learned_guards(
-        self,
-        guards: List[Any],
-        predicate_fns: Dict[str, Any],
-        calibration_doc_ids: List[str],
-        calibration_docs: List[str],
-        calibration_extractions: Dict[str, Dict[str, Any]],
-        calibration_embeddings: Optional[np.ndarray],
-    ) -> None:
-        """Backward-compatible alias for the legacy helper name."""
-        self._recalibrate_learned_proxies(
-            proxies=guards,
-            predicate_fns=predicate_fns,
-            calibration_doc_ids=calibration_doc_ids,
-            calibration_docs=calibration_docs,
-            calibration_extractions=calibration_extractions,
-            calibration_embeddings=calibration_embeddings,
-        )
-    
     def _get_extraction_attributes(
         self,
         query_info: Dict[str, Any],

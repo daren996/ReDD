@@ -54,12 +54,12 @@ class AdaptiveSamplingMixin:
     - Support for both entropy-based and DDGT algorithms
     
     Usage:
-        class SchemaGenWithAdaptive(AdaptiveSamplingMixin, SchemaGenGPT):
+        class SchemaGenWithAdaptive(AdaptiveSamplingMixin, SchemaGen):
             pass
     
-    Or simply add to existing class:
-    class SchemaGenGPT(SchemaGenBasic, AdaptiveSamplingMixin):
-        ...
+    Or simply add to an existing schema generator:
+        class SchemaGen(AdaptiveSamplingMixin):
+            ...
     """
 
     def _wait_if_paused_maybe(self, stage: str) -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 from importlib import import_module
 from typing import Any, Mapping
 
-from redd.core.llm import is_local_provider, normalize_provider_name
+from redd.llm import is_local_provider, normalize_provider_name
 
 
 def create_schema_generator(config: Mapping[str, Any], api_key: str | None = None):

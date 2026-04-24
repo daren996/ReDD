@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional, Set
 import numpy as np
 
 from redd.core.data_loader.data_loader_sqlite import DataLoaderSQLite
-from redd.core.embedding.manager import EmbeddingManager
+from redd.embedding import EmbeddingManager
 from redd.core.utils.conformal_calibration import (
     ConformalCalibrationResult,
     ConformalCalibrator,
@@ -49,9 +49,9 @@ class SchemaRelevanceFilter(DocFilterBase):
     
     Example:
         ```python
-        from core.doc_filtering import SchemaRelevanceFilter
-        from core.data_loader import DataLoaderSQLite
-        from core.embedding import EmbeddingManager
+        from redd.doc_filtering import SchemaRelevanceFilter
+        from redd.core.data_loader import DataLoaderSQLite
+        from redd.embedding import EmbeddingManager
         
         # Initialize
         loader = DataLoaderSQLite("dataset/spider_sqlite/bike_1/default_task")

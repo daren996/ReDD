@@ -28,13 +28,10 @@ import ast
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
-from .base import DataPopulator
-from redd.optimizations.doc_filtering import create_doc_filter
-from redd.optimizations.doc_filtering.runtime import (
-    normalize_doc_filter_config,
-    run_query_doc_filter,
+from redd.proxy.proxy_runtime.config import (
+    is_proxy_runtime_enabled,
+    normalize_proxy_runtime_config,
 )
-from redd.optimizations.alpha_allocation.datapop_adapter import DataPopAlphaAllocator
 from ..utils.constants import (
     NULL_VALUE,
     SCHEMA_NAME_KEY, ATTRIBUTES_KEY, ATTRIBUTE_NAME_KEY,
@@ -50,7 +47,12 @@ from ..data_loader import create_data_loader
 from ..utils.utils import is_none_value
 from ..utils.output_path import build_task_output_root
 from ..utils.data_split import resolve_training_data_count, split_doc_ids
-from .strategies import ProxyRuntimeExtractionStrategy
+from .base import DataPopulator
+from .strategies import (
+    AlphaAllocationStrategy,
+    DocFilteringStrategy,
+    ProxyRuntimeExtractionStrategy,
+)
 from ..utils.progress import tqdm
 from ..utils.prompt_utils import (
     create_prompt,
@@ -194,53 +196,14 @@ class DataPop(DataPopulator):
                     api_key=resolved_api_key,
                     config=config,
                 )
-            
+
             # Doc filter (optional): filter irrelevant docs before table assignment
-            self.doc_filter_config = normalize_doc_filter_config(
-                config.get("doc_filter")
-            )
-            proxy_runtime_config = config.get("proxy_runtime")
-            if not isinstance(proxy_runtime_config, dict):
-                legacy_proxy_config = config.get("ccg", {})
-                proxy_runtime_config = legacy_proxy_config if isinstance(legacy_proxy_config, dict) else {}
-            proxy_runtime_enabled = proxy_runtime_config.get("enabled")
-            if proxy_runtime_enabled is None:
-                proxy_runtime_enabled = proxy_runtime_config.get(
-                    "use_proxy_runtime",
-                    proxy_runtime_config.get(
-                        "use_ccg",
-                        config.get("use_proxy_runtime", config.get("use_ccg", False)),
-                    ),
-                )
-            self.use_proxy_runtime = bool(proxy_runtime_enabled)
-            self.doc_filter_enabled = bool(self.doc_filter_config.get("enabled", False))
-            self.doc_filter_only = bool(self.doc_filter_config.get("only", False))
-            self.doc_filter = None
-
-            if self.doc_filter_enabled:
-                self.doc_filter = create_doc_filter(self.doc_filter_config)
-                logging.info(
-                    f"[{self.__class__.__name__}:__init__] Doc filter enabled: "
-                    f"type={self.doc_filter_config.get('filter_type')}, "
-                    f"only={self.doc_filter_only}"
-                )
-            elif self.doc_filter_only:
-                logging.warning(
-                    f"[{self.__class__.__name__}:__init__] doc_filter.only=True but "
-                    "doc_filter.enabled=False. Ignoring only mode."
-                )
-                self.doc_filter_only = False
-
-            self.alpha_allocation_config = config.get("alpha_allocation", {})
-            self.alpha_allocation_enabled = bool(
-                isinstance(self.alpha_allocation_config, dict)
-                and self.alpha_allocation_config.get("enabled", False)
-            )
-            if self.alpha_allocation_enabled:
-                logging.info(
-                    f"[{self.__class__.__name__}:__init__] Alpha allocation enabled "
-                    f"(target_recall={self.alpha_allocation_config.get('target_recall', 0.95)})"
-                )
+            self.proxy_runtime_config = normalize_proxy_runtime_config(config)
+            self.use_proxy_runtime = is_proxy_runtime_enabled(config)
+            self.doc_filter_strategy = DocFilteringStrategy(config)
+            self.doc_filter_config = dict(self.doc_filter_strategy.config)
+            self.doc_filter_enabled = self.doc_filter_strategy.enabled
+            self.doc_filter_only = self.doc_filter_strategy.only
             
             logging.info(
                 f"[{self.__class__.__name__}:__init__] Initialized with mode: {self.mode}, "
@@ -327,24 +290,20 @@ class DataPop(DataPopulator):
             f"{len(selected_query_ids)} selected queries: {selected_query_ids}"
         )
 
-        alpha_allocator = None
-        if self.alpha_allocation_enabled and self.use_proxy_runtime:
-            alpha_allocator = DataPopAlphaAllocator(
-                datapop_config=self.config,
-                data_path=self.data_path,
-                loader=self.loader,
-                api_key=self.api_key,
-                train_doc_ids=self.train_doc_ids,
-            )
-        elif self.alpha_allocation_enabled and not self.use_proxy_runtime:
-            logging.warning(
-                f"[{self.__class__.__name__}:_process_dataset] alpha_allocation enabled "
-                "but proxy_runtime is disabled; skipping alpha allocation."
-            )
+        alpha_strategy = AlphaAllocationStrategy(
+            config=self.config,
+            data_path=self.data_path,
+            loader=self.loader,
+            api_key=self.api_key,
+            train_doc_ids=self.train_doc_ids,
+            proxy_runtime_enabled=self.use_proxy_runtime,
+        )
 
         for qid in selected_query_ids:
             self._wait_if_paused(f"query-{qid}")
             schema_query = self.loader.load_schema_query(qid)
+            if not schema_query:
+                schema_query = self.schema_general
             res_path = self.out_root / PATH_TEMPLATES.data_population_result(qid, self.param_str)
             res_data = self.load_processed_res(res_path)
             res_data = self._drop_training_results(res_data, res_path)
@@ -352,63 +311,48 @@ class DataPop(DataPopulator):
 
             doc_target_recall_override = None
             proxy_target_recall_override = None
-            if alpha_allocator is not None:
-                allocation_result = alpha_allocator.allocate_for_query(
-                    query_id=qid,
-                    schema_query=schema_query,
+            allocation_result = alpha_strategy.allocate_for_query(
+                query_id=qid,
+                schema_query=schema_query,
+            )
+            if allocation_result is not None:
+                doc_target_recall_override = (
+                    allocation_result.target_recall_doc_filtering
                 )
-                if allocation_result is not None:
-                    doc_target_recall_override = (
-                        allocation_result.target_recall_doc_filtering
-                    )
-                    proxy_target_recall_override = (
-                        allocation_result.target_recall_predicate_proxy
-                    )
-                    logging.info(
-                        f"[{self.__class__.__name__}:_process_dataset] Query {qid} alpha allocation: "
-                        f"doc_target_recall={doc_target_recall_override:.4f}, "
-                        f"predicate_target_recall={proxy_target_recall_override:.4f}, "
-                        f"estimated_cost={allocation_result.estimated_cost:.4f}"
-                    )
+                proxy_target_recall_override = (
+                    allocation_result.target_recall_predicate_proxy
+                )
+                logging.info(
+                    f"[{self.__class__.__name__}:_process_dataset] Query {qid} alpha allocation: "
+                    f"doc_target_recall={doc_target_recall_override:.4f}, "
+                    f"predicate_target_recall={proxy_target_recall_override:.4f}, "
+                    f"estimated_cost={allocation_result.estimated_cost:.4f}"
+                )
 
             # Phase 0: Doc filtering (optional) - exclude schema-irrelevant docs
-            excluded_doc_ids: set = set()
-            doc_filter_config_for_query = dict(self.doc_filter_config)
-            doc_filter_for_query = self.doc_filter
-            if doc_target_recall_override is not None:
-                doc_filter_config_for_query["target_recall"] = float(
-                    doc_target_recall_override
+            excluded_doc_ids = self.doc_filter_strategy.excluded_doc_ids_for_query(
+                query_id=qid,
+                schema_query=schema_query,
+                loader=self.loader,
+                test_doc_ids=self.test_doc_ids,
+                train_doc_ids=self.train_doc_ids,
+                api_key=self.api_key,
+                out_root=self.out_root,
+                param_str=self.param_str,
+                save_results_fn=lambda p, d: self.save_results(str(p), d),
+                target_recall_override=doc_target_recall_override,
+            )
+            if excluded_doc_ids:
+                logging.info(
+                    f"[{self.__class__.__name__}:_process_dataset] Phase 0: Doc filter excluded "
+                    f"{len(excluded_doc_ids)} docs for query-{qid}"
                 )
-                if bool(doc_filter_config_for_query.get("enabled", False)):
-                    doc_filter_for_query = create_doc_filter(
-                        doc_filter_config_for_query
-                    )
-
-            if doc_filter_for_query is not None:
-                excluded_doc_ids = run_query_doc_filter(
-                    query_id=qid,
-                    schema_query=schema_query,
-                    loader=self.loader,
-                    test_doc_ids=self.test_doc_ids,
-                    train_doc_ids=self.train_doc_ids,
-                    doc_filter=doc_filter_for_query,
-                    doc_filter_config=doc_filter_config_for_query,
-                    api_key=self.api_key,
-                    out_root=self.out_root,
-                    param_str=self.param_str,
-                    save_results_fn=self.save_results,
+            if self.doc_filter_only:
+                logging.info(
+                    f"[{self.__class__.__name__}:_process_dataset] "
+                    f"doc_filter.only=True; skip Phase 1/2 for query-{qid}"
                 )
-                if excluded_doc_ids:
-                    logging.info(
-                        f"[{self.__class__.__name__}:_process_dataset] Phase 0: Doc filter excluded "
-                        f"{len(excluded_doc_ids)} docs for query-{qid}"
-                    )
-                if self.doc_filter_only:
-                    logging.info(
-                        f"[{self.__class__.__name__}:_process_dataset] "
-                        f"doc_filter.only=True; skip Phase 1/2 for query-{qid}"
-                    )
-                    continue
+                continue
 
             # Phase 1: Table assignment (save to same file after each doc)
             logging.info(f"[{self.__class__.__name__}:_process_dataset] Phase 1: Table assignment for query-{qid} -> {res_path}")
@@ -638,10 +582,7 @@ class DataPop(DataPopulator):
         datapop_config = self.config
         if predicate_target_recall is not None:
             datapop_config = copy.deepcopy(self.config)
-            proxy_cfg = datapop_config.get("proxy_runtime")
-            if not isinstance(proxy_cfg, dict):
-                legacy_proxy_config = datapop_config.get("ccg", {})
-                proxy_cfg = legacy_proxy_config if isinstance(legacy_proxy_config, dict) else {}
+            proxy_cfg = normalize_proxy_runtime_config(datapop_config)
             proxy_cfg["target_recall"] = float(predicate_target_recall)
             datapop_config["proxy_runtime"] = proxy_cfg
             datapop_config["target_recall"] = float(predicate_target_recall)

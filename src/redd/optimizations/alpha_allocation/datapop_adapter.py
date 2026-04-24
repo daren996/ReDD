@@ -8,11 +8,16 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from redd.core.embedding import EmbeddingManager
+from redd.embedding import EmbeddingManager
 from redd.core.utils.constants import SCHEMA_NAME_KEY
 from redd.core.utils.sql_filter_parser import group_predicates_by_table
 from redd.optimizations.doc_filtering import create_doc_filter
 from redd.optimizations.doc_filtering.runtime import normalize_doc_filter_config
+from redd.proxy.proxy_runtime.config import (
+    normalize_proxy_runtime_config,
+    resolve_proxy_flag,
+    resolve_proxy_threshold,
+)
 from redd.proxy.proxy_runtime.oracle import GoldenOracle
 from redd.proxy.proxy_runtime.pipeline import ProxyPipeline
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
@@ -24,35 +29,6 @@ from .types import (
     STAGE_DOC_FILTERING,
     STAGE_PREDICATE_PROXY,
 )
-
-
-def _resolve_proxy_flag(
-    proxy_cfg: Dict[str, Any],
-    primary_key: str,
-    legacy_key: str,
-    default: bool,
-) -> bool:
-    """Read proxy config while preserving legacy guard-key compatibility."""
-    return bool(proxy_cfg.get(primary_key, proxy_cfg.get(legacy_key, default)))
-
-
-def _resolve_proxy_threshold(
-    proxy_cfg: Dict[str, Any],
-    datapop_config: Dict[str, Any],
-) -> float:
-    """Prefer proxy-threshold naming while supporting guard-threshold aliases."""
-    return float(
-        proxy_cfg.get(
-            "proxy_threshold",
-            proxy_cfg.get(
-                "guard_threshold",
-                datapop_config.get(
-                    "proxy_threshold",
-                    datapop_config.get("guard_threshold", 0.5),
-                ),
-            ),
-        )
-    )
 
 
 class DataPopAlphaAllocator:
@@ -78,11 +54,7 @@ class DataPopAlphaAllocator:
         self.doc_filter_config = normalize_doc_filter_config(
             datapop_config.get("doc_filter")
         )
-        proxy_runtime_config = datapop_config.get("proxy_runtime")
-        if not isinstance(proxy_runtime_config, dict):
-            legacy_proxy_config = datapop_config.get("ccg", {})
-            proxy_runtime_config = legacy_proxy_config if isinstance(legacy_proxy_config, dict) else {}
-        self.proxy_runtime_config = proxy_runtime_config
+        self.proxy_runtime_config = normalize_proxy_runtime_config(datapop_config)
         self._query_cache: Dict[str, Dict[str, Any]] = {}
         self._embedding_managers: Dict[Tuple[str, str], EmbeddingManager] = {}
 
@@ -351,22 +323,17 @@ class DataPopAlphaAllocator:
             llm_model=proxy_cfg.get("llm_model", self.datapop_config.get("llm_model", "gemini-2.5-flash-lite")),
             api_key=self.api_key,
             embedding_model=proxy_cfg.get("embedding_model", "gemini-embedding-001"),
-            use_embedding_proxies=_resolve_proxy_flag(
-                proxy_cfg, "use_embedding_proxies", "use_embedding_guards", True
-            ),
-            use_learned_proxies=_resolve_proxy_flag(
-                proxy_cfg, "use_learned_proxies", "use_learned_guards", True
-            ),
-            use_finetuned_learned_proxies=_resolve_proxy_flag(
+            use_embedding_proxies=resolve_proxy_flag(proxy_cfg, "use_embedding_proxies", True),
+            use_learned_proxies=resolve_proxy_flag(proxy_cfg, "use_learned_proxies", True),
+            use_finetuned_learned_proxies=resolve_proxy_flag(
                 proxy_cfg,
                 "use_finetuned_learned_proxies",
-                "use_finetuned_learned_guards",
                 True,
             ),
             training_data_count=len(self.train_doc_ids),
             min_training_data=0,
             min_calibration_data=0,
-            proxy_threshold=_resolve_proxy_threshold(proxy_cfg, self.datapop_config),
+            proxy_threshold=resolve_proxy_threshold(proxy_cfg, self.datapop_config),
             target_recall=self._clip_target_recall(predicate_target_recall),
             random_seed=int(proxy_cfg.get("random_seed", self.datapop_config.get("random_seed", 42))),
             save_hard_negatives=False,

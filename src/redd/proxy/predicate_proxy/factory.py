@@ -18,7 +18,7 @@ try:
 except ImportError:
     SKLEARN_AVAILABLE = False
 
-from redd.core.embedding import EmbeddingManager
+from redd.embedding import EmbeddingManager
 from redd.core.utils.sql_filter_parser import AttributePredicate, predicates_to_filter_dict
 from redd.proxy.proxy_runtime.executor import ConformalProxy, EmbeddingProxy
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
@@ -50,13 +50,13 @@ def _generate_filter_description(
     fallback = f"Documents where {attr} {op} {val!r}."
     normalized_mode = str(mode or "").strip().lower()
     llm_modes = {"gemini", "cgpt", "deepseek", "together", "siliconflow"}
-    # In ground-truth / non-LLM modes, never require API keys for guard description.
+    # In ground-truth / non-LLM modes, never require API keys for proxy description.
     if normalized_mode in {"ground_truth", "gt", "disabled", "none", ""}:
         return fallback
     if normalized_mode not in llm_modes:
         return fallback
     try:
-        from redd.core.utils.prompt_utils import get_api_key, llm_completion
+        from redd.llm import get_api_key, llm_completion
         from openai import OpenAI
         try:
             key = get_api_key({"mode": mode}, mode, api_key)
@@ -113,20 +113,20 @@ class PredicateProxyFactory:
         expected_embedding_dim: Optional[int] = None
     ) -> List[Union[ConformalProxy, EmbeddingProxy]]:
         """
-        Create guards for the given predicates.
+        Create proxies for the given predicates.
         
         Args:
             predicates: List of attribute predicates
-            query_text: Query text for embedding-based guards
+            query_text: Query text for embedding-based proxies
             expected_embedding_dim: Dimension of document embeddings. If provided,
                 ensures query embedding matches (avoids mismatch with cached embeddings).
             
         Returns:
-            List of guard objects
+            List of proxy objects
         """
-        guards = []
+        proxies = []
         
-        # Create embedding-based guard for overall relevance
+        # Create embedding-based proxy for overall relevance
         if self.config.use_embedding_proxies:
             try:
                 logging.debug(f"[PredicateProxyFactory] Computing query embedding with model={self.config.embedding_model}")
@@ -143,22 +143,22 @@ class PredicateProxyFactory:
                         "This suggests document embeddings were created with a different model."
                     )
                 
-                relevance_guard = EmbeddingProxy(
+                relevance_proxy = EmbeddingProxy(
                     name="query_relevance",
                     query_embedding=query_emb,
                     threshold=self.config.proxy_threshold,
                     cost=self.config.embedding_proxy_cost
                 )
-                guards.append(relevance_guard)
+                proxies.append(relevance_proxy)
                 logging.info(
-                    f"[PredicateProxyFactory] Created embedding-based relevance guard "
+                    f"[PredicateProxyFactory] Created embedding-based relevance proxy "
                     f"(model={self.config.embedding_model}, dim={query_emb.shape[0]})"
                 )
                 
             except Exception as e:
-                logging.warning(f"[PredicateProxyFactory] Could not create embedding guard: {e}")
+                logging.warning(f"[PredicateProxyFactory] Could not create embedding proxy: {e}")
         
-        # Create classifier-based guards for each predicate
+        # Create classifier-based proxies for each predicate
         if self.config.use_classifier_proxies and TORCH_AVAILABLE:
             for pred in predicates:
                 classifier_path = self.config.classifier_paths.get(pred.attribute)
@@ -168,20 +168,20 @@ class PredicateProxyFactory:
                         classifier = torch.load(classifier_path)
                         classifier.eval()
                         
-                        guard = ConformalProxy(
+                        proxy = ConformalProxy(
                             name=f"clf_{pred.attribute}",
                             classifier=classifier,
                             threshold=self.config.proxy_threshold,
                             cost=self.config.classifier_proxy_cost,
                             pass_rate=0.5  # Will be updated from runtime stats
                         )
-                        guards.append(guard)
-                        logging.info(f"[PredicateProxyFactory] Created classifier guard for {pred.attribute}")
+                        proxies.append(proxy)
+                        logging.info(f"[PredicateProxyFactory] Created classifier proxy for {pred.attribute}")
                         
                     except Exception as e:
                         logging.warning(f"[PredicateProxyFactory] Could not load classifier for {pred.attribute}: {e}")
         
-        return guards
+        return proxies
 
     def train_proxies(
         self,
@@ -194,12 +194,12 @@ class PredicateProxyFactory:
         """
         Train binary classifiers for each predicate using collected data.
         
-        Each guard uses: [doc_embedding, filter_embedding] as input.
+        Each proxy uses: [doc_embedding, filter_embedding] as input.
         Filter embedding is generated by: (1) LLM generates textual description of filter,
         (2) embed that description. Both embeddings are concatenated for the classifier.
         
         Args:
-            predicates: List of predicates to train guards for
+            predicates: List of predicates to train proxies for
             query_text: Query text (unused; kept for API compatibility)
             doc_embeddings: Embeddings of training documents
             doc_ids: IDs of training documents
@@ -209,10 +209,10 @@ class PredicateProxyFactory:
             List of trained ConformalProxy objects
         """
         if not SKLEARN_AVAILABLE:
-            logging.warning("[PredicateProxyFactory] Scikit-learn not available, cannot train guards. Installing sklearn is recommended.")
+            logging.warning("[PredicateProxyFactory] Scikit-learn not available, cannot train proxies. Installing sklearn is recommended.")
             return []
             
-        guards = []
+        proxies = []
         mode = getattr(self.config, "llm_mode", "gemini")
         model = getattr(self.config, "llm_model", "gemini-2.5-flash-lite")
         api_key = getattr(self.config, "api_key", None)
@@ -220,7 +220,7 @@ class PredicateProxyFactory:
         # Create predicate check functions
         predicate_fns = predicates_to_filter_dict(predicates)
         
-        # Train a guard for each predicate
+        # Train a proxy for each predicate
         for pred in predicates:
             attr = pred.attribute
             if attr not in predicate_fns:
@@ -266,10 +266,10 @@ class PredicateProxyFactory:
             n_neg = np.sum(y == 0)
             
             if n_pos < 2 or n_neg < 2:
-                logging.warning(f"[PredicateProxyFactory] Not enough samples to train guard for {attr} (pos={n_pos}, neg={n_neg}). Skipping.")
+                logging.warning(f"[PredicateProxyFactory] Not enough samples to train proxy for {attr} (pos={n_pos}, neg={n_neg}). Skipping.")
                 continue
                 
-            logging.info(f"[PredicateProxyFactory] Training guard for {attr} with {len(y)} samples (pos={n_pos}, neg={n_neg})")
+            logging.info(f"[PredicateProxyFactory] Training proxy for {attr} with {len(y)} samples (pos={n_pos}, neg={n_neg})")
             
             try:
                 clf = LogisticRegression(class_weight='balanced', max_iter=1000)
@@ -283,7 +283,7 @@ class PredicateProxyFactory:
                     probs = model.predict_proba(features)[:, 1]
                     return probs
                 
-                guard = ConformalProxy(
+                proxy = ConformalProxy(
                     name=f"learned_{attr}",
                     classifier=predict_wrapper,
                     threshold=0.5,
@@ -292,21 +292,21 @@ class PredicateProxyFactory:
                 )
                 
                 # Calibrate on training data
-                scores, _ = guard.evaluate(doc_embeddings)
+                scores, _ = proxy.evaluate(doc_embeddings)
                 pos_scores = scores[y == 1]
                 if len(pos_scores) > 0:
                     target_recall = self.config.target_recall
                     quantile = 1.0 - target_recall
                     threshold = np.quantile(pos_scores, quantile)
-                    guard.threshold = max(float(threshold), 0.01)
-                    logging.info(f"  Calibrated threshold: {guard.threshold:.4f} (target recall {target_recall})")
+                    proxy.threshold = max(float(threshold), 0.01)
+                    logging.info(f"  Calibrated threshold: {proxy.threshold:.4f} (target recall {target_recall})")
                 
-                guards.append(guard)
+                proxies.append(proxy)
                 
             except Exception as e:
-                logging.warning(f"[PredicateProxyFactory] Failed to train guard for {attr}: {e}")
+                logging.warning(f"[PredicateProxyFactory] Failed to train proxy for {attr}: {e}")
                 
-        return guards
+        return proxies
 
     def train_proxies_finetuned(
         self,
@@ -323,10 +323,10 @@ class PredicateProxyFactory:
         seed: Optional[int] = None,
     ) -> List["GLiClassProxy"]:
         """
-        Train GLiClass guards for each predicate.
+        Train GLiClass proxies for each predicate.
 
         Args:
-            predicates: List of predicates to train guards for
+            predicates: List of predicates to train proxies for
             query_text: Query text (for predicate context)
             documents: Document texts (same order as doc_ids)
             doc_ids: Document IDs
@@ -342,11 +342,11 @@ class PredicateProxyFactory:
             List of GLiClassProxy objects
         """
         if not FINETUNED_AVAILABLE:
-            logging.warning("[PredicateProxyFactory] Fine-tuned guards not available. Install transformers and torch.")
+            logging.warning("[PredicateProxyFactory] Fine-tuned proxies not available. Install transformers and torch.")
             return []
 
         predicate_fns = predicates_to_filter_dict(predicates)
-        guards = []
+        proxies = []
 
         for pred in predicates:
             attr = pred.attribute
@@ -369,13 +369,13 @@ class PredicateProxyFactory:
             n_neg = len(labels) - n_pos
             if n_pos < 2 or n_neg < 2:
                 logging.warning(
-                    f"[PredicateProxyFactory] Not enough samples for fine-tuned guard {attr} "
+                    f"[PredicateProxyFactory] Not enough samples for fine-tuned proxy {attr} "
                     f"(pos={n_pos}, neg={n_neg}). Skipping."
                 )
                 continue
 
             try:
-                guard, _ = train_finetuned_proxy(
+                proxy, _ = train_finetuned_proxy(
                     attribute=attr,
                     predicate_context=predicate_context,
                     documents=documents,
@@ -392,8 +392,8 @@ class PredicateProxyFactory:
                         self.config, "gliclass_icl_examples_per_class", 3
                     ),
                 )
-                guards.append(guard)
+                proxies.append(proxy)
             except Exception as e:
-                logging.warning(f"[PredicateProxyFactory] Failed to train fine-tuned guard for {attr}: {e}")
+                logging.warning(f"[PredicateProxyFactory] Failed to train fine-tuned proxy for {attr}: {e}")
 
-        return guards
+        return proxies

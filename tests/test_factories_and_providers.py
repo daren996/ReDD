@@ -7,17 +7,26 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from redd.core.data_loader import create_data_loader
+from redd.core.data_loader import get_loader_profile_notes, get_loader_registry
 from redd.core.data_population.factory import create_data_populator
 from redd.core.data_population.strategies import ProxyRuntimeExtractionStrategy
-from redd.core.llm import get_api_key, normalize_provider_name
-from redd.core.llm.hidden_states import HiddenStatesManager
 from redd.core.schema_gen.factory import create_schema_generator
+from redd.llm import get_api_key, normalize_provider_name
+from redd.llm.hidden_states import HiddenStatesManager
 
 
 class FactoryAndProviderTests(unittest.TestCase):
     def test_create_data_loader_rejects_unknown_loader_types(self) -> None:
         with self.assertRaisesRegex(ValueError, "Unknown loader type"):
             create_data_loader("dataset/unknown", loader_type="mystery")
+
+    def test_loader_registry_helpers_document_supported_loader_family(self) -> None:
+        registry = get_loader_registry()
+        notes = get_loader_profile_notes()
+
+        self.assertEqual(set(registry), set(notes))
+        self.assertIn("sqlite", registry)
+        self.assertIn("dataset-specific specialization", notes["cuad"].lower())
 
     def test_normalize_provider_name_accepts_aliases(self) -> None:
         self.assertEqual(normalize_provider_name("openai"), "cgpt")
@@ -106,6 +115,10 @@ class FactoryAndProviderTests(unittest.TestCase):
             getattr(schema_gen, "SchemaGenDeepSeek")
         with self.assertRaises(AttributeError):
             getattr(schema_gen, "SchemaGenTogether")
+        with self.assertRaises(AttributeError):
+            getattr(schema_gen, "LegacySchemaGeneratorBase")
+        with self.assertRaises(AttributeError):
+            getattr(schema_gen, "AdaptiveSamplingMixin")
 
     def test_proxy_runtime_strategy_has_dedicated_internal_strategy_module(self) -> None:
         self.assertEqual(
@@ -114,7 +127,7 @@ class FactoryAndProviderTests(unittest.TestCase):
         )
 
     def test_hidden_states_support_lives_under_llm(self) -> None:
-        self.assertEqual(HiddenStatesManager.__module__, "redd.core.llm.hidden_states")
+        self.assertEqual(HiddenStatesManager.__module__, "redd.llm.hidden_states")
 
 
 if __name__ == "__main__":

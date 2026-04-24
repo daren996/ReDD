@@ -2,21 +2,21 @@
 Proxy Runtime Execution Engine
 
 A cost-optimized data extraction pipeline that filters documents using
-lightweight proxy models (guards) before invoking expensive LLM extraction.
+lightweight proxy models before invoking expensive LLM extraction.
 
 Algorithm:
-1. Guard Chain: Lightweight binary classifiers on embeddings, one per attribute
-2. Fail-Fast Ordering: Sort guards by Rejection Efficiency = (1 - PassRate) / Cost
-3. Conformal Filtering: For each document, run guards in order; REJECT if score < threshold
-4. Atomic Oracle: Only if document passes ALL guards, invoke LLM for extraction
-5. Feedback Loop: Collect hard negatives (LLM rejects after guards pass) for retraining
+1. Proxy Chain: Lightweight binary classifiers on embeddings, one per attribute
+2. Fail-Fast Ordering: Sort proxies by Rejection Efficiency = (1 - PassRate) / Cost
+3. Conformal Filtering: For each document, run proxies in order; REJECT if score < threshold
+4. Atomic Oracle: Only if document passes ALL proxies, invoke LLM for extraction
+5. Feedback Loop: Collect hard negatives (LLM rejects after proxies pass) for retraining
 
 Example Usage:
     ```python
     from redd.proxy.proxy_runtime.executor import ProxyExecutor, ConformalProxy
     
-    # Create guards from trained classifiers
-    guards = [
+    # Create proxies from trained classifiers
+    proxies = [
         ConformalProxy(name="price_filter", classifier=price_clf, 
                        threshold=0.3, cost=0.1, pass_rate=0.6),
         ConformalProxy(name="category_filter", classifier=cat_clf,
@@ -24,7 +24,7 @@ Example Usage:
     ]
     
     # Create executor
-    executor = ProxyExecutor(guards=guards, llm_oracle=oracle)
+    executor = ProxyExecutor(proxies=proxies, llm_oracle=oracle)
     
     # Process batch
     results, stats = executor.process_batch(documents, embeddings)
@@ -63,7 +63,6 @@ except ImportError:
 __all__ = [
     "ConformalProxy",
     "create_proxy_executor_from_classifiers",
-    "create_ccg_executor_from_classifiers",
     "EmbeddingProxy",
     "ProxyDecision",
     "DocumentBatch",
@@ -120,7 +119,7 @@ class LLMOracleProtocol(Protocol):
 
 
 class FilterDecision(Enum):
-    """Decision made by a guard for a document."""
+    """Decision made by a proxy for a document."""
     PASS = "pass"
     REJECT = "reject"
     UNCERTAIN = "uncertain"
@@ -132,10 +131,10 @@ class FilterDecision(Enum):
 
 @dataclass
 class ProxyRuntimeConfig:
-    """Configuration for CCG Executor."""
-    # Guard chain configuration
-    min_guards_before_oracle: int = 1  # Minimum guards that must pass before LLM
-    max_guards_per_attribute: int = 1  # Max guards to run per attribute
+    """Configuration for proxy-chain execution."""
+    # Proxy-chain configuration
+    min_proxies_before_oracle: int = 1  # Minimum proxies that must pass before LLM
+    max_proxies_per_attribute: int = 1  # Max proxies to run per attribute
     
     # Threshold configuration
     default_threshold: float = 0.5
@@ -156,7 +155,7 @@ class ProxyRuntimeConfig:
 
 @dataclass
 class ProxyDecision:
-    """Result from a single guard evaluation."""
+    """Result from a single proxy evaluation."""
     proxy_name: str
     score: float
     threshold: float
@@ -171,7 +170,7 @@ class ProxyDecision:
 @dataclass
 class HardNegative:
     """
-    A hard negative sample: document that passed all guards but failed LLM predicates.
+    A hard negative sample: document that passed all proxies but failed LLM predicates.
     Used for retraining proxy models.
     """
     doc_id: str
@@ -226,54 +225,54 @@ class DocumentBatch:
 class ExecutionStats:
     """Statistics from batch processing."""
     total_documents: int = 0
-    rejected_by_guards: int = 0
+    rejected_by_proxies: int = 0
     passed_to_oracle: int = 0
     oracle_accepted: int = 0
     oracle_rejected: int = 0  # Hard negatives
 
-    # Per-guard statistics
+    # Per-proxy statistics
     proxy_stats: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
-    # Per-guard per-document decisions: proxy_name -> list of rejected doc_ids
+    # Per-proxy per-document decisions: proxy_name -> list of rejected doc_ids
     proxy_rejected_doc_ids: Dict[str, List[str]] = field(default_factory=dict)
-    # Doc IDs that passed all guards
+    # Doc IDs that passed all proxies
     passed_doc_ids: List[str] = field(default_factory=list)
     # All doc IDs in the batch (for recall computation)
     all_doc_ids: List[str] = field(default_factory=list)
 
     # Timing
-    total_guard_time_ms: float = 0.0
+    total_proxy_time_ms: float = 0.0
     total_oracle_time_ms: float = 0.0
-    avg_guards_per_doc: float = 0.0
+    avg_proxies_per_doc: float = 0.0
     
     @property
     def proxy_rejection_rate(self) -> float:
         if self.total_documents == 0:
             return 0.0
-        return self.rejected_by_guards / self.total_documents
+        return self.rejected_by_proxies / self.total_documents
     
     @property
     def oracle_precision(self) -> float:
-        """Precision of guard chain (how many oracle calls were useful)."""
+        """Precision of proxy chain (how many oracle calls were useful)."""
         if self.passed_to_oracle == 0:
             return 0.0
         return self.oracle_accepted / self.passed_to_oracle
     
     @property
     def cost_savings(self) -> float:
-        """Estimated cost savings from guard filtering."""
+        """Estimated cost savings from proxy filtering."""
         if self.total_documents == 0:
             return 0.0
-        return self.rejected_by_guards / self.total_documents
+        return self.rejected_by_proxies / self.total_documents
 
 
 # ============================================================================
-# Conformal Guard Class
+# Conformal Proxy Class
 # ============================================================================
 
 class ConformalProxy:
     """
-    A lightweight proxy model (guard) with conformal calibration.
+    A lightweight proxy model with conformal calibration.
     
     Wraps a binary classifier and provides:
     - Prediction scores (vectorized)
@@ -281,11 +280,11 @@ class ConformalProxy:
     - Cost and pass rate for optimization
     
     Args:
-        name: Unique identifier for this guard (usually attribute name)
+        name: Unique identifier for this proxy (usually attribute name)
         classifier: PyTorch classifier or callable that returns scores
         threshold: Calibrated threshold (scores >= threshold pass)
-        cost: Computational cost of running this guard (relative units)
-        pass_rate: Estimated fraction of documents that pass this guard
+        cost: Computational cost of running this proxy (relative units)
+        pass_rate: Estimated fraction of documents that pass this proxy
         device: Device for PyTorch inference ("cpu" or "cuda")
     """
     
@@ -340,7 +339,7 @@ class ConformalProxy:
         """
         Rejection Efficiency = (1 - PassRate) / Cost
         
-        Higher values indicate guards that are cheap and strict (good for fail-fast).
+        Higher values indicate proxies that are cheap and strict (good for fail-fast).
         """
         if self.cost <= 0:
             return float('inf')
@@ -394,7 +393,7 @@ class ConformalProxy:
         embeddings: Union[np.ndarray, "torch.Tensor"]
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Evaluate guard on embeddings and return (scores, passed_mask).
+        Evaluate a proxy on embeddings and return (scores, passed_mask).
         
         Args:
             embeddings: Input embeddings
@@ -459,12 +458,12 @@ class ConformalProxy:
 
 
 # ============================================================================
-# Embedding Guard Class
+# Embedding Proxy Class
 # ============================================================================
 
 class EmbeddingProxy:
     """
-    A guard that uses embedding similarity to filter documents.
+    A proxy that uses embedding similarity to filter documents.
     
     Computes similarity between query embedding and document embedding,
     passing documents that are sufficiently similar.
@@ -524,7 +523,7 @@ class EmbeddingProxy:
         return similarities
     
     def evaluate(self, embeddings: Union[np.ndarray, "torch.Tensor"]) -> Tuple[np.ndarray, np.ndarray]:
-        """Evaluate guard and return (scores, passed_mask)."""
+        """Evaluate a proxy and return (scores, passed_mask)."""
         scores = self.predict(embeddings)
         passed = scores >= self.threshold
         
@@ -539,36 +538,36 @@ class EmbeddingProxy:
 
 
 # ============================================================================
-# CCG Executor
+# Proxy Executor
 # ============================================================================
 
 class ProxyExecutor:
     """
-    Cascaded Conformal Guards Execution Engine.
+    Cascaded conformal proxy execution engine.
     
     Orchestrates the fail-fast filtering pipeline:
-    1. Sort guards by rejection efficiency
-    2. For each document, run guards in order (short-circuit on reject)
-    3. Only invoke LLM oracle if all guards pass
+    1. Sort proxies by rejection efficiency
+    2. For each document, run proxies in order (short-circuit on reject)
+    3. Only invoke LLM oracle if all proxies pass
     4. Collect hard negatives for feedback loop
     
     Args:
-        guards: List of ConformalProxy objects
+        proxies: List of proxy objects
         llm_oracle: LLM Oracle for attribute extraction (optional)
         config: ProxyRuntimeConfig for tuning behavior
     """
     
     def __init__(
         self,
-        guards: List[Union[ConformalProxy, EmbeddingProxy]],
+        proxies: List[Union[ConformalProxy, EmbeddingProxy]],
         llm_oracle: Optional[LLMOracleProtocol] = None,
         config: Optional[ProxyRuntimeConfig] = None
     ):
-        self.guards = guards
+        self.proxies = proxies
         self.llm_oracle = llm_oracle
         self.config = config or ProxyRuntimeConfig()
         
-        # Execution plan (sorted guards)
+        # Execution plan (sorted proxies)
         self._execution_plan: List[Union[ConformalProxy, EmbeddingProxy]] = []
         
         # Hard negative buffer for feedback loop
@@ -577,39 +576,39 @@ class ProxyExecutor:
         # Build initial execution plan
         self.optimize_execution_plan()
         
-        logging.info(f"[ProxyExecutor] Initialized with {len(guards)} guards")
+        logging.info(f"[ProxyExecutor] Initialized with {len(proxies)} proxies")
     
     def optimize_execution_plan(
         self,
-        guards: Optional[List[Union[ConformalProxy, EmbeddingProxy]]] = None,
+        proxies: Optional[List[Union[ConformalProxy, EmbeddingProxy]]] = None,
     ) -> List[Union[ConformalProxy, EmbeddingProxy]]:
         """
         Build or update the execution plan using centralized **reording** logic.
 
-        The plan is simply the list of guards sorted by their
-        `rejection_efficiency` (see `guard_reordering.reording`).
+        The plan is simply the list of proxies sorted by their
+        `rejection_efficiency` (see the shared `reording` helper).
 
         Args:
-            guards: Optional list of guards to sort. If None, uses `self.guards`.
+            proxies: Optional list of proxies to sort. If None, uses `self.proxies`.
 
         Returns:
-            Sorted list of guards (highest rejection efficiency first).
+            Sorted list of proxies (highest rejection efficiency first).
         """
-        guards_to_order = guards or self.guards
+        proxies_to_order = proxies or self.proxies
 
         # Delegate ordering to shared utility so the same logic can be reused
         # by other components or experiments.
-        ordered = reording(guards_to_order)  # type: ignore[arg-type]
+        ordered = reording(proxies_to_order)  # type: ignore[arg-type]
         self._execution_plan = ordered
 
         if self.config.verbose:
             logging.info("[ProxyExecutor] Execution plan optimized via reording:")
-            for i, guard in enumerate(self._execution_plan):
+            for i, proxy in enumerate(self._execution_plan):
                 logging.info(
-                    f"  {i + 1}. {guard.name}: "
-                    f"efficiency={guard.rejection_efficiency:.4f}, "
-                    f"pass_rate={guard.pass_rate:.4f}, "
-                    f"cost={guard.cost:.4f}",
+                    f"  {i + 1}. {proxy.name}: "
+                    f"efficiency={proxy.rejection_efficiency:.4f}, "
+                    f"pass_rate={proxy.pass_rate:.4f}, "
+                    f"cost={proxy.cost:.4f}",
                 )
 
         return self._execution_plan
@@ -622,7 +621,7 @@ class ProxyExecutor:
         attributes: Optional[List[str]] = None
     ) -> Tuple[List[Dict[str, Any]], ExecutionStats]:
         """
-        Process a batch of documents through the CCG pipeline.
+        Process a batch of documents through the proxy pipeline.
         
         Args:
             batch: DocumentBatch with documents and embeddings
@@ -643,18 +642,18 @@ class ProxyExecutor:
         active_mask = np.ones(len(batch), dtype=bool)
         active_indices = np.arange(len(batch))
         
-        # Track guard scores for potential hard negatives
+        # Track proxy scores for potential hard negatives
         all_proxy_scores: Dict[int, Dict[str, float]] = {i: {} for i in range(len(batch))}
         
-        # Track total guards run per document
-        guards_run_per_doc = np.zeros(len(batch), dtype=int)
+        # Track total proxies run per document
+        proxies_run_per_doc = np.zeros(len(batch), dtype=int)
         
         # ====================================================================
-        # Phase 1: Cascaded Guard Filtering
+        # Phase 1: Cascaded Proxy Filtering
         # ====================================================================
-        guard_start_time = time.perf_counter()
+        proxy_start_time = time.perf_counter()
         
-        for guard in self._execution_plan:
+        for proxy in self._execution_plan:
             if not active_mask.any():
                 # All documents rejected, no need to continue
                 break
@@ -663,17 +662,17 @@ class ProxyExecutor:
             active_idx = np.where(active_mask)[0]
             active_embeddings = batch.embeddings[active_idx]
 
-            # Evaluate guard (support both embedding-based and document-based guards)
-            if getattr(guard, "uses_documents", False):
+            # Evaluate proxy (support both embedding-based and document-based proxies)
+            if getattr(proxy, "uses_documents", False):
                 active_documents = [batch.documents[i] for i in active_idx]
                 active_doc_ids = [batch.doc_ids[i] for i in active_idx]
-                scores, passed = guard.evaluate_documents(active_documents, doc_ids=active_doc_ids)
+                scores, passed = proxy.evaluate_documents(active_documents, doc_ids=active_doc_ids)
             else:
-                scores, passed = guard.evaluate(active_embeddings)
+                scores, passed = proxy.evaluate(active_embeddings)
             
-            # Update guard statistics
-            if guard.name not in stats.proxy_stats:
-                stats.proxy_stats[guard.name] = {
+            # Update proxy statistics
+            if proxy.name not in stats.proxy_stats:
+                stats.proxy_stats[proxy.name] = {
                     "evaluated": 0,
                     "passed": 0,
                     "rejected": 0,
@@ -681,7 +680,7 @@ class ProxyExecutor:
                     "scores_sum": 0.0
                 }
             
-            gs = stats.proxy_stats[guard.name]
+            gs = stats.proxy_stats[proxy.name]
             gs["evaluated"] += len(scores)
             gs["passed"] += passed.sum()
             gs["rejected"] += (~passed).sum()
@@ -690,41 +689,41 @@ class ProxyExecutor:
             
             # Store scores for hard negative analysis
             for local_idx, global_idx in enumerate(active_idx):
-                all_proxy_scores[global_idx][guard.name] = float(scores[local_idx])
+                all_proxy_scores[global_idx][proxy.name] = float(scores[local_idx])
             
-            # Update guards run count
-            guards_run_per_doc[active_idx] += 1
+            # Update proxy-run count
+            proxies_run_per_doc[active_idx] += 1
             
-            # Update active mask: reject documents that failed this guard.
+            # Update active mask: reject documents that failed this proxy.
             # CRITICAL: Documents with active_mask=False are NEVER added to results
             # and thus NEVER sent to LLM extraction.
             rejected_local = ~passed
             rejected_global = active_idx[rejected_local]
             active_mask[rejected_global] = False
 
-            # Track rejected doc_ids per guard for recall analysis
+            # Track rejected doc_ids per proxy for recall analysis
             if len(rejected_global) > 0:
                 rejected_ids = [batch.doc_ids[i] for i in rejected_global]
-                stats.proxy_rejected_doc_ids.setdefault(guard.name, []).extend(rejected_ids)
+                stats.proxy_rejected_doc_ids.setdefault(proxy.name, []).extend(rejected_ids)
             
             if self.config.verbose and len(rejected_global) > 0:
-                logging.debug(f"[ProxyExecutor] Guard '{guard.name}' rejected "
+                logging.debug(f"[ProxyExecutor] Proxy '{proxy.name}' rejected "
                             f"{len(rejected_global)} documents")
         
-        stats.total_guard_time_ms = (time.perf_counter() - guard_start_time) * 1000
-        stats.rejected_by_guards = int((~active_mask).sum())
+        stats.total_proxy_time_ms = (time.perf_counter() - proxy_start_time) * 1000
+        stats.rejected_by_proxies = int((~active_mask).sum())
         stats.passed_to_oracle = int(active_mask.sum())
-        stats.avg_guards_per_doc = float(guards_run_per_doc.mean())
+        stats.avg_proxies_per_doc = float(proxies_run_per_doc.mean())
         stats.passed_doc_ids = [batch.doc_ids[i] for i in np.where(active_mask)[0]]
         
         # Sanity: passed + rejected must equal batch size
-        assert stats.passed_to_oracle + stats.rejected_by_guards == len(batch), (
-            f"Guard filter invariant violated: passed={stats.passed_to_oracle}, "
-            f"rejected={stats.rejected_by_guards}, batch_size={len(batch)}"
+        assert stats.passed_to_oracle + stats.rejected_by_proxies == len(batch), (
+            f"Proxy filter invariant violated: passed={stats.passed_to_oracle}, "
+            f"rejected={stats.rejected_by_proxies}, batch_size={len(batch)}"
         )
         
         # ====================================================================
-        # Phase 2: LLM Oracle Extraction (for documents that passed all guards)
+        # Phase 2: LLM Oracle Extraction (for documents that passed all proxies)
         # ====================================================================
         # ONLY documents in passed_indices are processed. Rejected docs are skipped.
         oracle_start_time = time.perf_counter()
@@ -738,7 +737,7 @@ class ProxyExecutor:
                 # No oracle configured, just return passed documents
                 results.append({
                     "doc_id": doc_id,
-                    "passed_guards": True,
+                    "passed_proxies": True,
                     "proxy_scores": all_proxy_scores[idx],
                     "extracted": None
                 })
@@ -764,13 +763,13 @@ class ProxyExecutor:
                         stats.oracle_accepted += 1
                         results.append({
                             "doc_id": doc_id,
-                            "passed_guards": True,
+                            "passed_proxies": True,
                             "passed_predicates": True,
                             "proxy_scores": all_proxy_scores[idx],
                             "extracted": extracted
                         })
                     else:
-                        # HARD NEGATIVE: Passed guards but failed predicates
+                        # HARD NEGATIVE: Passed proxies but failed predicates
                         stats.oracle_rejected += 1
                         
                         if self.config.collect_hard_negatives:
@@ -786,7 +785,7 @@ class ProxyExecutor:
                         
                         results.append({
                             "doc_id": doc_id,
-                            "passed_guards": True,
+                            "passed_proxies": True,
                             "passed_predicates": False,
                             "proxy_scores": all_proxy_scores[idx],
                             "extracted": extracted,
@@ -797,7 +796,7 @@ class ProxyExecutor:
                     stats.oracle_accepted += 1
                     results.append({
                         "doc_id": doc_id,
-                        "passed_guards": True,
+                        "passed_proxies": True,
                         "proxy_scores": all_proxy_scores[idx],
                         "extracted": extracted
                     })
@@ -806,7 +805,7 @@ class ProxyExecutor:
                 logging.warning(f"[ProxyExecutor] Oracle extraction failed for {doc_id}: {e}")
                 results.append({
                     "doc_id": doc_id,
-                    "passed_guards": True,
+                    "passed_proxies": True,
                     "error": str(e),
                     "proxy_scores": all_proxy_scores[idx]
                 })
@@ -825,7 +824,7 @@ class ProxyExecutor:
         attributes: Optional[List[str]] = None
     ) -> Tuple[Optional[Dict[str, Any]], List[ProxyDecision]]:
         """
-        Process a single document through the CCG pipeline.
+        Process a single document through the proxy pipeline.
         
         Useful for streaming processing or debugging.
         
@@ -840,7 +839,7 @@ class ProxyExecutor:
         Returns:
             (result, proxy_results) tuple where:
             - result: Extraction result dict or None if rejected
-            - proxy_results: List of ProxyDecision objects showing each guard's decision
+            - proxy_results: List of ProxyDecision objects showing each proxy's decision
         """
         proxy_results = []
         proxy_scores = {}
@@ -849,23 +848,23 @@ class ProxyExecutor:
         if embedding.ndim == 1:
             embedding = embedding.reshape(1, -1)
         
-        # Run guards in execution plan order (short-circuit on reject)
-        for guard in self._execution_plan:
+        # Run proxies in execution plan order (short-circuit on reject)
+        for proxy in self._execution_plan:
             start_time = time.perf_counter()
             
-            scores, passed = guard.evaluate(embedding)
+            scores, passed = proxy.evaluate(embedding)
             score = float(scores[0])
             did_pass = bool(passed[0])
             
             latency_ms = (time.perf_counter() - start_time) * 1000
             
-            proxy_scores[guard.name] = score
+            proxy_scores[proxy.name] = score
             
             decision = FilterDecision.PASS if did_pass else FilterDecision.REJECT
             proxy_results.append(ProxyDecision(
-                proxy_name=guard.name,
+                proxy_name=proxy.name,
                 score=score,
-                threshold=guard.threshold,
+                threshold=proxy.threshold,
                 decision=decision,
                 latency_ms=latency_ms
             ))
@@ -874,11 +873,11 @@ class ProxyExecutor:
                 # Short-circuit: document rejected
                 return None, proxy_results
         
-        # Document passed all guards, invoke oracle
+        # Document passed all proxies, invoke oracle
         if self.llm_oracle is None:
             return {
                 "doc_id": doc_id,
-                "passed_guards": True,
+                "passed_proxies": True,
                 "proxy_scores": proxy_scores,
                 "extracted": None
             }, proxy_results
@@ -911,7 +910,7 @@ class ProxyExecutor:
                     
                     return {
                         "doc_id": doc_id,
-                        "passed_guards": True,
+                        "passed_proxies": True,
                         "passed_predicates": False,
                         "proxy_scores": proxy_scores,
                         "extracted": extracted,
@@ -920,7 +919,7 @@ class ProxyExecutor:
             
             return {
                 "doc_id": doc_id,
-                "passed_guards": True,
+                "passed_proxies": True,
                 "passed_predicates": True,
                 "proxy_scores": proxy_scores,
                 "extracted": extracted
@@ -930,7 +929,7 @@ class ProxyExecutor:
             logging.warning(f"[ProxyExecutor] Oracle extraction failed for {doc_id}: {e}")
             return {
                 "doc_id": doc_id,
-                "passed_guards": True,
+                "passed_proxies": True,
                 "error": str(e),
                 "proxy_scores": proxy_scores
             }, proxy_results
@@ -949,10 +948,10 @@ class ProxyExecutor:
         Collect a hard negative sample for the feedback loop.
         
         Hard negatives are documents that:
-        1. Passed all guards (proxy models predicted positive)
+        1. Passed all proxies (proxy models predicted positive)
         2. Failed LLM predicate check (actual extraction doesn't match query)
         
-        These are valuable for retraining guards to be more accurate.
+        These are valuable for retraining proxies to be more accurate.
         """
         # Find which attributes failed
         for attr_name, passed in per_attr_results.items():
@@ -1028,25 +1027,25 @@ class ProxyExecutor:
     
     def update_proxy_pass_rates(self):
         """
-        Update guard pass rates from runtime statistics.
+        Update proxy pass rates from runtime statistics.
         
         Call this periodically to adapt the execution plan based on observed data.
         """
-        for guard in self.guards:
-            if guard._total_seen > 0:
-                empirical_pass_rate = guard._total_passed / guard._total_seen
-                logging.debug(f"[ProxyExecutor] Guard '{guard.name}' empirical pass rate: "
-                            f"{empirical_pass_rate:.4f} (from {guard._total_seen} samples)")
+        for proxy in self.proxies:
+            if proxy._total_seen > 0:
+                empirical_pass_rate = proxy._total_passed / proxy._total_seen
+                logging.debug(f"[ProxyExecutor] Proxy '{proxy.name}' empirical pass rate: "
+                            f"{empirical_pass_rate:.4f} (from {proxy._total_seen} samples)")
     
     def reset_proxy_stats(self):
-        """Reset all guard runtime statistics."""
-        for guard in self.guards:
-            guard.reset_stats()
+        """Reset all proxy runtime statistics."""
+        for proxy in self.proxies:
+            proxy.reset_stats()
     
     def get_execution_summary(self) -> Dict[str, Any]:
         """Get a summary of the current execution plan."""
         return {
-            "num_guards": len(self._execution_plan),
+            "num_proxies": len(self._execution_plan),
             "execution_order": [
                 {
                     "name": g.name,
@@ -1077,17 +1076,17 @@ def create_proxy_from_classifier(
     Factory function to create a ConformalProxy from a trained classifier.
     
     Args:
-        name: Guard name (usually attribute name)
+        name: Proxy name (usually attribute name)
         classifier: Trained PyTorch classifier
         calibration_data: Optional (embeddings, labels) tuple for calibration
         target_recall: Target recall for threshold calibration
-        cost: Computational cost of this guard
+        cost: Computational cost of this proxy
         device: Device for inference
         
     Returns:
         Configured ConformalProxy
     """
-    guard = ConformalProxy(
+    proxy = ConformalProxy(
         name=name,
         classifier=classifier,
         threshold=0.5,  # Will be calibrated if data provided
@@ -1098,13 +1097,13 @@ def create_proxy_from_classifier(
     
     if calibration_data is not None:
         embeddings, labels = calibration_data
-        guard.calibrate(embeddings, labels, target_recall=target_recall)
+        proxy.calibrate(embeddings, labels, target_recall=target_recall)
         
         # Estimate pass rate from calibration data
-        scores, passed = guard.evaluate(embeddings)
-        guard._pass_rate = passed.mean()
+        scores, passed = proxy.evaluate(embeddings)
+        proxy._pass_rate = passed.mean()
     
-    return guard
+    return proxy
 
 
 def create_proxy_executor_from_classifiers(
@@ -1134,12 +1133,12 @@ def create_proxy_executor_from_classifiers(
     costs = costs or {}
     calibration_data = calibration_data or {}
     
-    guards = []
+    proxies = []
     for attr_name, classifier in classifiers.items():
         cal_data = calibration_data.get(attr_name)
         cost = costs.get(attr_name, 1.0)
         
-        guard = create_proxy_from_classifier(
+        proxy = create_proxy_from_classifier(
             name=attr_name,
             classifier=classifier,
             calibration_data=cal_data,
@@ -1147,27 +1146,6 @@ def create_proxy_executor_from_classifiers(
             cost=cost,
             device=device
         )
-        guards.append(guard)
+        proxies.append(proxy)
     
-    return ProxyExecutor(guards=guards, llm_oracle=llm_oracle, config=config)
-
-
-def create_ccg_executor_from_classifiers(
-    classifiers: Dict[str, "nn.Module"],
-    calibration_data: Optional[Dict[str, Tuple[np.ndarray, np.ndarray]]] = None,
-    costs: Optional[Dict[str, float]] = None,
-    target_recall: float = 0.95,
-    llm_oracle: Optional[LLMOracleProtocol] = None,
-    config: Optional[ProxyRuntimeConfig] = None,
-    device: str = "cpu",
-) -> ProxyExecutor:
-    """Backward-compatible alias for `create_proxy_executor_from_classifiers`."""
-    return create_proxy_executor_from_classifiers(
-        classifiers=classifiers,
-        calibration_data=calibration_data,
-        costs=costs,
-        target_recall=target_recall,
-        llm_oracle=llm_oracle,
-        config=config,
-        device=device,
-    )
+    return ProxyExecutor(proxies=proxies, llm_oracle=llm_oracle, config=config)

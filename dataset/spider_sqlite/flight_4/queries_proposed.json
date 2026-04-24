@@ -1,0 +1,38 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "codeshare == 'Y'",
+        "dst_ap_country contains 'United States'",
+        "src_ap_country contains 'Canada'"
+      ],
+      "optimal_order": [
+        "src_ap_country contains 'Canada'",
+        "dst_ap_country contains 'United States'",
+        "codeshare == 'Y'"
+      ],
+      "token_cost": 250897,
+      "sql": "SELECT * FROM routes WHERE codeshare = 'Y' AND dst_ap_country LIKE '%United States%' AND src_ap_country LIKE '%Canada%';",
+      "natural_language": "Find codeshare flights from Canada to the United States.",
+      "attributes": ["codeshare", "dst_ap_country", "src_ap_country"]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "src_ap_country contains 'France'",
+        "dst_ap_country contains 'Germany'",
+        "codeshare == 'None'"
+      ],
+      "optimal_order": [
+        "src_ap_country contains 'France'",
+        "dst_ap_country contains 'Germany'",
+        "codeshare == 'None'"
+      ],
+      "token_cost": 249984,
+      "sql": "SELECT * FROM routes WHERE src_ap_country LIKE '%France%' AND dst_ap_country LIKE '%Germany%' AND codeshare = 'None';",
+      "natural_language": "List direct (non-codeshare) flight routes from France to Germany.",
+      "attributes": ["src_ap_country", "dst_ap_country", "codeshare"]
+    }
+  ]
+}

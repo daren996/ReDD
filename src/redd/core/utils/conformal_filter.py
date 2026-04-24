@@ -11,7 +11,7 @@ import numpy as np
 from typing import List, Dict, Tuple, Optional, Callable
 from dataclasses import dataclass
 
-from ..doc_clustering.vectorizer import DocVectorizer, llm_embeddings
+from redd.embedding.clustering import DocVectorizer, llm_embeddings
 
 
 @dataclass
@@ -311,4 +311,3 @@ class ConformalDocFilter:
         
         self.threshold = threshold
         return threshold
-

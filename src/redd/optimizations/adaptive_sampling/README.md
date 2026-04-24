@@ -76,7 +76,7 @@ adaptive_sampling:
   # dataset_db_path: "dataset/spider_sqlite/college_2/default_task.db"
 ```
 
-Embedding selection now uses SQLite-backed cache through `core.embedding.EmbeddingManager`.
+Embedding selection now uses SQLite-backed cache through `redd.embedding.EmbeddingManager`.
 `adaptive_sampling.embedding_file` is kept only for backward compatibility and is ignored in the SQLite embedding flow.
 
 ### Parameters
@@ -123,7 +123,7 @@ album_5d0_adaptive:
 Then run:
 
 ```bash
-python scripts/main_schemagen.py --config configs/schemagen_deepseek.yaml --exp album_5d0_adaptive
+python scripts/main_preprocessing.py --config configs/schemagen_deepseek.yaml --exp album_5d0_adaptive
 ```
 
 ### Integration into Custom Schema Generators
@@ -140,7 +140,7 @@ If you're creating a new schema generator, simply inherit from `AdaptiveSampling
 from core.schema_gen import SchemaGenerator
 from core.adaptive_sampling import AdaptiveSamplingMixin
 
-class MySchemaGen(AdaptiveSamplingMixin, SchemaGenBasic):
+class MySchemaGen(AdaptiveSamplingMixin, SchemaGen):
     def __init__(self, config):
         super().__init__(config)
         

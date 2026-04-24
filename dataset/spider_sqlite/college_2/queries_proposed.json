@@ -1,0 +1,38 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "year <= 2010",
+        "semester contains 'Fall'",
+        "instructor_name contains 'Mingoz'"
+      ],
+      "optimal_order": [
+        "instructor_name contains 'Mingoz'",
+        "semester contains 'Fall'",
+        "year <= 2010"
+      ],
+      "token_cost": 7182,
+      "sql": "SELECT * FROM teaches WHERE year <= 2010 AND semester LIKE '%Fall%' AND instructor_name LIKE '%Mingoz%';",
+      "natural_language": "Find courses taught by instructor Mingoz during Fall semesters before or in 2010.",
+      "attributes": ["year", "semester", "instructor_name"]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "semester contains 'Spring'",
+        "year >= 2004",
+        "instructor_name contains 'DAgostino'"
+      ],
+      "optimal_order": [
+        "instructor_name contains 'DAgostino'",
+        "semester contains 'Spring'",
+        "year >= 2004"
+      ],
+      "token_cost": 7643,
+      "sql": "SELECT * FROM teaches WHERE semester LIKE '%Spring%' AND year >= 2004 AND instructor_name LIKE '%DAgostino%';",
+      "natural_language": "Show Spring semester courses taught by DAgostino from 2004 onwards.",
+      "attributes": ["semester", "year", "instructor_name"]
+    }
+  ]
+}

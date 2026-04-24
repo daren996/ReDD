@@ -64,6 +64,47 @@ class ConfigNormalizationTests(unittest.TestCase):
         self.assertEqual(config["exp_dn_fn_list"], ["wine_1/default_task"])
         self.assertEqual(config["prompt"]["prompt_path"], "prompts/schemagen_4_0.txt")
 
+    def test_load_experiment_config_accepts_aliased_nested_module_section_names(self) -> None:
+        config_text = textwrap.dedent(
+            """
+            shared:
+              data_main: dataset/spider_sqlite
+            wine_reddv0:
+              schema_gen:
+                out_main: outputs/schema_gen/spider
+                mode: openai
+                llm_model: gpt-4o-mini
+                exp_dataset_task: wine_1/wine-appellations
+              data_pop:
+                out_main: outputs/data_pop/spider
+                mode: deepseek
+                llm_model: deepseek-chat
+                exp_dataset_task: wine_1/wine-appellations
+            """
+        ).strip()
+
+        with TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "aliased.yaml"
+            config_path.write_text(config_text, encoding="utf-8")
+
+            schema_config, _ = load_experiment_config(
+                config_path,
+                "wine_reddv0",
+                module="schemagen",
+            )
+            datapop_config, _ = load_experiment_config(
+                config_path,
+                "wine_reddv0",
+                module="datapop",
+            )
+
+        self.assertEqual(schema_config["out_main"], "outputs/schema_gen/spider")
+        self.assertEqual(schema_config["mode"], "cgpt")
+        self.assertEqual(schema_config["exp_dn_fn_list"], ["wine_1/wine-appellations"])
+        self.assertEqual(datapop_config["out_main"], "outputs/data_pop/spider")
+        self.assertEqual(datapop_config["mode"], "deepseek")
+        self.assertEqual(datapop_config["exp_dn_fn_list"], ["wine_1/wine-appellations"])
+
     def test_load_experiment_config_supports_legacy_experiment_keys(self) -> None:
         config_text = textwrap.dedent(
             """

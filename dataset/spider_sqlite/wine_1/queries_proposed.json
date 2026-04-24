@@ -1,0 +1,38 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "Year == 2007",
+        "Drink == 'now'",
+        "Score >= 90"
+      ],
+      "optimal_order": [
+        "Year == 2007",
+        "Score >= 90",
+        "Drink == 'now'"
+      ],
+      "token_cost": 96349,
+      "sql": "SELECT * FROM wine WHERE Year = 2007 AND Drink = 'now' AND Score >= 90;",
+      "natural_language": "Find highly rated (90+) wines from 2007 that are ready to drink now.",
+      "attributes": ["Year", "Drink", "Score"]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "Grape contains 'Cabernet'",
+        "Price <= 50",
+        "Score >= 85"
+      ],
+      "optimal_order": [
+        "Grape contains 'Cabernet'",
+        "Price <= 50",
+        "Score >= 85"
+      ],
+      "token_cost": 70972,
+      "sql": "SELECT * FROM wine WHERE Grape LIKE '%Cabernet%' AND Price <= 50 AND Score >= 85;",
+      "natural_language": "Show Cabernet wines under $50 with a score of at least 85.",
+      "attributes": ["Grape", "Price", "Score"]
+    }
+  ]
+}

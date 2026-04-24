@@ -1,0 +1,38 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "preferred_foot == 'left'",
+        "potential > 70",
+        "dribbling > 65"
+      ],
+      "optimal_order": [
+        "preferred_foot == 'left'",
+        "dribbling > 65",
+        "potential > 70"
+      ],
+      "token_cost": 40543,
+      "sql": "SELECT * FROM player_attributes WHERE preferred_foot = 'left' AND potential > 70 AND dribbling > 65;",
+      "natural_language": "Find left-footed players with high potential (>70) and good dribbling skills (>65).",
+      "attributes": ["preferred_foot", "potential", "dribbling"]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "overall_rating > 60",
+        "finishing > 60",
+        "preferred_foot == 'right'"
+      ],
+      "optimal_order": [
+        "finishing > 60",
+        "overall_rating > 60",
+        "preferred_foot == 'right'"
+      ],
+      "token_cost": 35851,
+      "sql": "SELECT * FROM player_attributes WHERE overall_rating > 60 AND finishing > 60 AND preferred_foot = 'right';",
+      "natural_language": "List right-footed players with decent overall rating and finishing ability (both above 60).",
+      "attributes": ["overall_rating", "finishing", "preferred_foot"]
+    }
+  ]
+}

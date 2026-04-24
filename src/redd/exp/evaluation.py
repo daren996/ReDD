@@ -314,8 +314,8 @@ class EvalDataPop(EvalBasic):
         if not eval_config:
             return
 
-        from redd.core.llm.providers import normalize_provider_name
-        from redd.core.utils.prompt_utils import get_api_key
+        from redd.llm import get_api_key
+        from redd.llm.providers import normalize_provider_name
 
         self.eval_mode = normalize_provider_name(eval_config.get("mode", "deepseek"))
         self.eval_api_key = get_api_key(eval_config, self.eval_mode, api_key)
@@ -342,8 +342,9 @@ class EvalDataPop(EvalBasic):
             self.prompts = {}
 
     def _initialize_committee(self, eval_config: Dict[str, Any], api_key: Optional[str] = None) -> None:
-        from redd.core.llm.providers import normalize_provider_name
-        from redd.core.utils.prompt_utils import create_prompt_map, get_api_key
+        from redd.core.utils.prompt_utils import create_prompt_map
+        from redd.llm import get_api_key
+        from redd.llm.providers import normalize_provider_name
 
         committee_config = eval_config["committee"]
         prompt_paths = eval_config["prompts"]

@@ -78,7 +78,7 @@ def schema_refine(*args, **kwargs):
 
 
 def schema_refinement(*args, **kwargs):
-    from .schema_refinement import schema_refinement as _schema_refinement
+    from .schema_refine import schema_refinement as _schema_refinement
 
     return _schema_refinement(*args, **kwargs)
 
@@ -95,6 +95,13 @@ def run_datapop_evaluation(*args, **kwargs):
     from .runners import run_datapop_evaluation as _run_datapop_evaluation
 
     return _run_datapop_evaluation(*args, **kwargs)
+
+
+def run_evaluation(*args, **kwargs):
+    """Wrapper for experiment-side evaluation workflows."""
+    from .runners import run_evaluation as _run_evaluation
+
+    return _run_evaluation(*args, **kwargs)
 
 
 def run_datapop(*args, **kwargs):
@@ -157,6 +164,7 @@ __all__ = [
     "create_data_loader",
     "run_datapop",
     "run_datapop_evaluation",
+    "run_evaluation",
     "run_ensemble_classifiers",
     "run_pipeline",
     "run_schemagen",

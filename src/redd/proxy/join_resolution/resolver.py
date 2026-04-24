@@ -1,9 +1,9 @@
 """
-Join Guard for CCG Pipeline.
+Join-resolution proxy for the proxy runtime.
 
-A guard that filters documents by join-key membership: for a child table in a join,
-extracts the join attribute from the document and rejects if the value is not
-in the parent table's extracted set.
+A proxy that filters documents by join-key membership: for a child table in a
+join, it extracts the join attribute from the document and rejects values not
+present in the parent table's extracted set.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ def _build_allowed_set(values: List[Any], case_insensitive: bool = True) -> Set[
 
 class JoinResolver:
     """
-    Guard that extracts the join attribute from documents and rejects if
+    Proxy that extracts the join attribute from documents and rejects if
     the value is not in the allowed set (from parent table extractions).
     
     Uses document text; implements uses_documents=True for ProxyExecutor.
@@ -65,7 +65,7 @@ class JoinResolver:
         Initialize JoinResolver.
         
         Args:
-            name: Guard name (e.g., "join_instructor_name")
+            name: Proxy name (e.g., "join_instructor_name")
             attr: Join attribute to extract from document
             allowed_set: Set of allowed values (from parent table)
             extract_fn: Callable(document, schema, attributes) -> {attr: value}
@@ -118,7 +118,7 @@ class JoinResolver:
         """
         raise NotImplementedError(
             "JoinResolver uses documents. Call evaluate_documents() or ensure "
-            "executor passes documents for guards with uses_documents=True."
+            "executor passes documents for proxies with uses_documents=True."
         )
 
     def evaluate_documents(
@@ -192,7 +192,7 @@ def create_join_resolver(
         allowed_set: Set of allowed values from parent table
         oracle: Oracle with extract(document, schema, attributes, doc_id)
         schema: Schema dict for the child table
-        table_name: Optional table name for guard naming
+        table_name: Optional table name for proxy naming
         cost: Relative cost
         pass_rate: Estimated pass rate
         

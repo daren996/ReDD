@@ -1,9 +1,16 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from redd.config import resolve_repo_path
 from redd.proxy.proxy_runtime.pipeline import ProxyPipeline
+from redd.proxy.proxy_runtime.config import (
+    is_proxy_runtime_enabled,
+    normalize_proxy_runtime_config,
+)
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
 from redd.core.utils.data_split import resolve_training_data_count
 from redd.runtime import (
@@ -85,19 +92,67 @@ class RuntimeBoundaryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Deprecated split keys detected"):
             resolve_training_data_count({"proxy_runtime": {"training_size": 32}})
 
-    def test_proxy_pipeline_keeps_legacy_aliases_while_preferring_proxy_naming(self) -> None:
+    def test_proxy_pipeline_prefers_proxy_naming_without_legacy_aliases(self) -> None:
         pipeline = ProxyPipeline(ProxyPipelineConfig())
         sentinel = object()
         pipeline._proxy_factory = sentinel  # type: ignore[assignment]
 
         self.assertIs(pipeline.proxy_factory, sentinel)
-        self.assertIs(pipeline.guard_factory, sentinel)
         self.assertEqual(pipeline._proxy_attribute_name("learned_city"), "city")
-        self.assertEqual(pipeline._guard_attribute_name("learned_city"), "city")
-        self.assertEqual(
-            pipeline._compute_per_proxy_target_recall(2),
-            pipeline._compute_per_guard_target_recall(2),
+        self.assertEqual(pipeline._compute_per_proxy_target_recall(2), 0.975)
+
+    @patch("redd.proxy.proxy_runtime.pipeline.create_data_loader")
+    def test_proxy_pipeline_uses_stable_loader_factory_signature(self, create_loader_mock) -> None:
+        fake_loader = SimpleNamespace(num_docs=0)
+        create_loader_mock.return_value = fake_loader
+
+        pipeline = ProxyPipeline(
+            ProxyPipelineConfig(
+                dataset_path="spider_sqlite/college_2",
+                data_main="dataset",
+            )
         )
+
+        self.assertIs(pipeline.data_loader, fake_loader)
+        create_loader_mock.assert_called_once_with(
+            data_root=Path("dataset/spider_sqlite/college_2"),
+            loader_type="sqlite",
+            loader_config={},
+        )
+
+    def test_proxy_pipeline_load_query_remains_callable_method(self) -> None:
+        fake_loader = SimpleNamespace(
+            data_root=Path("/tmp/fake-dataset"),
+            get_query_info=lambda query_id: {
+                "id": query_id,
+                "query": "find cities",
+                "sql": "select * from city",
+            },
+        )
+        pipeline = ProxyPipeline(ProxyPipelineConfig(query_id="Q1"))
+        pipeline._data_loader = fake_loader  # type: ignore[assignment]
+
+        query_info = pipeline.load_query()
+
+        self.assertEqual(query_info["id"], "Q1")
+        self.assertEqual(query_info["query"], "find cities")
+
+    def test_proxy_runtime_config_normalization_uses_proxy_runtime_section(self) -> None:
+        config = {"proxy_runtime": {"enabled": True, "target_recall": 0.9}}
+
+        self.assertEqual(
+            normalize_proxy_runtime_config(config),
+            {"enabled": True, "target_recall": 0.9},
+        )
+        self.assertTrue(is_proxy_runtime_enabled(config))
+
+    def test_proxy_runtime_enablement_prefers_explicit_proxy_runtime_config(self) -> None:
+        config = {
+            "proxy_runtime": {"enabled": False},
+            "use_proxy_runtime": True,
+        }
+
+        self.assertFalse(is_proxy_runtime_enabled(config))
 
 
 if __name__ == "__main__":

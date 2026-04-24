@@ -1,0 +1,81 @@
+{
+  "dataset": "spider_sqlite/wine_1",
+  "task_db": "gt_schema_task/documents.db",
+  "schema_db": "gt_schema_task/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q3": {
+      "query": "List the wineries that produce wine from the 'Sonoma Coast' appellation with a score greater than 90 and a price greater than $40.",
+      "sql": "SELECT Winery FROM wine WHERE Appelation = 'Sonoma Coast' AND Score > '90' AND Price > '40';",
+      "tables": [
+        "wine"
+      ],
+      "attributes": [
+        "wine.Winery",
+        "wine.Appelation",
+        "wine.Score",
+        "wine.Price"
+      ]
+    },
+    "Q6": {
+      "query": "What are the wineries that produce both Syrah and Pinot Noir wines?",
+      "sql": "SELECT Winery FROM wine WHERE Grape = 'Syrah' INTERSECT SELECT Winery FROM wine WHERE Grape = 'Pinot Noir';",
+      "tables": [
+        "wine"
+      ],
+      "attributes": [
+        "wine.Winery",
+        "wine.Grape"
+      ]
+    },
+    "Q10": {
+      "query": "List the wineries that produce wine from a grape other than Chardonnay or Pinot Noir and have a score greater than 90.",
+      "sql": "SELECT Winery FROM wine WHERE Grape NOT IN ('Chardonnay', 'Pinot Noir') AND Score > '90';",
+      "tables": [
+        "wine"
+      ],
+      "attributes": [
+        "wine.Winery",
+        "wine.Grape",
+        "wine.Score"
+      ]
+    },
+    "Q16": {
+      "query": "Find all wineries that have at least two different grape varieties with score greater than 91.",
+      "sql": "SELECT Winery FROM wine WHERE Score > '91' GROUP BY Winery HAVING COUNT(DISTINCT Grape) >= 2;",
+      "tables": [
+        "wine"
+      ],
+      "attributes": [
+        "wine.Winery",
+        "wine.Score",
+        "wine.Grape"
+      ]
+    },
+    "Q18": {
+      "query": "Find wineries that produce a wine with a score above 94 that are not located in Sonoma county.",
+      "sql": "SELECT DISTINCT w.Winery FROM wine w JOIN appellations a ON w.Appelation = a.Appelation WHERE w.Score > '94' AND a.County != 'Sonoma';",
+      "tables": [
+        "wine",
+        "appellations"
+      ],
+      "attributes": [
+        "wine.Winery",
+        "wine.Score",
+        "appellations.County"
+      ]
+    },
+    "Q19": {
+      "query": "List all appellations that have a Chardonnay and Pinot Noir, both with scores above 90.",
+      "sql": "SELECT Appelation FROM wine WHERE Grape = 'Chardonnay' AND Score > '90' INTERSECT SELECT Appelation FROM wine WHERE Grape = 'Pinot Noir' AND Score > '90';",
+      "tables": [
+        "wine"
+      ],
+      "attributes": [
+        "wine.Appelation",
+        "wine.Grape",
+        "wine.Score"
+      ]
+    }
+  }
+}

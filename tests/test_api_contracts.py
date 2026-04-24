@@ -14,6 +14,7 @@ from redd.api import (
     SchemaGenerator,
     run_pipeline,
 )
+from redd.core.data_loader.data_loader_sqlite import DataLoaderSQLite
 from redd.core.utils.constants import PATH_TEMPLATES
 
 
@@ -84,6 +85,7 @@ class ApiContractTests(unittest.TestCase):
         )
 
         loader_config = populator._build_loader_config(
+            schema_source="generated",
             base_loader_config={"filemap": {"documents": "documents.json"}},
             dataset="wine_1/default_task",
             general_schema_root=Path("/tmp/general"),
@@ -105,6 +107,44 @@ class ApiContractTests(unittest.TestCase):
                 / PATH_TEMPLATES.SCHEMA_QUERY_TAILORED.format(qid="{qid}", param_str="tailored")
             ),
         )
+
+    def test_data_populator_loader_config_uses_ground_truth_schema_when_requested(self) -> None:
+        populator = DataPopulator(
+            {
+                "mode": "openai",
+                "out_main": "outputs/data",
+                "exp_dn_fn_list": ["wine_1/gt_schema_task"],
+                "schema_source": "ground_truth",
+            },
+            configure_logging=False,
+        )
+
+        loader_config = populator._build_loader_config(
+            schema_source="ground_truth",
+            base_loader_config={"filemap": {"documents": "documents.db"}},
+            dataset="wine_1/gt_schema_task",
+            general_schema_root=Path("/tmp/general"),
+            general_schema_param="general",
+            query_schema_root=Path("/tmp/query"),
+            query_schema_param="tailored",
+        )
+
+        self.assertEqual(loader_config["filemap"]["documents"], "documents.db")
+        self.assertEqual(loader_config["filemap"]["schema_general"], "schema.json")
+        self.assertNotIn("schema_query", loader_config["filemap"])
+
+    def test_data_populator_schema_source_accepts_ground_truth_aliases(self) -> None:
+        populator = DataPopulator(
+            {
+                "mode": "openai",
+                "out_main": "outputs/data",
+                "exp_dn_fn_list": ["wine_1/gt_schema_task"],
+                "schema_source": "gt",
+            },
+            configure_logging=False,
+        )
+
+        self.assertEqual(populator._resolve_schema_source_mode(populator.config), "ground_truth")
 
     def test_run_pipeline_uses_default_stage_order(self) -> None:
         calls: list[tuple] = []
@@ -179,6 +219,54 @@ class ApiContractTests(unittest.TestCase):
                 with patch("redd.api.create_data_loader", return_value=FakeLoader()):
                     with self.assertRaisesRegex(FileNotFoundError, "Run PREPROCESSING first"):
                         generator.schema_refinement()
+
+    def test_sqlite_loader_accepts_nested_queries_and_gt_schema_shape(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / "queries.json").write_text(
+                (
+                    "{\n"
+                    '  "dataset": "example",\n'
+                    '  "queries": {\n'
+                    '    "Q1": {\n'
+                    '      "query": "Which winery has score above 90?",\n'
+                    '      "attributes": ["wine.Winery", "wine.Score"]\n'
+                    "    }\n"
+                    "  }\n"
+                    "}\n"
+                ),
+                encoding="utf-8",
+            )
+            (root / "schema.json").write_text(
+                (
+                    "{\n"
+                    '  "tables": {\n'
+                    '    "wine": {\n'
+                    '      "description": "Wine records",\n'
+                    '      "attributes": {\n'
+                    '        "Winery": {"description": "Winery name"},\n'
+                    '        "Score": {"description": "Wine score"}\n'
+                    "      }\n"
+                    "    }\n"
+                    "  }\n"
+                    "}\n"
+                ),
+                encoding="utf-8",
+            )
+
+            loader = DataLoaderSQLite(
+                root,
+                filemap={
+                    "schema_general": "schema.json",
+                },
+            )
+
+            self.assertEqual(list(loader.load_query_dict()), ["Q1"])
+            self.assertEqual(loader.load_schema_general()[0]["Schema Name"], "wine")
+            self.assertEqual(
+                loader.load_schema_general()[0]["Attributes"][0]["Attribute Name"],
+                "Winery",
+            )
 
 
 if __name__ == "__main__":

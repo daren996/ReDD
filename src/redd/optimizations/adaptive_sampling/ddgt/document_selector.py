@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional, Set
 
 import numpy as np
 
-from redd.core.embedding import EmbeddingManager
+from redd.embedding import EmbeddingManager
 
 
 class DDGTDocumentSelector:

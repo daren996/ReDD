@@ -1,0 +1,59 @@
+{
+  "dataset": "spider_sqlite/apartment_rentals",
+  "task_db": "gt_schema_task/documents.db",
+  "schema_db": "gt_schema_task/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q3": {
+      "query": "Find the first and last names of guests who have booked 'Studio' type apartments and whose booking status is 'Confirmed'.",
+      "sql": "SELECT DISTINCT T1.guest_first_name, T1.guest_last_name FROM Apartment_Bookings AS T1 INNER JOIN Apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T2.apt_type_code = 'Studio' AND T1.booking_status_code = 'Confirmed';",
+      "tables": [
+        "Apartment_Bookings",
+        "Apartments"
+      ],
+      "attributes": [
+        "Apartment_Bookings.guest_first_name",
+        "Apartment_Bookings.guest_last_name",
+        "Apartment_Bookings.apt_number",
+        "Apartments.apt_number",
+        "Apartments.apt_type_code"
+      ]
+    },
+    "Q8": {
+      "query": "Find the first names of guests who have a booking status of 'Cancelled'.",
+      "sql": "SELECT guest_first_name FROM Apartment_Bookings WHERE booking_status_code = 'Cancelled';",
+      "tables": [
+        "Apartment_Bookings"
+      ],
+      "attributes": [
+        "Apartment_Bookings.guest_first_name",
+        "Apartment_Bookings.booking_status_code"
+      ]
+    },
+    "Q11": {
+      "query": "List the building managers who manage buildings with 'Flat' descriptions, along with the count of buildings they manage.",
+      "sql": "SELECT building_manager, COUNT(*) FROM Apartment_Buildings WHERE building_description = 'Flat' GROUP BY building_manager;",
+      "tables": [
+        "Apartment_Buildings"
+      ],
+      "attributes": [
+        "Apartment_Buildings.building_manager",
+        "Apartment_Buildings.building_description"
+      ]
+    },
+    "Q14": {
+      "query": "Find apartment numbers that have both 'Balcony' and 'Boardband' facilities, and are also of type 'Studio'.",
+      "sql": "SELECT T1.apt_number FROM Apartment_Facilities AS T1 INNER JOIN Apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T1.facility_code = 'Balcony' INTERSECT SELECT T1.apt_number FROM Apartment_Facilities AS T1 INNER JOIN Apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T1.facility_code = 'Boardband' AND T2.apt_type_code = 'Studio';",
+      "tables": [
+        "Apartment_Facilities",
+        "Apartments"
+      ],
+      "attributes": [
+        "Apartment_Facilities.apt_number",
+        "Apartment_Facilities.facility_code",
+        "Apartments.apt_number",
+        "Apartments.apt_type_code"
+      ]
+    }
+  }
+}

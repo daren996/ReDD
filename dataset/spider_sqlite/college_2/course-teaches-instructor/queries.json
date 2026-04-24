@@ -1,0 +1,30 @@
+{
+  "dataset": "spider_sqlite/college_2",
+  "task_db": "course-teaches-instructor/documents.db",
+  "schema_db": "course-teaches-instructor/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q1": {
+      "query": "",
+      "sql": "",
+      "tables": [
+        "CourseInformation",
+        "CourseInstructorAssignments",
+        "Instructors"
+      ],
+      "attributes": [
+        "CourseInformation.course_title",
+        "CourseInformation.credits",
+        "CourseInformation.department",
+        "CourseInformation.course_description",
+        "CourseInstructorAssignments.course_title",
+        "CourseInstructorAssignments.semester",
+        "CourseInstructorAssignments.offering_year",
+        "CourseInstructorAssignments.instructor_name",
+        "Instructors.instructor_name",
+        "Instructors.department",
+        "Instructors.annual_salary"
+      ]
+    }
+  }
+}

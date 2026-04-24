@@ -1,0 +1,70 @@
+{
+  "dataset": "spider_sqlite/soccer_1",
+  "task_db": "gt_schema_task/documents.db",
+  "schema_db": "gt_schema_task/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q2": {
+      "query": "Find the player names and their overall ratings who have potential greater than 70 and aggression greater than 60.",
+      "sql": "SELECT player_name, overall_rating FROM player_attributes WHERE potential > '70' AND aggression > '60';",
+      "tables": [
+        "player_attributes"
+      ],
+      "attributes": [
+        "player_attributes.player_name",
+        "player_attributes.overall_rating",
+        "player_attributes.potential",
+        "player_attributes.aggression"
+      ]
+    },
+    "Q6": {
+      "query": "What are the average overall rating and potential of players whose preferred foot is left?",
+      "sql": "SELECT AVG(overall_rating), AVG(potential) FROM player_attributes WHERE preferred_foot = 'left';",
+      "tables": [
+        "player_attributes"
+      ],
+      "attributes": [
+        "player_attributes.overall_rating",
+        "player_attributes.potential",
+        "player_attributes.preferred_foot"
+      ]
+    },
+    "Q8": {
+      "query": "List the player names and their heights, showing only those players whose names start with 'A' and whose height is greater than 182cm.",
+      "sql": "SELECT p.player_name, p.height FROM player p WHERE p.player_name LIKE 'A%' AND p.height > '182';",
+      "tables": [
+        "player"
+      ],
+      "attributes": [
+        "player.player_name",
+        "player.height"
+      ]
+    },
+    "Q14": {
+      "query": "List the names of players who have a shot power greater than 60 and a long shots value greater than 50, and whose agility is also greater than 60.",
+      "sql": "SELECT player_name FROM player_attributes WHERE shot_power > '60' AND long_shots > '50' AND agility > '60';",
+      "tables": [
+        "player_attributes"
+      ],
+      "attributes": [
+        "player_attributes.player_name",
+        "player_attributes.shot_power",
+        "player_attributes.long_shots",
+        "player_attributes.agility"
+      ]
+    },
+    "Q19": {
+      "query": "List the players whose acceleration is greater than 70 and agility is greater than 70 and ball control is greater than 65.",
+      "sql": "SELECT player_name FROM player_attributes WHERE acceleration > '70' AND agility > '70' AND ball_control > '65';",
+      "tables": [
+        "player_attributes"
+      ],
+      "attributes": [
+        "player_attributes.player_name",
+        "player_attributes.acceleration",
+        "player_attributes.agility",
+        "player_attributes.ball_control"
+      ]
+    }
+  }
+}

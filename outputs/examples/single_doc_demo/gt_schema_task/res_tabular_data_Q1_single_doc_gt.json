@@ -1,0 +1,10 @@
+{
+  "doc-1": {
+    "res": "wine",
+    "data": {
+      "Winery": "Mount Demo Winery",
+      "Appelation": "Sonoma Coast",
+      "Score": "95"
+    }
+  }
+}

@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 import numpy as np
 
-from ..embedding import EmbeddingManager
+from redd.embedding import EmbeddingManager
 from ..utils.prompt_utils import (
     PromptDeepSeek,
     PromptGPT,

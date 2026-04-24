@@ -1,16 +1,8 @@
-"""
-Document Chunking Module
+"""Internal document-chunking utilities.
 
-This module provides various document chunking algorithms for splitting
-documents into smaller segments. The chunked documents are written back
-to SQLite database files for use in downstream tasks.
-
-Available chunkers:
-- BaseChunker: Abstract base class for all chunking algorithms
-- FixedSizeChunker: Fixed-length chunking with optional overlap
-- FixedSizeTokenChunker: Token-based chunking with optional overlap
-- ParagraphChunker: Paragraph-based chunking (TODO)
-- MapReduceChunker: Map-Reduce style chunking (TODO)
+This module provides lower-level chunking implementations used by preprocessing
+and data-loading workflows. It intentionally remains an internal utility family
+for now rather than a stable public facade.
 """
 
 from __future__ import annotations

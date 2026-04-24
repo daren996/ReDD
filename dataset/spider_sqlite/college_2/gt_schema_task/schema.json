@@ -1,0 +1,121 @@
+{
+  "tables": {
+    "course": {
+      "description": "College courses offered across departments with credit information. Contains 200 courses.",
+      "attributes": {
+        "credits": {
+          "description": "Number of credit hours for the course. Type: TEXT (numeric string). Values: '3' or '4'.",
+          "type": "TEXT",
+          "examples": [
+            "3",
+            "4"
+          ]
+        },
+        "dept_name": {
+          "description": "Name of the department offering the course. Type: TEXT. Examples: 'Cybernetics', 'Elec. Eng.', 'Marketing', 'Pol. Sci.', 'Psychology'.",
+          "type": "TEXT",
+          "examples": [
+            "Cybernetics",
+            "Elec. Eng.",
+            "Marketing",
+            "Pol. Sci.",
+            "Psychology"
+          ]
+        },
+        "title": {
+          "description": "Title or name of the course. Type: TEXT. Examples: 'Astronomy', 'Logic', 'Petroleum Engineering', 'European History', 'Visual BASIC'.",
+          "type": "TEXT",
+          "examples": [
+            "Astronomy",
+            "Logic",
+            "Petroleum Engineering",
+            "European History",
+            "Visual BASIC"
+          ]
+        }
+      }
+    },
+    "instructor": {
+      "description": "Faculty instructors with department affiliation and salary. Contains 50 instructors.",
+      "attributes": {
+        "dept_name": {
+          "description": "Name of the department the instructor belongs to. Type: TEXT. Examples: 'Astronomy', 'Athletics', 'Languages', 'Statistics'.",
+          "type": "TEXT",
+          "examples": [
+            "Astronomy",
+            "Athletics",
+            "Languages",
+            "Statistics"
+          ]
+        },
+        "name": {
+          "description": "Last name of the instructor. Type: TEXT. Examples: 'Romero', 'Tung', 'Konstantinides', 'Gutierrez', 'Bawa'.",
+          "type": "TEXT",
+          "examples": [
+            "Romero",
+            "Tung",
+            "Konstantinides",
+            "Gutierrez",
+            "Bawa"
+          ]
+        },
+        "salary": {
+          "description": "Annual salary of the instructor in dollars. Type: TEXT (decimal string). Examples: '79070.08', '50482.03', '32570.5'.",
+          "type": "TEXT",
+          "examples": [
+            "79070.08",
+            "50482.03",
+            "32570.5",
+            "45310.53",
+            "72140.88"
+          ]
+        }
+      }
+    },
+    "teaches": {
+      "description": "Teaching assignments linking instructors to courses with semester and year. Contains 100 records.",
+      "attributes": {
+        "course_title": {
+          "description": "Title of the course being taught. References course.title. Type: TEXT. Examples: 'Embedded Systems', 'Graph Theory', 'The Beatles'.",
+          "type": "TEXT",
+          "examples": [
+            "Embedded Systems",
+            "Graph Theory",
+            "The Beatles",
+            "Drama",
+            "Rock and Roll"
+          ]
+        },
+        "instructor_name": {
+          "description": "Name of the instructor teaching the course. References instructor.name. Type: TEXT. Examples: 'Mingoz', 'DAgostino', 'Luo'.",
+          "type": "TEXT",
+          "examples": [
+            "Mingoz",
+            "DAgostino",
+            "Luo",
+            "Liley",
+            "Morris"
+          ]
+        },
+        "semester": {
+          "description": "Semester when the course is taught. Type: TEXT. Values: 'Fall' or 'Spring'.",
+          "type": "TEXT",
+          "examples": [
+            "Fall",
+            "Spring"
+          ]
+        },
+        "year": {
+          "description": "Academic year when the course is taught. Type: TEXT (four-digit year string). Examples: '2002', '2006', '2009', '2010'.",
+          "type": "TEXT",
+          "examples": [
+            "2002",
+            "2006",
+            "2009",
+            "2010"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -47,9 +47,10 @@ dev = [
 
 [project.scripts]
 redd = "redd.cli.main:main"
-redd-schemagen = "redd.cli.schemagen:main"
+redd-preprocessing = "redd.cli.preprocessing:main"
+redd-schema-refinement = "redd.cli.schema_refinement:main"
 redd-datapop = "redd.cli.datapop:main"
-redd-correction = "redd.cli.correction:main"
+redd-exp = "redd.cli.exp:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

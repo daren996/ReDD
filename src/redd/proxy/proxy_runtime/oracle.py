@@ -11,7 +11,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 class GoldenOracle:
     """
     Oracle that returns golden attributes from get_doc_info (no LLM).
-    Used for filter-accuracy evaluation: CCG guards run, but extraction uses ground truth.
+    Used for filter-accuracy evaluation: proxy filtering still runs, but extraction uses ground truth.
     """
 
     def __init__(self, data_loader: Any):
@@ -120,9 +120,10 @@ class DataPopOracle:
             return
         
         from redd.core.utils.prompt_utils import (
-            PromptGPT, PromptDeepSeek, PromptTogether, 
-            PromptSiliconFlow, PromptGemini, get_api_key
+            PromptGPT, PromptDeepSeek, PromptTogether,
+            PromptSiliconFlow, PromptGemini,
         )
+        from redd.llm import get_api_key
         
         # Get API key
         config = {"mode": self.mode, "llm_model": self.llm_model}

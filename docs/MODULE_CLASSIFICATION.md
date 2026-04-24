@@ -12,25 +12,26 @@ These modules define the supported import surface for callers using the installe
 - `src/redd/preprocessing.py`
 - `src/redd/schema_global.py`
 - `src/redd/schema_refine.py`
-- `src/redd/schema_refinement.py`
 - `src/redd/data_extraction.py`
 - `src/redd/loader.py`
 - `src/redd/pipeline.py`
+
+The legacy `schema_refinement` helper remains supported as a public API alias
+exported from `src/redd/__init__.py` and `src/redd/api.py`, but it is no longer
+implemented as a standalone `src/redd/schema_refinement.py` module.
 
 These adapter-style public modules are also stable package surfaces for the first migration wave:
 
 - `src/redd/adaptive_sampling.py`
 - `src/redd/doc_filtering.py`
-- `src/redd/embedding.py`
+- `src/redd/embedding/`
 - `src/redd/schema_global.py`
-- `src/redd/global_schema.py`
 - `src/redd/join_resolution.py`
 - `src/redd/parameter_optimization.py`
 - `src/redd/predicate_proxy.py`
 - `src/redd/proxy_runtime.py`
 - `src/redd/retrieval.py`
 - `src/redd/schema_refine.py`
-- `src/redd/schema_tailoring.py`
 - `src/redd/text_to_sql.py`
 
 Execution-side optimization surfaces such as doc filtering, predicate proxies, join resolution,
@@ -53,10 +54,10 @@ Current implementation-heavy internals still live under:
 - `src/redd/cli/`
 - `src/redd/runtime.py`
 - `src/redd/config.py`
+- `src/redd/llm/`
 - `src/redd/core/data_loader/`
 - `src/redd/core/data_population/`
 - `src/redd/core/schema_gen/`
-- `src/redd/core/llm/`
 - `src/redd/core/schema_tailor/`
 - `src/redd/core/utils/`
 
@@ -83,7 +84,6 @@ These areas are useful for research workflows but should not be treated as stabl
 - `src/redd/correction/`
 - `src/redd/exp/`
 - `src/redd/exp/experiments/`
-- `src/redd/core/evaluation/`
 - `dataset/`
 - `papers/`
 - `prompts/` source prompt templates used to produce packaged prompt resources

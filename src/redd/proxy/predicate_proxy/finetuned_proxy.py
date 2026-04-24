@@ -1,5 +1,5 @@
 """
-Text Classification Guards for CCG Pipeline.
+Text classification proxies for the proxy runtime.
 
 Uses GLiClass model (zero-shot or fine-tuned) for document predicate filtering.
 """
@@ -54,7 +54,7 @@ def _is_gliclass_model(model_name: str) -> bool:
     """Return True if model_name indicates GLiClass or a pretrained model path."""
     if "gliclass" in model_name.lower():
         return True
-    # Local path to pretrained GLiClass (e.g. outputs/pretrained_guards/.../final_model)
+    # Local path to pretrained GLiClass (e.g. outputs/pretrained_proxies/.../final_model)
     p = Path(model_name)
     return p.exists() and p.is_dir()
 
@@ -71,7 +71,7 @@ def _resolve_model_path(model_name: str) -> str:
 
 
 def _set_reproducible_seed(seed: int) -> None:
-    """Best-effort deterministic seeding for fine-tuned guard training."""
+    """Best-effort deterministic seeding for fine-tuned proxy training."""
     random.seed(seed)
     np.random.seed(seed)
     if TORCH_AVAILABLE:
@@ -120,9 +120,9 @@ def _format_predicate_context(predicate: Any, query_text: str = "") -> str:
     return f"Does this document satisfy the filter: {pred_str}?"
 
 
-class FineTunedTextGuard:
+class FineTunedTextProxy:
     """
-    Guard that uses a fine-tuned transformer for document classification.
+    Proxy that uses a fine-tuned transformer for document classification.
     Takes raw text (document + predicate context) instead of embeddings.
     """
 
@@ -183,20 +183,20 @@ class FineTunedTextGuard:
     def evaluate(self, embeddings: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
         Required by interface but we use documents. Call evaluate_documents instead.
-        This raises if called - executor should use evaluate_documents for this guard.
+        This raises if called - executor should use evaluate_documents for this proxy.
         """
         raise NotImplementedError(
-            "FineTunedTextGuard uses documents. Call evaluate_documents() or ensure "
-            "executor passes documents for guards with uses_documents=True."
+            "FineTunedTextProxy uses documents. Call evaluate_documents() or ensure "
+            "executor passes documents for proxies with uses_documents=True."
         )
 
     def evaluate_documents(self, documents: List[str], **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Evaluate guard on raw documents.
+        Evaluate a proxy on raw documents.
 
         Args:
             documents: List of document texts
-            **kwargs: Ignored (e.g. doc_ids for other guards)
+            **kwargs: Ignored (e.g. doc_ids for other proxies)
 
         Returns:
             (scores, passed_mask)
@@ -237,8 +237,8 @@ class FineTunedTextGuard:
 
 class GLiClassProxy:
     """
-    Guard that uses GLiClass zero-shot classification (no fine-tuning).
-    Same interface as FineTunedTextGuard.
+    Proxy that uses GLiClass zero-shot classification (no fine-tuning).
+    Same interface as FineTunedTextProxy.
     """
 
     uses_documents = True
@@ -290,7 +290,7 @@ class GLiClassProxy:
     def evaluate(self, embeddings: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         raise NotImplementedError(
             "GLiClassProxy uses documents. Call evaluate_documents() or ensure "
-            "executor passes documents for guards with uses_documents=True."
+            "executor passes documents for proxies with uses_documents=True."
         )
 
     def evaluate_documents(self, documents: List[str], **kwargs) -> Tuple[np.ndarray, np.ndarray]:
@@ -353,7 +353,7 @@ def _build_icl_examples(
     return examples
 
 
-def _train_gliclass_guard(
+def _train_gliclass_proxy(
     attribute: str,
     predicate_context: str,
     documents: List[str],
@@ -369,7 +369,7 @@ def _train_gliclass_guard(
     icl_examples_per_class: int = 3,
 ) -> Tuple[GLiClassProxy, None]:
     """
-    Create a GLiClass guard. Fine-tunes when epochs > 0 and training is available;
+    Create a GLiClass proxy. Fine-tunes when epochs > 0 and training is available;
     otherwise uses zero-shot. When use_icl=True, adds few-shot examples for in-context learning.
     """
     device = "cuda:0" if TORCH_AVAILABLE and torch.cuda.is_available() else "cpu"
@@ -422,7 +422,7 @@ def _train_gliclass_guard(
             data_collator = DataCollatorWithPadding(device=device)
 
             save_path = (
-                Path(output_dir) / attribute if output_dir else Path(f"./guard_checkpoints/gliclass_{attribute}")
+                Path(output_dir) / attribute if output_dir else Path(f"./proxy_checkpoints/gliclass_{attribute}")
             )
             save_path.mkdir(parents=True, exist_ok=True)
 
@@ -515,7 +515,7 @@ def _train_gliclass_guard(
         threshold = 0.5
 
     n_pos = sum(labels)
-    guard = GLiClassProxy(
+    proxy = GLiClassProxy(
         name=f"gliclass_{attribute}",
         pipeline=pipeline,
         threshold=threshold,
@@ -524,7 +524,7 @@ def _train_gliclass_guard(
         predicate_context=predicate_context,
         icl_examples=icl_examples if icl_examples else None,
     )
-    return guard, None
+    return proxy, None
 
 
 def train_finetuned_proxy(
@@ -543,13 +543,13 @@ def train_finetuned_proxy(
     icl_examples_per_class: int = 3,
 ) -> Tuple[GLiClassProxy, None]:
     """
-    Train or create a GLiClass guard for binary classification.
+    Train or create a GLiClass proxy for binary classification.
 
     Fine-tunes when epochs > 0 (if gliclass.training available),
     else zero-shot with threshold calibration.
 
     Args:
-        attribute: Attribute name (for guard naming)
+        attribute: Attribute name (for proxy naming)
         predicate_context: Formatted predicate string for model input
         documents: Training document texts
         labels: Binary labels (1 = satisfies predicate)
@@ -562,25 +562,25 @@ def train_finetuned_proxy(
         seed: Random seed for reproducible training
 
     Returns:
-        (Guard, tokenizer or None for GLiClass)
+        (Proxy, tokenizer or None for GLiClass)
     """
     if not TORCH_AVAILABLE or not TRANSFORMERS_AVAILABLE:
-        raise ImportError("PyTorch and transformers required for fine-tuned guards")
+        raise ImportError("PyTorch and transformers required for fine-tuned proxies")
 
     _set_reproducible_seed(seed)
 
     # GLiClass path only (no fallback)
     if not GLICLASS_AVAILABLE:
         raise ImportError(
-            "gliclass package required for learned guards. Install with: pip install gliclass"
+            "gliclass package required for learned proxies. Install with: pip install gliclass"
         )
     if not _is_gliclass_model(model_name):
         raise ValueError(
-            f"Learned guards require a GLiClass model (e.g. knowledgator/gliclass-instruct-large-v1.0). "
+            f"Learned proxies require a GLiClass model (e.g. knowledgator/gliclass-instruct-large-v1.0). "
             f"Got: {model_name}"
         )
 
-    return _train_gliclass_guard(
+    return _train_gliclass_proxy(
         attribute=attribute,
         predicate_context=predicate_context,
         documents=documents,

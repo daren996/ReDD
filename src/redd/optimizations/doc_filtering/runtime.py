@@ -12,7 +12,7 @@ import logging
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, Set
 
-from redd.core.embedding import EmbeddingManager
+from redd.embedding import EmbeddingManager
 from redd.core.utils.constants import PATH_TEMPLATES
 
 from .base import DocFilterBase, NoOpFilter

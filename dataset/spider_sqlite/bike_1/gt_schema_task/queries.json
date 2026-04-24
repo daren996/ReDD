@@ -1,0 +1,47 @@
+{
+  "dataset": "spider_sqlite/bike_1",
+  "task_db": "gt_schema_task/documents.db",
+  "schema_db": "gt_schema_task/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q2": {
+      "query": "Show the station names and available bikes for stations with more than 5 available bikes at '2015-06-02 14:00:00'.",
+      "sql": "SELECT station_name, bikes_available FROM status WHERE bikes_available > '5' AND time LIKE '2015-06-02 14:%';",
+      "tables": [
+        "status"
+      ],
+      "attributes": [
+        "status.station_name",
+        "status.bikes_available",
+        "status.time"
+      ]
+    },
+    "Q8": {
+      "query": "Find the names of stations that had at least 10 bikes available at any point in time and are located in 'San Jose'.",
+      "sql": "SELECT DISTINCT s.name FROM station s JOIN status st ON s.name = st.station_name WHERE st.bikes_available >= '10' AND s.city = 'San Jose';",
+      "tables": [
+        "station",
+        "status"
+      ],
+      "attributes": [
+        "station.name",
+        "station.city",
+        "status.station_name",
+        "status.bikes_available"
+      ]
+    },
+    "Q11": {
+      "query": "Find the stations where the number of bikes available is greater than 5 and the number of docks available is less than 10. List station name and time.",
+      "sql": "SELECT station_name, time FROM status WHERE bikes_available > '5' AND docks_available < '10';",
+      "tables": [
+        "status"
+      ],
+      "attributes": [
+        "status.station_name",
+        "status.bikes_available",
+        "status.docks_available",
+        "status.time"
+      ]
+    }
+  }
+}

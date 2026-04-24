@@ -1,0 +1,42 @@
+{
+  "dataset": "spider_sqlite/flight_4",
+  "task_db": "routes-airports-airlines/documents.db",
+  "schema_db": "routes-airports-airlines/schema.db",
+  "gt_db": "gt_data.db",
+  "queries": {
+    "Q1": {
+      "query": "",
+      "sql": "",
+      "tables": [
+        "Airlines",
+        "Airports",
+        "FlightRoutes"
+      ],
+      "attributes": [
+        "Airlines.airline_name",
+        "Airlines.iata_code",
+        "Airlines.icao_code",
+        "Airlines.callsign",
+        "Airlines.country",
+        "Airlines.active",
+        "Airports.airport_name",
+        "Airports.city",
+        "Airports.country",
+        "Airports.latitude",
+        "Airports.longitude",
+        "Airports.elevation",
+        "Airports.iata_code",
+        "Airports.icao_code",
+        "FlightRoutes.airline_name",
+        "FlightRoutes.departure_airport_name",
+        "FlightRoutes.departure_airport_code",
+        "FlightRoutes.departure_country",
+        "FlightRoutes.arrival_airport_name",
+        "FlightRoutes.arrival_airport_code",
+        "FlightRoutes.arrival_country",
+        "FlightRoutes.operation_focus",
+        "FlightRoutes.route_type"
+      ]
+    }
+  }
+}

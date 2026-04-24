@@ -97,7 +97,7 @@ class ProxyPipelineConfig:
     # When True, train_doc_ids may overlap with doc_ids (table-relevant training)
     allow_train_test_overlap: bool = False
 
-    # Model for learned guards (GLiClass). Can be HuggingFace model name or path to pretrained model.
+    # Model for learned proxies (GLiClass). Can be HuggingFace model name or path to pretrained model.
     finetuned_model: str = "knowledgator/gliclass-instruct-large-v1.0"
     finetuned_epochs: int = 3
     finetuned_learning_rate: float = 2e-5
