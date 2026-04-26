@@ -1,0 +1,117 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.college_2",
+  "tables": [
+    {
+      "table_id": "course",
+      "name": "course",
+      "description": "College courses offered across departments with credit information. Contains 200 courses.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "course.credits",
+          "name": "credits",
+          "type": "string",
+          "description": "Number of credit hours for the course. Type: TEXT (numeric string). Values: '3' or '4'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course.dept_name",
+          "name": "dept_name",
+          "type": "string",
+          "description": "Name of the department offering the course. Type: TEXT. Examples: 'Cybernetics', 'Elec. Eng.', 'Marketing', 'Pol. Sci.', 'Psychology'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course.title",
+          "name": "title",
+          "type": "string",
+          "description": "Title or name of the course. Type: TEXT. Examples: 'Astronomy', 'Logic', 'Petroleum Engineering', 'European History', 'Visual BASIC'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "instructor",
+      "name": "instructor",
+      "description": "Faculty instructors with department affiliation and salary. Contains 50 instructors.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "instructor.dept_name",
+          "name": "dept_name",
+          "type": "string",
+          "description": "Name of the department the instructor belongs to. Type: TEXT. Examples: 'Astronomy', 'Athletics', 'Languages', 'Statistics'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "instructor.name",
+          "name": "name",
+          "type": "string",
+          "description": "Last name of the instructor. Type: TEXT. Examples: 'Romero', 'Tung', 'Konstantinides', 'Gutierrez', 'Bawa'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "instructor.salary",
+          "name": "salary",
+          "type": "string",
+          "description": "Annual salary of the instructor in dollars. Type: TEXT (decimal string). Examples: '79070.08', '50482.03', '32570.5'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "teaches",
+      "name": "teaches",
+      "description": "Teaching assignments linking instructors to courses with semester and year. Contains 100 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "teaches.course_title",
+          "name": "course_title",
+          "type": "string",
+          "description": "Title of the course being taught. References course.title. Type: TEXT. Examples: 'Embedded Systems', 'Graph Theory', 'The Beatles'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "teaches.instructor_name",
+          "name": "instructor_name",
+          "type": "string",
+          "description": "Name of the instructor teaching the course. References instructor.name. Type: TEXT. Examples: 'Mingoz', 'DAgostino', 'Luo'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "teaches.semester",
+          "name": "semester",
+          "type": "string",
+          "description": "Semester when the course is taught. Type: TEXT. Values: 'Fall' or 'Spring'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "teaches.year",
+          "name": "year",
+          "type": "string",
+          "description": "Academic year when the course is taught. Type: TEXT (four-digit year string). Examples: '2002', '2006', '2009', '2010'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

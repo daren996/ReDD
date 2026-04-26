@@ -1,0 +1,49 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "galois.fortune.default_task",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.company",
+        "fortune500_companies.ticker",
+        "fortune500_companies.sector",
+        "fortune500_companies.industry",
+        "fortune500_companies.is_profitable",
+        "fortune500_companies.founder_is_ceo",
+        "fortune500_companies.is_female_ceo",
+        "fortune500_companies.growth_in_jobs",
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.gained_in_rank",
+        "fortune500_companies.dropped_in_rank",
+        "fortune500_companies.newcomer_to_the_fortune500",
+        "fortune500_companies.global500",
+        "fortune500_companies.worlds_most_admired_companies",
+        "fortune500_companies.best_companies_to_work_for",
+        "fortune500_companies.number_of_employees",
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.profits_m",
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.assets_m",
+        "fortune500_companies.ceo",
+        "fortune500_companies.country",
+        "fortune500_companies.headquarters_city",
+        "fortune500_companies.headquarters_state",
+        "fortune500_companies.company_type",
+        "fortune500_companies.market_cap_updated_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

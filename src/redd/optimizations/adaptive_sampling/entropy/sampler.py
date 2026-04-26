@@ -15,7 +15,8 @@ References:
 
 import logging
 import math
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
+
 from ..schema_entropy import SchemaEntropyCalculator
 
 
@@ -131,7 +132,7 @@ class AdaptiveSampler:
             if stability_met:
                 reasons.append(f"stability(streak={self.low_entropy_streak}>={self.m})")
             if probabilistic_met:
-                reasons.append(f"probabilistic((1-ε)^n*F <= δ)")
+                reasons.append("probabilistic((1-ε)^n*F <= δ)")
                 
             self.stop_reason = " AND ".join(reasons)
             

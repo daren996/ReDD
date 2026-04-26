@@ -1,0 +1,38 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.wine_1.wine_appellations",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "appellation.region_name",
+        "appellation.main_location",
+        "appellation.ava_status",
+        "appellation.terroir_description",
+        "wines.winery_name",
+        "wines.wine_name",
+        "wines.vintage_year",
+        "wines.region",
+        "wines.vineyard_name",
+        "wines.price",
+        "wines.score",
+        "wines.production_volume",
+        "wines.drinking_window",
+        "wines.grape_variety",
+        "wines.appellation"
+      ],
+      "output_columns": [
+        "appellation.appellation"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

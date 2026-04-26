@@ -1,0 +1,693 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "bird.california_schools",
+  "tables": [
+    {
+      "table_id": "frpm",
+      "name": "frpm",
+      "description": "Free or Reduced Price Meals (FRPM) eligibility data for California schools, used as a socioeconomic indicator. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "frpm.2013_14_calpads_fall_1_certification_status",
+          "name": "2013_14_calpads_fall_1_certification_status",
+          "type": "string",
+          "description": "Certification status flag from the CALPADS system for 2013-14 Fall 1 reporting. Type: TEXT. Values: '1' (certified).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.academic_year",
+          "name": "academic_year",
+          "type": "string",
+          "description": "Academic year for the data. Type: TEXT. Example: '2014-2015'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.charter_funding_type",
+          "name": "charter_funding_type",
+          "type": "string",
+          "description": "Funding type for charter schools. Type: TEXT. Values: 'Directly funded', 'Locally funded', or empty if not a charter school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.charter_school_y_n",
+          "name": "charter_school_y_n",
+          "type": "string",
+          "description": "Whether the school is a charter school. Type: TEXT. Values: '0.0' (no) or '1.0' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.charter_school_number",
+          "name": "charter_school_number",
+          "type": "string",
+          "description": "Charter school identification number. Type: TEXT. Empty if not a charter school. Examples: '0067'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.county_name",
+          "name": "county_name",
+          "type": "string",
+          "description": "California county where the school is located. Type: TEXT. Examples: 'Alameda', 'Butte', 'Imperial'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.district_name",
+          "name": "district_name",
+          "type": "string",
+          "description": "Name of the school district. Type: TEXT. Examples: 'Oakland Unified', 'Paradise Unified', 'Butte County Office of Education'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.district_type",
+          "name": "district_type",
+          "type": "string",
+          "description": "Type of school district. Type: TEXT. Values: 'Unified School District', 'County Office of Education (COE)', 'Elementary School District', 'High School District'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.educational_option_type",
+          "name": "educational_option_type",
+          "type": "string",
+          "description": "Type of educational program. Type: TEXT. Examples: 'Special Education School', 'Continuation School', 'Juvenile Court School', 'Traditional'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.enrollment_ages_5_17",
+          "name": "enrollment_ages_5_17",
+          "type": "string",
+          "description": "Number of enrolled students aged 5-17. Type: TEXT (numeric string or empty). Examples: '95.0', '25.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.enrollment_k_12",
+          "name": "enrollment_k_12",
+          "type": "string",
+          "description": "Total K-12 enrollment count. Type: TEXT (numeric string). Examples: '1.0', '102.0', '28.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.frpm_count_ages_5_17",
+          "name": "frpm_count_ages_5_17",
+          "type": "string",
+          "description": "Count of students aged 5-17 eligible for Free or Reduced Price Meals. Type: TEXT (numeric or empty).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.frpm_count_k_12",
+          "name": "frpm_count_k_12",
+          "type": "string",
+          "description": "Count of K-12 students eligible for Free or Reduced Price Meals. Type: TEXT (numeric or empty).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.free_meal_count_ages_5_17",
+          "name": "free_meal_count_ages_5_17",
+          "type": "string",
+          "description": "Count of students aged 5-17 eligible for Free Meals specifically. Type: TEXT (numeric or empty).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.free_meal_count_k_12",
+          "name": "free_meal_count_k_12",
+          "type": "string",
+          "description": "Count of K-12 students eligible for Free Meals specifically. Type: TEXT (numeric or empty).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.high_grade",
+          "name": "high_grade",
+          "type": "string",
+          "description": "Highest grade level served by the school. Type: TEXT. Examples: '12', 'Adult', 'K'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.low_grade",
+          "name": "low_grade",
+          "type": "string",
+          "description": "Lowest grade level served by the school. Type: TEXT. Examples: 'K', '9', 'Adult'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.nslp_provision_status",
+          "name": "nslp_provision_status",
+          "type": "string",
+          "description": "National School Lunch Program provision status. Type: TEXT. Values: 'Provision 2', 'Provision 3', or empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_frpm_ages_5_17",
+          "name": "percent_eligible_frpm_ages_5_17",
+          "type": "string",
+          "description": "Percentage of students aged 5-17 eligible for FRPM. Type: TEXT (decimal 0-1). Examples: '0.842' (~84.2%).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_frpm_k_12",
+          "name": "percent_eligible_frpm_k_12",
+          "type": "string",
+          "description": "Percentage of K-12 students eligible for FRPM. Type: TEXT (decimal 0-1). Examples: '0.843' (~84.3%).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_free_ages_5_17",
+          "name": "percent_eligible_free_ages_5_17",
+          "type": "string",
+          "description": "Percentage of students aged 5-17 eligible for Free Meals. Type: TEXT (decimal 0-1).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_free_k_12",
+          "name": "percent_eligible_free_k_12",
+          "type": "string",
+          "description": "Percentage of K-12 students eligible for Free Meals. Type: TEXT (decimal 0-1).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.school_name",
+          "name": "school_name",
+          "type": "string",
+          "description": "Name of the school. Type: TEXT. Examples: 'Young Adult Program', 'Ridgeview High (Continuation)', 'Table Mountain'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.school_type",
+          "name": "school_type",
+          "type": "string",
+          "description": "Classification of the school type. Type: TEXT. Examples: 'Special Education Schools (Public)', 'Continuation High Schools', 'Juvenile Court Schools'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "satscores",
+      "name": "satscores",
+      "description": "SAT test scores data for California schools and districts, including average scores and test-taker counts. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "satscores.avg_scr_math",
+          "name": "avg_scr_math",
+          "type": "string",
+          "description": "Average SAT Math score. Type: TEXT (decimal string or empty). Examples: '451.0'. Range: typically 200-800.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.avg_scr_read",
+          "name": "avg_scr_read",
+          "type": "string",
+          "description": "Average SAT Reading score. Type: TEXT (decimal string or empty). Examples: '441.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.avg_scr_write",
+          "name": "avg_scr_write",
+          "type": "string",
+          "description": "Average SAT Writing score. Type: TEXT (decimal string or empty). Examples: '434.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.num_ge1500",
+          "name": "num_ge1500",
+          "type": "string",
+          "description": "Number of test takers scoring >= 1500 total (combined Math+Reading+Writing). Type: TEXT (decimal or empty). Examples: '13.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.num_tst_takr",
+          "name": "num_tst_takr",
+          "type": "string",
+          "description": "Total number of SAT test takers. Type: TEXT (numeric string). Examples: '67', '0', '9'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.cname",
+          "name": "cname",
+          "type": "string",
+          "description": "County name. Type: TEXT. Examples: 'Imperial', 'Humboldt'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.dname",
+          "name": "dname",
+          "type": "string",
+          "description": "District name. Type: TEXT. Examples: 'Holtville Unified', 'Loleta Union Elementary', 'San Pasqual Valley Unified'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.enroll12",
+          "name": "enroll12",
+          "type": "string",
+          "description": "12th grade enrollment count. Type: TEXT (numeric string). Examples: '142', '22', '38'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.rtype",
+          "name": "rtype",
+          "type": "string",
+          "description": "Record type indicating reporting level. Type: TEXT. Values: 'S' (school), 'D' (district), 'X' (state).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.sname",
+          "name": "sname",
+          "type": "string",
+          "description": "School name (empty for district-level records). Type: TEXT. Examples: 'Pacific View Charter'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "schools",
+      "name": "schools",
+      "description": "Comprehensive California school directory with administrative contacts, location, type, and status information. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "schools.adm_email1",
+          "name": "adm_email1",
+          "type": "string",
+          "description": "Email address of the primary school administrator. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_email2",
+          "name": "adm_email2",
+          "type": "string",
+          "description": "Email address of the secondary administrator. Type: TEXT. Often empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_email3",
+          "name": "adm_email3",
+          "type": "string",
+          "description": "Email address of the third administrator. Type: TEXT. Often empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_f_name1",
+          "name": "adm_f_name1",
+          "type": "string",
+          "description": "First name of the primary administrator. Type: TEXT. Examples: 'Laura', 'Michael'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_f_name2",
+          "name": "adm_f_name2",
+          "type": "string",
+          "description": "First name of the secondary administrator. Type: TEXT. Often empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_f_name3",
+          "name": "adm_f_name3",
+          "type": "string",
+          "description": "First name of the third administrator. Type: TEXT. Often empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_l_name1",
+          "name": "adm_l_name1",
+          "type": "string",
+          "description": "Last name of the primary administrator. Type: TEXT. Examples: 'Kerns', 'Ervin'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_l_name2",
+          "name": "adm_l_name2",
+          "type": "string",
+          "description": "Last name of the secondary administrator. Type: TEXT. Often empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_l_name3",
+          "name": "adm_l_name3",
+          "type": "string",
+          "description": "Last name of the third administrator. Type: TEXT. Often empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.charter",
+          "name": "charter",
+          "type": "string",
+          "description": "Whether the school is a charter school. Type: TEXT. Values: '0.0' (no) or '1.0' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.charter_num",
+          "name": "charter_num",
+          "type": "string",
+          "description": "Charter school number. Type: TEXT. Empty if not a charter. Examples: '0067'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.city",
+          "name": "city",
+          "type": "string",
+          "description": "City where the school is located. Type: TEXT. Examples: 'Magalia', 'Paradise', 'Oakland'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.closed_date",
+          "name": "closed_date",
+          "type": "string",
+          "description": "Date when the school was closed. Type: TEXT. Empty if the school is still active.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.county",
+          "name": "county",
+          "type": "string",
+          "description": "County where the school is located. Type: TEXT. Examples: 'Butte', 'Alameda'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.doc",
+          "name": "doc",
+          "type": "string",
+          "description": "District Ownership Code. Type: TEXT (numeric). Examples: '54'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.doc_type",
+          "name": "doc_type",
+          "type": "string",
+          "description": "District Ownership Code type description. Type: TEXT. Examples: 'Unified School District'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.district",
+          "name": "district",
+          "type": "string",
+          "description": "Name of the school district. Type: TEXT. Examples: 'Paradise Unified', 'Oakland Unified'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.eil_code",
+          "name": "eil_code",
+          "type": "string",
+          "description": "Educational Instruction Level code. Type: TEXT. Values: 'ELEM', 'ELEMHIGH', 'HS', 'INTRMDT'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.eil_name",
+          "name": "eil_name",
+          "type": "string",
+          "description": "Educational Instruction Level name. Type: TEXT. Values: 'Elementary', 'Elementary-High Combination', 'High School'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.ed_ops_code",
+          "name": "ed_ops_code",
+          "type": "string",
+          "description": "Educational Operations code. Type: TEXT. Values: 'TRAD' (Traditional), 'CON' (Continuation), etc.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.ed_ops_name",
+          "name": "ed_ops_name",
+          "type": "string",
+          "description": "Educational Operations name. Type: TEXT. Examples: 'Traditional', 'Continuation School'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.ext",
+          "name": "ext",
+          "type": "string",
+          "description": "Phone extension number for the school. Type: TEXT. Often empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.funding_type",
+          "name": "funding_type",
+          "type": "string",
+          "description": "Funding type for charter schools. Type: TEXT. Values: 'Directly funded', 'Locally funded', or empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.g_soffered",
+          "name": "g_soffered",
+          "type": "string",
+          "description": "Grade span offered by the school. Type: TEXT. Examples: 'K-5', 'K-12', '9-12'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.g_sserved",
+          "name": "g_sserved",
+          "type": "string",
+          "description": "Grade span actually served. Type: TEXT. Examples: 'K-5', 'K-12', '11-12'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.last_update",
+          "name": "last_update",
+          "type": "string",
+          "description": "Date of last record update. Type: TEXT (YYYY-MM-DD). Examples: '2016-07-19', '2015-09-10'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.latitude",
+          "name": "latitude",
+          "type": "string",
+          "description": "Latitude coordinate of the school location. Type: TEXT (decimal degrees). Examples: '39.853672', '37.8132'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.longitude",
+          "name": "longitude",
+          "type": "string",
+          "description": "Longitude coordinate of the school location. Type: TEXT (decimal degrees, negative). Examples: '-121.5978', '-122.28784'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.magnet",
+          "name": "magnet",
+          "type": "string",
+          "description": "Whether the school is a magnet school. Type: TEXT. Values: '0.0' (no) or '1.0' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_city",
+          "name": "mail_city",
+          "type": "string",
+          "description": "Mailing address city. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_state",
+          "name": "mail_state",
+          "type": "string",
+          "description": "Mailing address state abbreviation. Type: TEXT. Value: 'CA'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_str_abr",
+          "name": "mail_str_abr",
+          "type": "string",
+          "description": "Abbreviated mailing street address. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_street",
+          "name": "mail_street",
+          "type": "string",
+          "description": "Full mailing street address. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_zip",
+          "name": "mail_zip",
+          "type": "string",
+          "description": "Mailing address ZIP code (with optional +4 extension). Type: TEXT. Examples: '95954-9152', '95969-3271'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.nces_dist",
+          "name": "nces_dist",
+          "type": "string",
+          "description": "NCES (National Center for Education Statistics) district identifier. Type: TEXT. Examples: '0629820', '0628050'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.nces_school",
+          "name": "nces_school",
+          "type": "string",
+          "description": "NCES school identifier. Type: TEXT. Examples: '05712', '04345', '12325'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.open_date",
+          "name": "open_date",
+          "type": "string",
+          "description": "Date when the school was opened. Type: TEXT (YYYY-MM-DD). Examples: '1996-08-28', '1994-08-31'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.phone",
+          "name": "phone",
+          "type": "string",
+          "description": "School phone number. Type: TEXT. Examples: '(530) 873-3785', '(530) 872-1171'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.soc",
+          "name": "soc",
+          "type": "string",
+          "description": "School Ownership Code (numeric). Type: TEXT. Examples: '60', '65', '68'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.soc_type",
+          "name": "soc_type",
+          "type": "string",
+          "description": "School Ownership Code type description. Type: TEXT. Examples: 'Elementary Schools (Public)', 'K-12 Schools (Public)', 'Continuation High Schools'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.school",
+          "name": "school",
+          "type": "string",
+          "description": "Name of the school. Type: TEXT. Examples: 'Cedarwood Elementary', 'HomeTech Charter', 'Ralph J. Bunche High'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.state",
+          "name": "state",
+          "type": "string",
+          "description": "State abbreviation. Type: TEXT. Value: 'CA'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.status_type",
+          "name": "status_type",
+          "type": "string",
+          "description": "Current operational status of the school. Type: TEXT. Values: 'Active', 'Closed', 'Merged', 'Pending'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.street",
+          "name": "street",
+          "type": "string",
+          "description": "Physical street address of the school. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.street_abr",
+          "name": "street_abr",
+          "type": "string",
+          "description": "Abbreviated physical street address. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.virtual",
+          "name": "virtual",
+          "type": "string",
+          "description": "Whether the school operates virtually. Type: TEXT. Values: 'N' (no), 'P' (partial), 'Y' (yes), 'F' (full).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.website",
+          "name": "website",
+          "type": "string",
+          "description": "School website URL. Type: TEXT. May be empty. Examples: 'www.cedarwood.pusdk12.org', 'www.hometech.org'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.zip",
+          "name": "zip",
+          "type": "string",
+          "description": "Physical address ZIP code. Type: TEXT. Examples: '95954-9152', '95969-3271'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

@@ -6,12 +6,12 @@ from importlib import import_module
 
 __all__ = [
     "EvalBasic",
-    "EvalDataPop",
+    "EvalDataExtraction",
 ]
 
 _EXPORT_MAP = {
     "EvalBasic": ".evaluation",
-    "EvalDataPop": ".evaluation",
+    "EvalDataExtraction": ".evaluation",
 }
 
 

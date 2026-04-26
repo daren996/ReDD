@@ -30,7 +30,7 @@ class FixedSizeChunker(BaseChunker):
         >>> config = {
         ...     "data_main": "dataset/fda_sqlite/",
         ...     "exp_dataset_task_list": ["no_chunk"],
-        ...     "data_loader_type": "sqlite",
+        ...     "data_loader_type": "hf_manifest",
         ...     "chunker_type": "fixed_size",
         ...     "chunk_size": 4000,
         ...     "overlap": 200,
@@ -173,7 +173,7 @@ class FixedSizeTokenChunker(BaseChunker):
         >>> config = {
         ...     "data_main": "dataset/fda_sqlite/",
         ...     "exp_dataset_task_list": ["no_chunk"],
-        ...     "data_loader_type": "sqlite",
+        ...     "data_loader_type": "hf_manifest",
         ...     "chunker_type": "fixed_token",
         ...     "chunk_size": 1024,
         ...     "overlap": 100,

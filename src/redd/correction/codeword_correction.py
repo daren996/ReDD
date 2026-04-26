@@ -6,6 +6,7 @@ import numpy as np
 
 from redd.core.data_loader import create_data_loader
 from redd.core.utils.constants import PATH_TEMPLATES
+
 from .test_classifier import ClassifierVal
 
 
@@ -53,7 +54,7 @@ class ClassifierValCodeCorrection(ClassifierVal):
         out_root = os.path.join(self.out_main, test_dn_fn)
         loader = create_data_loader(
             data_root=data_root,
-            loader_type=self.config.get("data_loader_type", "sqlite"),
+            loader_type=self.config.get("data_loader_type", "hf_manifest"),
             loader_config=self.config.get("data_loader_config", {}),
         )
         query_dict = loader.load_query_dict()
@@ -87,7 +88,7 @@ class ClassifierValCodeCorrection(ClassifierVal):
                 results[model_dn_fn][model_qid][size] = {}
                 for _ in range(self.ensemble_sample_trials):
                     layers = self._random_layers()
-                    marginal_name = "_".join(str(l) for l in layers)
+                    marginal_name = "_".join(str(layer) for layer in layers)
                     cls_outputs = [classifier_outputs[model_dn_fn][model_qid][str(layer)][size] for layer in layers]
                     res = self._evaluate_correction_marginalvoting(test_gt, cls_outputs)
                     results[model_dn_fn][model_qid][size][marginal_name] = res

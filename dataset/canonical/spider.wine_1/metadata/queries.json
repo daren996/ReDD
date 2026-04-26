@@ -1,0 +1,115 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.wine_1",
+  "queries": [
+    {
+      "query_id": "q1",
+      "question": "List the wineries that produce wine from the 'Sonoma Coast' appellation with a score greater than 90 and a price greater than $40.",
+      "sql": "SELECT winery FROM wine WHERE appelation = 'Sonoma Coast' AND score > '90' AND price > '40';",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.winery",
+        "wine.appelation",
+        "wine.score",
+        "wine.price"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q2",
+      "question": "What are the wineries that produce both Syrah and Pinot Noir wines?",
+      "sql": "SELECT winery FROM wine WHERE grape = 'Syrah' INTERSECT SELECT winery FROM wine WHERE grape = 'Pinot Noir';",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.winery",
+        "wine.grape"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q3",
+      "question": "List the wineries that produce wine from a grape other than Chardonnay or Pinot Noir and have a score greater than 90.",
+      "sql": "SELECT winery FROM wine WHERE grape NOT IN ('Chardonnay', 'Pinot Noir') AND score > '90';",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.winery",
+        "wine.grape",
+        "wine.score"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q4",
+      "question": "Find all wineries that have at least two different grape varieties with score greater than 91.",
+      "sql": "SELECT winery FROM wine WHERE score > '91' GROUP BY winery HAVING COUNT(DISTINCT grape) >= 2;",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.winery",
+        "wine.score",
+        "wine.grape"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q5",
+      "question": "Find wineries that produce a wine with a score above 94 that are not located in Sonoma county.",
+      "sql": "SELECT DISTINCT w.winery FROM wine w JOIN appellations a ON w.appelation = a.appelation WHERE w.score > '94' AND a.county != 'Sonoma';",
+      "required_tables": [
+        "wine",
+        "appellations"
+      ],
+      "required_columns": [
+        "wine.winery",
+        "wine.score",
+        "appellations.county"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q6",
+      "question": "List all appellations that have a Chardonnay and Pinot Noir, both with scores above 90.",
+      "sql": "SELECT appelation FROM wine WHERE grape = 'Chardonnay' AND score > '90' INTERSECT SELECT appelation FROM wine WHERE grape = 'Pinot Noir' AND score > '90';",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.appelation",
+        "wine.grape",
+        "wine.score"
+      ],
+      "output_columns": [
+        "wine.appelation"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

@@ -1,0 +1,337 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "cuad.cuad",
+  "tables": [
+    {
+      "table_id": "cuad_contract",
+      "name": "cuad_contract",
+      "description": "Legal contract documents annotated with 41 clause-level attributes from the CUAD (Contract Understanding Atticus Dataset) benchmark. Each row represents a contract with extracted clause information. Contains 510 contracts.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "cuad_contract.document_name",
+          "name": "document_name",
+          "type": "string",
+          "description": "Title or type of the legal contract document. Type: TEXT. Examples: 'DISTRIBUTOR AGREEMENT', 'Promotion and Distribution Agreement', 'SUPPLY CONTRACT', 'WEB SITE HOSTING AGREEMENT', 'JOINT FILING AGREEMENT'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.parties",
+          "name": "parties",
+          "type": "string",
+          "description": "Names and roles of the parties involved in the contract, including companies, individuals, and their designations. Type: TEXT. Often contains multiple parties separated by '|'. May include entity type labels like 'Company', 'Distributor', 'Seller', 'Buyer'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.agreement_date",
+          "name": "agreement_date",
+          "type": "string",
+          "description": "Date when the contract/agreement was signed or executed. Type: TEXT. Free-form date text extracted from the contract. Examples: '7th day of September, 1999.', '1 August 2011'. Empty if not specified.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.effective_date",
+          "name": "effective_date",
+          "type": "string",
+          "description": "Date when the contract becomes effective. Type: TEXT. Contains the relevant clause text from the contract describing the effective date. Empty if not specified.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.expiration_date",
+          "name": "expiration_date",
+          "type": "string",
+          "description": "Date or conditions under which the contract expires. Type: TEXT. Contains the relevant clause text describing expiration terms. Examples include specific dates or duration descriptions.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.renewal_term",
+          "name": "renewal_term",
+          "type": "string",
+          "description": "Terms and conditions for contract renewal, including automatic renewal provisions and duration. Type: TEXT. Contains extracted clause text. Empty if no renewal terms.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.notice_period_to_terminate_renewal",
+          "name": "notice_period_to_terminate_renewal",
+          "type": "string",
+          "description": "Required notice period to prevent automatic renewal or to terminate the contract. Type: TEXT. Contains extracted clause text. Empty if not specified.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.governing_law",
+          "name": "governing_law",
+          "type": "string",
+          "description": "Jurisdiction and governing law specified in the contract. Type: TEXT. Contains the relevant clause text. Examples reference specific states, countries, or legal frameworks. Empty if not specified.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.most_favored_nation",
+          "name": "most_favored_nation",
+          "type": "string",
+          "description": "Most favored nation clause ensuring equal or better terms compared to other parties. Type: TEXT. Contains extracted clause text. Empty if no such clause.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.non_compete",
+          "name": "non_compete",
+          "type": "string",
+          "description": "Non-competition restrictions preventing parties from engaging in competing business activities. Type: TEXT. Contains extracted clause text. Empty if no non-compete clause.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.exclusivity",
+          "name": "exclusivity",
+          "type": "string",
+          "description": "Exclusivity provisions granting exclusive rights to one or more parties within defined markets or territories. Type: TEXT. Contains extracted clause text. Empty if no exclusivity clause.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.no_solicit_of_customers",
+          "name": "no_solicit_of_customers",
+          "type": "string",
+          "description": "Provisions preventing solicitation of the other party's customers. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.no_solicit_of_employees",
+          "name": "no_solicit_of_employees",
+          "type": "string",
+          "description": "Provisions preventing solicitation or hiring of the other party's employees. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.non_disparagement",
+          "name": "non_disparagement",
+          "type": "string",
+          "description": "Clause preventing parties from making negative public statements about each other. Type: TEXT. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.termination_for_convenience",
+          "name": "termination_for_convenience",
+          "type": "string",
+          "description": "Right of one or both parties to terminate the contract without cause, typically with notice. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.rofr_rofo_rofn",
+          "name": "rofr_rofo_rofn",
+          "type": "string",
+          "description": "Right of First Refusal (ROFR), Right of First Offer (ROFO), or Right of First Negotiation (ROFN) clauses. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.change_of_control",
+          "name": "change_of_control",
+          "type": "string",
+          "description": "Provisions triggered by a change in ownership or control of one of the parties. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.anti_assignment",
+          "name": "anti_assignment",
+          "type": "string",
+          "description": "Restrictions on the assignment or transfer of contract rights or obligations to third parties. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.revenue_profit_sharing",
+          "name": "revenue_profit_sharing",
+          "type": "string",
+          "description": "Provisions for sharing revenue or profits between the parties. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.price_restrictions",
+          "name": "price_restrictions",
+          "type": "string",
+          "description": "Clauses governing pricing constraints, adjustments, or price protection mechanisms. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.minimum_commitment",
+          "name": "minimum_commitment",
+          "type": "string",
+          "description": "Minimum purchase, volume, or performance commitments required by one or more parties. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.volume_restriction",
+          "name": "volume_restriction",
+          "type": "string",
+          "description": "Restrictions or requirements on transaction volumes. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.ip_ownership_assignment",
+          "name": "ip_ownership_assignment",
+          "type": "string",
+          "description": "Provisions for the assignment or transfer of intellectual property ownership. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.joint_ip_ownership",
+          "name": "joint_ip_ownership",
+          "type": "string",
+          "description": "Provisions for joint ownership of intellectual property created under the agreement. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.license_grant",
+          "name": "license_grant",
+          "type": "string",
+          "description": "License grants from one party to another, including scope, territory, and restrictions. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.non_transferable_license",
+          "name": "non_transferable_license",
+          "type": "string",
+          "description": "Provisions specifying that a granted license cannot be transferred to third parties. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.affiliate_license_licensor",
+          "name": "affiliate_license_licensor",
+          "type": "string",
+          "description": "License provisions extending rights to affiliates of the licensor. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.affiliate_license_licensee",
+          "name": "affiliate_license_licensee",
+          "type": "string",
+          "description": "License provisions extending rights to affiliates of the licensee. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.unlimited_all_you_can_eat_license",
+          "name": "unlimited_all_you_can_eat_license",
+          "type": "string",
+          "description": "License grants with unlimited usage rights. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.irrevocable_or_perpetual_license",
+          "name": "irrevocable_or_perpetual_license",
+          "type": "string",
+          "description": "License grants that are irrevocable or perpetual in nature. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.source_code_escrow",
+          "name": "source_code_escrow",
+          "type": "string",
+          "description": "Provisions for placing source code in escrow for the benefit of the licensee. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.post_termination_services",
+          "name": "post_termination_services",
+          "type": "string",
+          "description": "Obligations for providing services after the contract terminates. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.audit_rights",
+          "name": "audit_rights",
+          "type": "string",
+          "description": "Right of one or both parties to audit the other's records for compliance verification. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.uncapped_liability",
+          "name": "uncapped_liability",
+          "type": "string",
+          "description": "Provisions where liability is not subject to a cap or limit. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.cap_on_liability",
+          "name": "cap_on_liability",
+          "type": "string",
+          "description": "Provisions setting a maximum limit on liability. Type: TEXT. Contains extracted clause text describing the cap amount or formula. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.liquidated_damages",
+          "name": "liquidated_damages",
+          "type": "string",
+          "description": "Pre-determined damages amounts payable upon breach. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.warranty_duration",
+          "name": "warranty_duration",
+          "type": "string",
+          "description": "Duration of warranties provided under the contract. Type: TEXT. Contains extracted clause text specifying the warranty period. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.insurance",
+          "name": "insurance",
+          "type": "string",
+          "description": "Requirements for insurance coverage by one or both parties. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.covenant_not_to_sue",
+          "name": "covenant_not_to_sue",
+          "type": "string",
+          "description": "Agreement by one or both parties not to initiate legal proceedings against the other. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.third_party_beneficiary",
+          "name": "third_party_beneficiary",
+          "type": "string",
+          "description": "Provisions identifying or excluding third party beneficiaries under the contract. Type: TEXT. Contains extracted clause text. Empty if not present.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

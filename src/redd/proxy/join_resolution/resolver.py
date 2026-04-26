@@ -9,7 +9,6 @@ present in the parent table's extracted set.
 from __future__ import annotations
 
 import logging
-import time
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 import numpy as np
@@ -145,7 +144,6 @@ class JoinResolver:
 
         for i, doc in enumerate(documents):
             doc_id = doc_ids[i] if doc_ids and i < len(doc_ids) else None
-            start = time.perf_counter()
             try:
                 extracted = self._extract_fn(
                     doc,

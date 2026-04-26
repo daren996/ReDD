@@ -13,26 +13,23 @@ The SchemaTailor class uses adaptive sampling similar to the general schema pass
 - Early stopping when entropy stabilizes
 """
 
+import hashlib
 import json
 import logging
 import random
-import hashlib
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 
+from redd.core.data_loader import create_data_loader
 from redd.embedding import EmbeddingManager
-from ..utils.prompt_utils import (
-    PromptDeepSeek,
-    PromptGPT,
-    PromptGemini,
-    PromptSiliconFlow,
-    PromptTogether,
-)
+from redd.optimizations.adaptive_sampling.entropy.sampler import AdaptiveSampler
+
 from ..utils.constants import PATH_TEMPLATES
 from ..utils.progress import tqdm
-from redd.optimizations.adaptive_sampling.entropy.sampler import AdaptiveSampler
-from redd.optimizations.adaptive_sampling.schema_entropy import SchemaEntropyCalculator
+from ..utils.prompt_utils import create_prompt
+from ..utils.structured_outputs import SchemaUpdateOutput
 
 
 class QueryDocumentFilter:
@@ -208,15 +205,6 @@ class SchemaTailor:
     4. Use entropy-based adaptive sampling for early stopping
     """
     
-    # Map mode to Prompt class
-    PROMPT_CLASS_MAP = {
-        "cgpt": PromptGPT,
-        "deepseek": PromptDeepSeek,
-        "together": PromptTogether,
-        "siliconflow": PromptSiliconFlow,
-        "gemini": PromptGemini,
-    }
-    
     def __init__(
         self,
         config: Dict[str, Any],
@@ -236,13 +224,12 @@ class SchemaTailor:
         
         # Initialize prompt for tailoring
         tailor_prompt_path = config.get("tailor_prompt_path", "prompts/schema_tailor_1_0.txt")
-        PromptClass = self.PROMPT_CLASS_MAP.get(self.mode, PromptGPT)
-        
-        self.tailor_prompt = PromptClass(
+        self.tailor_prompt = create_prompt(
             self.mode,
             tailor_prompt_path,
             llm_model=config.get("llm_model", "gpt-4o-mini"),
-            api_key=api_key
+            api_key=api_key,
+            config=config,
         )
         
         # Initialize document filter
@@ -340,7 +327,8 @@ class SchemaTailor:
         """Load queries from queries.json file."""
         try:
             with open(query_path, "r", encoding="utf-8") as f:
-                queries = json.load(f)
+                raw_queries = json.load(f)
+            queries = self._normalize_queries(raw_queries)
             logging.info(
                 f"[SchemaTailor:load_queries] "
                 f"Loaded {len(queries)} queries from {query_path}"
@@ -352,6 +340,48 @@ class SchemaTailor:
                 f"Error loading queries: {e}"
             )
             return {}
+
+    @staticmethod
+    def _normalize_queries(raw_queries: Any) -> Dict[str, Dict]:
+        """Normalize legacy and ReDD contract query payloads to qid -> query info."""
+        if not isinstance(raw_queries, dict):
+            return {}
+
+        if isinstance(raw_queries.get("queries"), list):
+            queries: Dict[str, Dict] = {}
+            for item in raw_queries["queries"]:
+                if not isinstance(item, dict):
+                    continue
+                query_id = item.get("query_id") or item.get("id")
+                if query_id is None:
+                    continue
+                normalized = dict(item)
+                normalized.setdefault("query", normalized.get("question", ""))
+                normalized.setdefault("attributes", normalized.get("required_columns", []))
+                normalized.setdefault("tables", normalized.get("required_tables", []))
+                queries[str(query_id)] = normalized
+            return queries
+
+        if isinstance(raw_queries.get("queries"), dict):
+            return {
+                str(query_id): dict(query_info)
+                for query_id, query_info in raw_queries["queries"].items()
+                if isinstance(query_info, dict)
+            }
+
+        return {
+            str(query_id): dict(query_info)
+            for query_id, query_info in raw_queries.items()
+            if isinstance(query_info, dict)
+        }
+
+    @staticmethod
+    def _build_doc_dict_from_loader(loader: Any) -> Dict[str, List[str]]:
+        doc_dict: Dict[str, List[str]] = {}
+        for doc_text, doc_id, metadata in loader.iter_docs():
+            source_info = metadata.get("source_file") or metadata.get("table_name") or ""
+            doc_dict[str(doc_id)] = [doc_text, source_info]
+        return doc_dict
     
     def prepare_tailor_input(
         self,
@@ -406,28 +436,21 @@ class SchemaTailor:
         input_json = self.prepare_tailor_input(current_schema, query, document)
         
         try:
-            result_str = self.tailor_prompt(
-                msg="New Input:\n" + json.dumps(input_json, indent=2)
-            ).strip()
+            result = self.tailor_prompt.complete_model(
+                "New Input:\n" + json.dumps(input_json, indent=2),
+                SchemaUpdateOutput,
+            )
+            updated_schema = result.updated_schema
             
-            result = json.loads(result_str)
-            updated_schema = result.get("Updated Schema", result.get("Schema", None))
-            
-            if updated_schema is None:
+            if not updated_schema:
                 logging.warning(
-                    f"[SchemaTailor:process_single_document] "
-                    f"No 'Updated Schema' in response"
+                    "[SchemaTailor:process_single_document] "
+                    "No 'Updated Schema' in response"
                 )
                 return None
             
             return updated_schema
             
-        except json.JSONDecodeError as e:
-            logging.warning(
-                f"[SchemaTailor:process_single_document] "
-                f"JSON parse error (retry {retry_count}): {e}"
-            )
-            return None
         except Exception as e:
             logging.warning(
                 f"[SchemaTailor:process_single_document] "
@@ -624,21 +647,36 @@ class SchemaTailor:
         if general_schema is None:
             return {"error": "No general schema provided"}
         
-        # Load queries
+        # Load queries and documents. Prefer the current manifest loader so this
+        # entry point works with the ReDD dataset contract; keep explicit
+        # queries_path support for callers that pass a standalone file.
         if queries_path is None:
-            queries_path = data_root / "queries.json"
-        queries = self.load_queries(queries_path)
+            loader_config = self.config.get("data_loader_config") or {}
+            loader_type = self.config.get("data_loader_type", "hf_manifest")
+            loader = create_data_loader(
+                data_root,
+                loader_type=loader_type,
+                loader_config=dict(loader_config),
+            )
+            queries = loader.load_query_dict()
+            doc_dict = self._build_doc_dict_from_loader(loader)
+        else:
+            queries = self.load_queries(queries_path)
+            doc_dict_path = data_root / "doc_dict.json"
+            if doc_dict_path.exists():
+                with open(doc_dict_path, "r", encoding="utf-8") as f:
+                    doc_dict = json.load(f)
+            else:
+                loader_config = self.config.get("data_loader_config") or {}
+                loader_type = self.config.get("data_loader_type", "hf_manifest")
+                loader = create_data_loader(
+                    data_root,
+                    loader_type=loader_type,
+                    loader_config=dict(loader_config),
+                )
+                doc_dict = self._build_doc_dict_from_loader(loader)
         if not queries:
             return {"error": "No queries found"}
-        
-        # Load document dictionary
-        doc_dict_path = data_root / "doc_dict.json"
-        if doc_dict_path.exists():
-            with open(doc_dict_path, "r", encoding="utf-8") as f:
-                doc_dict = json.load(f)
-        else:
-            logging.error(f"[SchemaTailor] doc_dict.json not found at {doc_dict_path}")
-            return {"error": "doc_dict.json not found"}
         
         # Process each query with adaptive sampling
         self.doc_filter.set_dataset_db_path(data_root / "__schema_tailor_anchor__.db")

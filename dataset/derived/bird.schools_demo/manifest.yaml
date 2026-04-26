@@ -1,0 +1,13 @@
+schema_version: redd.manifest.v1
+dataset_id: bird.schools_demo
+kind: derived
+version: 0.1.0
+source:
+  parent_dataset: bird.california_schools
+  legacy_dataset_root: /Users/drchao/CursorSpace/ReDD/ReDD_Dev/dataset/bird_sqlite/schools_demo
+  legacy_task: gt_schema_task
+paths:
+  documents: data/documents.parquet
+  ground_truth: data/ground_truth.parquet
+  schema: metadata/schema.json
+  queries: metadata/queries.json

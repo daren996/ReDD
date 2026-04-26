@@ -1,0 +1,1532 @@
+{
+  "dataset": "lcr/default_task",
+  "source": "quest_sqlite",
+  "database": "lcr",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "List the court names, judge names, and verdicts for cases where the plaintiff is 'Australian Competition and Consumer Commission (ACCC)' and the hearing year is 'None'.",
+      "sql": "SELECT court_name, judge_name, verdict FROM corpus WHERE plaintiff = 'Australian Competition and Consumer Commission (ACCC)' AND hearing_year = 'None';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "judge_name",
+          "verdict",
+          "plaintiff",
+          "hearing_year"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "judge_name",
+        "verdict"
+      ],
+      "result_rows": [
+        [
+          "Federal Court of Australia",
+          "None",
+          "AKA and three AKA members found to have made an anti-competitive arrangement"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "Find the distinct court names and judgment years where the charges contain 'defamation' and the appeal information is not 'None'.",
+      "sql": "SELECT DISTINCT court_name, judgment_year FROM corpus WHERE charges LIKE '%defamation%' AND appeal_information != 'None';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "judgment_year",
+          "charges",
+          "appeal_information"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "judgment_year"
+      ],
+      "result_rows": [
+        [
+          "None",
+          "2007.0"
+        ],
+        [
+          "Supreme Court of Queensland",
+          "2005.0"
+        ],
+        [
+          "Supreme Court of Tasmania",
+          "2005.0"
+        ],
+        [
+          "Supreme Court of Northern Territory",
+          "2009.0"
+        ],
+        [
+          "District Court of Queensland",
+          "2009.0"
+        ],
+        [
+          "Supreme Court of Queensland",
+          "2007.0"
+        ],
+        [
+          "Supreme Court of Tasmania",
+          "2009.0"
+        ],
+        [
+          "Supreme Court of Victoria",
+          "2007.0"
+        ],
+        [
+          "Tasmanian Supreme Court",
+          "2006.0"
+        ],
+        [
+          "ACT Supreme Court",
+          "2006.0"
+        ],
+        [
+          "ACT Supreme Court",
+          "2007.0"
+        ],
+        [
+          "Supreme Court of South Australia",
+          "2009.0"
+        ],
+        [
+          "Federal Court of Australia",
+          "2009.0"
+        ],
+        [
+          "Supreme Court of Western Australia",
+          "2007.0"
+        ]
+      ],
+      "result_count": 14,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "What are the court names and judge names for cases with 'Extradition Act' in the legal basis and 'dismissed' in the verdict?",
+      "sql": "SELECT court_name, judge_name FROM corpus WHERE legal_basis LIKE '%Extradition Act%' AND verdict = 'dismissed';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "judge_name",
+          "legal_basis",
+          "verdict"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "judge_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "List the plaintiff, defendant, and charges for cases heard in the 'Federal Court of Australia' in 2009 where the verdict is 'None'.",
+      "sql": "SELECT plaintiff, defendant, charges FROM corpus WHERE court_name = 'Federal Court of Australia' AND judgment_year = '2009.0' AND verdict = 'None';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "plaintiff",
+          "defendant",
+          "charges",
+          "court_name",
+          "judgment_year",
+          "verdict"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "plaintiff",
+        "defendant",
+        "charges"
+      ],
+      "result_rows": [
+        [
+          "Overseas Aircrew Basing Limited",
+          "Deputy Commissioner of Taxation",
+          "None"
+        ],
+        [
+          "Australian Communication and Media Authority",
+          "Mr Simon Anthony Owen (Fourth Respondent)",
+          "None"
+        ],
+        [
+          "None",
+          "Watershed Premium Wines Ltd (the company)",
+          "None"
+        ],
+        [
+          "Scarborough Equities Limited",
+          "None",
+          "None"
+        ]
+      ],
+      "result_count": 4,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "Find the court names, hearing years, and judgment years where the legal basis contains 'Patent' and the appeal information is 'True'.",
+      "sql": "SELECT court_name, hearing_year, judgment_year FROM corpus WHERE legal_basis LIKE '%Patent%' AND appeal_information = 'True';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "hearing_year",
+          "judgment_year",
+          "legal_basis",
+          "appeal_information"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "hearing_year",
+        "judgment_year"
+      ],
+      "result_rows": [
+        [
+          "New South Wales Supreme Court",
+          "2005.0",
+          "2005.0"
+        ],
+        [
+          "Federal Court of Australia",
+          "2008.0",
+          "2008.0"
+        ]
+      ],
+      "result_count": 2,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "List the distinct judges who presided over cases related to 'Competition Code' and whose name contains 'Justice'.",
+      "sql": "SELECT DISTINCT judge_name FROM corpus WHERE legal_basis LIKE '%Competition Code%' AND judge_name LIKE '%Justice%';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "judge_name",
+          "legal_basis"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "judge_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "Show the count of verdicts for each court name where the hearing year is either '2008.0' or '2009.0'.",
+      "sql": "SELECT court_name, COUNT(verdict) FROM corpus WHERE hearing_year IN ('2008.0', '2009.0') GROUP BY court_name;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "verdict",
+          "hearing_year"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "count_verdict"
+      ],
+      "result_rows": [
+        [
+          "ACT Magistrates Court",
+          3
+        ],
+        [
+          "Administrative Appeals Tribunal",
+          3
+        ],
+        [
+          "Australian Industrial Relations Commission",
+          1
+        ],
+        [
+          "Children's Court of Queensland",
+          1
+        ],
+        [
+          "Children's Court of Victoria",
+          1
+        ],
+        [
+          "County Court of Victoria",
+          4
+        ],
+        [
+          "District Court of New South Wales",
+          3
+        ],
+        [
+          "District Court of Queensland",
+          5
+        ],
+        [
+          "District Court of South Australia",
+          2
+        ],
+        [
+          "District Court of Tasmania",
+          1
+        ],
+        [
+          "District Court of Western Australia",
+          1
+        ],
+        [
+          "Fair Work Commission",
+          2
+        ],
+        [
+          "Family Court of Australia",
+          7
+        ],
+        [
+          "Family Court of Western Australia",
+          2
+        ],
+        [
+          "Federal Circuit Court",
+          3
+        ],
+        [
+          "Federal Circuit Court of Australia",
+          1
+        ],
+        [
+          "Federal Court",
+          12
+        ],
+        [
+          "Federal Court of Australia",
+          48
+        ],
+        [
+          "Federal Magistrate",
+          1
+        ],
+        [
+          "Federal Magistrates Court",
+          17
+        ],
+        [
+          "High Court of Australia",
+          13
+        ],
+        [
+          "Land and Environment Court of NSW",
+          1
+        ],
+        [
+          "Local Court of New South Wales",
+          2
+        ],
+        [
+          "Local Court of Tasmania",
+          1
+        ],
+        [
+          "Magistrates Court of Victoria",
+          1
+        ],
+        [
+          "NSW Civil and Administrative Tribunal",
+          1
+        ],
+        [
+          "NSW District Court",
+          1
+        ],
+        [
+          "NSW Land and Environment Court",
+          5
+        ],
+        [
+          "NSW Supreme Court",
+          4
+        ],
+        [
+          "NT Local Court",
+          1
+        ],
+        [
+          "None",
+          1
+        ],
+        [
+          "Northern Territory Supreme Court",
+          2
+        ],
+        [
+          "Queensland Civil and Administrative Tribunal",
+          5
+        ],
+        [
+          "Queensland District Court",
+          1
+        ],
+        [
+          "Queensland Supreme Court",
+          1
+        ],
+        [
+          "SA District Court",
+          1
+        ],
+        [
+          "South Australian Civil and Administrative Tribunal",
+          1
+        ],
+        [
+          "South Australian District Court",
+          1
+        ],
+        [
+          "South Australian Employment Tribunal",
+          1
+        ],
+        [
+          "South Australian Magistrates Court",
+          3
+        ],
+        [
+          "South Australian Supreme Court",
+          3
+        ],
+        [
+          "Supreme Court of NSW",
+          2
+        ],
+        [
+          "Supreme Court of New South Wales",
+          1
+        ],
+        [
+          "Supreme Court of Northern Territory",
+          1
+        ],
+        [
+          "Supreme Court of Queensland",
+          6
+        ],
+        [
+          "Supreme Court of South Australia",
+          8
+        ],
+        [
+          "Supreme Court of Tasmania",
+          8
+        ],
+        [
+          "Supreme Court of Victoria",
+          4
+        ],
+        [
+          "Supreme Court of Western Australia",
+          3
+        ],
+        [
+          "Supreme Court of the Northern Territory",
+          2
+        ],
+        [
+          "Tasmanian Civil and Administrative Tribunal",
+          1
+        ],
+        [
+          "Tasmanian Magistrates Court",
+          4
+        ],
+        [
+          "Tasmanian Supreme Court",
+          2
+        ],
+        [
+          "Victorian Civil and Administrative Tribunal",
+          3
+        ],
+        [
+          "Victorian County Court",
+          1
+        ],
+        [
+          "WA Industrial Relations Commission",
+          1
+        ],
+        [
+          "Western Australian District Court",
+          1
+        ],
+        [
+          "Western Australian Magistrates Court",
+          10
+        ],
+        [
+          "Western Australian Magistrates Court at Perth",
+          1
+        ],
+        [
+          "Western Australian Supreme Court",
+          1
+        ]
+      ],
+      "result_count": 60,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "Find the average judgment year for each court name, only considering cases where appeal information is not 'None'.",
+      "sql": "SELECT court_name, AVG(CAST(REPLACE(judgment_year, '.0', '') AS REAL)) FROM corpus WHERE appeal_information != 'None' AND judgment_year != 'None' GROUP BY court_name;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "judgment_year",
+          "appeal_information"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "avg_cast_replace_judgment_year.0_as_real"
+      ],
+      "result_rows": [
+        [
+          "ACT Magistrates Court",
+          2006.3
+        ],
+        [
+          "ACT Supreme Court",
+          2006.4
+        ],
+        [
+          "Administrative Appeals Tribunal",
+          2007.8
+        ],
+        [
+          "Australian Industrial Relations Commission",
+          2009.0
+        ],
+        [
+          "Children's Court",
+          2008.0
+        ],
+        [
+          "Children's Court of NSW",
+          2006.0
+        ],
+        [
+          "Children's Court of Queensland",
+          2008.0
+        ],
+        [
+          "Children's Court of Victoria",
+          2008.0
+        ],
+        [
+          "County Court of Victoria",
+          2007.2727272727273
+        ],
+        [
+          "District Court of NSW",
+          2006.5
+        ],
+        [
+          "District Court of New South Wales",
+          2007.3
+        ],
+        [
+          "District Court of Queensland",
+          2007.4545454545455
+        ],
+        [
+          "District Court of South Australia",
+          2007.75
+        ],
+        [
+          "District Court of Tasmania",
+          2008.0
+        ],
+        [
+          "District Court of Western Australia",
+          2007.25
+        ],
+        [
+          "Fair Work Commission",
+          2008.0
+        ],
+        [
+          "Family Court of Australia",
+          2007.0625
+        ],
+        [
+          "Family Court of Western Australia",
+          2006.8333333333333
+        ],
+        [
+          "Federal Circuit Court",
+          2006.6666666666667
+        ],
+        [
+          "Federal Circuit Court of Australia",
+          2008.0
+        ],
+        [
+          "Federal Court",
+          2008.1666666666667
+        ],
+        [
+          "Federal Court of Australia",
+          2007.421052631579
+        ],
+        [
+          "Federal Magistrate",
+          2007.5
+        ],
+        [
+          "Federal Magistrate's Court",
+          2006.0
+        ],
+        [
+          "Federal Magistrates Court",
+          2006.8823529411766
+        ],
+        [
+          "Full Court",
+          2006.0
+        ],
+        [
+          "High Court of Australia",
+          2007.25
+        ],
+        [
+          "Land Court of Queensland",
+          2007.0
+        ],
+        [
+          "Land and Environment Court of NSW",
+          2007.0
+        ],
+        [
+          "Local Court of ACT",
+          2005.0
+        ],
+        [
+          "Local Court of NSW",
+          2006.0
+        ],
+        [
+          "Local Court of New South Wales",
+          2006.375
+        ],
+        [
+          "Local Court of Northern Territory",
+          2007.0
+        ],
+        [
+          "Local Court of Queensland",
+          2005.0
+        ],
+        [
+          "Local Court of South Australia",
+          2006.5
+        ],
+        [
+          "Local Court of Tasmania",
+          2007.3333333333333
+        ],
+        [
+          "Local Court of Western Australia",
+          2007.0
+        ],
+        [
+          "Magistrates Court of Tasmania",
+          2007.0
+        ],
+        [
+          "Magistrates Court of Victoria",
+          2009.0
+        ],
+        [
+          "Magistrates Court of Western Australia",
+          2006.5
+        ],
+        [
+          "NSW Civil and Administrative Tribunal",
+          2007.0
+        ],
+        [
+          "NSW District Court",
+          2007.5
+        ],
+        [
+          "NSW Land and Environment Court",
+          2008.0
+        ],
+        [
+          "NSW Supreme Court",
+          2008.4
+        ],
+        [
+          "NT Local Court",
+          2007.0
+        ],
+        [
+          "NT Supreme Court",
+          2006.0
+        ],
+        [
+          "New South Wales Supreme Court",
+          2005.0
+        ],
+        [
+          "None",
+          2007.5
+        ],
+        [
+          "Northern Territory Local Court",
+          2005.5
+        ],
+        [
+          "Northern Territory Magistrates Court",
+          2005.0
+        ],
+        [
+          "Northern Territory Supreme Court",
+          2007.0
+        ],
+        [
+          "Queensland Civil and Administrative Tribunal",
+          2007.3
+        ],
+        [
+          "Queensland District Court",
+          2006.5
+        ],
+        [
+          "Queensland Industrial Relations Commission",
+          2005.0
+        ],
+        [
+          "Queensland Supreme Court",
+          2006.6666666666667
+        ],
+        [
+          "SA District Court",
+          2008.0
+        ],
+        [
+          "SA Employment Tribunal",
+          2007.0
+        ],
+        [
+          "SA Magistrates Court",
+          2007.0
+        ],
+        [
+          "South Australian Civil and Administrative Tribunal",
+          2009.0
+        ],
+        [
+          "South Australian District Court",
+          2006.5
+        ],
+        [
+          "South Australian Employment Tribunal",
+          2006.8
+        ],
+        [
+          "South Australian Magistrates Court",
+          2008.25
+        ],
+        [
+          "South Australian Supreme Court",
+          2007.8
+        ],
+        [
+          "Supreme Court of NSW",
+          2007.6666666666667
+        ],
+        [
+          "Supreme Court of New South Wales",
+          2006.5
+        ],
+        [
+          "Supreme Court of Northern Territory",
+          2009.0
+        ],
+        [
+          "Supreme Court of Queensland",
+          2007.4166666666667
+        ],
+        [
+          "Supreme Court of South Australia",
+          2007.6153846153845
+        ],
+        [
+          "Supreme Court of Tasmania",
+          2007.5
+        ],
+        [
+          "Supreme Court of Victoria",
+          2006.8666666666666
+        ],
+        [
+          "Supreme Court of Western Australia",
+          2006.7692307692307
+        ],
+        [
+          "Supreme Court of the Northern Territory",
+          2007.5
+        ],
+        [
+          "Tasmanian Civil and Administrative Tribunal",
+          2006.5
+        ],
+        [
+          "Tasmanian Magistrates Court",
+          2007.8333333333333
+        ],
+        [
+          "Tasmanian Supreme Court",
+          2007.6
+        ],
+        [
+          "This Court",
+          2009.0
+        ],
+        [
+          "Victorian Civil and Administrative Tribunal",
+          2006.625
+        ],
+        [
+          "Victorian Civil and Administrative Tribunal (VCAT)",
+          2005.0
+        ],
+        [
+          "Victorian County Court",
+          2006.2
+        ],
+        [
+          "Victorian Magistrates' Court",
+          2006.6666666666667
+        ],
+        [
+          "WA District Court",
+          2005.0
+        ],
+        [
+          "WA Industrial Relations Commission",
+          2008.0
+        ],
+        [
+          "Western Australian District Court",
+          2007.5
+        ],
+        [
+          "Western Australian Magistrates Court",
+          2006.6666666666667
+        ],
+        [
+          "Western Australian Supreme Court",
+          2006.6666666666667
+        ],
+        [
+          "Workers Compensation Commission",
+          2008.0
+        ]
+      ],
+      "result_count": 86,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "For each plaintiff, find the number of cases where the defendant is 'None' and charges contain 'fraudulent' and the hearing year is before 2009.",
+      "sql": "SELECT plaintiff, COUNT(*) FROM corpus WHERE defendant = 'None' AND charges LIKE '%fraudulent%' AND hearing_year IN ('2006.0','2007.0','2008.0') GROUP BY plaintiff;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "plaintiff",
+          "defendant",
+          "charges",
+          "hearing_year"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "plaintiff",
+        "count"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "List the court names and the number of cases where the verdict is 'dismissed' or contains 'anti-competitive' and the legal basis is not 'None'.",
+      "sql": "SELECT court_name, COUNT(*) FROM corpus WHERE (verdict = 'dismissed' OR verdict LIKE '%anti-competitive%') AND legal_basis != 'None' GROUP BY court_name;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "verdict",
+          "legal_basis"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "count"
+      ],
+      "result_rows": [
+        [
+          "Administrative Appeals Tribunal",
+          1
+        ],
+        [
+          "FCA (Federal Court of Australia)",
+          1
+        ],
+        [
+          "Federal Court of Australia",
+          6
+        ],
+        [
+          "Federal Magistrate",
+          1
+        ],
+        [
+          "Federal Magistrates Court",
+          4
+        ]
+      ],
+      "result_count": 5,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "Find the judge names and the maximum judgment year for each judge, considering only cases where the charges contain 'false pretences' and the appeal information is 'None'.",
+      "sql": "SELECT judge_name, MAX(judgment_year) FROM corpus WHERE charges LIKE '%false pretences%' AND appeal_information = 'None' GROUP BY judge_name;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "judge_name",
+          "judgment_year",
+          "charges",
+          "appeal_information"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "judge_name",
+        "max_judgment_year"
+      ],
+      "result_rows": [
+        [
+          "His Honour Magistrate G N Calder",
+          "2009.0"
+        ],
+        [
+          "Magistrate GN Calder",
+          "2009.0"
+        ]
+      ],
+      "result_count": 2,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "What are the plaintiffs and defendants involved in cases where the court name is either 'Federal Court' or 'Federal Magistrates Court' and the charges are 'None'?",
+      "sql": "SELECT plaintiff, defendant FROM corpus WHERE court_name IN ('Federal Court', 'Federal Magistrates Court') AND charges = 'None';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "plaintiff",
+          "defendant",
+          "court_name",
+          "charges"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "plaintiff",
+        "defendant"
+      ],
+      "result_rows": [
+        [
+          "Coadys (a firm)",
+          "Boglari & Anor"
+        ],
+        [
+          "None",
+          "None"
+        ],
+        [
+          "None",
+          "University of Technology, Sydney"
+        ],
+        [
+          "Saulyak LLC",
+          "Oxus Gold"
+        ],
+        [
+          "not mentioned",
+          "Minister for Immigration and Citizenship"
+        ],
+        [
+          "Black &amp; Decker",
+          "GMCA"
+        ],
+        [
+          "Singh & Ors",
+          "Minister for Immigration & Anor"
+        ],
+        [
+          "Terry Patrick Sharples",
+          "The Fishing Party"
+        ],
+        [
+          "None",
+          "None"
+        ],
+        [
+          "SZHGO & ORS",
+          "Minister for Immigration and Multicultural Affairs & Anor"
+        ],
+        [
+          "Scantech Limited, Scantech Services Pty Ltd, Scantech International Pty Ltd",
+          "James Hubert Asbury, Real Time Instruments Pty Ltd, RTI Pty Ltd"
+        ],
+        [
+          "Clough Engineering Limited (\"Clough\")",
+          "Oil and Natural Gas Corporation Limited (\"ONGC\")"
+        ],
+        [
+          "Internet Industry Association (IIA)",
+          "None"
+        ],
+        [
+          "Telstra",
+          "The Minister"
+        ],
+        [
+          "Merlin BV",
+          "Sharman Licence Holdings Ltd"
+        ],
+        [
+          "None",
+          "None"
+        ],
+        [
+          "Australian Taxation Office",
+          "(not specified)"
+        ],
+        [
+          "None",
+          "Minister for Immigration"
+        ],
+        [
+          "None",
+          "St George Bank Ltd"
+        ],
+        [
+          "Australian Securities and Investments Commission",
+          "Westpoint Corporation Pty Ltd"
+        ],
+        [
+          "None",
+          "None"
+        ],
+        [
+          "The Applicant",
+          "First Respondent (Australian Government Solicitor)"
+        ],
+        [
+          "Mr Knight",
+          "Beyond Productions Pty Ltd, Simon & Schuster Inc t/as Simon Spotlight Entertainment, John Wiley & Sons Inc"
+        ],
+        [
+          "HID",
+          "Keycorp"
+        ],
+        [
+          "None",
+          "None"
+        ],
+        [
+          "None",
+          "None"
+        ],
+        [
+          "Deputy Commissioner of Taxation",
+          "Zdenek Simandl, Heather Jane Simandl"
+        ],
+        [
+          "Merim Pty Ltd, Mr Peter Yunghanns",
+          "Golden Circle Limited"
+        ],
+        [
+          "None",
+          "respondents"
+        ],
+        [
+          "None",
+          "Respondent"
+        ],
+        [
+          "Mr Hur",
+          "Samsun"
+        ],
+        [
+          "Australian Securities and Investments Commission",
+          "Michael Kyriackou (and six related companies)"
+        ],
+        [
+          "Allphones",
+          "the ACCC (Australian Competition and Consumer Commission)"
+        ],
+        [
+          "Australian Communications and Media Authority",
+          "Clarity1 Pty Ltd, Mr Mansfield"
+        ],
+        [
+          "Westpac Banking Corporation",
+          "Mr Bruno Strangio"
+        ]
+      ],
+      "result_count": 35,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "For each hearing year, find the number of cases where the verdict is not 'None' and the appeal information is 'True' or contains the word 'appeal'.",
+      "sql": "SELECT hearing_year, COUNT(*) FROM corpus WHERE verdict != 'None' AND (appeal_information = 'True' OR appeal_information LIKE '%appeal%') GROUP BY hearing_year;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "hearing_year",
+          "verdict",
+          "appeal_information"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "hearing_year",
+        "count"
+      ],
+      "result_rows": [
+        [
+          "2005.0",
+          12
+        ],
+        [
+          "2006.0",
+          17
+        ],
+        [
+          "2007.0",
+          18
+        ],
+        [
+          "2008.0",
+          15
+        ],
+        [
+          "2009.0",
+          21
+        ],
+        [
+          "None",
+          2
+        ]
+      ],
+      "result_count": 6,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find the court name and judge name of cases where the plaintiff contains 'Commission' and defendant contains 'Association' and the judgment year is 'None'.",
+      "sql": "SELECT court_name, judge_name FROM corpus WHERE plaintiff LIKE '%Commission%' AND defendant LIKE '%Association%' AND judgment_year = 'None';",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "judge_name",
+          "plaintiff",
+          "defendant",
+          "judgment_year"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "judge_name"
+      ],
+      "result_rows": [
+        [
+          "Federal Court of Australia",
+          "None"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "List the distinct legal bases used in cases with hearing year as '2007.0' or '2008.0' and the verdict contains 'judgment' or 'found'.",
+      "sql": "SELECT DISTINCT legal_basis FROM corpus WHERE hearing_year IN ('2007.0', '2008.0') AND (verdict LIKE '%judgment%' OR verdict LIKE '%found%');",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "legal_basis",
+          "hearing_year",
+          "verdict"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "legal_basis"
+      ],
+      "result_rows": [
+        [
+          "Patents Act 1990 (Cth)"
+        ],
+        [
+          "Corporations Act 2001 (Cth)"
+        ],
+        [
+          "Crimes Act 1958 (Vic)"
+        ],
+        [
+          "Corporations Law, Trust Law"
+        ],
+        [
+          "Trespass to Land, Property Law"
+        ],
+        [
+          "Contract Law"
+        ],
+        [
+          "Environmental Protection and Biodiversity Conservation Act 1999"
+        ],
+        [
+          "Patents Act 1990"
+        ],
+        [
+          "Civil Procedure Rules 2006 (SA)"
+        ],
+        [
+          "Trust Law"
+        ],
+        [
+          "Defamation Act 2005 (Qld)"
+        ],
+        [
+          "Building Act 2011 (WA)"
+        ],
+        [
+          "Copyright Act 1968 (Cth)"
+        ],
+        [
+          "Australian Constitution"
+        ],
+        [
+          "Workplace Injury Management and Workers Compensation Act 1998 (Vic)"
+        ],
+        [
+          "Planning and Development Act 2007 (ACT)"
+        ],
+        [
+          "Fair Trading Act 1989 (Qld)"
+        ],
+        [
+          "Insurance Contracts Act 1984 (Cth)"
+        ],
+        [
+          "Competition and Consumer Act 2010 (Cth)"
+        ],
+        [
+          "Franchising Code of Conduct"
+        ],
+        [
+          "Tort Law"
+        ],
+        [
+          "Property Law"
+        ],
+        [
+          "Common Law"
+        ],
+        [
+          "Defamation Act 2005"
+        ],
+        [
+          "Contract law"
+        ],
+        [
+          "Fair Work Act 2009"
+        ],
+        [
+          "Residential Tenancies Act 1997 (VIC)"
+        ],
+        [
+          "Wills Act 1936 (SA)"
+        ],
+        [
+          "Fair Work Act 2009 (Cth)"
+        ],
+        [
+          "Tort law"
+        ],
+        [
+          "Civil Law"
+        ],
+        [
+          "Defamation Act 2005 (WA)"
+        ]
+      ],
+      "result_count": 32,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Show the court names and count of cases for each court where the charges include 'false pretences' or 'fraudulent conversion', and the appeal information is not 'None'.",
+      "sql": "SELECT court_name, COUNT(*) FROM corpus WHERE (charges LIKE '%false pretences%' OR charges LIKE '%fraudulent conversion%') AND appeal_information != 'None' GROUP BY court_name;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "charges",
+          "appeal_information"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name",
+        "count"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "Find all plaintiff and defendant combinations involved in cases tried by judge 'Gray' and the cases contain the word 'Extradition' in their legal basis or include 'defamation' in their charges.",
+      "sql": "SELECT plaintiff, defendant FROM corpus WHERE judge_name = 'Gray' AND (legal_basis LIKE '%Extradition%' OR charges LIKE '%defamation%');",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "plaintiff",
+          "defendant",
+          "judge_name",
+          "legal_basis",
+          "charges"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "plaintiff",
+        "defendant"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "List the judge names who have presided over more than 5 cases where hearing year is not 'None' and where the verdict also is 'None'.",
+      "sql": "SELECT judge_name FROM corpus WHERE hearing_year != 'None' AND verdict = 'None' GROUP BY judge_name HAVING COUNT(*) > 5;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "judge_name",
+          "hearing_year",
+          "verdict"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "judge_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find the court names where the count of distinct judges is greater than 2, where the plaintiff includes 'ACCC' and judgment year is not 'None'",
+      "sql": "SELECT court_name FROM corpus WHERE plaintiff LIKE '%ACCC%' AND judgment_year != 'None' GROUP BY court_name HAVING COUNT(DISTINCT judge_name) > 2;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "court_name",
+          "judge_name",
+          "plaintiff",
+          "judgment_year"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "court_name"
+      ],
+      "result_rows": [
+        [
+          "Federal Court of Australia"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "List the hearing years and count of cases where the charges contain the word 'false', but only for those years where the average length of the charges string is greater than 20.",
+      "sql": "SELECT hearing_year, COUNT(*) FROM corpus WHERE charges LIKE '%false%' GROUP BY hearing_year HAVING AVG(LENGTH(charges)) > 20;",
+      "golden_schema": {
+        "tables": [
+          "corpus"
+        ],
+        "columns": [
+          "hearing_year",
+          "charges"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "lcr/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "hearing_year",
+        "count"
+      ],
+      "result_rows": [
+        [
+          "2009.0",
+          2
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    }
+  ]
+}

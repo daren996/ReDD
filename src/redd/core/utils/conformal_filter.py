@@ -4,12 +4,13 @@ Query-Aware Doc Filtering with Conformal Guarantees
 Filters document chunks based on query similarity while guaranteeing
 statistical recall using conformal prediction.
 """
-import os
 import json
 import logging
-import numpy as np
-from typing import List, Dict, Tuple, Optional, Callable
+import os
 from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
 
 from redd.embedding.clustering import DocVectorizer, llm_embeddings
 

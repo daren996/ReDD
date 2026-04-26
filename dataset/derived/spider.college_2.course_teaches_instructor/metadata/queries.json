@@ -1,0 +1,34 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.college_2.course_teaches_instructor",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "course_information",
+        "course_instructor_assignments",
+        "instructors"
+      ],
+      "required_columns": [
+        "course_information.course_title",
+        "course_information.credits",
+        "course_information.department",
+        "course_information.course_description",
+        "course_instructor_assignments.course_title",
+        "course_instructor_assignments.semester",
+        "course_instructor_assignments.offering_year",
+        "course_instructor_assignments.instructor_name",
+        "instructors.instructor_name",
+        "instructors.department",
+        "instructors.annual_salary"
+      ],
+      "output_columns": [
+        "course_information.course_title"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

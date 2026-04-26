@@ -1,0 +1,66 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.bike_1.default_task",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "station",
+        "status",
+        "trip",
+        "weather"
+      ],
+      "required_columns": [
+        "station.name",
+        "station.lat",
+        "station.long",
+        "station.dock_count",
+        "station.city",
+        "station.installation_date",
+        "status.bikes_available",
+        "status.docks_available",
+        "status.time",
+        "status.station_name",
+        "trip.duration",
+        "trip.start_date",
+        "trip.start_station_name",
+        "trip.end_date",
+        "trip.end_station_name",
+        "trip.bike_id",
+        "trip.subscription_type",
+        "trip.zip_code",
+        "weather.date",
+        "weather.max_temperature_f",
+        "weather.mean_temperature_f",
+        "weather.min_temperature_f",
+        "weather.max_dew_point_f",
+        "weather.mean_dew_point_f",
+        "weather.min_dew_point_f",
+        "weather.max_humidity",
+        "weather.mean_humidity",
+        "weather.min_humidity",
+        "weather.max_sea_level_pressure_inches",
+        "weather.mean_sea_level_pressure_inches",
+        "weather.min_sea_level_pressure_inches",
+        "weather.max_visibility_miles",
+        "weather.mean_visibility_miles",
+        "weather.min_visibility_miles",
+        "weather.max_wind_speed_mph",
+        "weather.mean_wind_speed_mph",
+        "weather.max_gust_speed_mph",
+        "weather.precipitation_inches",
+        "weather.cloud_cover",
+        "weather.events",
+        "weather.wind_dir_degrees",
+        "weather.zip_code"
+      ],
+      "output_columns": [
+        "station.name"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

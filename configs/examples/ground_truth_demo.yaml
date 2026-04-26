@@ -1,0 +1,53 @@
+config_version: 2.1.1
+
+project:
+  name: single-doc-demo
+  seed: 42
+
+runtime:
+  output_dir: outputs/demo
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: single-doc-ground-truth-v1
+
+models:
+  llm:
+    provider: deepseek
+    model: deepseek-v4-flash
+    api_key_env: DEEPSEEK_API_KEY
+    base_url: null
+    structured_backend: auto
+    max_retries: 5
+    wait_time: 10
+    temperature: null
+    top_p: null
+    max_tokens: null
+    local_model_path: null
+  embedding:
+    provider: openai
+    model: text-embedding-3-small
+    enabled: true
+    api_key_env: OPENAI_API_KEY
+    base_url: null
+    batch_size: 100
+    storage_file: embeddings.sqlite3
+
+datasets:
+  demo:
+    loader: hf_manifest
+    root: dataset/canonical/examples.single_doc_demo
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: ground_truth
+
+experiments:
+  demo:
+    datasets: [demo]
+    stages: [data_extraction]

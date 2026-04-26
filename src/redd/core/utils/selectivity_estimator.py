@@ -7,12 +7,12 @@ Provides selectivity estimates for attribute filters using:
 """
 import json
 import logging
-import numpy as np
-from typing import Dict, Optional, List, Tuple
 from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
+
 from scipy.stats import beta
 
-from ..utils.prompt_utils import PromptGPT, PromptDeepSeek, get_api_key
+from ..utils.prompt_utils import create_prompt, get_api_key
 
 
 @dataclass
@@ -23,7 +23,7 @@ class SelectivityConfig:
     prior_strength: float = 3.0
     thompson_enabled: bool = False
     cache_path: Optional[str] = None
-    mode: str = "cgpt"  # LLM mode for estimation
+    mode: str = "openai"  # LLM mode for estimation
 
 
 class SelectivityEstimator:
@@ -45,7 +45,7 @@ class SelectivityEstimator:
             prior_strength=est_config.get("prior_strength", 3.0),
             thompson_enabled=est_config.get("thompson", {}).get("enabled", False),
             cache_path=est_config.get("cache_path"),
-            mode=config.get("mode", "cgpt")
+            mode=config.get("mode", "openai")
         )
         
         if not self.config.enabled:
@@ -55,20 +55,13 @@ class SelectivityEstimator:
         if self.config.init_mode == "llm":
             try:
                 api_key = get_api_key(config, self.config.mode, None)
-                if self.config.mode == "deepseek":
-                    self.llm_prompt = PromptDeepSeek(
-                        self.config.mode,
-                        "prompts/selectivity_estimation.txt",  # TODO: create this prompt
-                        llm_model=config.get("llm_model", "deepseek-chat"),
-                        api_key=api_key
-                    )
-                else:
-                    self.llm_prompt = PromptGPT(
-                        self.config.mode,
-                        "prompts/selectivity_estimation.txt",
-                        llm_model=config.get("llm_model", "gpt-4o"),
-                        api_key=api_key
-                    )
+                self.llm_prompt = create_prompt(
+                    self.config.mode,
+                    "prompts/selectivity_estimation.txt",  # TODO: create this prompt
+                    llm_model=config.get("llm_model", "deepseek-chat"),
+                    api_key=api_key,
+                    config=config,
+                )
             except Exception as e:
                 logging.warning(f"[{self.__class__.__name__}:__init__] "
                                f"Failed to initialize LLM prompt: {e}, using uniform init")
@@ -309,4 +302,3 @@ class SelectivityEstimator:
                 selectivities[attr_name] = self.get_mean_selectivity(attr_name)
         
         return selectivities
-

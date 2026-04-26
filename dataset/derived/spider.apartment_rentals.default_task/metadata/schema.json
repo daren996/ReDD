@@ -1,0 +1,307 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.apartment_rentals.default_task",
+  "tables": [
+    {
+      "table_id": "apartment_bookings",
+      "name": "apartment_bookings",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartment_bookings.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Apartment number associated with the booking.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.booking_end_date",
+          "name": "booking_end_date",
+          "type": "string",
+          "description": "End date and time of the booking period.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.booking_start_date",
+          "name": "booking_start_date",
+          "type": "string",
+          "description": "Start date and time of the booking period.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.booking_status_code",
+          "name": "booking_status_code",
+          "type": "string",
+          "description": "Status code indicating the booking status (e.g., provisional, confirmed).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.guest_first_name",
+          "name": "guest_first_name",
+          "type": "string",
+          "description": "First name of the guest who made the booking.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.guest_last_name",
+          "name": "guest_last_name",
+          "type": "string",
+          "description": "Last name of the guest who made the booking.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "apartment_buildings",
+      "name": "apartment_buildings",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartment_buildings.building_address",
+          "name": "building_address",
+          "type": "string",
+          "description": "Physical address of the apartment building.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_description",
+          "name": "building_description",
+          "type": "string",
+          "description": "Description of the apartment building, such as the type of units it offers.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_full_name",
+          "name": "building_full_name",
+          "type": "string",
+          "description": "Full official name of the apartment building.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_manager",
+          "name": "building_manager",
+          "type": "string",
+          "description": "Name of the manager responsible for the apartment building.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_phone",
+          "name": "building_phone",
+          "type": "string",
+          "description": "Contact phone number for the apartment building or its manager.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_short_name",
+          "name": "building_short_name",
+          "type": "string",
+          "description": "Short name used to refer to the apartment building.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "apartment_facilities",
+      "name": "apartment_facilities",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartment_facilities.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Apartment number where the facility is provided.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_facilities.facility_code",
+          "name": "facility_code",
+          "type": "string",
+          "description": "Name or code identifying a facility available in the apartment.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "apartments",
+      "name": "apartments",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartments.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Unique number identifying the apartment.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.apt_type_code",
+          "name": "apt_type_code",
+          "type": "string",
+          "description": "Code representing the type of apartment (e.g., Studio, One-bedroom).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.bathroom_count",
+          "name": "bathroom_count",
+          "type": "string",
+          "description": "Number of bathrooms in the apartment.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.bedroom_count",
+          "name": "bedroom_count",
+          "type": "string",
+          "description": "Number of bedrooms in the apartment.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.building_full_name",
+          "name": "building_full_name",
+          "type": "string",
+          "description": "Full name of the building the apartment belongs to.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.building_short_name",
+          "name": "building_short_name",
+          "type": "string",
+          "description": "Short name of the building the apartment belongs to.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.room_count",
+          "name": "room_count",
+          "type": "string",
+          "description": "Total number of rooms in the apartment.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "guests",
+      "name": "guests",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "guests.date_of_birth",
+          "name": "date_of_birth",
+          "type": "string",
+          "description": "Date and time of birth of the guest.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "guests.gender_code",
+          "name": "gender_code",
+          "type": "string",
+          "description": "Gender of the guest.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "guests.guest_first_name",
+          "name": "guest_first_name",
+          "type": "string",
+          "description": "First name of the guest.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "guests.guest_last_name",
+          "name": "guest_last_name",
+          "type": "string",
+          "description": "Last name of the guest.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "view_unit_status",
+      "name": "view_unit_status",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "view_unit_status.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Apartment number being tracked for availability.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.available_yn",
+          "name": "available_yn",
+          "type": "string",
+          "description": "Indicates whether the apartment is available (1 for Yes, 0 for No).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.booking_end_date",
+          "name": "booking_end_date",
+          "type": "string",
+          "description": "End date of a booking associated with the apartment (if any).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.booking_start_date",
+          "name": "booking_start_date",
+          "type": "string",
+          "description": "Start date of a booking associated with the apartment (if any).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.status_date",
+          "name": "status_date",
+          "type": "string",
+          "description": "Date when the availability status of the unit was recorded.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

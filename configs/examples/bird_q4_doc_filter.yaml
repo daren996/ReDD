@@ -1,0 +1,54 @@
+config_version: 2.1.1
+
+project:
+  name: bird-q4-optimizer-eval
+  seed: 42
+
+runtime:
+  output_dir: outputs/bird_q4_optimizer_eval
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: doc-filter-v1
+  console_log_level: INFO
+
+models:
+  llm:
+    provider: none
+    model: ground_truth
+  embedding:
+    provider: gemini
+    model: gemini-embedding-001
+    enabled: true
+    api_key_env: GEMINI_API_KEY
+    storage_file: embeddings.sqlite3
+
+datasets:
+  bird.schools_demo:
+    loader: hf_manifest
+    root: dataset/derived/bird.schools_demo
+    query_ids: [q4]
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: ground_truth
+    document_filtering:
+      enabled: true
+      filter_type: schema_relevance
+      target_recall: 0.95
+      enable_calibrate: false
+      embedding_model: gemini-embedding-001
+      threshold: 0.585
+    options:
+      force_rerun: false
+
+experiments:
+  demo:
+    datasets: [bird.schools_demo]
+    stages: [data_extraction]
+    artifact_id: doc-filter-v1

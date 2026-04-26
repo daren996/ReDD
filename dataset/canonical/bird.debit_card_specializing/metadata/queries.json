@@ -1,0 +1,346 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "bird.debit_card_specializing",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List Segment, row_id, ChainID from gasstations where Segment contains 'other'.",
+      "sql": "SELECT segment, row_id, chain_id FROM gasstations WHERE segment LIKE '%other%';",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.segment",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.segment"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q2",
+      "question": "List Segment, row_id, ChainID from gasstations where Segment equals 'Other'.",
+      "sql": "SELECT segment, row_id, chain_id FROM gasstations WHERE segment = 'Other';",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.segment",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.segment"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q3",
+      "question": "List row_id, ChainID, Country from gasstations where row_id <= 170.",
+      "sql": "SELECT row_id, chain_id, country FROM gasstations WHERE row_id <= 170;",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.chain_id",
+        "gasstations.country"
+      ],
+      "output_columns": [
+        "gasstations.chain_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q4",
+      "question": "List row_id, Amount, CardID from transactions_1k where row_id <= 170.",
+      "sql": "SELECT row_id, amount, card_id FROM transactions_1k WHERE row_id <= 170;",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.amount",
+        "transactions_1k.card_id"
+      ],
+      "output_columns": [
+        "transactions_1k.amount"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q5",
+      "question": "List row_id, Description, ProductID from products where row_id <= 170.",
+      "sql": "SELECT row_id, description, product_id FROM products WHERE row_id <= 170;",
+      "required_tables": [
+        "products"
+      ],
+      "required_columns": [
+        "products.description",
+        "products.product_id"
+      ],
+      "output_columns": [
+        "products.description"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q6",
+      "question": "List Price, row_id, Amount from transactions_1k where Price >= 650.98.",
+      "sql": "SELECT price, row_id, amount FROM transactions_1k WHERE price >= 650.98;",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.price",
+        "transactions_1k.amount"
+      ],
+      "output_columns": [
+        "transactions_1k.price"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q7",
+      "question": "List ProductID, row_id, Amount from transactions_1k where ProductID = 5.",
+      "sql": "SELECT product_id, row_id, amount FROM transactions_1k WHERE product_id = 5;",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.product_id",
+        "transactions_1k.amount"
+      ],
+      "output_columns": [
+        "transactions_1k.product_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q8",
+      "question": "List CustomerID, row_id, Consumption from yearmonth where CustomerID <= 1650.",
+      "sql": "SELECT customer_id, row_id, consumption FROM yearmonth WHERE customer_id <= 1650;",
+      "required_tables": [
+        "yearmonth"
+      ],
+      "required_columns": [
+        "yearmonth.customer_id",
+        "yearmonth.consumption"
+      ],
+      "output_columns": [
+        "yearmonth.customer_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q9",
+      "question": "Find CustomerID, TransactionID, row_id from transactions_1k where CustomerID <= 30837 and TransactionID >= 303.",
+      "sql": "SELECT customer_id, transaction_id, row_id FROM transactions_1k WHERE customer_id <= 30837 AND transaction_id >= 303;",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.customer_id",
+        "transactions_1k.transaction_id"
+      ],
+      "output_columns": [
+        "transactions_1k.customer_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q10",
+      "question": "Find Segment, ChainID, row_id from gasstations where Segment equals 'Noname' and ChainID <= 2.",
+      "sql": "SELECT segment, chain_id, row_id FROM gasstations WHERE segment = 'Noname' AND chain_id <= 2;",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.segment",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.segment"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q11",
+      "question": "Find TransactionID, CardID, row_id from transactions_1k where TransactionID >= 347 and CardID <= 588072.",
+      "sql": "SELECT transaction_id, card_id, row_id FROM transactions_1k WHERE transaction_id >= 347 AND card_id <= 588072;",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.transaction_id",
+        "transactions_1k.card_id"
+      ],
+      "output_columns": [
+        "transactions_1k.transaction_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q12",
+      "question": "Find row_id, GasStationID, ChainID from gasstations where row_id <= 238 and GasStationID >= 344.",
+      "sql": "SELECT row_id, gas_station_id, chain_id FROM gasstations WHERE row_id <= 238 AND gas_station_id >= 344;",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.gas_station_id",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.gas_station_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q13",
+      "question": "Find Segment, row_id, ChainID from gasstations where Segment equals 'Other' and Segment contains 'other'.",
+      "sql": "SELECT segment, row_id, chain_id FROM gasstations WHERE segment = 'Other' AND segment LIKE '%other%';",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.segment",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.segment"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q14",
+      "question": "Find Price, GasStationID, row_id from transactions_1k where Price >= 486.17 and GasStationID <= 3621.",
+      "sql": "SELECT price, gas_station_id, row_id FROM transactions_1k WHERE price >= 486.17 AND gas_station_id <= 3621;",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.price",
+        "transactions_1k.gas_station_id"
+      ],
+      "output_columns": [
+        "transactions_1k.price"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q15",
+      "question": "Find Segment, ChainID, row_id from gasstations where Segment contains 'noname' and ChainID <= 2.",
+      "sql": "SELECT segment, chain_id, row_id FROM gasstations WHERE segment LIKE '%noname%' AND chain_id <= 2;",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.segment",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.segment"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q16",
+      "question": "Find TransactionID, Price, row_id from transactions_1k where TransactionID <= 303 and Price <= 486.17.",
+      "sql": "SELECT transaction_id, price, row_id FROM transactions_1k WHERE transaction_id <= 303 AND price <= 486.17;",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.transaction_id",
+        "transactions_1k.price"
+      ],
+      "output_columns": [
+        "transactions_1k.transaction_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q17",
+      "question": "Find row_id, GasStationID, ChainID from gasstations where row_id >= 272, GasStationID >= 344, and row_id >= 238.",
+      "sql": "SELECT row_id, gas_station_id, chain_id FROM gasstations WHERE row_id >= 272 AND gas_station_id >= 344 AND row_id >= 238;",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.gas_station_id",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.gas_station_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q18",
+      "question": "Find row_id, ProductID, Description from products where row_id >= 272, ProductID <= 340, and row_id >= 238.",
+      "sql": "SELECT row_id, product_id, description FROM products WHERE row_id >= 272 AND product_id <= 340 AND row_id >= 238;",
+      "required_tables": [
+        "products"
+      ],
+      "required_columns": [
+        "products.product_id",
+        "products.description"
+      ],
+      "output_columns": [
+        "products.product_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q19",
+      "question": "Find ProductID, row_id, Description from products where ProductID <= 286, ProductID <= 340, and row_id >= 238.",
+      "sql": "SELECT product_id, row_id, description FROM products WHERE product_id <= 286 AND product_id <= 340 AND row_id >= 238;",
+      "required_tables": [
+        "products"
+      ],
+      "required_columns": [
+        "products.product_id",
+        "products.description"
+      ],
+      "output_columns": [
+        "products.product_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q20",
+      "question": "Find Date, row_id, Consumption from yearmonth where Date <= 201302, Date <= 201303, and row_id >= 249.",
+      "sql": "SELECT date, row_id, consumption FROM yearmonth WHERE date <= 201302 AND date <= 201303 AND row_id >= 249;",
+      "required_tables": [
+        "yearmonth"
+      ],
+      "required_columns": [
+        "yearmonth.date",
+        "yearmonth.consumption"
+      ],
+      "output_columns": [
+        "yearmonth.date"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

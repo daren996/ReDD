@@ -1,0 +1,40 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "home_goals >= 3",
+        "home_goals > away_goals"
+      ],
+      "optimal_order": [
+        "home_goals >= 3",
+        "home_goals > away_goals"
+      ],
+      "token_cost": 93414,
+      "sql": "SELECT * FROM match_result WHERE home_goals >= 3 AND home_goals > away_goals;",
+      "natural_language": "Show matches where the home team scored at least 3 goals and won.",
+      "attributes": [
+        "home_goals",
+        "away_goals"
+      ]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "home_team == 'Liverpool'",
+        "home_goals >= 2"
+      ],
+      "optimal_order": [
+        "home_team == 'Liverpool'",
+        "home_goals >= 2"
+      ],
+      "token_cost": 83416,
+      "sql": "SELECT * FROM match_result WHERE home_team = 'Liverpool' AND home_goals >= 2;",
+      "natural_language": "Find Liverpool home games where they scored 2 or more goals.",
+      "attributes": [
+        "home_team",
+        "home_goals"
+      ]
+    }
+  ]
+}

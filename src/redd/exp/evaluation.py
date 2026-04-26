@@ -6,11 +6,15 @@ part of the primary runtime stage surface.
 
 from __future__ import annotations
 
-from copy import deepcopy
 import json
 import logging
+import re
+import sqlite3
 from abc import ABC, abstractmethod
+from collections import Counter
+from copy import deepcopy
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -18,16 +22,18 @@ from redd.core.data_loader import DataLoaderBase, create_data_loader
 from redd.core.utils import constants
 from redd.core.utils.constants import (
     ATTRIBUTE_NAME_KEY,
-    ATTRIBUTE_VALUE_KEY,
-    GROUND_TRUTH_KEY,
+    ATTRIBUTES_KEY,
     PATH_TEMPLATES,
-    PREDICTION_KEY,
+    RESULT_DATA_KEY,
+    RESULT_TABLE_KEY,
+    SCHEMA_NAME_KEY,
 )
+from redd.core.utils.data_split import resolve_training_data_count, split_doc_ids
 from redd.core.utils.utils import is_null
 
 __all__ = [
     "EvalBasic",
-    "EvalDataPop",
+    "EvalDataExtraction",
 ]
 
 
@@ -285,7 +291,33 @@ class EvaluationMetrics:
         )
 
 
-class EvalDataPop(EvalBasic):
+@dataclass
+class QueryAwareEvaluation:
+    """Recall-oriented evaluation of whether extracted rows can answer a query."""
+
+    query_id: str
+    summary: Dict[str, Any]
+    table_assignment: Dict[str, Any]
+    cell_recall: Dict[str, Any]
+    answer_recall: Dict[str, Any]
+    doc_details: Dict[str, Any]
+    missing_cells: List[Dict[str, Any]]
+    extra_cells: List[Dict[str, Any]]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "query_id": self.query_id,
+            "summary": self.summary,
+            "table_assignment": self.table_assignment,
+            "cell_recall": self.cell_recall,
+            "answer_recall": self.answer_recall,
+            "doc_details": self.doc_details,
+            "missing_cells": self.missing_cells,
+            "extra_cells": self.extra_cells,
+        }
+
+
+class EvalDataExtraction(EvalBasic):
     """Data-population evaluation with optional LLM-based semantic comparison."""
 
     def __init__(
@@ -296,7 +328,7 @@ class EvalDataPop(EvalBasic):
     ):
         super().__init__(config, data_loader)
 
-        self.loader_type = str(config.get("data_loader_type", "sqlite")).lower()
+        self.loader_type = str(config.get("data_loader_type", "hf_manifest")).lower()
         self.loader_config = deepcopy(dict(config.get("data_loader_config") or {}))
 
         eval_config = config.get("eval", {})
@@ -374,6 +406,23 @@ class EvalDataPop(EvalBasic):
         )
 
     def __call__(self, dataset_list: Optional[List[str]] = None) -> None:
+        runtime_contexts = self.config.get("_runtime_contexts")
+        if isinstance(runtime_contexts, list) and runtime_contexts:
+            requested = set(str(dataset) for dataset in dataset_list) if dataset_list else None
+            for context in runtime_contexts:
+                if not isinstance(context, dict):
+                    continue
+                dataset_name = str(context["dataset"])
+                if requested is not None and dataset_name not in requested:
+                    continue
+                self._evaluate_dataset(
+                    dataset_name,
+                    context["data_root"],
+                    context["out_root"],
+                    query_ids=context.get("query_ids"),
+                )
+            return
+
         if dataset_list is None:
             if "exp_dn_fn_list" in self.config:
                 dataset_list = self.config["exp_dn_fn_list"]
@@ -402,7 +451,13 @@ class EvalDataPop(EvalBasic):
             )
             self._evaluate_dataset(dataset_name, data_root, out_root)
 
-    def _evaluate_dataset(self, dataset_name: str, data_root: str | Path, out_root: str | Path) -> None:
+    def _evaluate_dataset(
+        self,
+        dataset_name: str,
+        data_root: str | Path,
+        out_root: str | Path,
+        query_ids: Optional[List[str]] = None,
+    ) -> None:
         self.data_root = Path(data_root)
         self.out_root = Path(out_root)
 
@@ -447,7 +502,16 @@ class EvalDataPop(EvalBasic):
             self.data_root.name,
         )
 
-        for query_id in query_dict:
+        selected_query_ids = [str(query_id) for query_id in query_ids] if query_ids else list(query_dict)
+        for query_id in selected_query_ids:
+            if query_id not in query_dict:
+                logging.warning(
+                    "[%s:_evaluate_dataset] Query %s not found in dataset %s; skipping",
+                    self.__class__.__name__,
+                    query_id,
+                    dataset_name,
+                )
+                continue
             try:
                 self._evaluate_query(loader, dataset_name, query_id, query_dict[query_id])
             except Exception as exc:
@@ -481,8 +545,9 @@ class EvalDataPop(EvalBasic):
             return
 
         logging.info("[%s:_evaluate_query] Start evaluating query %s: %s", self.__class__.__name__, query_id, query)
-        self.name_map = self._load_or_generate_mapping(query_id)
+        self.name_map = self._load_or_generate_mapping(query_id, loader)
         self.prediction_data, self.gt_data = self._prepare_evaluation_data(loader, result_dict)
+        query_aware_eval = self.compute_query_aware_statistics(loader, result_dict, query_id, query_info)
 
         stats = self.compute_statistics()
         if stats is None:
@@ -491,8 +556,12 @@ class EvalDataPop(EvalBasic):
 
         tp, fp, fn, tn, correct, total, doc_stats, attr_stats = stats
         self._display_results(dataset_name, query_id, tp, fp, fn, tn, correct, total, attr_stats)
+        self._display_query_aware_results(query_aware_eval)
 
-        eval_results = {"doc_stats": doc_stats, "attr_stats": attr_stats}
+        eval_results = {
+            "query_aware": query_aware_eval.to_dict(),
+            "legacy": {"doc_stats": doc_stats, "attr_stats": attr_stats},
+        }
         eval_path = self.out_root / PATH_TEMPLATES.eval_result(query_id, self.res_param_str)
         self.save_results(eval_path, eval_results)
         logging.info("[%s:_evaluate_query] Evaluation results saved to %s", self.__class__.__name__, eval_path)
@@ -531,6 +600,194 @@ class EvalDataPop(EvalBasic):
             )
 
         return prediction_data, ground_truth_data
+
+    def compute_query_aware_statistics(
+        self,
+        loader: DataLoaderBase,
+        result_dict: Dict[str, Any],
+        query_id: str,
+        query_info: Dict[str, Any],
+    ) -> QueryAwareEvaluation:
+        """Evaluate the query-required extraction as recall.
+
+        Extra extracted rows or attributes are reported but do not reduce recall.
+        A required cell is covered only when the document is assigned to the
+        correct required table and the extracted value matches the GT value.
+        """
+
+        required_by_table = self._required_attrs_by_table(loader, query_id, query_info)
+        required_tables = set(required_by_table)
+        _, eval_doc_ids = split_doc_ids(
+            loader.doc_ids,
+            resolve_training_data_count(self.config),
+        )
+        answer_doc_ids_by_table = self._answer_doc_ids_by_table(
+            loader=loader,
+            query_info=query_info,
+            eval_doc_ids=eval_doc_ids,
+            required_by_table=required_by_table,
+        )
+
+        table_total = table_covered = table_missing = table_wrong = 0
+        cell_total = cell_covered = cell_missing = cell_mismatched = 0
+        null_gt_cells_skipped = 0
+        extra_cells: List[Dict[str, Any]] = []
+        missing_cells: List[Dict[str, Any]] = []
+        doc_details: Dict[str, Any] = {}
+        relevant_doc_ids: set[str] = set()
+
+        for doc_id in eval_doc_ids:
+            gt_records = self._query_required_gt_records(
+                loader,
+                doc_id,
+                required_by_table,
+                answer_doc_ids_by_table=answer_doc_ids_by_table,
+            )
+            pred_record = result_dict.get(doc_id) if isinstance(result_dict.get(doc_id), dict) else {}
+            pred_table = pred_record.get(RESULT_TABLE_KEY)
+            pred_data = pred_record.get(RESULT_DATA_KEY, {})
+            if not isinstance(pred_data, dict):
+                pred_data = {}
+
+            doc_detail = {
+                "pred_table": pred_table,
+                "required_tables": [],
+                "table_ok": True,
+                "cells_total": 0,
+                "cells_covered": 0,
+                "missing": [],
+                "mismatched": [],
+            }
+
+            for gt_record in gt_records:
+                gt_table = gt_record["table"]
+                gt_data = gt_record["data"]
+                relevant_doc_ids.add(doc_id)
+                doc_detail["required_tables"].append(gt_table)
+                table_total += 1
+
+                table_ok = pred_table == gt_table
+                if table_ok:
+                    table_covered += 1
+                else:
+                    doc_detail["table_ok"] = False
+                    if is_null(pred_table):
+                        table_missing += 1
+                    else:
+                        table_wrong += 1
+
+                for attr in required_by_table.get(gt_table, []):
+                    gt_value = gt_data.get(attr)
+                    if is_null(gt_value):
+                        null_gt_cells_skipped += 1
+                        continue
+
+                    cell_total += 1
+                    doc_detail["cells_total"] += 1
+                    pred_value = pred_data.get(attr) if table_ok else None
+                    cell_ok = table_ok and self._compare_attribute_values(pred_value, gt_value)
+                    if cell_ok:
+                        cell_covered += 1
+                        doc_detail["cells_covered"] += 1
+                        continue
+
+                    miss = {
+                        "doc_id": doc_id,
+                        "table": gt_table,
+                        "attr": attr,
+                        "gt": gt_value,
+                        "pred_table": pred_table,
+                        "pred": pred_value,
+                        "reason": "missing" if is_null(pred_value) else "mismatch",
+                    }
+                    missing_cells.append(miss)
+                    if is_null(pred_value):
+                        cell_missing += 1
+                        doc_detail["missing"].append(miss)
+                    else:
+                        cell_mismatched += 1
+                        doc_detail["mismatched"].append(miss)
+
+            if not gt_records and not is_null(pred_table):
+                for attr, pred_value in pred_data.items():
+                    if not is_null(pred_value):
+                        extra_cells.append(
+                            {
+                                "doc_id": doc_id,
+                                "table": pred_table,
+                                "attr": attr,
+                                "pred": pred_value,
+                                "reason": "doc_not_required_for_query",
+                            }
+                        )
+            elif pred_table in required_tables:
+                expected_attrs = set(required_by_table.get(str(pred_table), []))
+                for attr, pred_value in pred_data.items():
+                    if attr not in expected_attrs and not is_null(pred_value):
+                        extra_cells.append(
+                            {
+                                "doc_id": doc_id,
+                                "table": pred_table,
+                                "attr": attr,
+                                "pred": pred_value,
+                                "reason": "attr_not_required_for_query",
+                            }
+                        )
+
+            if gt_records or not is_null(pred_table):
+                doc_details[doc_id] = doc_detail
+
+        answer_recall = self._evaluate_answer_recall(
+            loader=loader,
+            result_dict=result_dict,
+            query_info=query_info,
+            eval_doc_ids=eval_doc_ids,
+            required_by_table=required_by_table,
+        )
+        cell_recall_value = cell_covered / cell_total if cell_total else 1.0
+        table_recall_value = table_covered / table_total if table_total else 1.0
+        answer_recall_value = answer_recall.get("recall")
+
+        summary = {
+            "can_answer_query": bool(
+                cell_covered == cell_total
+                and table_covered == table_total
+                and answer_recall.get("executable", False)
+                and answer_recall_value == 1.0
+            ),
+            "query_required_tables": sorted(required_tables),
+            "query_required_attrs": {
+                table: list(attrs) for table, attrs in sorted(required_by_table.items())
+            },
+            "evaluated_docs": len(eval_doc_ids),
+            "relevant_docs": len(relevant_doc_ids),
+            "prediction_docs": len(result_dict),
+            "redundant_cells": len(extra_cells),
+        }
+
+        return QueryAwareEvaluation(
+            query_id=query_id,
+            summary=summary,
+            table_assignment={
+                "covered": table_covered,
+                "total": table_total,
+                "missing": table_missing,
+                "wrong": table_wrong,
+                "recall": table_recall_value,
+            },
+            cell_recall={
+                "covered": cell_covered,
+                "total": cell_total,
+                "missing": cell_missing,
+                "mismatched": cell_mismatched,
+                "null_gt_skipped": null_gt_cells_skipped,
+                "recall": cell_recall_value,
+            },
+            answer_recall=answer_recall,
+            doc_details=doc_details,
+            missing_cells=missing_cells,
+            extra_cells=extra_cells,
+        )
 
     def _display_results(
         self,
@@ -592,6 +849,38 @@ class EvalDataPop(EvalBasic):
         overall_label = "Overall (All Tables & Attributes)"
         attr_col_width = width - 32
         print(f"{overall_label:<{attr_col_width}}{total_correct:>10}{total_attrs:>10}{overall_accuracy:>10.2%}")
+        print("=" * width)
+
+    def _display_query_aware_results(self, result: QueryAwareEvaluation, width: int = 80) -> None:
+        payload = result.to_dict()
+        summary = payload["summary"]
+        table = payload["table_assignment"]
+        cells = payload["cell_recall"]
+        answer = payload["answer_recall"]
+
+        print("\n" + "=" * width)
+        print("Query-Aware Recall")
+        print("-" * width)
+        print(f"{'Can answer query':<24}{summary['can_answer_query']}")
+        print(f"{'Required tables':<24}{', '.join(summary['query_required_tables'])}")
+        print(f"{'Relevant docs':<24}{summary['relevant_docs']}/{summary['evaluated_docs']}")
+        print(
+            f"{'Table assignment':<24}"
+            f"{table['covered']}/{table['total']} = {table['recall']:.2%}"
+        )
+        print(
+            f"{'Required cells':<24}"
+            f"{cells['covered']}/{cells['total']} = {cells['recall']:.2%} "
+            f"(missing={cells['missing']}, mismatched={cells['mismatched']})"
+        )
+        if answer.get("executable"):
+            print(
+                f"{'SQL answer recall':<24}"
+                f"{answer['covered']}/{answer['total']} = {answer['recall']:.2%} "
+                f"(precision={answer['precision']:.2%})"
+            )
+        else:
+            print(f"{'SQL answer recall':<24}not executable: {answer.get('reason')}")
         print("=" * width)
 
     def compute_statistics(self) -> Optional[Tuple[int, int, int, int, int, int, Dict[str, Any], Dict[str, Dict[str, int]]]]:
@@ -710,15 +999,395 @@ class EvalDataPop(EvalBasic):
             return True
         if is_null(pred_val) or is_null(gt_val):
             return False
-        return str(pred_val).strip() == str(gt_val).strip()
+        pred_number = self._decimal_value(pred_val)
+        gt_number = self._decimal_value(gt_val)
+        if pred_number is not None and gt_number is not None:
+            return pred_number == gt_number
+        return self._normalize_text_value(pred_val) == self._normalize_text_value(gt_val)
 
-    def _load_or_generate_mapping(self, query_id: str) -> Dict[str, Any]:
-        if self.name_map is not None:
-            return self.name_map
+    @staticmethod
+    def _decimal_value(value: Any) -> Decimal | None:
+        text = str(value).strip()
+        if not text:
+            return None
+        text = text.replace(",", "")
+        if text.startswith("$"):
+            text = text[1:]
+        if text.endswith("%"):
+            text = text[:-1]
+        try:
+            return Decimal(text)
+        except (InvalidOperation, ValueError):
+            return None
 
-        mapping_path = self.out_root / PATH_TEMPLATES.name_map(query_id, self.res_param_str)
+    @staticmethod
+    def _normalize_text_value(value: Any) -> str:
+        text = re.sub(r"\s+", " ", str(value).strip())
+        text = text.strip(" \t\r\n\"'")
+        text = re.sub(r"[\s.。:;；，,]+$", "", text)
+        return text.casefold()
+
+    def _required_attrs_by_table(
+        self,
+        loader: DataLoaderBase,
+        query_id: str,
+        query_info: Dict[str, Any],
+    ) -> Dict[str, List[str]]:
+        required_by_table: Dict[str, List[str]] = {}
+        for attr_ref in query_info.get("attributes") or []:
+            table, attr = self._split_attr_ref(attr_ref)
+            if not table or not attr:
+                continue
+            required_by_table.setdefault(table, [])
+            if attr not in required_by_table[table]:
+                required_by_table[table].append(attr)
+
+        for table in query_info.get("tables") or []:
+            required_by_table.setdefault(str(table), [])
+
+        if not any(required_by_table.values()):
+            for schema in loader.load_schema_query(query_id):
+                table = str(schema.get(SCHEMA_NAME_KEY) or "")
+                if not table:
+                    continue
+                attrs = [
+                    str(attr.get(ATTRIBUTE_NAME_KEY))
+                    for attr in schema.get(ATTRIBUTES_KEY, [])
+                    if isinstance(attr, dict) and attr.get(ATTRIBUTE_NAME_KEY)
+                ]
+                required_by_table.setdefault(table, [])
+                for attr in attrs:
+                    if attr not in required_by_table[table]:
+                        required_by_table[table].append(attr)
+
+        return {table: attrs for table, attrs in required_by_table.items() if table}
+
+    @staticmethod
+    def _split_attr_ref(attr_ref: Any) -> Tuple[Optional[str], Optional[str]]:
+        text = str(attr_ref or "")
+        if "." not in text:
+            return None, text or None
+        table, attr = text.split(".", 1)
+        return table or None, attr or None
+
+    def _query_required_gt_records(
+        self,
+        loader: DataLoaderBase,
+        doc_id: str,
+        required_by_table: Dict[str, List[str]],
+        answer_doc_ids_by_table: Optional[Dict[str, set[str]]] = None,
+    ) -> List[Dict[str, Any]]:
+        info = loader.get_doc_info(doc_id)
+        if not info:
+            return []
+        records = info.get("data_records") or []
+        if not records and info.get("table"):
+            records = [{"table_name": info.get("table"), "data": info.get("data", {})}]
+
+        required_tables = set(required_by_table)
+        result = []
+        for record in records:
+            if not isinstance(record, dict):
+                continue
+            table = record.get("table_name") or record.get("table")
+            if table not in required_tables:
+                continue
+            table_name = str(table)
+            if answer_doc_ids_by_table is not None and doc_id not in answer_doc_ids_by_table.get(table_name, set()):
+                continue
+            data = record.get("data") or {}
+            if not isinstance(data, dict):
+                data = {}
+            row_id = (
+                record.get("source_row_id")
+                or record.get("row_id")
+                or data.get("row_id")
+                or info.get("source_row_id")
+            )
+            result.append({"table": table_name, "data": data, "row_id": row_id})
+        return result
+
+    def _answer_doc_ids_by_table(
+        self,
+        *,
+        loader: DataLoaderBase,
+        query_info: Dict[str, Any],
+        eval_doc_ids: List[str],
+        required_by_table: Dict[str, List[str]],
+    ) -> Optional[Dict[str, set[str]]]:
+        """Return GT docs that participate in the SQL answer rows.
+
+        Query-aware table/cell recall should measure the rows needed to answer
+        the SQL query, not every row from every table referenced by the query.
+        The temporary SQL tables include ``__doc_id`` specifically so we can
+        derive this provenance for selections and joins.
+        """
+
+        sql = str(query_info.get("sql") or "").strip()
+        if not sql:
+            return None
+        try:
+            provenance_rows = self._execute_query_provenance(
+                sql=sql,
+                records_by_table=self._gt_records_for_sql(loader, eval_doc_ids, required_by_table),
+                required_by_table=required_by_table,
+            )
+        except Exception as exc:
+            logging.warning(
+                "[%s:_answer_doc_ids_by_table] Could not compute SQL answer provenance; "
+                "falling back to all required-table records: %s",
+                self.__class__.__name__,
+                exc,
+            )
+            return None
+
+        result: Dict[str, set[str]] = {table: set() for table in required_by_table}
+        for row in provenance_rows:
+            for table, doc_id in row.items():
+                if table in result and not is_null(doc_id):
+                    result[table].add(str(doc_id))
+        return result
+
+    def _evaluate_answer_recall(
+        self,
+        *,
+        loader: DataLoaderBase,
+        result_dict: Dict[str, Any],
+        query_info: Dict[str, Any],
+        eval_doc_ids: List[str],
+        required_by_table: Dict[str, List[str]],
+    ) -> Dict[str, Any]:
+        sql = str(query_info.get("sql") or "").strip()
+        if not sql:
+            return {"executable": False, "reason": "query_has_no_sql", "recall": None}
+
+        try:
+            gt_rows = self._execute_query_over_records(
+                sql=sql,
+                records_by_table=self._gt_records_for_sql(loader, eval_doc_ids, required_by_table),
+                required_by_table=required_by_table,
+            )
+            pred_rows = self._execute_query_over_records(
+                sql=sql,
+                records_by_table=self._prediction_records_for_sql(
+                    loader,
+                    result_dict,
+                    eval_doc_ids,
+                    required_by_table,
+                ),
+                required_by_table=required_by_table,
+            )
+        except Exception as exc:
+            return {"executable": False, "reason": str(exc), "recall": None}
+
+        gt_counter = Counter(self._canonical_row(row) for row in gt_rows)
+        pred_counter = Counter(self._canonical_row(row) for row in pred_rows)
+        missing_counter = gt_counter - pred_counter
+        extra_counter = pred_counter - gt_counter
+        covered = sum((gt_counter & pred_counter).values())
+        total = sum(gt_counter.values())
+        recall = covered / total if total else 1.0
+        precision = covered / sum(pred_counter.values()) if pred_counter else (1.0 if not gt_counter else 0.0)
+
+        return {
+            "executable": True,
+            "covered": covered,
+            "total": total,
+            "recall": recall,
+            "precision": precision,
+            "gt_rows": [list(row) for row in gt_counter.elements()],
+            "pred_rows": [list(row) for row in pred_counter.elements()],
+            "missing_rows": [list(row) for row in missing_counter.elements()],
+            "extra_rows": [list(row) for row in extra_counter.elements()],
+        }
+
+    def _gt_records_for_sql(
+        self,
+        loader: DataLoaderBase,
+        eval_doc_ids: List[str],
+        required_by_table: Dict[str, List[str]],
+    ) -> Dict[str, List[Dict[str, Any]]]:
+        records_by_table: Dict[str, List[Dict[str, Any]]] = {table: [] for table in required_by_table}
+        for doc_id in eval_doc_ids:
+            for record in self._query_required_gt_records(loader, doc_id, required_by_table):
+                row = {attr: record["data"].get(attr) for attr in required_by_table[record["table"]]}
+                row["__doc_id"] = doc_id
+                row["row_id"] = record.get("row_id")
+                records_by_table[record["table"]].append(row)
+        return records_by_table
+
+    def _prediction_records_for_sql(
+        self,
+        loader: DataLoaderBase,
+        result_dict: Dict[str, Any],
+        eval_doc_ids: List[str],
+        required_by_table: Dict[str, List[str]],
+    ) -> Dict[str, List[Dict[str, Any]]]:
+        records_by_table: Dict[str, List[Dict[str, Any]]] = {table: [] for table in required_by_table}
+        for doc_id in eval_doc_ids:
+            record = result_dict.get(doc_id)
+            if not isinstance(record, dict):
+                continue
+            table = record.get(RESULT_TABLE_KEY)
+            if table not in required_by_table:
+                continue
+            data = record.get(RESULT_DATA_KEY, {})
+            if not isinstance(data, dict):
+                data = {}
+            row = {attr: data.get(attr) for attr in required_by_table[str(table)]}
+            row["__doc_id"] = doc_id
+            row["row_id"] = self._doc_row_id(loader, doc_id)
+            records_by_table[str(table)].append(row)
+        return records_by_table
+
+    def _execute_query_over_records(
+        self,
+        *,
+        sql: str,
+        records_by_table: Dict[str, List[Dict[str, Any]]],
+        required_by_table: Dict[str, List[str]],
+    ) -> List[Tuple[Any, ...]]:
+        conn = sqlite3.connect(":memory:")
+        try:
+            self._populate_query_connection(conn, records_by_table, required_by_table)
+            cursor = conn.execute(sql)
+            return [tuple(row) for row in cursor.fetchall()]
+        finally:
+            conn.close()
+
+    def _execute_query_provenance(
+        self,
+        *,
+        sql: str,
+        records_by_table: Dict[str, List[Dict[str, Any]]],
+        required_by_table: Dict[str, List[str]],
+    ) -> List[Dict[str, Any]]:
+        table_refs = self._sql_table_references(sql, set(required_by_table))
+        if not table_refs:
+            return []
+
+        from_match = re.search(r"\bFROM\b", sql, re.IGNORECASE)
+        if not from_match:
+            return []
+
+        select_parts = [
+            f'"{ref}"."__doc_id" AS "__doc_id__{table}"'
+            for ref, table in table_refs
+            if table in required_by_table
+        ]
+        if not select_parts:
+            return []
+
+        provenance_sql = "SELECT " + ", ".join(select_parts) + " " + sql[from_match.start() :]
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        try:
+            self._populate_query_connection(conn, records_by_table, required_by_table)
+            cursor = conn.execute(provenance_sql)
+            result = []
+            for row in cursor.fetchall():
+                result.append({table: row[f"__doc_id__{table}"] for _, table in table_refs if table in required_by_table})
+            return result
+        finally:
+            conn.close()
+
+    def _populate_query_connection(
+        self,
+        conn: sqlite3.Connection,
+        records_by_table: Dict[str, List[Dict[str, Any]]],
+        required_by_table: Dict[str, List[str]],
+    ) -> None:
+        for table, attrs in required_by_table.items():
+            columns = ["__doc_id", "row_id", *(attr for attr in attrs if attr != "row_id")]
+            create_sql = (
+                f'CREATE TABLE "{table}" ('
+                + ", ".join(
+                    f'"{column}" {"TEXT" if column == "__doc_id" else "NUMERIC"}'
+                    for column in columns
+                )
+                + ")"
+            )
+            conn.execute(create_sql)
+            insert_sql = (
+                f'INSERT INTO "{table}" ('
+                + ", ".join(f'"{column}"' for column in columns)
+                + ") VALUES ("
+                + ", ".join("?" for _ in columns)
+                + ")"
+            )
+            for row in records_by_table.get(table, []):
+                conn.execute(insert_sql, [self._sql_value(row.get(column)) for column in columns])
+
+    @staticmethod
+    def _sql_table_references(sql: str, required_tables: set[str]) -> List[Tuple[str, str]]:
+        from_match = re.search(
+            r"\bFROM\s+(.+?)(?=\bWHERE\b|\bGROUP\b|\bORDER\b|\bHAVING\b|\bLIMIT\b|\bUNION\b|\bINTERSECT\b|\bEXCEPT\b|;|$)",
+            sql,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if not from_match:
+            return []
+
+        refs: List[Tuple[str, str]] = []
+        parts = re.split(r"\bJOIN\b", from_match.group(1).strip(), flags=re.IGNORECASE)
+        for part in parts:
+            segment = re.split(r"\bON\b|\bUSING\s*\(", part.strip(), maxsplit=1, flags=re.IGNORECASE)[0].strip()
+            match = re.match(
+                r'"?([A-Za-z_][A-Za-z0-9_]*)"?\s*(?:AS\s+)?("?([A-Za-z_][A-Za-z0-9_]*)"?\s*)?$',
+                segment,
+                re.IGNORECASE,
+            )
+            if not match:
+                continue
+            table = match.group(1)
+            alias = match.group(3) or table
+            if table in required_tables:
+                refs.append((alias, table))
+        return refs
+
+    def _doc_row_id(self, loader: DataLoaderBase, doc_id: str) -> Any:
+        info = loader.get_doc_info(doc_id) or {}
+        row_id = info.get("source_row_id")
+        if not is_null(row_id):
+            return row_id
+        parent_doc_id = str(info.get("parent_doc_id") or "")
+        if "-" in parent_doc_id:
+            return parent_doc_id.rsplit("-", 1)[-1]
+        return None
+
+    @staticmethod
+    def _sql_value(value: Any) -> Any:
+        if is_null(value):
+            return None
+        text = re.sub(r"\s+", " ", str(value).strip())
+        text = text.strip(" \t\r\n\"'")
+        text = re.sub(r"[\s.。:;；，,]+$", "", text)
+        numeric_text = text.replace(",", "")
+        if numeric_text.startswith("$"):
+            numeric_text = numeric_text[1:]
+        if numeric_text.endswith("%"):
+            numeric_text = numeric_text[:-1]
+        try:
+            Decimal(numeric_text)
+            return numeric_text
+        except (InvalidOperation, ValueError):
+            return text
+
+    @staticmethod
+    def _canonical_row(row: Tuple[Any, ...]) -> Tuple[str, ...]:
+        return tuple("" if is_null(value) else str(value).strip() for value in row)
+
+    def _load_or_generate_mapping(
+        self,
+        query_id: str,
+        loader: DataLoaderBase | None = None,
+    ) -> Dict[str, Any]:
+        mapping_path = self.out_root / PATH_TEMPLATES.eval_name_mapping(query_id)
         if mapping_path.exists():
             return self.load_json(mapping_path)
+
+        if loader is not None and hasattr(loader, "load_name_map"):
+            return loader.load_name_map(query_id)
 
         logging.warning(
             "[%s:_load_or_generate_mapping] Name map not found at %s; using empty mapping",

@@ -1,0 +1,73 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "galois.premierleague.default_task",
+  "tables": [
+    {
+      "table_id": "match_result",
+      "name": "match_result",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "match_result.away_goals",
+          "name": "away_goals",
+          "type": "string",
+          "description": "The number of goals scored by the away team.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "match_result.away_team",
+          "name": "away_team",
+          "type": "string",
+          "description": "The name of the team playing away from their home stadium.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "match_result.date",
+          "name": "date",
+          "type": "string",
+          "description": "The date when the match took place, formatted as DD/MM/YY.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "match_result.home_goals",
+          "name": "home_goals",
+          "type": "string",
+          "description": "The number of goals scored by the home team.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "match_result.home_team",
+          "name": "home_team",
+          "type": "string",
+          "description": "The name of the team playing at their home stadium.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "match_result.player_of_the_match",
+          "name": "player_of_the_match",
+          "type": "string",
+          "description": "The name of the player deemed the most outstanding in the match.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "match_result.player_of_the_match_team",
+          "name": "player_of_the_match_team",
+          "type": "string",
+          "description": "The team of the player of the match.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

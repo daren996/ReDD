@@ -16,8 +16,8 @@ def create_data_populator(config: Mapping[str, Any], api_key: str | None = None)
     else:
         resolved_config["mode"] = normalize_provider_name(config["mode"])
 
-    unified_module = import_module(".datapop", __package__)
-    populator_cls = getattr(unified_module, "DataPop")
+    unified_module = import_module(".data_extraction", __package__)
+    populator_cls = getattr(unified_module, "DataExtraction")
     return populator_cls(resolved_config, api_key=api_key)
 
 

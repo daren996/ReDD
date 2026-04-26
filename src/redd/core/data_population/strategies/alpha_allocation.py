@@ -1,4 +1,4 @@
-"""Alpha-allocation orchestration for unified data population."""
+"""Alpha-allocation orchestration for unified data extraction."""
 
 from __future__ import annotations
 
@@ -6,14 +6,16 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from redd.optimizations.alpha_allocation.datapop_adapter import DataPopAlphaAllocator
+from redd.optimizations.alpha_allocation.data_extraction_adapter import (
+    DataExtractionAlphaAllocator,
+)
 from redd.optimizations.alpha_allocation.types import AlphaAllocationResult
 
 __all__ = ["AlphaAllocationStrategy"]
 
 
 class AlphaAllocationStrategy:
-    """Thin wrapper that keeps alpha-allocation setup out of `datapop.py`."""
+    """Thin wrapper that keeps alpha-allocation setup out of `data_extraction.py`."""
 
     def __init__(
         self,
@@ -27,7 +29,7 @@ class AlphaAllocationStrategy:
     ) -> None:
         raw_config = config.get("alpha_allocation", {})
         self.enabled = bool(isinstance(raw_config, dict) and raw_config.get("enabled", False))
-        self._allocator: Optional[DataPopAlphaAllocator] = None
+        self._allocator: Optional[DataExtractionAlphaAllocator] = None
 
         if not self.enabled:
             return
@@ -43,8 +45,8 @@ class AlphaAllocationStrategy:
             "[AlphaAllocationStrategy] Enabled (target_recall=%s)",
             raw_config.get("target_recall", 0.95),
         )
-        self._allocator = DataPopAlphaAllocator(
-            datapop_config=config,
+        self._allocator = DataExtractionAlphaAllocator(
+            extraction_config=config,
             data_path=data_path,
             loader=loader,
             api_key=api_key,

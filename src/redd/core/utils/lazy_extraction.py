@@ -4,8 +4,8 @@ Lazy Attribute Extraction with Cost-Based Ordering
 Optimizes data population by extracting attributes in order that fails fast.
 """
 import logging
-from typing import Dict, List, Tuple, Optional, Callable
 from dataclasses import dataclass
+from typing import Callable, Dict, List, Optional, Tuple
 
 from .selectivity_estimator import SelectivityEstimator
 
@@ -67,7 +67,6 @@ class LazyAttributeExtractor:
         filters = []
         
         for table_schema in schema:
-            table_name = table_schema.get("Schema Name", "")
             attrs = table_schema.get("Attributes", [])
             
             for attr in attrs:
@@ -211,4 +210,3 @@ class LazyAttributeExtractor:
                 # Continue to next attribute even if extraction fails
         
         return extracted_values, stats
-

@@ -1,0 +1,609 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.soccer_1",
+  "tables": [
+    {
+      "table_id": "league",
+      "name": "league",
+      "description": "Football/soccer leagues from various European countries. Contains 8 leagues.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "league.country_name",
+          "name": "country_name",
+          "type": "string",
+          "description": "Country where the league is based. Type: TEXT. Examples: 'Germany', 'England', 'Switzerland', 'Italy', 'Portugal'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "league.name",
+          "name": "name",
+          "type": "string",
+          "description": "Full official name of the league. Type: TEXT. Examples: 'Germany 1. Bundesliga', 'England Premier League', 'Italy Serie A'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "player",
+      "name": "player",
+      "description": "Basic biographical information about football/soccer players. Contains 98 players.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "player.birthday",
+          "name": "birthday",
+          "type": "string",
+          "description": "Player's date of birth. Type: TEXT (YYYY-MM-DD HH:MM:SS format). Examples: '1980-11-25 00:00:00', '1992-03-30 00:00:00'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player.height",
+          "name": "height",
+          "type": "string",
+          "description": "Player's height in centimeters. Type: TEXT (decimal string). Examples: '182.88', '177.8', '187.96'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player.player_name",
+          "name": "player_name",
+          "type": "string",
+          "description": "Full name of the player. Type: TEXT. Examples: 'Aaron Mokoena', 'Aco Stojkov', 'Abdoulaye Diallo'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player.weight",
+          "name": "weight",
+          "type": "string",
+          "description": "Player's weight in pounds. Type: TEXT (numeric string). Examples: '181', '165', '174', '154'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "player_attributes",
+      "name": "player_attributes",
+      "description": "Detailed skill ratings and attributes for football/soccer players at a specific point in time, similar to FIFA game ratings. Contains 95 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "player_attributes.acceleration",
+          "name": "acceleration",
+          "type": "string",
+          "description": "Player's acceleration rating (0-100 scale). Type: TEXT (decimal string). How quickly the player reaches top speed.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.aggression",
+          "name": "aggression",
+          "type": "string",
+          "description": "Player's aggression rating (0-100). Type: TEXT. Willingness to challenge for the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.agility",
+          "name": "agility",
+          "type": "string",
+          "description": "Player's agility rating (0-100). Type: TEXT. Ability to change direction quickly.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.attacking_work_rate",
+          "name": "attacking_work_rate",
+          "type": "string",
+          "description": "Player's offensive work rate. Type: TEXT. Values include 'medium', 'high', 'low'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.balance",
+          "name": "balance",
+          "type": "string",
+          "description": "Player's balance rating (0-100). Type: TEXT. Ability to maintain stability under pressure.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.ball_control",
+          "name": "ball_control",
+          "type": "string",
+          "description": "Player's ball control rating (0-100). Type: TEXT. Ability to control and trap the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.crossing",
+          "name": "crossing",
+          "type": "string",
+          "description": "Player's crossing ability (0-100). Type: TEXT. Accuracy of crosses from wide positions.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.curve",
+          "name": "curve",
+          "type": "string",
+          "description": "Player's curve rating (0-100). Type: TEXT. Ability to curve the ball when passing or shooting.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.date",
+          "name": "date",
+          "type": "string",
+          "description": "Date when these attribute ratings were recorded. Type: TEXT (YYYY-MM-DD HH:MM:SS). Examples: '2013-09-20 00:00:00'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.defensive_work_rate",
+          "name": "defensive_work_rate",
+          "type": "string",
+          "description": "Player's defensive work rate. Type: TEXT. Values include 'medium', 'high', 'low'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.dribbling",
+          "name": "dribbling",
+          "type": "string",
+          "description": "Player's dribbling ability (0-100). Type: TEXT. Skill at moving with the ball at feet.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.finishing",
+          "name": "finishing",
+          "type": "string",
+          "description": "Player's finishing ability (0-100). Type: TEXT. Accuracy when shooting at goal from close range.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.free_kick_accuracy",
+          "name": "free_kick_accuracy",
+          "type": "string",
+          "description": "Player's free kick accuracy (0-100). Type: TEXT. Precision when taking free kicks.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_diving",
+          "name": "gk_diving",
+          "type": "string",
+          "description": "Goalkeeper diving ability (0-100). Type: TEXT. Low values for non-goalkeepers.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_handling",
+          "name": "gk_handling",
+          "type": "string",
+          "description": "Goalkeeper handling ability (0-100). Type: TEXT. Ability to hold onto the ball after a save.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_kicking",
+          "name": "gk_kicking",
+          "type": "string",
+          "description": "Goalkeeper kicking ability (0-100). Type: TEXT. Distance and accuracy of goal kicks.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_positioning",
+          "name": "gk_positioning",
+          "type": "string",
+          "description": "Goalkeeper positioning ability (0-100). Type: TEXT. Ability to be in the right place.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_reflexes",
+          "name": "gk_reflexes",
+          "type": "string",
+          "description": "Goalkeeper reflexes (0-100). Type: TEXT. Reaction speed to close-range shots.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.heading_accuracy",
+          "name": "heading_accuracy",
+          "type": "string",
+          "description": "Player's heading accuracy (0-100). Type: TEXT. Precision when heading the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.interceptions",
+          "name": "interceptions",
+          "type": "string",
+          "description": "Player's interception ability (0-100). Type: TEXT. Ability to read and intercept passes.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.jumping",
+          "name": "jumping",
+          "type": "string",
+          "description": "Player's jumping ability (0-100). Type: TEXT. Vertical leap height.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.long_passing",
+          "name": "long_passing",
+          "type": "string",
+          "description": "Player's long passing accuracy (0-100). Type: TEXT. Accuracy of long-range passes.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.long_shots",
+          "name": "long_shots",
+          "type": "string",
+          "description": "Player's long shot ability (0-100). Type: TEXT. Accuracy and power from distance.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.marking",
+          "name": "marking",
+          "type": "string",
+          "description": "Player's marking ability (0-100). Type: TEXT. Ability to track and stay close to opponents.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.overall_rating",
+          "name": "overall_rating",
+          "type": "string",
+          "description": "Player's overall rating (0-100). Type: TEXT. Composite score of all abilities. Examples: '67.0', '62.0', '72.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.penalties",
+          "name": "penalties",
+          "type": "string",
+          "description": "Player's penalty kick taking ability (0-100). Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.player_name",
+          "name": "player_name",
+          "type": "string",
+          "description": "Full name of the player these attributes belong to. References player.player_name. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.positioning",
+          "name": "positioning",
+          "type": "string",
+          "description": "Player's attacking positioning (0-100). Type: TEXT. Ability to find space in the box.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.potential",
+          "name": "potential",
+          "type": "string",
+          "description": "Player's potential overall rating (0-100). Type: TEXT. Maximum rating the player could reach.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.preferred_foot",
+          "name": "preferred_foot",
+          "type": "string",
+          "description": "Player's preferred/dominant foot. Type: TEXT. Values: 'right' or 'left'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.reactions",
+          "name": "reactions",
+          "type": "string",
+          "description": "Player's reaction speed (0-100). Type: TEXT. How quickly the player responds to situations.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.short_passing",
+          "name": "short_passing",
+          "type": "string",
+          "description": "Player's short passing accuracy (0-100). Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.shot_power",
+          "name": "shot_power",
+          "type": "string",
+          "description": "Player's shot power (0-100). Type: TEXT. Strength of shots.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.sliding_tackle",
+          "name": "sliding_tackle",
+          "type": "string",
+          "description": "Player's sliding tackle ability (0-100). Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.sprint_speed",
+          "name": "sprint_speed",
+          "type": "string",
+          "description": "Player's sprint speed (0-100). Type: TEXT. Maximum running speed.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.stamina",
+          "name": "stamina",
+          "type": "string",
+          "description": "Player's stamina (0-100). Type: TEXT. Ability to maintain performance over full match.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.standing_tackle",
+          "name": "standing_tackle",
+          "type": "string",
+          "description": "Player's standing tackle ability (0-100). Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.strength",
+          "name": "strength",
+          "type": "string",
+          "description": "Player's physical strength (0-100). Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.vision",
+          "name": "vision",
+          "type": "string",
+          "description": "Player's vision (0-100). Type: TEXT. Ability to spot passing opportunities.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.volleys",
+          "name": "volleys",
+          "type": "string",
+          "description": "Player's volley ability (0-100). Type: TEXT. Accuracy when striking the ball in mid-air.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "team",
+      "name": "team",
+      "description": "Football/soccer teams with short and long names. Contains 100 teams.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "team.team_long_name",
+          "name": "team_long_name",
+          "type": "string",
+          "description": "Full official name of the team. Type: TEXT. Examples: 'Stoke City', 'Tottenham Hotspur', 'SC Bastia', 'Wolverhampton Wanderers'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team.team_short_name",
+          "name": "team_short_name",
+          "type": "string",
+          "description": "Abbreviated 3-letter code for the team. Type: TEXT. Examples: 'STK', 'TOT', 'BAS', 'WOL', 'MOU'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "team_attributes",
+      "name": "team_attributes",
+      "description": "Tactical and strategic attributes for football/soccer teams at a specific point in time, similar to FIFA game team ratings. Contains 22 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "team_attributes.build_up_play_passing",
+          "name": "build_up_play_passing",
+          "type": "string",
+          "description": "Build-up play passing rating (0-100). Type: TEXT (numeric string). How much the team relies on passing during build-up.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_passing_class",
+          "name": "build_up_play_passing_class",
+          "type": "string",
+          "description": "Classification of build-up passing style. Type: TEXT. Values: 'Mixed', 'Long', 'Short'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_positioning_class",
+          "name": "build_up_play_positioning_class",
+          "type": "string",
+          "description": "Build-up play positional strategy. Type: TEXT. Values: 'Organised', 'Free Form'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_speed",
+          "name": "build_up_play_speed",
+          "type": "string",
+          "description": "Build-up play speed rating (0-100). Type: TEXT (numeric string). How quickly the team transitions from defense to attack.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_speed_class",
+          "name": "build_up_play_speed_class",
+          "type": "string",
+          "description": "Classification of build-up speed. Type: TEXT. Values: 'Balanced', 'Slow', 'Fast'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_crossing",
+          "name": "chance_creation_crossing",
+          "type": "string",
+          "description": "Chance creation crossing rating (0-100). Type: TEXT. Tendency to create chances via crosses.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_crossing_class",
+          "name": "chance_creation_crossing_class",
+          "type": "string",
+          "description": "Classification of crossing tendency. Type: TEXT. Values: 'Normal', 'Lots', 'Little'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_passing",
+          "name": "chance_creation_passing",
+          "type": "string",
+          "description": "Chance creation passing rating (0-100). Type: TEXT. Tendency to create chances via passing.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_passing_class",
+          "name": "chance_creation_passing_class",
+          "type": "string",
+          "description": "Classification of passing tendency in chance creation. Type: TEXT. Values: 'Normal', 'Risky', 'Safe'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_positioning_class",
+          "name": "chance_creation_positioning_class",
+          "type": "string",
+          "description": "Positioning style in chance creation. Type: TEXT. Values: 'Organised', 'Free Form'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_shooting",
+          "name": "chance_creation_shooting",
+          "type": "string",
+          "description": "Chance creation shooting rating (0-100). Type: TEXT. Tendency to shoot when creating chances.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_shooting_class",
+          "name": "chance_creation_shooting_class",
+          "type": "string",
+          "description": "Classification of shooting tendency. Type: TEXT. Values: 'Normal', 'Lots', 'Little'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.date",
+          "name": "date",
+          "type": "string",
+          "description": "Date when these team attributes were recorded. Type: TEXT (YYYY-MM-DD HH:MM:SS). Examples: '2010-02-22 00:00:00'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_aggression",
+          "name": "defence_aggression",
+          "type": "string",
+          "description": "Defensive aggression rating (0-100). Type: TEXT. How aggressively the team defends.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_aggression_class",
+          "name": "defence_aggression_class",
+          "type": "string",
+          "description": "Classification of defensive aggression. Type: TEXT. Values: 'Press', 'Contain', 'Double'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_defender_line_class",
+          "name": "defence_defender_line_class",
+          "type": "string",
+          "description": "Defender line strategy. Type: TEXT. Values: 'Cover', 'Offside Trap'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_pressure",
+          "name": "defence_pressure",
+          "type": "string",
+          "description": "Defensive pressure rating (0-100). Type: TEXT. How high up the pitch the team presses.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_pressure_class",
+          "name": "defence_pressure_class",
+          "type": "string",
+          "description": "Classification of defensive pressure level. Type: TEXT. Values: 'Medium', 'High', 'Deep'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_team_width",
+          "name": "defence_team_width",
+          "type": "string",
+          "description": "Defensive team width rating (0-100). Type: TEXT. How wide the team spreads when defending.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_team_width_class",
+          "name": "defence_team_width_class",
+          "type": "string",
+          "description": "Classification of defensive width. Type: TEXT. Values: 'Normal', 'Wide', 'Narrow'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.team_long_name",
+          "name": "team_long_name",
+          "type": "string",
+          "description": "Full name of the team these attributes belong to. References team.team_long_name. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

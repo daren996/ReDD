@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from .base import PredicateProxyBase, FilterResult
+from .base import FilterResult, PredicateProxyBase
 
 __all__ = ["PredicateProxyFilter"]
 

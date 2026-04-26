@@ -1,0 +1,61 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "cuad.cuad.no_chunk",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "cuad_contract"
+      ],
+      "required_columns": [
+        "cuad_contract.document_name",
+        "cuad_contract.parties",
+        "cuad_contract.agreement_date",
+        "cuad_contract.effective_date",
+        "cuad_contract.expiration_date",
+        "cuad_contract.renewal_term",
+        "cuad_contract.notice_period_to_terminate_renewal",
+        "cuad_contract.governing_law",
+        "cuad_contract.most_favored_nation",
+        "cuad_contract.non_compete",
+        "cuad_contract.exclusivity",
+        "cuad_contract.no_solicit_of_customers",
+        "cuad_contract.no_solicit_of_employees",
+        "cuad_contract.non_disparagement",
+        "cuad_contract.termination_for_convenience",
+        "cuad_contract.rofr_rofo_rofn",
+        "cuad_contract.change_of_control",
+        "cuad_contract.anti_assignment",
+        "cuad_contract.revenue_profit_sharing",
+        "cuad_contract.price_restrictions",
+        "cuad_contract.minimum_commitment",
+        "cuad_contract.volume_restriction",
+        "cuad_contract.ip_ownership_assignment",
+        "cuad_contract.joint_ip_ownership",
+        "cuad_contract.license_grant",
+        "cuad_contract.non_transferable_license",
+        "cuad_contract.affiliate_license_licensor",
+        "cuad_contract.affiliate_license_licensee",
+        "cuad_contract.unlimited_all_you_can_eat_license",
+        "cuad_contract.irrevocable_or_perpetual_license",
+        "cuad_contract.source_code_escrow",
+        "cuad_contract.post_termination_services",
+        "cuad_contract.audit_rights",
+        "cuad_contract.uncapped_liability",
+        "cuad_contract.cap_on_liability",
+        "cuad_contract.liquidated_damages",
+        "cuad_contract.warranty_duration",
+        "cuad_contract.insurance",
+        "cuad_contract.covenant_not_to_sue",
+        "cuad_contract.third_party_beneficiary"
+      ],
+      "output_columns": [
+        "cuad_contract.document_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

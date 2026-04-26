@@ -1,0 +1,337 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "cuad.cuad.no_chunk",
+  "tables": [
+    {
+      "table_id": "cuad_contract",
+      "name": "cuad_contract",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "cuad_contract.affiliate_license_licensee",
+          "name": "affiliate_license_licensee",
+          "type": "string",
+          "description": "Contract clause: Affiliate License-Licensee",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.affiliate_license_licensor",
+          "name": "affiliate_license_licensor",
+          "type": "string",
+          "description": "Contract clause: Affiliate License-Licensor",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.agreement_date",
+          "name": "agreement_date",
+          "type": "string",
+          "description": "Contract clause: Agreement Date",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.anti_assignment",
+          "name": "anti_assignment",
+          "type": "string",
+          "description": "Contract clause: Anti-Assignment",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.audit_rights",
+          "name": "audit_rights",
+          "type": "string",
+          "description": "Contract clause: Audit Rights",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.cap_on_liability",
+          "name": "cap_on_liability",
+          "type": "string",
+          "description": "Contract clause: Cap On Liability",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.change_of_control",
+          "name": "change_of_control",
+          "type": "string",
+          "description": "Contract clause: Change Of Control",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.covenant_not_to_sue",
+          "name": "covenant_not_to_sue",
+          "type": "string",
+          "description": "Contract clause: Covenant Not To Sue",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.document_name",
+          "name": "document_name",
+          "type": "string",
+          "description": "Contract clause: Document Name",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.effective_date",
+          "name": "effective_date",
+          "type": "string",
+          "description": "Contract clause: Effective Date",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.exclusivity",
+          "name": "exclusivity",
+          "type": "string",
+          "description": "Contract clause: Exclusivity",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.expiration_date",
+          "name": "expiration_date",
+          "type": "string",
+          "description": "Contract clause: Expiration Date",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.governing_law",
+          "name": "governing_law",
+          "type": "string",
+          "description": "Contract clause: Governing Law",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.insurance",
+          "name": "insurance",
+          "type": "string",
+          "description": "Contract clause: Insurance",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.ip_ownership_assignment",
+          "name": "ip_ownership_assignment",
+          "type": "string",
+          "description": "Contract clause: Ip Ownership Assignment",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.irrevocable_or_perpetual_license",
+          "name": "irrevocable_or_perpetual_license",
+          "type": "string",
+          "description": "Contract clause: Irrevocable Or Perpetual License",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.joint_ip_ownership",
+          "name": "joint_ip_ownership",
+          "type": "string",
+          "description": "Contract clause: Joint Ip Ownership",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.license_grant",
+          "name": "license_grant",
+          "type": "string",
+          "description": "Contract clause: License Grant",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.liquidated_damages",
+          "name": "liquidated_damages",
+          "type": "string",
+          "description": "Contract clause: Liquidated Damages",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.minimum_commitment",
+          "name": "minimum_commitment",
+          "type": "string",
+          "description": "Contract clause: Minimum Commitment",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.most_favored_nation",
+          "name": "most_favored_nation",
+          "type": "string",
+          "description": "Contract clause: Most Favored Nation",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.no_solicit_of_customers",
+          "name": "no_solicit_of_customers",
+          "type": "string",
+          "description": "Contract clause: No-Solicit Of Customers",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.no_solicit_of_employees",
+          "name": "no_solicit_of_employees",
+          "type": "string",
+          "description": "Contract clause: No-Solicit Of Employees",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.non_compete",
+          "name": "non_compete",
+          "type": "string",
+          "description": "Contract clause: Non-Compete",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.non_disparagement",
+          "name": "non_disparagement",
+          "type": "string",
+          "description": "Contract clause: Non-Disparagement",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.non_transferable_license",
+          "name": "non_transferable_license",
+          "type": "string",
+          "description": "Contract clause: Non-Transferable License",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.notice_period_to_terminate_renewal",
+          "name": "notice_period_to_terminate_renewal",
+          "type": "string",
+          "description": "Contract clause: Notice Period To Terminate Renewal",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.parties",
+          "name": "parties",
+          "type": "string",
+          "description": "Contract clause: Parties",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.post_termination_services",
+          "name": "post_termination_services",
+          "type": "string",
+          "description": "Contract clause: Post-Termination Services",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.price_restrictions",
+          "name": "price_restrictions",
+          "type": "string",
+          "description": "Contract clause: Price Restrictions",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.renewal_term",
+          "name": "renewal_term",
+          "type": "string",
+          "description": "Contract clause: Renewal Term",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.revenue_profit_sharing",
+          "name": "revenue_profit_sharing",
+          "type": "string",
+          "description": "Contract clause: Revenue/Profit Sharing",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.rofr_rofo_rofn",
+          "name": "rofr_rofo_rofn",
+          "type": "string",
+          "description": "Contract clause: Rofr/Rofo/Rofn",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.source_code_escrow",
+          "name": "source_code_escrow",
+          "type": "string",
+          "description": "Contract clause: Source Code Escrow",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.termination_for_convenience",
+          "name": "termination_for_convenience",
+          "type": "string",
+          "description": "Contract clause: Termination For Convenience",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.third_party_beneficiary",
+          "name": "third_party_beneficiary",
+          "type": "string",
+          "description": "Contract clause: Third Party Beneficiary",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.uncapped_liability",
+          "name": "uncapped_liability",
+          "type": "string",
+          "description": "Contract clause: Uncapped Liability",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.unlimited_all_you_can_eat_license",
+          "name": "unlimited_all_you_can_eat_license",
+          "type": "string",
+          "description": "Contract clause: Unlimited/All-You-Can-Eat-License",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.volume_restriction",
+          "name": "volume_restriction",
+          "type": "string",
+          "description": "Contract clause: Volume Restriction",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "cuad_contract.warranty_duration",
+          "name": "warranty_duration",
+          "type": "string",
+          "description": "Contract clause: Warranty Duration",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

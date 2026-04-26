@@ -1,0 +1,81 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.apartment_rentals",
+  "queries": [
+    {
+      "query_id": "Q3",
+      "question": "Find the first and last names of guests who have booked 'Studio' type apartments and whose booking status is 'Confirmed'.",
+      "sql": "SELECT DISTINCT T1.guest_first_name, T1.guest_last_name FROM apartment_bookings AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T2.apt_type_code = 'Studio' AND T1.booking_status_code = 'Confirmed';",
+      "required_tables": [
+        "apartment_bookings",
+        "apartments"
+      ],
+      "required_columns": [
+        "apartment_bookings.guest_first_name",
+        "apartment_bookings.guest_last_name",
+        "apartment_bookings.apt_number",
+        "apartments.apt_number",
+        "apartments.apt_type_code"
+      ],
+      "output_columns": [
+        "apartment_bookings.guest_first_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q8",
+      "question": "Find the first names of guests who have a booking status of 'Cancelled'.",
+      "sql": "SELECT guest_first_name FROM apartment_bookings WHERE booking_status_code = 'Cancelled';",
+      "required_tables": [
+        "apartment_bookings"
+      ],
+      "required_columns": [
+        "apartment_bookings.guest_first_name",
+        "apartment_bookings.booking_status_code"
+      ],
+      "output_columns": [
+        "apartment_bookings.guest_first_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q11",
+      "question": "List the building managers who manage buildings with 'Flat' descriptions, along with the count of buildings they manage.",
+      "sql": "SELECT building_manager, COUNT(*) FROM apartment_buildings WHERE building_description = 'Flat' GROUP BY building_manager;",
+      "required_tables": [
+        "apartment_buildings"
+      ],
+      "required_columns": [
+        "apartment_buildings.building_manager",
+        "apartment_buildings.building_description"
+      ],
+      "output_columns": [
+        "apartment_buildings.building_manager"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q14",
+      "question": "Find apartment numbers that have both 'Balcony' and 'Boardband' facilities, and are also of type 'Studio'.",
+      "sql": "SELECT T1.apt_number FROM apartment_facilities AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T1.facility_code = 'Balcony' INTERSECT SELECT T1.apt_number FROM apartment_facilities AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T1.facility_code = 'Boardband' AND T2.apt_type_code = 'Studio';",
+      "required_tables": [
+        "apartment_facilities",
+        "apartments"
+      ],
+      "required_columns": [
+        "apartment_facilities.apt_number",
+        "apartment_facilities.facility_code",
+        "apartments.apt_number",
+        "apartments.apt_type_code"
+      ],
+      "output_columns": [
+        "apartment_facilities.apt_number"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

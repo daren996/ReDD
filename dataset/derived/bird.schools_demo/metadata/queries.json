@@ -1,0 +1,92 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "bird.schools_demo",
+  "queries": [
+    {
+      "query_id": "q1",
+      "question": "List cname, row_id, AvgScrMath from satscores where cname equals 'Fresno'.",
+      "sql": "SELECT cname, row_id, avg_scr_math FROM satscores WHERE cname = 'Fresno';",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.cname",
+        "satscores.avg_scr_math"
+      ],
+      "output_columns": [
+        "satscores.cname"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q2",
+      "question": "Find NumTstTakr, AvgScrMath, row_id from satscores where NumTstTakr >= 36 and AvgScrMath >= 473.",
+      "sql": "SELECT num_tst_takr, avg_scr_math, row_id FROM satscores WHERE num_tst_takr >= 36 AND avg_scr_math >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.num_tst_takr",
+        "satscores.avg_scr_math"
+      ],
+      "output_columns": [
+        "satscores.num_tst_takr"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q3",
+      "question": "Find NumGE1500, AvgScrRead, row_id from satscores where NumGE1500 >= 33 and AvgScrRead >= 473.",
+      "sql": "SELECT num_ge1500, avg_scr_read, row_id FROM satscores WHERE num_ge1500 >= 33 AND avg_scr_read >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.num_ge1500",
+        "satscores.avg_scr_read"
+      ],
+      "output_columns": [
+        "satscores.num_ge1500"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q4",
+      "question": "Find AvgScrRead, AvgScrMath, NumGE1500 from satscores where AvgScrRead >= 491, AvgScrMath >= 473, and NumGE1500 <= 33.",
+      "sql": "SELECT avg_scr_read, avg_scr_math, num_ge1500 FROM satscores WHERE avg_scr_read >= 491 AND avg_scr_math >= 473 AND num_ge1500 <= 33;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_read",
+        "satscores.avg_scr_math",
+        "satscores.num_ge1500"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_read"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q5",
+      "question": "Find AvgScrMath, AvgScrWrite, row_id from satscores where AvgScrMath >= 535, AvgScrWrite >= 496, and AvgScrMath >= 473.",
+      "sql": "SELECT avg_scr_math, avg_scr_write, row_id FROM satscores WHERE avg_scr_math >= 535 AND avg_scr_write >= 496 AND avg_scr_math >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_math",
+        "satscores.avg_scr_write"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_math"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+schema_version: redd.registry.v1
+collection_id: redd
+format: hf_parquet_registry
+datasets:
+  bird.california_schools.default_task:
+    kind: derived
+    path: derived/bird.california_schools.default_task/manifest.yaml
+    parents: []
+  bird.california_schools:
+    kind: canonical
+    path: canonical/bird.california_schools/manifest.yaml
+    parents: []
+  bird.schools_demo:
+    kind: derived
+    path: derived/bird.schools_demo/manifest.yaml
+    parents:
+    - bird.california_schools
+  bird.debit_card_specializing.default_task:
+    kind: derived
+    path: derived/bird.debit_card_specializing.default_task/manifest.yaml
+    parents: []
+  bird.debit_card_specializing:
+    kind: canonical
+    path: canonical/bird.debit_card_specializing/manifest.yaml
+    parents: []
+  bird.student_club.default_task:
+    kind: derived
+    path: derived/bird.student_club.default_task/manifest.yaml
+    parents: []
+  bird.student_club:
+    kind: canonical
+    path: canonical/bird.student_club/manifest.yaml
+    parents: []
+  cuad.cuad.fixed_size_10k:
+    kind: derived
+    path: derived/cuad.cuad.fixed_size_10k/manifest.yaml
+    parents: []
+  cuad.cuad.fixed_size_50k:
+    kind: derived
+    path: derived/cuad.cuad.fixed_size_50k/manifest.yaml
+    parents: []
+  cuad.cuad:
+    kind: canonical
+    path: canonical/cuad.cuad/manifest.yaml
+    parents: []
+  cuad.cuad.no_chunk:
+    kind: derived
+    path: derived/cuad.cuad.no_chunk/manifest.yaml
+    parents: []
+  examples.single_doc_demo:
+    kind: canonical
+    path: canonical/examples.single_doc_demo/manifest.yaml
+    parents: []
+  fda.fda.fixed_size_10k:
+    kind: derived
+    path: derived/fda.fda.fixed_size_10k/manifest.yaml
+    parents: []
+  fda.fda.fixed_size_50k:
+    kind: derived
+    path: derived/fda.fda.fixed_size_50k/manifest.yaml
+    parents: []
+  fda.fda:
+    kind: canonical
+    path: canonical/fda.fda/manifest.yaml
+    parents: []
+  fda.fda.no_chunk:
+    kind: derived
+    path: derived/fda.fda.no_chunk/manifest.yaml
+    parents: []
+  galois.fortune.default_task:
+    kind: derived
+    path: derived/galois.fortune.default_task/manifest.yaml
+    parents: []
+  galois.fortune:
+    kind: canonical
+    path: canonical/galois.fortune/manifest.yaml
+    parents: []
+  galois.premierleague.default_task:
+    kind: derived
+    path: derived/galois.premierleague.default_task/manifest.yaml
+    parents: []
+  galois.premierleague:
+    kind: canonical
+    path: canonical/galois.premierleague/manifest.yaml
+    parents: []
+  quest.lcr:
+    kind: canonical
+    path: canonical/quest.lcr/manifest.yaml
+    parents: []
+  quest.swde_movie:
+    kind: canonical
+    path: canonical/quest.swde_movie/manifest.yaml
+    parents: []
+  quest.swde_university:
+    kind: canonical
+    path: canonical/quest.swde_university/manifest.yaml
+    parents: []
+  quest.wikitext:
+    kind: canonical
+    path: canonical/quest.wikitext/manifest.yaml
+    parents: []
+  spider.apartment_rentals.default_task:
+    kind: derived
+    path: derived/spider.apartment_rentals.default_task/manifest.yaml
+    parents: []
+  spider.apartment_rentals:
+    kind: canonical
+    path: canonical/spider.apartment_rentals/manifest.yaml
+    parents: []
+  spider.bike_1.default_task:
+    kind: derived
+    path: derived/spider.bike_1.default_task/manifest.yaml
+    parents: []
+  spider.bike_1:
+    kind: canonical
+    path: canonical/spider.bike_1/manifest.yaml
+    parents: []
+  spider.college_2.course_teaches_instructor:
+    kind: derived
+    path: derived/spider.college_2.course_teaches_instructor/manifest.yaml
+    parents: []
+  spider.college_2:
+    kind: canonical
+    path: canonical/spider.college_2/manifest.yaml
+    parents: []
+  spider.college_demo:
+    kind: derived
+    path: derived/spider.college_demo/manifest.yaml
+    parents:
+    - spider.college_2
+  spider.flight_4:
+    kind: canonical
+    path: canonical/spider.flight_4/manifest.yaml
+    parents: []
+  spider.flight_4.routes_airports_airlines:
+    kind: derived
+    path: derived/spider.flight_4.routes_airports_airlines/manifest.yaml
+    parents: []
+  spider.soccer_1.default_task:
+    kind: derived
+    path: derived/spider.soccer_1.default_task/manifest.yaml
+    parents: []
+  spider.soccer_1:
+    kind: canonical
+    path: canonical/spider.soccer_1/manifest.yaml
+    parents: []
+  spider.wine_1:
+    kind: canonical
+    path: canonical/spider.wine_1/manifest.yaml
+    parents: []
+  spider.wine_1.wine_appellations:
+    kind: derived
+    path: derived/spider.wine_1.wine_appellations/manifest.yaml
+    parents: []

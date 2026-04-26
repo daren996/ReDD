@@ -13,16 +13,15 @@ from torch.utils.data import DataLoader, Subset
 if torch.cuda.is_available():
     from transformers import AutoTokenizer
 
-from redd.exceptions import ArtifactNotFoundError, RuntimeDependencyError
-
 from redd.core.data_loader import create_data_loader
 from redd.core.utils import constants
 from redd.core.utils.constants import PATH_TEMPLATES
 from redd.core.utils.progress import tqdm
+from redd.exceptions import ArtifactNotFoundError, RuntimeDependencyError
+
 from .classifier_structure import BinaryClassifier0 as BinaryClassifier
 from .classifier_structure import MultiHeadBinaryClassifier, diversity_loss
 from .hidden_states_loader import LazyHiddenStatesDataset, SequentialOversampler
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -95,7 +94,7 @@ class ClassifierTrainer:
     def process_dataset(self, data_root, out_root):
         loader = create_data_loader(
             data_root=data_root,
-            loader_type=self.config.get("data_loader_type", "sqlite"),
+            loader_type=self.config.get("data_loader_type", "hf_manifest"),
             loader_config=self.config.get("data_loader_config", {}),
         )
         query_dict = loader.load_query_dict()

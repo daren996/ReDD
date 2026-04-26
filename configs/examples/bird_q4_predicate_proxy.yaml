@@ -1,0 +1,63 @@
+config_version: 2.1.1
+
+project:
+  name: bird-q4-optimizer-eval
+  seed: 42
+
+runtime:
+  output_dir: outputs/bird_q4_optimizer_eval
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: predicate-proxy-v1
+  console_log_level: INFO
+
+models:
+  llm:
+    provider: none
+    model: ground_truth
+  embedding:
+    provider: gemini
+    model: gemini-embedding-001
+    enabled: true
+    api_key_env: GEMINI_API_KEY
+    storage_file: embeddings.sqlite3
+
+datasets:
+  bird.schools_demo:
+    loader: hf_manifest
+    root: dataset/derived/bird.schools_demo
+    query_ids: [q4]
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: ground_truth
+    proxy_runtime:
+      enabled: true
+      predicate_proxy_mode: pretrained
+      target_recall: 0.95
+      use_embedding_proxies: false
+      use_learned_proxies: true
+      use_finetuned_learned_proxies: true
+      use_join_resolution: false
+      finetuned_model: heuristic
+      finetuned_epochs: 0
+      proxy_threshold: 0.51
+      allow_embedding_fallback: false
+      save_hard_negatives: false
+      verbose: true
+    alpha_allocation:
+      enabled: false
+    options:
+      force_rerun: false
+
+experiments:
+  demo:
+    datasets: [bird.schools_demo]
+    stages: [data_extraction]
+    artifact_id: predicate-proxy-v1

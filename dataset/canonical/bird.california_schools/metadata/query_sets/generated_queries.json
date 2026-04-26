@@ -1,0 +1,9641 @@
+{
+  "dataset": "california_schools/default_task",
+  "source": "bird_sqlite",
+  "database": "california_schools",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "schema_db": "default_task_schema.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "List Low Grade, FRPM Count (Ages 5-17), High Grade from frpm where Low Grade equals '9'.",
+      "sql": "SELECT \"low_grade\", \"frpm_count_ages_5_17\", \"high_grade\" FROM \"frpm\" WHERE (\"low_grade\" = '9');",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.low_grade",
+          "frpm.frpm_count_ages_5_17",
+          "frpm.high_grade"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "low_grade",
+        "frpm_count_ages_5_17",
+        "high_grade"
+      ],
+      "result_rows": [
+        [
+          "9",
+          "80.0",
+          "12"
+        ],
+        [
+          "9",
+          "13.0",
+          "12"
+        ],
+        [
+          "9",
+          "422.0",
+          "12"
+        ],
+        [
+          "9",
+          "29.0",
+          "12"
+        ],
+        [
+          "9",
+          "259.0",
+          "12"
+        ],
+        [
+          "9",
+          "145.0",
+          "12"
+        ],
+        [
+          "9",
+          "1511.0",
+          "12"
+        ],
+        [
+          "9",
+          "663.0",
+          "12"
+        ],
+        [
+          "9",
+          "2.0",
+          "Adult"
+        ],
+        [
+          "9",
+          "100.0",
+          "12"
+        ],
+        [
+          "9",
+          "17.0",
+          "12"
+        ],
+        [
+          "9",
+          "27.0",
+          "12"
+        ],
+        [
+          "9",
+          "109.0",
+          "12"
+        ],
+        [
+          "9",
+          "351.0",
+          "12"
+        ],
+        [
+          "9",
+          "182.0",
+          "12"
+        ],
+        [
+          "9",
+          "51.0",
+          "12"
+        ],
+        [
+          "9",
+          "50.0",
+          "12"
+        ],
+        [
+          "9",
+          "4.0",
+          "12"
+        ],
+        [
+          "9",
+          "1030.0",
+          "12"
+        ],
+        [
+          "9",
+          "53.0",
+          "12"
+        ],
+        [
+          "9",
+          "126.0",
+          "12"
+        ],
+        [
+          "9",
+          "580.0",
+          "12"
+        ],
+        [
+          "9",
+          "1385.0",
+          "12"
+        ],
+        [
+          "9",
+          "9.0",
+          "12"
+        ],
+        [
+          "9",
+          "40.0",
+          "12"
+        ],
+        [
+          "9",
+          "144.0",
+          "12"
+        ],
+        [
+          "9",
+          "1188.0",
+          "12"
+        ],
+        [
+          "9",
+          "5.0",
+          "12"
+        ],
+        [
+          "9",
+          "3.0",
+          "12"
+        ],
+        [
+          "9",
+          "228.0",
+          "12"
+        ],
+        [
+          "9",
+          "8.0",
+          "12"
+        ],
+        [
+          "9",
+          "226.0",
+          "12"
+        ],
+        [
+          "9",
+          "417.0",
+          "12"
+        ],
+        [
+          "9",
+          "852.0",
+          "12"
+        ],
+        [
+          "9",
+          "494.0",
+          "12"
+        ],
+        [
+          "9",
+          "171.0",
+          "12"
+        ],
+        [
+          "9",
+          "621.0",
+          "12"
+        ],
+        [
+          "9",
+          "671.0",
+          "12"
+        ],
+        [
+          "9",
+          "378.0",
+          "12"
+        ],
+        [
+          "9",
+          "1017.0",
+          "12"
+        ],
+        [
+          "9",
+          "267.0",
+          "12"
+        ],
+        [
+          "9",
+          "52.0",
+          "12"
+        ],
+        [
+          "9",
+          "247.0",
+          "12"
+        ],
+        [
+          "9",
+          "417.0",
+          "12"
+        ],
+        [
+          "9",
+          "138.0",
+          "12"
+        ],
+        [
+          "9",
+          "74.0",
+          "12"
+        ],
+        [
+          "9",
+          "360.0",
+          "12"
+        ],
+        [
+          "9",
+          "325.0",
+          "12"
+        ],
+        [
+          "9",
+          "282.0",
+          "12"
+        ],
+        [
+          "9",
+          "895.0",
+          "12"
+        ],
+        [
+          "9",
+          "72.0",
+          "12"
+        ],
+        [
+          "9",
+          "132.0",
+          "12"
+        ],
+        [
+          "9",
+          "63.0",
+          "12"
+        ],
+        [
+          "9",
+          "1259.0",
+          "12"
+        ],
+        [
+          "9",
+          "252.0",
+          "12"
+        ],
+        [
+          "9",
+          "69.0",
+          "12"
+        ],
+        [
+          "9",
+          "192.0",
+          "12"
+        ],
+        [
+          "9",
+          "118.0",
+          "12"
+        ],
+        [
+          "9",
+          "571.0",
+          "12"
+        ],
+        [
+          "9",
+          "37.0",
+          "12"
+        ],
+        [
+          "9",
+          "50.0",
+          "12"
+        ],
+        [
+          "9",
+          "168.0",
+          "12"
+        ],
+        [
+          "9",
+          "1510.0",
+          "12"
+        ],
+        [
+          "9",
+          "545.0",
+          "12"
+        ],
+        [
+          "9",
+          "263.0",
+          "12"
+        ],
+        [
+          "9",
+          null,
+          "12"
+        ],
+        [
+          "9",
+          "372.0",
+          "12"
+        ],
+        [
+          "9",
+          "116.0",
+          "12"
+        ],
+        [
+          "9",
+          "809.0",
+          "12"
+        ],
+        [
+          "9",
+          "144.0",
+          "12"
+        ],
+        [
+          "9",
+          "416.0",
+          "12"
+        ],
+        [
+          "9",
+          "319.0",
+          "12"
+        ],
+        [
+          "9",
+          "335.0",
+          "12"
+        ],
+        [
+          "9",
+          "76.0",
+          "12"
+        ],
+        [
+          "9",
+          "17.0",
+          "12"
+        ],
+        [
+          "9",
+          "199.0",
+          "12"
+        ],
+        [
+          "9",
+          "14.0",
+          "12"
+        ],
+        [
+          "9",
+          "27.0",
+          "12"
+        ],
+        [
+          "9",
+          "32.0",
+          "12"
+        ],
+        [
+          "9",
+          "80.0",
+          "12"
+        ],
+        [
+          "9",
+          "1077.0",
+          "12"
+        ],
+        [
+          "9",
+          "440.0",
+          "12"
+        ],
+        [
+          "9",
+          "6.0",
+          "12"
+        ],
+        [
+          "9",
+          "260.0",
+          "12"
+        ],
+        [
+          "9",
+          "104.0",
+          "12"
+        ],
+        [
+          "9",
+          null,
+          "12"
+        ],
+        [
+          "9",
+          "1301.0",
+          "12"
+        ],
+        [
+          "9",
+          "222.0",
+          "12"
+        ],
+        [
+          "9",
+          "104.0",
+          "12"
+        ],
+        [
+          "9",
+          "209.0",
+          "12"
+        ],
+        [
+          "9",
+          "33.0",
+          "12"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "List cname, dname, AvgScrRead from satscores where cname contains 'alameda'.",
+      "sql": "SELECT \"cname\", \"dname\", \"avg_scr_read\" FROM \"satscores\" WHERE (LOWER(CAST(\"cname\" AS TEXT)) LIKE '%alameda%');",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.cname",
+          "satscores.dname",
+          "satscores.avg_scr_read"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "cname",
+        "dname",
+        "avg_scr_read"
+      ],
+      "result_rows": [
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "423.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "391.0"
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          "418.0"
+        ],
+        [
+          "Alameda",
+          "Dublin Unified",
+          "534.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "447.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "New Haven Unified",
+          "499.0"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          null
+        ],
+        [
+          "Alameda",
+          "Castro Valley Unified",
+          "527.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Pleasanton Unified",
+          "585.0"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "437.0"
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          "503.0"
+        ],
+        [
+          "Alameda",
+          "Emery Unified",
+          "420.0"
+        ],
+        [
+          "Alameda",
+          "Newark Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "384.0"
+        ],
+        [
+          "Alameda",
+          "Newark Unified",
+          "486.0"
+        ],
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          "544.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "414.0"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "521.0"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "430.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "308.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          "543.0"
+        ],
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          "544.0"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "575.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "376.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "417.0"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "435.0"
+        ],
+        [
+          "Alameda",
+          "Newark Unified",
+          "486.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "515.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          "397.0"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "483.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "359.0"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "352.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "586.0"
+        ],
+        [
+          "Alameda",
+          "Castro Valley Unified",
+          "527.0"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "489.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "418.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "New Haven Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "San Leandro Unified",
+          "460.0"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "423.0"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "562.0"
+        ],
+        [
+          "Alameda",
+          "Pleasanton Unified",
+          "591.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "485.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "529.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "546.0"
+        ],
+        [
+          "Alameda",
+          "Piedmont City Unified",
+          "615.0"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "482.0"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "439.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "451.0"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          "384.0"
+        ],
+        [
+          "Alameda",
+          "Emery Unified",
+          "420.0"
+        ],
+        [
+          "Alameda",
+          "Piedmont City Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "543.0"
+        ],
+        [
+          "Alameda",
+          "Albany City Unified",
+          "572.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "438.0"
+        ],
+        [
+          "Alameda",
+          "San Leandro Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "355.0"
+        ],
+        [
+          "Alameda",
+          "Piedmont City Unified",
+          "621.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "653.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "432.0"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "463.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "520.0"
+        ],
+        [
+          "Alameda",
+          "Dublin Unified",
+          "534.0"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "424.0"
+        ],
+        [
+          "Alameda",
+          "Albany City Unified",
+          "572.0"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          "583.0"
+        ],
+        [
+          "Alameda",
+          "New Haven Unified",
+          "499.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "378.0"
+        ],
+        [
+          "Alameda",
+          "SBE - Livermore Valley Charter Preparatory High",
+          "516.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          null
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "505.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "399.0"
+        ],
+        [
+          "Alameda",
+          "Pleasanton Unified",
+          "596.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "590.0"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          "566.0"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "573.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "373.0"
+        ],
+        [
+          "Alameda",
+          "San Leandro Unified",
+          "461.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "401.0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "355.0"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "List cname, dname, NumTstTakr from satscores where cname equals 'Alameda'.",
+      "sql": "SELECT \"cname\", \"dname\", \"num_tst_takr\" FROM \"satscores\" WHERE (\"cname\" = 'Alameda');",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.cname",
+          "satscores.dname",
+          "satscores.num_tst_takr"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "cname",
+        "dname",
+        "num_tst_takr"
+      ],
+      "result_rows": [
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          "2"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "34"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "52"
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          "88"
+        ],
+        [
+          "Alameda",
+          "Dublin Unified",
+          "292"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "179"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "0"
+        ],
+        [
+          "Alameda",
+          "New Haven Unified",
+          "453"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          "4"
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          "0"
+        ],
+        [
+          "Alameda",
+          "Castro Valley Unified",
+          "438"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "5"
+        ],
+        [
+          "Alameda",
+          "Pleasanton Unified",
+          "394"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "686"
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          "17"
+        ],
+        [
+          "Alameda",
+          "Emery Unified",
+          "23"
+        ],
+        [
+          "Alameda",
+          "Newark Unified",
+          "0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "49"
+        ],
+        [
+          "Alameda",
+          "Newark Unified",
+          "234"
+        ],
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          "423"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "187"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "544"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "162"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "19"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "4"
+        ],
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          "191"
+        ],
+        [
+          "Alameda",
+          "Livermore Valley Joint Unified",
+          "230"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "20"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "57"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "66"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "99"
+        ],
+        [
+          "Alameda",
+          "Newark Unified",
+          "234"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "308"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "1"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "0"
+        ],
+        [
+          "Alameda",
+          "Alameda County Office of Education",
+          "71"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "132"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "3"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "39"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "23"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "1537"
+        ],
+        [
+          "Alameda",
+          "Castro Valley Unified",
+          "438"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "218"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "34"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "1"
+        ],
+        [
+          "Alameda",
+          "New Haven Unified",
+          "1"
+        ],
+        [
+          "Alameda",
+          "San Leandro Unified",
+          "325"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "161"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "36"
+        ],
+        [
+          "Alameda",
+          "Pleasanton Unified",
+          "882"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "179"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "80"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "226"
+        ],
+        [
+          "Alameda",
+          "Piedmont City Unified",
+          "150"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "115"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "97"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "0"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "214"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          "36"
+        ],
+        [
+          "Alameda",
+          "Emery Unified",
+          "23"
+        ],
+        [
+          "Alameda",
+          "Piedmont City Unified",
+          "10"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "6"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "325"
+        ],
+        [
+          "Alameda",
+          "Albany City Unified",
+          "178"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "1509"
+        ],
+        [
+          "Alameda",
+          "San Leandro Unified",
+          "1"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "44"
+        ],
+        [
+          "Alameda",
+          "Piedmont City Unified",
+          "140"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "453"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "53"
+        ],
+        [
+          "Alameda",
+          "San Lorenzo Unified",
+          "528"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "56"
+        ],
+        [
+          "Alameda",
+          "Dublin Unified",
+          "292"
+        ],
+        [
+          "Alameda",
+          "Alameda Unified",
+          "2"
+        ],
+        [
+          "Alameda",
+          "Hayward Unified",
+          "114"
+        ],
+        [
+          "Alameda",
+          "Albany City Unified",
+          "178"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          "450"
+        ],
+        [
+          "Alameda",
+          "New Haven Unified",
+          "452"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "54"
+        ],
+        [
+          "Alameda",
+          "SBE - Livermore Valley Charter Preparatory High",
+          "75"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "0"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "30"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "66"
+        ],
+        [
+          "Alameda",
+          "Pleasanton Unified",
+          "488"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "364"
+        ],
+        [
+          "Alameda",
+          "Berkeley Unified",
+          "490"
+        ],
+        [
+          "Alameda",
+          "Fremont Unified",
+          "309"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "38"
+        ],
+        [
+          "Alameda",
+          "San Leandro Unified",
+          "324"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "21"
+        ],
+        [
+          "Alameda",
+          "Oakland Unified",
+          "69"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "List NSLP Provision Status, Percent (%) Eligible FRPM (Ages 5-17), FRPM Count (Ages 5-17) from frpm where NSLP Provision Status is not null.",
+      "sql": "SELECT \"nslp_provision_status\", \"percent_eligible_frpm_ages_5_17\", \"frpm_count_ages_5_17\" FROM \"frpm\" WHERE (\"nslp_provision_status\" IS NOT NULL);",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.nslp_provision_status",
+          "frpm.percent_eligible_frpm_ages_5_17",
+          "frpm.frpm_count_ages_5_17"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "nslp_provision_status",
+        "percent_eligible_frpm_ages_5_17",
+        "frpm_count_ages_5_17"
+      ],
+      "result_rows": [
+        [
+          "Provision 2",
+          null,
+          null
+        ],
+        [
+          "Provision 2",
+          "0.79108635097493",
+          "284.0"
+        ],
+        [
+          "Provision 2",
+          "0.898305084745763",
+          "318.0"
+        ],
+        [
+          "Provision 2",
+          "0.933035714285714",
+          "209.0"
+        ],
+        [
+          "Provision 2",
+          "0.8125",
+          "13.0"
+        ],
+        [
+          "CEP",
+          "0.933130699088146",
+          "307.0"
+        ],
+        [
+          "Provision 2",
+          "0.937759336099585",
+          "226.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.906",
+          "453.0"
+        ],
+        [
+          "CEP",
+          "1.0",
+          "1.0"
+        ],
+        [
+          "Provision 2",
+          "0.761038961038961",
+          "293.0"
+        ],
+        [
+          "CEP",
+          "0.80106100795756",
+          "302.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.731578947368421",
+          "139.0"
+        ],
+        [
+          "CEP",
+          "0.890625",
+          "399.0"
+        ],
+        [
+          "Provision 2",
+          "0.933025404157044",
+          "404.0"
+        ],
+        [
+          "CEP",
+          "0.934210526315789",
+          "284.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.816568047337278",
+          "552.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.165116279069767",
+          "71.0"
+        ],
+        [
+          "Provision 2",
+          "0.923076923076923",
+          "216.0"
+        ],
+        [
+          "CEP",
+          "0.843853820598007",
+          "254.0"
+        ],
+        [
+          "Provision 2",
+          "0.4",
+          "4.0"
+        ],
+        [
+          "Provision 2",
+          "0.86374695863747",
+          "355.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.560301507537688",
+          "223.0"
+        ],
+        [
+          "Provision 2",
+          "0.926829268292683",
+          "152.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.575098814229249",
+          "291.0"
+        ],
+        [
+          "Provision 2",
+          "0.885918003565062",
+          "497.0"
+        ],
+        [
+          "Provision 2",
+          "0.954230235783634",
+          "688.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.597701149425287",
+          "260.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.777653003930376",
+          "1385.0"
+        ],
+        [
+          "Provision 2",
+          "0.913151364764268",
+          "368.0"
+        ],
+        [
+          "Provision 2",
+          "0.923684210526316",
+          "351.0"
+        ],
+        [
+          "Provision 2",
+          "0.968446601941748",
+          "399.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.830393487109905",
+          "612.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.750877192982456",
+          "214.0"
+        ],
+        [
+          "Provision 2",
+          "0.915540540540541",
+          "271.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.640471512770137",
+          "326.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.566059225512529",
+          "497.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.601307189542484",
+          "368.0"
+        ],
+        [
+          "Provision 2",
+          "0.933110367892977",
+          "279.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.879746835443038",
+          "417.0"
+        ],
+        [
+          "CEP",
+          "0.840579710144927",
+          "348.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.539325842696629",
+          "288.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.77027027027027",
+          "456.0"
+        ],
+        [
+          "Provision 2",
+          "0.831763122476447",
+          "618.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.160558464223386",
+          "92.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.691656590084643",
+          "572.0"
+        ],
+        [
+          "Provision 2",
+          "0.919504643962848",
+          "297.0"
+        ],
+        [
+          "Provision 2",
+          "0.91533180778032",
+          "400.0"
+        ],
+        [
+          "CEP",
+          "0.818181818181818",
+          "9.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.787878787878788",
+          "52.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.888489208633094",
+          "247.0"
+        ],
+        [
+          "Provision 2",
+          "0.8203125",
+          "315.0"
+        ],
+        [
+          "CEP",
+          "0.916666666666667",
+          "242.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.746376811594203",
+          "206.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.800759013282732",
+          "422.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.720620842572062",
+          "325.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.904320987654321",
+          "293.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.292225201072386",
+          "109.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.841328413284133",
+          "228.0"
+        ],
+        [
+          "Provision 2",
+          "0.956043956043956",
+          "174.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.827586206896552",
+          "72.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.780898876404494",
+          "556.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.365217391304348",
+          "168.0"
+        ],
+        [
+          "Provision 2",
+          "0.953767123287671",
+          "557.0"
+        ],
+        [
+          "Provision 2",
+          "0.87857641311933",
+          "1259.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.683257918552036",
+          "302.0"
+        ],
+        [
+          "CEP",
+          "0.75",
+          "3.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.151986183074266",
+          "88.0"
+        ],
+        [
+          "Provision 2",
+          "0.772665764546685",
+          "571.0"
+        ],
+        [
+          "Provision 2",
+          "0.985074626865672",
+          "330.0"
+        ],
+        [
+          "Provision 2",
+          "0.874015748031496",
+          "222.0"
+        ],
+        [
+          "Provision 2",
+          "0.943181818181818",
+          "249.0"
+        ],
+        [
+          "Provision 2",
+          "0.914841849148418",
+          "376.0"
+        ],
+        [
+          "CEP",
+          "0.634146341463415",
+          "52.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.889830508474576",
+          "315.0"
+        ],
+        [
+          "Provision 2",
+          "0.926910299003322",
+          "279.0"
+        ],
+        [
+          "Provision 2",
+          "0.888235294117647",
+          "302.0"
+        ],
+        [
+          "Provision 2",
+          "0.91958041958042",
+          "263.0"
+        ],
+        [
+          "Provision 2",
+          "0.950570342205323",
+          "500.0"
+        ],
+        [
+          "CEP",
+          "0.83206106870229",
+          "218.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.462469733656174",
+          "191.0"
+        ],
+        [
+          "Provision 2",
+          "0.81941309255079",
+          "363.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.867219917012448",
+          "209.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.739247311827957",
+          "275.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.659090909090909",
+          "261.0"
+        ],
+        [
+          "Provision 2",
+          "0.824",
+          "309.0"
+        ],
+        [
+          "CEP",
+          "0.791489361702128",
+          "186.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.553158705701079",
+          "1077.0"
+        ],
+        [
+          "Provision 2",
+          "0.738154613466334",
+          "296.0"
+        ],
+        [
+          "Provision 2",
+          "0.827380952380952",
+          "417.0"
+        ],
+        [
+          "Provision 2",
+          "0.847328244274809",
+          "444.0"
+        ],
+        [
+          "Breakfast Provision 2",
+          "0.686411149825784",
+          "197.0"
+        ],
+        [
+          "Provision 2",
+          "0.897280966767372",
+          "297.0"
+        ],
+        [
+          "CEP",
+          "0.869369369369369",
+          "193.0"
+        ]
+      ],
+      "result_count": 93,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "List County Name, District Name, School Type from frpm where County Name equals 'Butte'.",
+      "sql": "SELECT \"county_name\", \"district_name\", \"school_type\" FROM \"frpm\" WHERE (\"county_name\" = 'Butte');",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.county_name",
+          "frpm.district_name",
+          "frpm.school_type"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "county_name",
+        "district_name",
+        "school_type"
+      ],
+      "result_rows": [
+        [
+          "Butte",
+          "Paradise Unified",
+          "Continuation High Schools"
+        ],
+        [
+          "Butte",
+          "Butte County Office of Education",
+          "Juvenile Court Schools"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Continuation High Schools"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Bangor Union Elementary",
+          "Elemen Schools In 1 School Dist. (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville Union High",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Biggs Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Durham Unified",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville Union High",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Oroville Union High",
+          "Continuation High Schools"
+        ],
+        [
+          "Butte",
+          "Thermalito Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Butte County Office of Education",
+          "County Community"
+        ],
+        [
+          "Butte",
+          "Butte County Office of Education",
+          "County Community"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Alternative Schools of Choice"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Durham Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Gridley Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Gridley Unified",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Thermalito Union Elementary",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Palermo Union Elementary",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Feather Falls Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville Union High",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "K-12 Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Palermo Union Elementary",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Thermalito Union Elementary",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Gridley Unified",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Gridley Unified",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Biggs Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Durham Unified",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Butte County Office of Education",
+          "K-12 Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Palermo Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Palermo Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Manzanita Elementary",
+          "Elemen Schools In 1 School Dist. (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Butte County Office of Education",
+          "County Community"
+        ],
+        [
+          "Butte",
+          "Thermalito Union Elementary",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Butte County Office of Education",
+          "Special Education Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Butte County Office of Education",
+          "K-12 Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Palermo Union Elementary",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Oroville City Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Biggs Unified",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "District Community Day Schools"
+        ],
+        [
+          "Butte",
+          "Golden Feather Union Elementary",
+          "K-12 Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Opportunity Schools"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "High Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Thermalito Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Golden Feather Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Alternative Schools of Choice"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Special Education Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Gridley Unified",
+          "Continuation High Schools"
+        ],
+        [
+          "Butte",
+          "Palermo Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Thermalito Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Pioneer Union Elementary",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Alternative Schools of Choice"
+        ],
+        [
+          "Butte",
+          "Gridley Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Feather Falls Union Elementary",
+          "K-12 Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Chico Unified",
+          "Elementary Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Paradise Unified",
+          "Intermediate/Middle Schools (Public)"
+        ],
+        [
+          "Butte",
+          "Biggs Unified",
+          "High Schools (Public)"
+        ]
+      ],
+      "result_count": 94,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "List dname, enroll12, AvgScrMath from satscores where dname contains 'union'.",
+      "sql": "SELECT \"dname\", \"enroll12\", \"avg_scr_math\" FROM \"satscores\" WHERE (LOWER(CAST(\"dname\" AS TEXT)) LIKE '%union%');",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.dname",
+          "satscores.enroll12",
+          "satscores.avg_scr_math"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "dname",
+        "enroll12",
+        "avg_scr_math"
+      ],
+      "result_rows": [
+        [
+          "Loleta Union Elementary",
+          "22",
+          null
+        ],
+        [
+          "Antelope Valley Union High",
+          "342",
+          "426.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "797",
+          "435.0"
+        ],
+        [
+          "Northern Humboldt Union High",
+          "27",
+          "528.0"
+        ],
+        [
+          "Lassen Union High",
+          "210",
+          "507.0"
+        ],
+        [
+          "Delano Joint Union High",
+          "223",
+          "449.0"
+        ],
+        [
+          "Acalanes Union High",
+          "17",
+          null
+        ],
+        [
+          "Acalanes Union High",
+          "253",
+          "633.0"
+        ],
+        [
+          "Northern Humboldt Union High",
+          "6",
+          null
+        ],
+        [
+          "Feather Falls Union Elementary",
+          "14",
+          null
+        ],
+        [
+          "Liberty Union High",
+          "621",
+          "479.0"
+        ],
+        [
+          "Golden Feather Union Elementary",
+          "11",
+          null
+        ],
+        [
+          "El Dorado Union High",
+          "73",
+          null
+        ],
+        [
+          "Lemoore Union High",
+          "62",
+          "468.0"
+        ],
+        [
+          "Oroville Union High",
+          "262",
+          "522.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "564",
+          "462.0"
+        ],
+        [
+          "Golden Feather Union Elementary",
+          "11",
+          null
+        ],
+        [
+          "Taft Union High",
+          "251",
+          "471.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "509",
+          "408.0"
+        ],
+        [
+          "El Dorado Union High",
+          "34",
+          null
+        ],
+        [
+          "Hanford Joint Union High",
+          "204",
+          "483.0"
+        ],
+        [
+          "South Bay Union Elementary",
+          "36",
+          null
+        ],
+        [
+          "Central Union High",
+          "56",
+          null
+        ],
+        [
+          "Antelope Valley Union High",
+          "796",
+          "460.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "405",
+          null
+        ],
+        [
+          "Byron Union Elementary",
+          "46",
+          null
+        ],
+        [
+          "Lemoore Union High",
+          "558",
+          "468.0"
+        ],
+        [
+          "Delano Joint Union High",
+          "977",
+          "457.0"
+        ],
+        [
+          "Acalanes Union High",
+          "373",
+          "554.0"
+        ],
+        [
+          "Central Union High",
+          "472",
+          "482.0"
+        ],
+        [
+          "Liberty Union High",
+          "2106",
+          "485.0"
+        ],
+        [
+          "El Dorado Union High",
+          "433",
+          "564.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "9",
+          null
+        ],
+        [
+          "Northern Humboldt Union High",
+          "419",
+          "533.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "1312",
+          null
+        ],
+        [
+          "Brawley Union High",
+          "346",
+          "451.0"
+        ],
+        [
+          "El Dorado Union High",
+          "305",
+          "522.0"
+        ],
+        [
+          "Lassen Union High",
+          "215",
+          "507.0"
+        ],
+        [
+          "Hanford Joint Union High",
+          "304",
+          "454.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "86",
+          "513.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "695",
+          "427.0"
+        ],
+        [
+          "Loleta Union Elementary",
+          "22",
+          null
+        ],
+        [
+          "Armona Union Elementary",
+          "73",
+          null
+        ],
+        [
+          "Oroville Union High",
+          "204",
+          "485.0"
+        ],
+        [
+          "Oroville Union High",
+          "541",
+          "504.0"
+        ],
+        [
+          "Acalanes Union High",
+          "301",
+          "617.0"
+        ],
+        [
+          "Brawley Union High",
+          "470",
+          "451.0"
+        ],
+        [
+          "Armona Union Elementary",
+          "43",
+          null
+        ],
+        [
+          "Liberty Union High",
+          "212",
+          null
+        ],
+        [
+          "Fortuna Union High",
+          "170",
+          "493.0"
+        ],
+        [
+          "Wasco Union High",
+          "385",
+          "448.0"
+        ],
+        [
+          "El Dorado Union High",
+          "208",
+          "517.0"
+        ],
+        [
+          "Kingsburg Joint Union High",
+          "258",
+          "481.0"
+        ],
+        [
+          "Armona Union Elementary",
+          "58",
+          null
+        ],
+        [
+          "South Bay Union Elementary",
+          "36",
+          null
+        ],
+        [
+          "El Dorado Union High",
+          "1684",
+          "556.0"
+        ],
+        [
+          "Fortuna Union High",
+          "39",
+          "542.0"
+        ],
+        [
+          "Kingsburg Joint Union High",
+          "22",
+          null
+        ],
+        [
+          "Wasco Union High",
+          "327",
+          "448.0"
+        ],
+        [
+          "Delano Joint Union High",
+          "390",
+          "453.0"
+        ],
+        [
+          "Bret Harte Union High",
+          "182",
+          "550.0"
+        ],
+        [
+          "Lemoore Union High",
+          "448",
+          "468.0"
+        ],
+        [
+          "Bret Harte Union High",
+          "163",
+          "550.0"
+        ],
+        [
+          "Acalanes Union High",
+          "296",
+          "604.0"
+        ],
+        [
+          "Northern Humboldt Union High",
+          "126",
+          "500.0"
+        ],
+        [
+          "Feather Falls Union Elementary",
+          "14",
+          null
+        ],
+        [
+          "Antelope Valley Union High",
+          "780",
+          "494.0"
+        ],
+        [
+          "El Dorado Union High",
+          "563",
+          "570.0"
+        ],
+        [
+          "Liberty Union High",
+          "571",
+          "510.0"
+        ],
+        [
+          "Fortuna Union High",
+          "254",
+          "506.0"
+        ],
+        [
+          "Hanford Joint Union High",
+          "340",
+          "449.0"
+        ],
+        [
+          "Byron Union Elementary",
+          "46",
+          null
+        ],
+        [
+          "Antelope Valley Union High",
+          "141",
+          null
+        ],
+        [
+          "Central Union High",
+          "905",
+          "483.0"
+        ],
+        [
+          "Northern Humboldt Union High",
+          "206",
+          "555.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "371",
+          "400.0"
+        ],
+        [
+          "Armona Union Elementary",
+          "174",
+          null
+        ],
+        [
+          "Acalanes Union High",
+          "1251",
+          "601.0"
+        ],
+        [
+          "Kingsburg Joint Union High",
+          "293",
+          "481.0"
+        ],
+        [
+          "Antelope Valley Union High",
+          "7334",
+          "448.0"
+        ],
+        [
+          "Delano Joint Union High",
+          "317",
+          "463.0"
+        ],
+        [
+          "Upper Lake Union High",
+          "95",
+          "412.0"
+        ],
+        [
+          "Liberty Union High",
+          "594",
+          "455.0"
+        ],
+        [
+          "Taft Union High",
+          "222",
+          "471.0"
+        ],
+        [
+          "Central Union High",
+          "377",
+          "486.0"
+        ],
+        [
+          "Hanford Joint Union High",
+          "962",
+          "459.0"
+        ]
+      ],
+      "result_count": 86,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "List County Name, Charter School Number, District Type from frpm where County Name contains 'butte'.",
+      "sql": "SELECT \"county_name\", \"charter_school_number\", \"district_type\" FROM \"frpm\" WHERE (LOWER(CAST(\"county_name\" AS TEXT)) LIKE '%butte%');",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.county_name",
+          "frpm.charter_school_number",
+          "frpm.district_type"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "county_name",
+        "charter_school_number",
+        "district_type"
+      ],
+      "result_rows": [
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "County Office of Education (COE)"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "1189",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "1616",
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "High School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "High School District"
+        ],
+        [
+          "Butte",
+          null,
+          "High School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "County Office of Education (COE)"
+        ],
+        [
+          "Butte",
+          null,
+          "County Office of Education (COE)"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "1166",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "High School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0067",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          "1019",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0079",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0112",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0751",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0945",
+          "County Office of Education (COE)"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0729",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "County Office of Education (COE)"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "County Office of Education (COE)"
+        ],
+        [
+          "Butte",
+          "1280",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0110",
+          "County Office of Education (COE)"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0415",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "1364",
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "1114",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "0094",
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          "1170",
+          "Elementary School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ],
+        [
+          "Butte",
+          null,
+          "Unified School District"
+        ]
+      ],
+      "result_count": 94,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "List School Type, Low Grade, District Type from frpm where School Type contains 'high'.",
+      "sql": "SELECT \"school_type\", \"low_grade\", \"district_type\" FROM \"frpm\" WHERE (LOWER(CAST(\"school_type\" AS TEXT)) LIKE '%high%');",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.school_type",
+          "frpm.low_grade",
+          "frpm.district_type"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "school_type",
+        "low_grade",
+        "district_type"
+      ],
+      "result_rows": [
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "High School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "High School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "County Office of Education (COE)"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "High School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "High School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "10",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "10",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "7",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "High School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "6",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "County Office of Education (COE)"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Junior High Schools (Public)",
+          "5",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "7",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "Continuation High Schools",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ],
+        [
+          "High Schools (Public)",
+          "9",
+          "Unified School District"
+        ]
+      ],
+      "result_count": 94,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "Find enroll12, AvgScrMath, NumTstTakr from satscores where enroll12 is between 77 and 346 and row_id is <= 249.",
+      "sql": "SELECT \"enroll12\", \"avg_scr_math\", \"num_tst_takr\" FROM \"satscores\" WHERE (CAST(\"enroll12\" AS REAL) >= 77 AND CAST(\"enroll12\" AS REAL) <= 346) AND (CAST(\"row_id\" AS REAL) <= 249);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.enroll12",
+          "satscores.avg_scr_math",
+          "satscores.num_tst_takr",
+          "satscores.row_id"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "enroll12",
+        "avg_scr_math",
+        "num_tst_takr"
+      ],
+      "result_rows": [
+        [
+          "142",
+          "451.0",
+          "67"
+        ],
+        [
+          "218",
+          "396.0",
+          "113"
+        ],
+        [
+          "95",
+          "505.0",
+          "49"
+        ],
+        [
+          "342",
+          "426.0",
+          "133"
+        ],
+        [
+          "269",
+          "446.0",
+          "72"
+        ],
+        [
+          "107",
+          "502.0",
+          "38"
+        ],
+        [
+          "107",
+          null,
+          "0"
+        ],
+        [
+          "100",
+          "462.0",
+          "26"
+        ],
+        [
+          "210",
+          "507.0",
+          "70"
+        ],
+        [
+          "320",
+          "545.0",
+          "52"
+        ],
+        [
+          "223",
+          "449.0",
+          "85"
+        ],
+        [
+          "94",
+          "550.0",
+          "16"
+        ],
+        [
+          "227",
+          "503.0",
+          "61"
+        ],
+        [
+          "172",
+          "345.0",
+          "134"
+        ],
+        [
+          "113",
+          "431.0",
+          "41"
+        ],
+        [
+          "182",
+          "480.0",
+          "38"
+        ],
+        [
+          "253",
+          "633.0",
+          "218"
+        ],
+        [
+          "150",
+          "491.0",
+          "36"
+        ],
+        [
+          "133",
+          "468.0",
+          "42"
+        ],
+        [
+          "143",
+          null,
+          "4"
+        ],
+        [
+          "99",
+          "473.0",
+          "30"
+        ],
+        [
+          "149",
+          "523.0",
+          "70"
+        ],
+        [
+          "81",
+          null,
+          "1"
+        ],
+        [
+          "95",
+          null,
+          "9"
+        ],
+        [
+          "262",
+          "522.0",
+          "53"
+        ],
+        [
+          "87",
+          "443.0",
+          "27"
+        ],
+        [
+          "321",
+          "523.0",
+          "111"
+        ],
+        [
+          "343",
+          "505.0",
+          "121"
+        ],
+        [
+          "317",
+          "446.0",
+          "72"
+        ],
+        [
+          "231",
+          "446.0",
+          "71"
+        ],
+        [
+          "181",
+          "471.0",
+          "51"
+        ],
+        [
+          "251",
+          "471.0",
+          "69"
+        ],
+        [
+          "243",
+          null,
+          "3"
+        ],
+        [
+          "81",
+          "502.0",
+          "74"
+        ],
+        [
+          "91",
+          null,
+          "4"
+        ],
+        [
+          "150",
+          "422.0",
+          "72"
+        ],
+        [
+          "143",
+          "422.0",
+          "72"
+        ],
+        [
+          "127",
+          "518.0",
+          "44"
+        ],
+        [
+          "163",
+          "550.0",
+          "16"
+        ],
+        [
+          "188",
+          "418.0",
+          "104"
+        ],
+        [
+          "172",
+          "417.0",
+          "104"
+        ],
+        [
+          "240",
+          "305.0",
+          "11"
+        ],
+        [
+          "106",
+          "518.0",
+          "44"
+        ],
+        [
+          "174",
+          "373.0",
+          "84"
+        ],
+        [
+          "237",
+          null,
+          "0"
+        ],
+        [
+          "334",
+          "436.0",
+          "187"
+        ],
+        [
+          "319",
+          "536.0",
+          "116"
+        ],
+        [
+          "204",
+          "483.0",
+          "64"
+        ],
+        [
+          "162",
+          "462.0",
+          "26"
+        ],
+        [
+          "121",
+          "395.0",
+          "56"
+        ],
+        [
+          "274",
+          null,
+          "0"
+        ],
+        [
+          "100",
+          null,
+          "0"
+        ],
+        [
+          "90",
+          "352.0",
+          "19"
+        ],
+        [
+          "101",
+          "448.0",
+          "26"
+        ],
+        [
+          "129",
+          null,
+          "8"
+        ],
+        [
+          "86",
+          "448.0",
+          "26"
+        ],
+        [
+          "164",
+          "687.0",
+          "154"
+        ],
+        [
+          "309",
+          "435.0",
+          "101"
+        ],
+        [
+          "136",
+          "457.0",
+          "40"
+        ],
+        [
+          "127",
+          "424.0",
+          "69"
+        ],
+        [
+          "136",
+          null,
+          "4"
+        ],
+        [
+          "121",
+          "541.0",
+          "27"
+        ],
+        [
+          "204",
+          null,
+          "1"
+        ],
+        [
+          "257",
+          "510.0",
+          "77"
+        ],
+        [
+          "83",
+          null,
+          "0"
+        ],
+        [
+          "163",
+          "509.0",
+          "129"
+        ],
+        [
+          "317",
+          "419.0",
+          "81"
+        ],
+        [
+          "125",
+          "357.0",
+          "82"
+        ],
+        [
+          "105",
+          "451.0",
+          "99"
+        ],
+        [
+          "158",
+          "506.0",
+          "73"
+        ],
+        [
+          "99",
+          null,
+          "1"
+        ],
+        [
+          "302",
+          "445.0",
+          "262"
+        ],
+        [
+          "346",
+          "451.0",
+          "156"
+        ],
+        [
+          "341",
+          "543.0",
+          "118"
+        ],
+        [
+          "305",
+          "522.0",
+          "115"
+        ],
+        [
+          "225",
+          "494.0",
+          "105"
+        ],
+        [
+          "212",
+          "502.0",
+          "107"
+        ],
+        [
+          "91",
+          null,
+          "1"
+        ],
+        [
+          "215",
+          "507.0",
+          "70"
+        ],
+        [
+          "169",
+          null,
+          "0"
+        ],
+        [
+          "304",
+          "454.0",
+          "108"
+        ],
+        [
+          "173",
+          "480.0",
+          "38"
+        ],
+        [
+          "86",
+          "513.0",
+          "87"
+        ],
+        [
+          "238",
+          "504.0",
+          "132"
+        ],
+        [
+          "88",
+          "539.0",
+          "16"
+        ],
+        [
+          "109",
+          "402.0",
+          "55"
+        ],
+        [
+          "335",
+          "354.0",
+          "273"
+        ],
+        [
+          "267",
+          "455.0",
+          "102"
+        ],
+        [
+          "173",
+          "289.0",
+          "19"
+        ],
+        [
+          "242",
+          "395.0",
+          "204"
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "Find Low Grade, FRPM Count (K-12), row_id from frpm where Low Grade equals '9' and High Grade is >= 12.",
+      "sql": "SELECT \"low_grade\", \"frpm_count_k_12\", \"row_id\" FROM \"frpm\" WHERE (\"low_grade\" = '9') AND (CAST(\"high_grade\" AS REAL) >= 12);",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.low_grade",
+          "frpm.frpm_count_k_12",
+          "frpm.row_id",
+          "frpm.high_grade"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "low_grade",
+        "frpm_count_k_12",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "9",
+          "86.0",
+          "1"
+        ],
+        [
+          "9",
+          "16.0",
+          "12"
+        ],
+        [
+          "9",
+          "447.0",
+          "14"
+        ],
+        [
+          "9",
+          "36.0",
+          "17"
+        ],
+        [
+          "9",
+          "271.0",
+          "18"
+        ],
+        [
+          "9",
+          "171.0",
+          "29"
+        ],
+        [
+          "9",
+          "1556.0",
+          "30"
+        ],
+        [
+          "9",
+          "694.0",
+          "37"
+        ],
+        [
+          "9",
+          "103.0",
+          "55"
+        ],
+        [
+          "9",
+          "17.0",
+          "57"
+        ],
+        [
+          "9",
+          "34.0",
+          "58"
+        ],
+        [
+          "9",
+          "124.0",
+          "60"
+        ],
+        [
+          "9",
+          "368.0",
+          "64"
+        ],
+        [
+          "9",
+          "186.0",
+          "66"
+        ],
+        [
+          "9",
+          "64.0",
+          "81"
+        ],
+        [
+          "9",
+          "85.0",
+          "82"
+        ],
+        [
+          "9",
+          "27.0",
+          "95"
+        ],
+        [
+          "9",
+          "1078.0",
+          "97"
+        ],
+        [
+          "9",
+          "53.0",
+          "98"
+        ],
+        [
+          "9",
+          "130.0",
+          "103"
+        ],
+        [
+          "9",
+          "601.0",
+          "115"
+        ],
+        [
+          "9",
+          "1438.0",
+          "123"
+        ],
+        [
+          "9",
+          "13.0",
+          "141"
+        ],
+        [
+          "9",
+          "51.0",
+          "148"
+        ],
+        [
+          "9",
+          "151.0",
+          "150"
+        ],
+        [
+          "9",
+          "1218.0",
+          "152"
+        ],
+        [
+          "9",
+          "6.0",
+          "168"
+        ],
+        [
+          "9",
+          "4.0",
+          "169"
+        ],
+        [
+          "9",
+          "232.0",
+          "171"
+        ],
+        [
+          "9",
+          "11.0",
+          "174"
+        ],
+        [
+          "9",
+          "244.0",
+          "179"
+        ],
+        [
+          "9",
+          "447.0",
+          "182"
+        ],
+        [
+          "9",
+          "873.0",
+          "184"
+        ],
+        [
+          "9",
+          "508.0",
+          "193"
+        ],
+        [
+          "9",
+          "179.0",
+          "196"
+        ],
+        [
+          "9",
+          "648.0",
+          "198"
+        ],
+        [
+          "9",
+          "692.0",
+          "199"
+        ],
+        [
+          "9",
+          "396.0",
+          "205"
+        ],
+        [
+          "9",
+          "1073.0",
+          "210"
+        ],
+        [
+          "9",
+          "280.0",
+          "225"
+        ],
+        [
+          "9",
+          "106.0",
+          "231"
+        ],
+        [
+          "9",
+          "253.0",
+          "240"
+        ],
+        [
+          "9",
+          "433.0",
+          "247"
+        ],
+        [
+          "9",
+          "143.0",
+          "259"
+        ],
+        [
+          "9",
+          "86.0",
+          "260"
+        ],
+        [
+          "9",
+          "378.0",
+          "261"
+        ],
+        [
+          "9",
+          "337.0",
+          "264"
+        ],
+        [
+          "9",
+          "288.0",
+          "266"
+        ],
+        [
+          "9",
+          "934.0",
+          "269"
+        ],
+        [
+          "9",
+          "190.0",
+          "282"
+        ],
+        [
+          "9",
+          "148.0",
+          "283"
+        ],
+        [
+          "9",
+          "83.0",
+          "292"
+        ],
+        [
+          "9",
+          "1331.0",
+          "298"
+        ],
+        [
+          "9",
+          "263.0",
+          "301"
+        ],
+        [
+          "9",
+          "72.0",
+          "325"
+        ],
+        [
+          "9",
+          "205.0",
+          "327"
+        ],
+        [
+          "9",
+          "128.0",
+          "332"
+        ],
+        [
+          "9",
+          "613.0",
+          "333"
+        ],
+        [
+          "9",
+          "41.0",
+          "337"
+        ],
+        [
+          "9",
+          "52.0",
+          "343"
+        ],
+        [
+          "9",
+          "175.0",
+          "353"
+        ],
+        [
+          "9",
+          "1563.0",
+          "354"
+        ],
+        [
+          "9",
+          "573.0",
+          "364"
+        ],
+        [
+          "9",
+          "353.0",
+          "368"
+        ],
+        [
+          "9",
+          "1.0",
+          "389"
+        ],
+        [
+          "9",
+          "388.0",
+          "390"
+        ],
+        [
+          "9",
+          "121.0",
+          "391"
+        ],
+        [
+          "9",
+          "838.0",
+          "397"
+        ],
+        [
+          "9",
+          "145.0",
+          "398"
+        ],
+        [
+          "9",
+          "430.0",
+          "403"
+        ],
+        [
+          "9",
+          "331.0",
+          "412"
+        ],
+        [
+          "9",
+          "354.0",
+          "417"
+        ],
+        [
+          "9",
+          "90.0",
+          "434"
+        ],
+        [
+          "9",
+          "21.0",
+          "437"
+        ],
+        [
+          "9",
+          "220.0",
+          "440"
+        ],
+        [
+          "9",
+          "17.0",
+          "448"
+        ],
+        [
+          "9",
+          "42.0",
+          "453"
+        ],
+        [
+          "9",
+          "62.0",
+          "454"
+        ],
+        [
+          "9",
+          "88.0",
+          "456"
+        ],
+        [
+          "9",
+          "1124.0",
+          "458"
+        ],
+        [
+          "9",
+          "452.0",
+          "460"
+        ],
+        [
+          "9",
+          "7.0",
+          "467"
+        ],
+        [
+          "9",
+          "267.0",
+          "469"
+        ],
+        [
+          "9",
+          "139.0",
+          "470"
+        ],
+        [
+          "9",
+          "3.0",
+          "473"
+        ],
+        [
+          "9",
+          "1337.0",
+          "474"
+        ],
+        [
+          "9",
+          "233.0",
+          "479"
+        ],
+        [
+          "9",
+          "109.0",
+          "486"
+        ],
+        [
+          "9",
+          "216.0",
+          "493"
+        ],
+        [
+          "9",
+          "36.0",
+          "496"
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "Find NumGE1500, row_id, enroll12 from satscores where NumGE1500 is <= 17 and AvgScrMath is <= 473.",
+      "sql": "SELECT \"num_ge1500\", \"row_id\", \"enroll12\" FROM \"satscores\" WHERE (CAST(\"num_ge1500\" AS REAL) <= 17) AND (CAST(\"avg_scr_math\" AS REAL) <= 473);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.num_ge1500",
+          "satscores.row_id",
+          "satscores.enroll12",
+          "satscores.avg_scr_math"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "num_ge1500",
+        "row_id",
+        "enroll12"
+      ],
+      "result_rows": [
+        [
+          "13.0",
+          "0",
+          "142"
+        ],
+        [
+          "6.0",
+          "4",
+          "218"
+        ],
+        [
+          "10.0",
+          "13",
+          "100"
+        ],
+        [
+          "7.0",
+          "20",
+          "65"
+        ],
+        [
+          "6.0",
+          "25",
+          "387"
+        ],
+        [
+          "7.0",
+          "26",
+          "172"
+        ],
+        [
+          "5.0",
+          "27",
+          "66"
+        ],
+        [
+          "3.0",
+          "30",
+          "59"
+        ],
+        [
+          "8.0",
+          "31",
+          "113"
+        ],
+        [
+          "14.0",
+          "41",
+          "398"
+        ],
+        [
+          "10.0",
+          "42",
+          "736"
+        ],
+        [
+          "4.0",
+          "60",
+          "24"
+        ],
+        [
+          "9.0",
+          "69",
+          "99"
+        ],
+        [
+          "8.0",
+          "83",
+          "87"
+        ],
+        [
+          "11.0",
+          "84",
+          "68"
+        ],
+        [
+          "4.0",
+          "92",
+          "56"
+        ],
+        [
+          "16.0",
+          "93",
+          "231"
+        ],
+        [
+          "17.0",
+          "98",
+          "181"
+        ],
+        [
+          "4.0",
+          "109",
+          "24"
+        ],
+        [
+          "1.0",
+          "111",
+          "65"
+        ],
+        [
+          "10.0",
+          "114",
+          "150"
+        ],
+        [
+          "6.0",
+          "115",
+          "47"
+        ],
+        [
+          "10.0",
+          "116",
+          "143"
+        ],
+        [
+          "8.0",
+          "119",
+          "450"
+        ],
+        [
+          "5.0",
+          "122",
+          "188"
+        ],
+        [
+          "5.0",
+          "125",
+          "55"
+        ],
+        [
+          "0.0",
+          "126",
+          "240"
+        ],
+        [
+          "4.0",
+          "130",
+          "174"
+        ],
+        [
+          "10.0",
+          "139",
+          "162"
+        ],
+        [
+          "1.0",
+          "142",
+          "121"
+        ],
+        [
+          "0.0",
+          "152",
+          "90"
+        ],
+        [
+          "6.0",
+          "161",
+          "101"
+        ],
+        [
+          "6.0",
+          "165",
+          "86"
+        ],
+        [
+          "12.0",
+          "174",
+          "136"
+        ],
+        [
+          "12.0",
+          "175",
+          "127"
+        ],
+        [
+          "3.0",
+          "185",
+          "59"
+        ],
+        [
+          "12.0",
+          "187",
+          "74"
+        ],
+        [
+          "15.0",
+          "190",
+          "317"
+        ],
+        [
+          "1.0",
+          "192",
+          "125"
+        ],
+        [
+          "2.0",
+          "203",
+          "34"
+        ],
+        [
+          "11.0",
+          "209",
+          "61"
+        ],
+        [
+          "5.0",
+          "225",
+          "75"
+        ],
+        [
+          "4.0",
+          "232",
+          "109"
+        ],
+        [
+          "1.0",
+          "233",
+          "36"
+        ],
+        [
+          "1.0",
+          "235",
+          "41"
+        ],
+        [
+          "11.0",
+          "237",
+          "335"
+        ],
+        [
+          "15.0",
+          "245",
+          "61"
+        ],
+        [
+          "0.0",
+          "247",
+          "173"
+        ],
+        [
+          "5.0",
+          "266",
+          "38"
+        ],
+        [
+          "6.0",
+          "268",
+          "73"
+        ],
+        [
+          "17.0",
+          "272",
+          "435"
+        ],
+        [
+          "16.0",
+          "273",
+          "192"
+        ],
+        [
+          "7.0",
+          "277",
+          "63"
+        ],
+        [
+          "7.0",
+          "281",
+          "41"
+        ],
+        [
+          "11.0",
+          "295",
+          "112"
+        ],
+        [
+          "14.0",
+          "300",
+          "203"
+        ],
+        [
+          "5.0",
+          "320",
+          "185"
+        ],
+        [
+          "2.0",
+          "328",
+          "76"
+        ],
+        [
+          "0.0",
+          "329",
+          "111"
+        ],
+        [
+          "6.0",
+          "331",
+          "47"
+        ],
+        [
+          "4.0",
+          "342",
+          "192"
+        ],
+        [
+          "0.0",
+          "349",
+          "54"
+        ],
+        [
+          "4.0",
+          "354",
+          "168"
+        ],
+        [
+          "14.0",
+          "361",
+          "193"
+        ],
+        [
+          "5.0",
+          "362",
+          "66"
+        ],
+        [
+          "16.0",
+          "371",
+          "309"
+        ],
+        [
+          "7.0",
+          "377",
+          "702"
+        ],
+        [
+          "4.0",
+          "382",
+          "184"
+        ],
+        [
+          "7.0",
+          "399",
+          "47"
+        ],
+        [
+          "9.0",
+          "406",
+          "159"
+        ],
+        [
+          "6.0",
+          "408",
+          "108"
+        ],
+        [
+          "12.0",
+          "410",
+          "130"
+        ],
+        [
+          "17.0",
+          "414",
+          "325"
+        ],
+        [
+          "4.0",
+          "420",
+          "122"
+        ],
+        [
+          "12.0",
+          "427",
+          "177"
+        ],
+        [
+          "4.0",
+          "428",
+          "69"
+        ],
+        [
+          "1.0",
+          "434",
+          "140"
+        ],
+        [
+          "10.0",
+          "435",
+          "371"
+        ],
+        [
+          "9.0",
+          "443",
+          "111"
+        ],
+        [
+          "17.0",
+          "447",
+          "223"
+        ],
+        [
+          "6.0",
+          "454",
+          "147"
+        ],
+        [
+          "2.0",
+          "459",
+          "37"
+        ],
+        [
+          "8.0",
+          "466",
+          "78"
+        ],
+        [
+          "2.0",
+          "471",
+          "51"
+        ],
+        [
+          "5.0",
+          "475",
+          "225"
+        ],
+        [
+          "3.0",
+          "478",
+          "25"
+        ],
+        [
+          "5.0",
+          "486",
+          "95"
+        ],
+        [
+          "2.0",
+          "488",
+          "125"
+        ],
+        [
+          "13.0",
+          "491",
+          "140"
+        ],
+        [
+          "6.0",
+          "499",
+          "73"
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "Find NumGE1500, sname, NumTstTakr from satscores where NumGE1500 is between 17 and 70 and AvgScrWrite is >= 449.",
+      "sql": "SELECT \"num_ge1500\", \"sname\", \"num_tst_takr\" FROM \"satscores\" WHERE (CAST(\"num_ge1500\" AS REAL) >= 17 AND CAST(\"num_ge1500\" AS REAL) <= 70) AND (CAST(\"avg_scr_write\" AS REAL) >= 449);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.num_ge1500",
+          "satscores.sname",
+          "satscores.num_tst_takr",
+          "satscores.avg_scr_write"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "num_ge1500",
+        "sname",
+        "num_tst_takr"
+      ],
+      "result_rows": [
+        [
+          "32.0",
+          "Northcoast Preparatory and Performing Arts Academy",
+          "35"
+        ],
+        [
+          "23.0",
+          "Desert Junior-Senior High",
+          "49"
+        ],
+        [
+          "24.0",
+          "Coalinga High",
+          "72"
+        ],
+        [
+          "35.0",
+          "Lassen High",
+          "70"
+        ],
+        [
+          "32.0",
+          null,
+          "52"
+        ],
+        [
+          "19.0",
+          "Robert F. Kennedy High",
+          "85"
+        ],
+        [
+          "33.0",
+          "Calaveras High",
+          "61"
+        ],
+        [
+          "18.0",
+          "Gridley High",
+          "36"
+        ],
+        [
+          "18.0",
+          null,
+          "42"
+        ],
+        [
+          "33.0",
+          "Middle College High",
+          "68"
+        ],
+        [
+          "45.0",
+          "Amador High",
+          "70"
+        ],
+        [
+          "22.0",
+          "Lemoore Middle College High",
+          "55"
+        ],
+        [
+          "32.0",
+          "Las Plumas High",
+          "53"
+        ],
+        [
+          "57.0",
+          null,
+          "111"
+        ],
+        [
+          "56.0",
+          "Concord High",
+          "121"
+        ],
+        [
+          "24.0",
+          null,
+          "72"
+        ],
+        [
+          "17.0",
+          "Rosamond High",
+          "51"
+        ],
+        [
+          "18.0",
+          null,
+          "69"
+        ],
+        [
+          "34.0",
+          "Design Science Early College High",
+          "74"
+        ],
+        [
+          "25.0",
+          null,
+          "44"
+        ],
+        [
+          "25.0",
+          "Middletown High",
+          "44"
+        ],
+        [
+          "70.0",
+          "Burroughs High",
+          "116"
+        ],
+        [
+          "21.0",
+          "Sierra Pacific High",
+          "64"
+        ],
+        [
+          "59.0",
+          null,
+          "172"
+        ],
+        [
+          "70.0",
+          "Southwest High",
+          "193"
+        ],
+        [
+          "19.0",
+          null,
+          "43"
+        ],
+        [
+          "70.0",
+          null,
+          "116"
+        ],
+        [
+          "20.0",
+          null,
+          "27"
+        ],
+        [
+          "35.0",
+          null,
+          "77"
+        ],
+        [
+          "38.0",
+          "Bishop Union High",
+          "73"
+        ],
+        [
+          "70.0",
+          null,
+          "118"
+        ],
+        [
+          "66.0",
+          "El Dorado High",
+          "115"
+        ],
+        [
+          "44.0",
+          "Imperial High",
+          "105"
+        ],
+        [
+          "55.0",
+          "South Tahoe High",
+          "107"
+        ],
+        [
+          "35.0",
+          null,
+          "70"
+        ],
+        [
+          "26.0",
+          "Hanford West High",
+          "108"
+        ],
+        [
+          "45.0",
+          "SOAR High (Students On Academic Rise)",
+          "87"
+        ],
+        [
+          "56.0",
+          "Encinal High",
+          "132"
+        ],
+        [
+          "45.0",
+          "Antioch High",
+          "134"
+        ],
+        [
+          "33.0",
+          "Ygnacio Valley High",
+          "102"
+        ],
+        [
+          "28.0",
+          "Clear Lake High",
+          "51"
+        ],
+        [
+          "28.0",
+          null,
+          "51"
+        ],
+        [
+          "48.0",
+          null,
+          "102"
+        ],
+        [
+          "19.0",
+          null,
+          "37"
+        ],
+        [
+          "29.0",
+          "Fortuna Union High",
+          "67"
+        ],
+        [
+          "27.0",
+          null,
+          "58"
+        ],
+        [
+          "40.0",
+          "Union Mine High",
+          "75"
+        ],
+        [
+          "44.0",
+          "Kingsburg High",
+          "112"
+        ],
+        [
+          "29.0",
+          "Alameda Science and Technology Institute",
+          "36"
+        ],
+        [
+          "19.0",
+          "Making Waves Academy",
+          "73"
+        ],
+        [
+          "60.0",
+          null,
+          "97"
+        ],
+        [
+          "57.0",
+          "Hercules High",
+          "196"
+        ],
+        [
+          "40.0",
+          "Oakland School for the Arts",
+          "80"
+        ],
+        [
+          "42.0",
+          "KIPP King Collegiate High",
+          "115"
+        ],
+        [
+          "19.0",
+          "Academy of the Redwoods",
+          "25"
+        ],
+        [
+          "69.0",
+          "Mt. Eden High",
+          "214"
+        ],
+        [
+          "31.0",
+          "Artesia High",
+          "130"
+        ],
+        [
+          "34.0",
+          "Inspire School of Arts and Sciences",
+          "42"
+        ],
+        [
+          "24.0",
+          "Sierra High",
+          "50"
+        ],
+        [
+          "43.0",
+          null,
+          "60"
+        ],
+        [
+          "44.0",
+          null,
+          "105"
+        ],
+        [
+          "37.0",
+          "Lemoore High",
+          "117"
+        ],
+        [
+          "35.0",
+          "Dozier-Libbey Medical High",
+          "85"
+        ],
+        [
+          "43.0",
+          "Bret Harte Union High",
+          "60"
+        ],
+        [
+          "57.0",
+          "Eureka Senior High",
+          "111"
+        ],
+        [
+          "35.0",
+          "Del Norte High",
+          "77"
+        ],
+        [
+          "19.0",
+          "Durham High",
+          "43"
+        ],
+        [
+          "20.0",
+          "Golden Sierra Junior Senior High",
+          "27"
+        ],
+        [
+          "70.0",
+          "Alhambra Senior High",
+          "118"
+        ],
+        [
+          "18.0",
+          "Kelseyville High",
+          "42"
+        ],
+        [
+          "38.0",
+          "Oakland Charter High",
+          "56"
+        ],
+        [
+          "27.0",
+          "McKinleyville High",
+          "52"
+        ],
+        [
+          "38.0",
+          null,
+          "73"
+        ],
+        [
+          "48.0",
+          null,
+          "92"
+        ],
+        [
+          "30.0",
+          "Rancho Learning Center (Alternative)",
+          "32"
+        ],
+        [
+          "57.0",
+          "International Polytechnic High",
+          "110"
+        ],
+        [
+          "32.0",
+          null,
+          "35"
+        ],
+        [
+          "45.0",
+          null,
+          "75"
+        ],
+        [
+          "33.0",
+          null,
+          "61"
+        ],
+        [
+          "17.0",
+          null,
+          "51"
+        ],
+        [
+          "22.0",
+          "American Indian Public High",
+          "30"
+        ],
+        [
+          "56.0",
+          null,
+          "102"
+        ],
+        [
+          "32.0",
+          "Paradise Senior High",
+          "52"
+        ],
+        [
+          "44.0",
+          null,
+          "112"
+        ],
+        [
+          "56.0",
+          "Tehachapi High",
+          "102"
+        ],
+        [
+          "24.0",
+          null,
+          "50"
+        ],
+        [
+          "70.0",
+          "Freedom High",
+          "227"
+        ],
+        [
+          "18.0",
+          "Taft Union High",
+          "69"
+        ],
+        [
+          "55.0",
+          null,
+          "107"
+        ],
+        [
+          "46.0",
+          "Central Union High",
+          "128"
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "Find Percent (%) Eligible FRPM (K-12), Charter School Number, Charter School (Y/N) from frpm where Percent (%) Eligible FRPM (K-12) is >= 0.833333 and Percent (%) Eligible Free (K-12) is >= 0.767857.",
+      "sql": "SELECT \"percent_eligible_frpm_k_12\", \"charter_school_number\", \"charter_school_y_n\" FROM \"frpm\" WHERE (CAST(\"percent_eligible_frpm_k_12\" AS REAL) >= 0.833333) AND (CAST(\"percent_eligible_free_k_12\" AS REAL) >= 0.767857);",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.percent_eligible_frpm_k_12",
+          "frpm.charter_school_number",
+          "frpm.charter_school_y_n",
+          "frpm.percent_eligible_free_k_12"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "percent_eligible_frpm_k_12",
+        "charter_school_number",
+        "charter_school_y_n"
+      ],
+      "result_rows": [
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.833333333333333",
+          null,
+          "0.0"
+        ],
+        [
+          "0.899182561307902",
+          null,
+          "0.0"
+        ],
+        [
+          "0.933035714285714",
+          null,
+          "0.0"
+        ],
+        [
+          "0.928082191780822",
+          "1449",
+          "1.0"
+        ],
+        [
+          "0.933130699088146",
+          null,
+          "0.0"
+        ],
+        [
+          "0.937759336099585",
+          null,
+          "0.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.9375",
+          "0948",
+          "1.0"
+        ],
+        [
+          "0.904296875",
+          null,
+          "0.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.894736842105263",
+          null,
+          "0.0"
+        ],
+        [
+          "0.889848812095032",
+          null,
+          "0.0"
+        ],
+        [
+          "0.933025404157044",
+          "1443",
+          "1.0"
+        ],
+        [
+          "0.930817610062893",
+          null,
+          "0.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.974554707379135",
+          "0252",
+          "1.0"
+        ],
+        [
+          "0.842105263157895",
+          null,
+          "0.0"
+        ],
+        [
+          "0.893063583815029",
+          null,
+          "0.0"
+        ],
+        [
+          "0.923076923076923",
+          null,
+          "0.0"
+        ],
+        [
+          "0.85031185031185",
+          null,
+          "0.0"
+        ],
+        [
+          "0.911908646003263",
+          null,
+          "0.0"
+        ],
+        [
+          "0.843853820598007",
+          null,
+          "0.0"
+        ],
+        [
+          "0.926829268292683",
+          "1632",
+          "1.0"
+        ],
+        [
+          "0.875850340136054",
+          null,
+          "0.0"
+        ],
+        [
+          "0.947930574098798",
+          "0780",
+          "1.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.913151364764268",
+          null,
+          "0.0"
+        ],
+        [
+          "0.923684210526316",
+          null,
+          "0.0"
+        ],
+        [
+          "0.863459037711313",
+          null,
+          "0.0"
+        ],
+        [
+          "0.88109756097561",
+          null,
+          "0.0"
+        ],
+        [
+          "0.969555035128806",
+          null,
+          "0.0"
+        ],
+        [
+          "0.904651162790698",
+          null,
+          "0.0"
+        ],
+        [
+          "0.932773109243697",
+          null,
+          "0.0"
+        ],
+        [
+          "0.943589743589744",
+          null,
+          "0.0"
+        ],
+        [
+          "0.915540540540541",
+          null,
+          "0.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.955193482688391",
+          "0465",
+          "1.0"
+        ],
+        [
+          "0.923076923076923",
+          null,
+          "0.0"
+        ],
+        [
+          "0.885148514851485",
+          null,
+          "0.0"
+        ],
+        [
+          "0.945848375451264",
+          "1577",
+          "1.0"
+        ],
+        [
+          "0.912337662337662",
+          null,
+          "0.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.917995444191344",
+          null,
+          "0.0"
+        ],
+        [
+          "0.919504643962848",
+          null,
+          "0.0"
+        ],
+        [
+          "0.91533180778032",
+          "1464",
+          "1.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.884615384615385",
+          null,
+          "0.0"
+        ],
+        [
+          "0.920289855072464",
+          null,
+          "0.0"
+        ],
+        [
+          "0.901459854014598",
+          null,
+          "0.0"
+        ],
+        [
+          "0.908823529411765",
+          null,
+          "0.0"
+        ],
+        [
+          "0.841328413284133",
+          null,
+          "0.0"
+        ],
+        [
+          "0.956043956043956",
+          null,
+          "0.0"
+        ],
+        [
+          "0.887323943661972",
+          "1271",
+          "1.0"
+        ],
+        [
+          "0.953767123287671",
+          null,
+          "0.0"
+        ],
+        [
+          "0.878547854785479",
+          null,
+          "0.0"
+        ],
+        [
+          "0.909090909090909",
+          null,
+          "0.0"
+        ],
+        [
+          "0.933333333333333",
+          null,
+          "0.0"
+        ],
+        [
+          "0.982926829268293",
+          null,
+          "0.0"
+        ],
+        [
+          "0.874045801526718",
+          "0661",
+          "1.0"
+        ],
+        [
+          "0.930656934306569",
+          null,
+          "0.0"
+        ],
+        [
+          "0.932998324958124",
+          "0740",
+          "1.0"
+        ],
+        [
+          "0.914841849148418",
+          "1442",
+          "1.0"
+        ],
+        [
+          "0.863247863247863",
+          null,
+          "0.0"
+        ],
+        [
+          "0.889502762430939",
+          null,
+          "0.0"
+        ],
+        [
+          "0.922077922077922",
+          null,
+          "0.0"
+        ],
+        [
+          "0.888235294117647",
+          null,
+          "0.0"
+        ],
+        [
+          "1.0",
+          null,
+          "0.0"
+        ],
+        [
+          "0.928947368421053",
+          null,
+          "0.0"
+        ],
+        [
+          "0.92",
+          null,
+          "0.0"
+        ],
+        [
+          "0.950570342205323",
+          null,
+          "0.0"
+        ],
+        [
+          "0.983333333333333",
+          null,
+          "0.0"
+        ],
+        [
+          "0.843416370106762",
+          null,
+          "0.0"
+        ],
+        [
+          "0.860869565217391",
+          null,
+          "0.0"
+        ],
+        [
+          "0.867219917012448",
+          null,
+          "0.0"
+        ],
+        [
+          "0.888468809073724",
+          null,
+          "0.0"
+        ],
+        [
+          "0.94954128440367",
+          null,
+          "0.0"
+        ],
+        [
+          "0.894736842105263",
+          null,
+          "0.0"
+        ],
+        [
+          "0.972972972972973",
+          null,
+          "0.0"
+        ],
+        [
+          "0.926056338028169",
+          "1663",
+          "1.0"
+        ],
+        [
+          "0.94170403587444",
+          "1115",
+          "1.0"
+        ],
+        [
+          "0.875",
+          null,
+          "0.0"
+        ],
+        [
+          "0.833729216152019",
+          null,
+          "0.0"
+        ],
+        [
+          "0.860119047619048",
+          null,
+          "0.0"
+        ],
+        [
+          "0.903100775193798",
+          "0837",
+          "1.0"
+        ],
+        [
+          "0.847328244274809",
+          null,
+          "0.0"
+        ],
+        [
+          "0.993333333333333",
+          "0499",
+          "1.0"
+        ],
+        [
+          "0.897280966767372",
+          null,
+          "0.0"
+        ],
+        [
+          "0.871681415929204",
+          null,
+          "0.0"
+        ],
+        [
+          "0.861842105263158",
+          "0014",
+          "1.0"
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find Percent (%) Eligible FRPM (Ages 5-17), Charter School (Y/N), Enrollment (K-12) from frpm where Percent (%) Eligible FRPM (Ages 5-17) is >= 0.833741 and Percent (%) Eligible Free (K-12) is >= 0.767857.",
+      "sql": "SELECT \"percent_eligible_frpm_ages_5_17\", \"charter_school_y_n\", \"enrollment_k_12\" FROM \"frpm\" WHERE (CAST(\"percent_eligible_frpm_ages_5_17\" AS REAL) >= 0.833741) AND (CAST(\"percent_eligible_free_k_12\" AS REAL) >= 0.767857);",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.percent_eligible_frpm_ages_5_17",
+          "frpm.charter_school_y_n",
+          "frpm.enrollment_k_12",
+          "frpm.percent_eligible_free_k_12"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "percent_eligible_frpm_ages_5_17",
+        "charter_school_y_n",
+        "enrollment_k_12"
+      ],
+      "result_rows": [
+        [
+          "1.0",
+          "0.0",
+          "28.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "6.0"
+        ],
+        [
+          "0.898305084745763",
+          "0.0",
+          "367.0"
+        ],
+        [
+          "0.933035714285714",
+          "0.0",
+          "224.0"
+        ],
+        [
+          "0.92831541218638",
+          "1.0",
+          "292.0"
+        ],
+        [
+          "0.933130699088146",
+          "0.0",
+          "329.0"
+        ],
+        [
+          "0.937759336099585",
+          "0.0",
+          "241.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "10.0"
+        ],
+        [
+          "1.0",
+          "1.0",
+          "80.0"
+        ],
+        [
+          "0.906",
+          "0.0",
+          "512.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "1.0"
+        ],
+        [
+          "0.894736842105263",
+          "0.0",
+          "19.0"
+        ],
+        [
+          "0.890625",
+          "0.0",
+          "463.0"
+        ],
+        [
+          "0.933025404157044",
+          "1.0",
+          "433.0"
+        ],
+        [
+          "0.934210526315789",
+          "0.0",
+          "318.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "15.0"
+        ],
+        [
+          "0.973753280839895",
+          "1.0",
+          "393.0"
+        ],
+        [
+          "0.842105263157895",
+          "0.0",
+          "19.0"
+        ],
+        [
+          "0.899109792284866",
+          "0.0",
+          "692.0"
+        ],
+        [
+          "0.923076923076923",
+          "0.0",
+          "234.0"
+        ],
+        [
+          "0.856832971800434",
+          "0.0",
+          "481.0"
+        ],
+        [
+          "0.912605042016807",
+          "0.0",
+          "613.0"
+        ],
+        [
+          "0.843853820598007",
+          "0.0",
+          "301.0"
+        ],
+        [
+          "0.926829268292683",
+          "1.0",
+          "164.0"
+        ],
+        [
+          "0.885918003565062",
+          "0.0",
+          "588.0"
+        ],
+        [
+          "0.954230235783634",
+          "1.0",
+          "749.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "17.0"
+        ],
+        [
+          "0.913151364764268",
+          "0.0",
+          "403.0"
+        ],
+        [
+          "0.923684210526316",
+          "0.0",
+          "380.0"
+        ],
+        [
+          "0.863459037711313",
+          "0.0",
+          "769.0"
+        ],
+        [
+          "0.883647798742138",
+          "0.0",
+          "328.0"
+        ],
+        [
+          "0.968446601941748",
+          "0.0",
+          "427.0"
+        ],
+        [
+          "0.908212560386473",
+          "0.0",
+          "430.0"
+        ],
+        [
+          "0.93816631130064",
+          "0.0",
+          "476.0"
+        ],
+        [
+          "0.851851851851852",
+          "0.0",
+          "28.0"
+        ],
+        [
+          "0.943589743589744",
+          "0.0",
+          "390.0"
+        ],
+        [
+          "0.915540540540541",
+          "0.0",
+          "296.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "1.0"
+        ],
+        [
+          "0.958592132505176",
+          "1.0",
+          "491.0"
+        ],
+        [
+          "0.933110367892977",
+          "0.0",
+          "312.0"
+        ],
+        [
+          "0.879746835443038",
+          "0.0",
+          "505.0"
+        ],
+        [
+          "0.945255474452555",
+          "1.0",
+          "277.0"
+        ],
+        [
+          "0.912337662337662",
+          "0.0",
+          "308.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "1.0"
+        ],
+        [
+          "0.921800947867299",
+          "0.0",
+          "439.0"
+        ],
+        [
+          "0.919504643962848",
+          "0.0",
+          "323.0"
+        ],
+        [
+          "0.91533180778032",
+          "1.0",
+          "437.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "4.0"
+        ],
+        [
+          "0.888489208633094",
+          "0.0",
+          "286.0"
+        ],
+        [
+          "0.916666666666667",
+          "0.0",
+          "276.0"
+        ],
+        [
+          "0.909774436090226",
+          "0.0",
+          "548.0"
+        ],
+        [
+          "0.904320987654321",
+          "0.0",
+          "340.0"
+        ],
+        [
+          "0.841328413284133",
+          "0.0",
+          "271.0"
+        ],
+        [
+          "0.956043956043956",
+          "0.0",
+          "182.0"
+        ],
+        [
+          "0.887323943661972",
+          "1.0",
+          "142.0"
+        ],
+        [
+          "0.953767123287671",
+          "0.0",
+          "584.0"
+        ],
+        [
+          "0.87857641311933",
+          "0.0",
+          "1515.0"
+        ],
+        [
+          "0.909090909090909",
+          "0.0",
+          "11.0"
+        ],
+        [
+          "0.933333333333333",
+          "0.0",
+          "15.0"
+        ],
+        [
+          "0.985074626865672",
+          "0.0",
+          "410.0"
+        ],
+        [
+          "0.874015748031496",
+          "1.0",
+          "262.0"
+        ],
+        [
+          "0.943181818181818",
+          "0.0",
+          "274.0"
+        ],
+        [
+          "0.931740614334471",
+          "1.0",
+          "597.0"
+        ],
+        [
+          "0.914841849148418",
+          "1.0",
+          "411.0"
+        ],
+        [
+          "0.866863905325444",
+          "0.0",
+          "351.0"
+        ],
+        [
+          "0.889830508474576",
+          "0.0",
+          "362.0"
+        ],
+        [
+          "0.926910299003322",
+          "0.0",
+          "308.0"
+        ],
+        [
+          "0.888235294117647",
+          "0.0",
+          "340.0"
+        ],
+        [
+          "1.0",
+          "0.0",
+          "1.0"
+        ],
+        [
+          "0.91958041958042",
+          "0.0",
+          "380.0"
+        ],
+        [
+          "0.916666666666667",
+          "0.0",
+          "25.0"
+        ],
+        [
+          "0.950570342205323",
+          "0.0",
+          "526.0"
+        ],
+        [
+          "0.975",
+          "0.0",
+          "60.0"
+        ],
+        [
+          "0.867256637168142",
+          "0.0",
+          "115.0"
+        ],
+        [
+          "0.867219917012448",
+          "0.0",
+          "241.0"
+        ],
+        [
+          "0.888468809073724",
+          "0.0",
+          "529.0"
+        ],
+        [
+          "0.94954128440367",
+          "0.0",
+          "436.0"
+        ],
+        [
+          "0.875",
+          "0.0",
+          "19.0"
+        ],
+        [
+          "0.972972972972973",
+          "0.0",
+          "74.0"
+        ],
+        [
+          "0.925795053003534",
+          "1.0",
+          "284.0"
+        ],
+        [
+          "0.945205479452055",
+          "1.0",
+          "223.0"
+        ],
+        [
+          "0.857142857142857",
+          "0.0",
+          "8.0"
+        ],
+        [
+          "0.860119047619048",
+          "0.0",
+          "336.0"
+        ],
+        [
+          "0.909836065573771",
+          "1.0",
+          "258.0"
+        ],
+        [
+          "0.847328244274809",
+          "0.0",
+          "524.0"
+        ],
+        [
+          "1.0",
+          "1.0",
+          "150.0"
+        ],
+        [
+          "0.897280966767372",
+          "0.0",
+          "331.0"
+        ],
+        [
+          "0.869369369369369",
+          "0.0",
+          "226.0"
+        ],
+        [
+          "0.861842105263158",
+          "1.0",
+          "152.0"
+        ]
+      ],
+      "result_count": 89,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "Find AvgScrRead, AvgScrMath, enroll12 from satscores where AvgScrRead is <= 460 and NumGE1500 is between 10 and 124.",
+      "sql": "SELECT \"avg_scr_read\", \"avg_scr_math\", \"enroll12\" FROM \"satscores\" WHERE (CAST(\"avg_scr_read\" AS REAL) <= 460) AND (CAST(\"num_ge1500\" AS REAL) >= 10 AND CAST(\"num_ge1500\" AS REAL) <= 124);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.avg_scr_read",
+          "satscores.avg_scr_math",
+          "satscores.enroll12",
+          "satscores.num_ge1500"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "avg_scr_read",
+        "avg_scr_math",
+        "enroll12"
+      ],
+      "result_rows": [
+        [
+          "441.0",
+          "451.0",
+          "142"
+        ],
+        [
+          "423.0",
+          "426.0",
+          "342"
+        ],
+        [
+          "441.0",
+          "435.0",
+          "797"
+        ],
+        [
+          "443.0",
+          "449.0",
+          "223"
+        ],
+        [
+          "440.0",
+          "445.0",
+          "372"
+        ],
+        [
+          "424.0",
+          "428.0",
+          "470"
+        ],
+        [
+          "418.0",
+          "418.0",
+          "398"
+        ],
+        [
+          "404.0",
+          "410.0",
+          "736"
+        ],
+        [
+          "447.0",
+          "446.0",
+          "390"
+        ],
+        [
+          "456.0",
+          "465.0",
+          "68"
+        ],
+        [
+          "398.0",
+          "406.0",
+          "463"
+        ],
+        [
+          "443.0",
+          "446.0",
+          "231"
+        ],
+        [
+          "420.0",
+          "424.0",
+          "517"
+        ],
+        [
+          "413.0",
+          "422.0",
+          "150"
+        ],
+        [
+          "413.0",
+          "422.0",
+          "143"
+        ],
+        [
+          "420.0",
+          "408.0",
+          "509"
+        ],
+        [
+          "424.0",
+          "417.0",
+          "172"
+        ],
+        [
+          "454.0",
+          "463.0",
+          "423"
+        ],
+        [
+          "414.0",
+          "436.0",
+          "334"
+        ],
+        [
+          "430.0",
+          "440.0",
+          "384"
+        ],
+        [
+          "439.0",
+          "457.0",
+          "977"
+        ],
+        [
+          "429.0",
+          "435.0",
+          "309"
+        ],
+        [
+          "422.0",
+          "424.0",
+          "127"
+        ],
+        [
+          "417.0",
+          "429.0",
+          "74"
+        ],
+        [
+          "441.0",
+          "419.0",
+          "317"
+        ],
+        [
+          "431.0",
+          "425.0",
+          "583"
+        ],
+        [
+          "435.0",
+          "451.0",
+          "105"
+        ],
+        [
+          "444.0",
+          "445.0",
+          "302"
+        ],
+        [
+          "452.0",
+          "451.0",
+          "346"
+        ],
+        [
+          "456.0",
+          "462.0",
+          "449"
+        ],
+        [
+          "456.0",
+          "465.0",
+          "61"
+        ],
+        [
+          "450.0",
+          "455.0",
+          "538"
+        ],
+        [
+          "448.0",
+          "454.0",
+          "304"
+        ],
+        [
+          "446.0",
+          "427.0",
+          "695"
+        ],
+        [
+          "357.0",
+          "354.0",
+          "335"
+        ],
+        [
+          "403.0",
+          "411.0",
+          "676"
+        ],
+        [
+          "431.0",
+          "432.0",
+          "711"
+        ],
+        [
+          "401.0",
+          "420.0",
+          "61"
+        ],
+        [
+          "458.0",
+          "455.0",
+          "267"
+        ],
+        [
+          "399.0",
+          "395.0",
+          "242"
+        ],
+        [
+          "452.0",
+          "451.0",
+          "470"
+        ],
+        [
+          "434.0",
+          "422.0",
+          "427"
+        ],
+        [
+          "446.0",
+          "436.0",
+          "580"
+        ],
+        [
+          "377.0",
+          "384.0",
+          "435"
+        ],
+        [
+          "443.0",
+          "446.0",
+          "192"
+        ],
+        [
+          "434.0",
+          "426.0",
+          "312"
+        ],
+        [
+          "432.0",
+          "448.0",
+          "385"
+        ],
+        [
+          "442.0",
+          "440.0",
+          "767"
+        ],
+        [
+          "460.0",
+          "462.0",
+          "752"
+        ],
+        [
+          "423.0",
+          "447.0",
+          "357"
+        ],
+        [
+          "415.0",
+          "417.0",
+          "379"
+        ],
+        [
+          "424.0",
+          "417.0",
+          "186"
+        ],
+        [
+          "394.0",
+          "413.0",
+          "112"
+        ],
+        [
+          "459.0",
+          "473.0",
+          "424"
+        ],
+        [
+          "454.0",
+          "478.0",
+          "80"
+        ],
+        [
+          "407.0",
+          "420.0",
+          "203"
+        ],
+        [
+          "434.0",
+          "422.0",
+          "375"
+        ],
+        [
+          "451.0",
+          "454.0",
+          "209"
+        ],
+        [
+          "439.0",
+          "490.0",
+          "116"
+        ],
+        [
+          "431.0",
+          "432.0",
+          "777"
+        ],
+        [
+          "445.0",
+          "432.0",
+          "288"
+        ],
+        [
+          "451.0",
+          "471.0",
+          "441"
+        ],
+        [
+          "446.0",
+          "436.0",
+          "719"
+        ],
+        [
+          "432.0",
+          "448.0",
+          "327"
+        ],
+        [
+          "453.0",
+          "466.0",
+          "314"
+        ],
+        [
+          "436.0",
+          "453.0",
+          "390"
+        ],
+        [
+          "451.0",
+          "449.0",
+          "877"
+        ],
+        [
+          "407.0",
+          "420.0",
+          "193"
+        ],
+        [
+          "442.0",
+          "464.0",
+          "309"
+        ],
+        [
+          "432.0",
+          "483.0",
+          "53"
+        ],
+        [
+          "427.0",
+          "436.0",
+          "263"
+        ],
+        [
+          "434.0",
+          "446.0",
+          "593"
+        ],
+        [
+          "434.0",
+          "426.0",
+          "292"
+        ],
+        [
+          "417.0",
+          "420.0",
+          "448"
+        ],
+        [
+          "415.0",
+          "436.0",
+          "429"
+        ],
+        [
+          "422.0",
+          "424.0",
+          "130"
+        ],
+        [
+          "424.0",
+          "425.0",
+          "325"
+        ],
+        [
+          "460.0",
+          "449.0",
+          "340"
+        ],
+        [
+          "425.0",
+          "429.0",
+          "488"
+        ],
+        [
+          "436.0",
+          "443.0",
+          "555"
+        ],
+        [
+          "441.0",
+          "446.0",
+          "754"
+        ],
+        [
+          "412.0",
+          "400.0",
+          "371"
+        ],
+        [
+          "437.0",
+          "436.0",
+          "329"
+        ],
+        [
+          "437.0",
+          "446.0",
+          "714"
+        ],
+        [
+          "426.0",
+          "417.0",
+          "296"
+        ],
+        [
+          "439.0",
+          "463.0",
+          "317"
+        ],
+        [
+          "451.0",
+          "449.0",
+          "1071"
+        ],
+        [
+          "441.0",
+          "451.0",
+          "140"
+        ],
+        [
+          "460.0",
+          "459.0",
+          "962"
+        ]
+      ],
+      "result_count": 89,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find FRPM Count (Ages 5-17), NSLP Provision Status, Enrollment (K-12) from frpm where FRPM Count (Ages 5-17) is <= 50 and Free Meal Count (K-12) is <= 43.",
+      "sql": "SELECT \"frpm_count_ages_5_17\", \"nslp_provision_status\", \"enrollment_k_12\" FROM \"frpm\" WHERE (CAST(\"frpm_count_ages_5_17\" AS REAL) <= 50) AND (CAST(\"free_meal_count_k_12\" AS REAL) <= 43);",
+      "golden_schema": {
+        "tables": [
+          "frpm"
+        ],
+        "columns": [
+          "frpm.frpm_count_ages_5_17",
+          "frpm.nslp_provision_status",
+          "frpm.enrollment_k_12",
+          "frpm.free_meal_count_k_12"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "frpm_count_ages_5_17",
+        "nslp_provision_status",
+        "enrollment_k_12"
+      ],
+      "result_rows": [
+        [
+          "25.0",
+          null,
+          "28.0"
+        ],
+        [
+          "21.0",
+          null,
+          "628.0"
+        ],
+        [
+          "3.0",
+          null,
+          "6.0"
+        ],
+        [
+          "45.0",
+          null,
+          "572.0"
+        ],
+        [
+          "13.0",
+          "Provision 2",
+          "20.0"
+        ],
+        [
+          "29.0",
+          null,
+          "49.0"
+        ],
+        [
+          "34.0",
+          null,
+          "77.0"
+        ],
+        [
+          "9.0",
+          null,
+          "10.0"
+        ],
+        [
+          "21.0",
+          null,
+          "920.0"
+        ],
+        [
+          "1.0",
+          "CEP",
+          "1.0"
+        ],
+        [
+          "17.0",
+          null,
+          "451.0"
+        ],
+        [
+          "5.0",
+          null,
+          "33.0"
+        ],
+        [
+          "17.0",
+          null,
+          "19.0"
+        ],
+        [
+          "27.0",
+          null,
+          "45.0"
+        ],
+        [
+          "17.0",
+          null,
+          "778.0"
+        ],
+        [
+          "14.0",
+          null,
+          "15.0"
+        ],
+        [
+          "16.0",
+          null,
+          "19.0"
+        ],
+        [
+          "35.0",
+          null,
+          "853.0"
+        ],
+        [
+          "14.0",
+          null,
+          "142.0"
+        ],
+        [
+          "4.0",
+          "Provision 2",
+          "68.0"
+        ],
+        [
+          "21.0",
+          null,
+          "257.0"
+        ],
+        [
+          "43.0",
+          null,
+          "1169.0"
+        ],
+        [
+          "15.0",
+          null,
+          "17.0"
+        ],
+        [
+          "9.0",
+          null,
+          "19.0"
+        ],
+        [
+          "40.0",
+          null,
+          "1028.0"
+        ],
+        [
+          "38.0",
+          null,
+          "679.0"
+        ],
+        [
+          "35.0",
+          null,
+          "145.0"
+        ],
+        [
+          "23.0",
+          null,
+          "28.0"
+        ],
+        [
+          "1.0",
+          null,
+          "1.0"
+        ],
+        [
+          "5.0",
+          null,
+          "784.0"
+        ],
+        [
+          "3.0",
+          null,
+          "77.0"
+        ],
+        [
+          "30.0",
+          null,
+          "216.0"
+        ],
+        [
+          "1.0",
+          null,
+          "24.0"
+        ],
+        [
+          "8.0",
+          null,
+          "23.0"
+        ],
+        [
+          "43.0",
+          null,
+          "645.0"
+        ],
+        [
+          "1.0",
+          null,
+          "1.0"
+        ],
+        [
+          "20.0",
+          null,
+          "209.0"
+        ],
+        [
+          "9.0",
+          null,
+          "11.0"
+        ],
+        [
+          "14.0",
+          null,
+          "27.0"
+        ],
+        [
+          "4.0",
+          null,
+          "4.0"
+        ],
+        [
+          "9.0",
+          "CEP",
+          "11.0"
+        ],
+        [
+          "6.0",
+          null,
+          "533.0"
+        ],
+        [
+          "14.0",
+          null,
+          "33.0"
+        ],
+        [
+          "2.0",
+          null,
+          "362.0"
+        ],
+        [
+          "28.0",
+          null,
+          "662.0"
+        ],
+        [
+          "10.0",
+          null,
+          "35.0"
+        ],
+        [
+          "49.0",
+          null,
+          "723.0"
+        ],
+        [
+          "50.0",
+          null,
+          "156.0"
+        ],
+        [
+          "12.0",
+          null,
+          "93.0"
+        ],
+        [
+          "45.0",
+          null,
+          "376.0"
+        ],
+        [
+          "30.0",
+          null,
+          "990.0"
+        ],
+        [
+          "31.0",
+          null,
+          "432.0"
+        ],
+        [
+          "34.0",
+          null,
+          "1075.0"
+        ],
+        [
+          "10.0",
+          null,
+          "11.0"
+        ],
+        [
+          "45.0",
+          null,
+          "792.0"
+        ],
+        [
+          "14.0",
+          null,
+          "15.0"
+        ],
+        [
+          "14.0",
+          null,
+          "278.0"
+        ],
+        [
+          "15.0",
+          null,
+          "19.0"
+        ],
+        [
+          "3.0",
+          "CEP",
+          "4.0"
+        ],
+        [
+          "31.0",
+          null,
+          "1130.0"
+        ],
+        [
+          "29.0",
+          null,
+          "871.0"
+        ],
+        [
+          "37.0",
+          null,
+          "129.0"
+        ],
+        [
+          "50.0",
+          null,
+          "170.0"
+        ],
+        [
+          "5.0",
+          null,
+          "645.0"
+        ],
+        [
+          "29.0",
+          null,
+          "133.0"
+        ],
+        [
+          "50.0",
+          null,
+          "415.0"
+        ],
+        [
+          "22.0",
+          null,
+          "247.0"
+        ],
+        [
+          "29.0",
+          null,
+          "359.0"
+        ],
+        [
+          "1.0",
+          null,
+          "1.0"
+        ],
+        [
+          "2.0",
+          null,
+          "22.0"
+        ],
+        [
+          "33.0",
+          null,
+          "1113.0"
+        ],
+        [
+          "14.0",
+          null,
+          "36.0"
+        ],
+        [
+          "22.0",
+          null,
+          "25.0"
+        ],
+        [
+          "29.0",
+          null,
+          "61.0"
+        ],
+        [
+          "33.0",
+          null,
+          "43.0"
+        ],
+        [
+          "18.0",
+          null,
+          "938.0"
+        ],
+        [
+          "8.0",
+          null,
+          "52.0"
+        ],
+        [
+          "10.0",
+          null,
+          "22.0"
+        ],
+        [
+          "17.0",
+          null,
+          "41.0"
+        ],
+        [
+          "44.0",
+          null,
+          "833.0"
+        ],
+        [
+          "17.0",
+          null,
+          "70.0"
+        ],
+        [
+          "14.0",
+          null,
+          "19.0"
+        ],
+        [
+          "23.0",
+          null,
+          "724.0"
+        ],
+        [
+          "27.0",
+          null,
+          "124.0"
+        ],
+        [
+          "6.0",
+          null,
+          "8.0"
+        ],
+        [
+          "17.0",
+          null,
+          "39.0"
+        ],
+        [
+          "9.0",
+          null,
+          "14.0"
+        ],
+        [
+          "11.0",
+          null,
+          "624.0"
+        ],
+        [
+          "50.0",
+          null,
+          "326.0"
+        ],
+        [
+          "33.0",
+          null,
+          "147.0"
+        ],
+        [
+          "34.0",
+          null,
+          "778.0"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "Find NumGE1500, enroll12, rtype from satscores where NumGE1500 is <= 33, AvgScrMath is >= 446, and AvgScrRead is >= 427.",
+      "sql": "SELECT \"num_ge1500\", \"enroll12\", \"rtype\" FROM \"satscores\" WHERE (CAST(\"num_ge1500\" AS REAL) <= 33) AND (CAST(\"avg_scr_math\" AS REAL) >= 446) AND (CAST(\"avg_scr_read\" AS REAL) >= 427);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.num_ge1500",
+          "satscores.enroll12",
+          "satscores.rtype",
+          "satscores.avg_scr_math",
+          "satscores.avg_scr_read"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "num_ge1500",
+        "enroll12",
+        "rtype"
+      ],
+      "result_rows": [
+        [
+          "13.0",
+          "142",
+          "D"
+        ],
+        [
+          "32.0",
+          "36",
+          "S"
+        ],
+        [
+          "23.0",
+          "95",
+          "S"
+        ],
+        [
+          "24.0",
+          "269",
+          "S"
+        ],
+        [
+          "15.0",
+          "107",
+          "D"
+        ],
+        [
+          "10.0",
+          "100",
+          "S"
+        ],
+        [
+          "6.0",
+          "27",
+          "S"
+        ],
+        [
+          "32.0",
+          "320",
+          "D"
+        ],
+        [
+          "19.0",
+          "223",
+          "S"
+        ],
+        [
+          "13.0",
+          "94",
+          "S"
+        ],
+        [
+          "33.0",
+          "227",
+          "S"
+        ],
+        [
+          "5.0",
+          "66",
+          "S"
+        ],
+        [
+          "13.0",
+          "182",
+          "D"
+        ],
+        [
+          "18.0",
+          "150",
+          "S"
+        ],
+        [
+          "29.0",
+          "348",
+          "S"
+        ],
+        [
+          "18.0",
+          "133",
+          "D"
+        ],
+        [
+          "7.0",
+          "47",
+          "D"
+        ],
+        [
+          "33.0",
+          "62",
+          "S"
+        ],
+        [
+          "9.0",
+          "99",
+          "S"
+        ],
+        [
+          "22.0",
+          "62",
+          "S"
+        ],
+        [
+          "32.0",
+          "262",
+          "S"
+        ],
+        [
+          "11.0",
+          "68",
+          "D"
+        ],
+        [
+          "24.0",
+          "317",
+          "D"
+        ],
+        [
+          "16.0",
+          "231",
+          "D"
+        ],
+        [
+          "17.0",
+          "181",
+          "S"
+        ],
+        [
+          "18.0",
+          "251",
+          "D"
+        ],
+        [
+          "9.0",
+          "62",
+          "S"
+        ],
+        [
+          "25.0",
+          "127",
+          "D"
+        ],
+        [
+          "13.0",
+          "163",
+          "D"
+        ],
+        [
+          "25.0",
+          "106",
+          "S"
+        ],
+        [
+          "21.0",
+          "204",
+          "S"
+        ],
+        [
+          "10.0",
+          "162",
+          "D"
+        ],
+        [
+          "6.0",
+          "101",
+          "D"
+        ],
+        [
+          "19.0",
+          "76",
+          "D"
+        ],
+        [
+          "6.0",
+          "86",
+          "S"
+        ],
+        [
+          "16.0",
+          "26",
+          "S"
+        ],
+        [
+          "12.0",
+          "136",
+          "S"
+        ],
+        [
+          "20.0",
+          "121",
+          "D"
+        ],
+        [
+          "25.0",
+          "105",
+          "S"
+        ],
+        [
+          "11.0",
+          "61",
+          "S"
+        ],
+        [
+          "26.0",
+          "304",
+          "S"
+        ],
+        [
+          "13.0",
+          "173",
+          "S"
+        ],
+        [
+          "11.0",
+          "88",
+          "S"
+        ],
+        [
+          "6.0",
+          "63",
+          "S"
+        ],
+        [
+          "33.0",
+          "267",
+          "S"
+        ],
+        [
+          "28.0",
+          "111",
+          "S"
+        ],
+        [
+          "28.0",
+          "125",
+          "D"
+        ],
+        [
+          "16.0",
+          "204",
+          "S"
+        ],
+        [
+          "19.0",
+          "163",
+          "D"
+        ],
+        [
+          "6.0",
+          "73",
+          "D"
+        ],
+        [
+          "16.0",
+          "192",
+          "S"
+        ],
+        [
+          "29.0",
+          "170",
+          "S"
+        ],
+        [
+          "27.0",
+          "138",
+          "D"
+        ],
+        [
+          "14.0",
+          "77",
+          "S"
+        ],
+        [
+          "22.0",
+          "385",
+          "D"
+        ],
+        [
+          "29.0",
+          "36",
+          "S"
+        ],
+        [
+          "19.0",
+          "80",
+          "S"
+        ],
+        [
+          "15.0",
+          "125",
+          "S"
+        ],
+        [
+          "27.0",
+          "116",
+          "S"
+        ],
+        [
+          "19.0",
+          "39",
+          "S"
+        ],
+        [
+          "7.0",
+          "46",
+          "S"
+        ],
+        [
+          "22.0",
+          "327",
+          "S"
+        ],
+        [
+          "31.0",
+          "314",
+          "S"
+        ],
+        [
+          "14.0",
+          "93",
+          "S"
+        ],
+        [
+          "31.0",
+          "390",
+          "S"
+        ],
+        [
+          "24.0",
+          "132",
+          "S"
+        ],
+        [
+          "5.0",
+          "66",
+          "D"
+        ],
+        [
+          "19.0",
+          "76",
+          "S"
+        ],
+        [
+          "16.0",
+          "309",
+          "S"
+        ],
+        [
+          "10.0",
+          "53",
+          "S"
+        ],
+        [
+          "20.0",
+          "100",
+          "S"
+        ],
+        [
+          "11.0",
+          "29",
+          "D"
+        ],
+        [
+          "18.0",
+          "122",
+          "S"
+        ],
+        [
+          "27.0",
+          "126",
+          "S"
+        ],
+        [
+          "6.0",
+          "108",
+          "S"
+        ],
+        [
+          "24.0",
+          "340",
+          "S"
+        ],
+        [
+          "30.0",
+          "38",
+          "S"
+        ],
+        [
+          "12.0",
+          "177",
+          "D"
+        ],
+        [
+          "14.0",
+          "119",
+          "D"
+        ],
+        [
+          "32.0",
+          "70",
+          "D"
+        ],
+        [
+          "9.0",
+          "111",
+          "D"
+        ],
+        [
+          "33.0",
+          "271",
+          "D"
+        ],
+        [
+          "17.0",
+          "223",
+          "D"
+        ],
+        [
+          "22.0",
+          "27",
+          "S"
+        ],
+        [
+          "32.0",
+          "229",
+          "S"
+        ],
+        [
+          "11.0",
+          "29",
+          "S"
+        ],
+        [
+          "24.0",
+          "148",
+          "D"
+        ],
+        [
+          "13.0",
+          "140",
+          "S"
+        ],
+        [
+          "18.0",
+          "222",
+          "S"
+        ],
+        [
+          "6.0",
+          "73",
+          "S"
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "Find AvgScrWrite, cname, sname from satscores where AvgScrWrite is between 425 and 514, NumGE1500 is >= 17, and row_id is >= 249.",
+      "sql": "SELECT \"avg_scr_write\", \"cname\", \"sname\" FROM \"satscores\" WHERE (CAST(\"avg_scr_write\" AS REAL) >= 425 AND CAST(\"avg_scr_write\" AS REAL) <= 514) AND (CAST(\"num_ge1500\" AS REAL) >= 17) AND (CAST(\"row_id\" AS REAL) >= 249);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.avg_scr_write",
+          "satscores.cname",
+          "satscores.sname",
+          "satscores.num_ge1500",
+          "satscores.row_id"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "avg_scr_write",
+        "cname",
+        "sname"
+      ],
+      "result_rows": [
+        [
+          "497.0",
+          "Lake",
+          "Clear Lake High"
+        ],
+        [
+          "497.0",
+          "Lake",
+          null
+        ],
+        [
+          "479.0",
+          "Alameda",
+          "Arroyo High"
+        ],
+        [
+          "487.0",
+          "Los Angeles",
+          null
+        ],
+        [
+          "464.0",
+          "Contra Costa",
+          "Deer Valley High"
+        ],
+        [
+          "468.0",
+          "Butte",
+          null
+        ],
+        [
+          "502.0",
+          "Butte",
+          null
+        ],
+        [
+          "442.0",
+          "Imperial",
+          null
+        ],
+        [
+          "425.0",
+          "Fresno",
+          null
+        ],
+        [
+          "442.0",
+          "Contra Costa",
+          "Pittsburg Senior High"
+        ],
+        [
+          "480.0",
+          "Humboldt",
+          "Fortuna Union High"
+        ],
+        [
+          "484.0",
+          "Kern",
+          null
+        ],
+        [
+          "425.0",
+          "Fresno",
+          null
+        ],
+        [
+          "433.0",
+          "Kern",
+          null
+        ],
+        [
+          "432.0",
+          "Los Angeles",
+          null
+        ],
+        [
+          "501.0",
+          "Kern",
+          "Liberty High"
+        ],
+        [
+          "498.0",
+          "El Dorado",
+          "Union Mine High"
+        ],
+        [
+          "460.0",
+          "Alameda",
+          null
+        ],
+        [
+          "471.0",
+          "Fresno",
+          "Kingsburg High"
+        ],
+        [
+          "426.0",
+          "Alameda",
+          "San Lorenzo High"
+        ],
+        [
+          "446.0",
+          "Los Angeles",
+          "Baldwin Park High"
+        ],
+        [
+          "452.0",
+          "Contra Costa",
+          "Making Waves Academy"
+        ],
+        [
+          "425.0",
+          "Fresno",
+          "Selma High"
+        ],
+        [
+          "485.0",
+          "Alameda",
+          "John F. Kennedy High"
+        ],
+        [
+          "503.0",
+          "Amador",
+          null
+        ],
+        [
+          "454.0",
+          "Contra Costa",
+          "Hercules High"
+        ],
+        [
+          "478.0",
+          "Alameda",
+          "KIPP King Collegiate High"
+        ],
+        [
+          "443.0",
+          "Alameda",
+          "Leadership Public Schools - Hayward"
+        ],
+        [
+          "425.0",
+          "Imperial",
+          null
+        ],
+        [
+          "434.0",
+          "Los Angeles",
+          "Gladstone High"
+        ],
+        [
+          "449.0",
+          "Alameda",
+          "Mt. Eden High"
+        ],
+        [
+          "442.0",
+          "Contra Costa",
+          null
+        ],
+        [
+          "433.0",
+          "Kern",
+          "Wasco High"
+        ],
+        [
+          "450.0",
+          "Los Angeles",
+          "Artesia High"
+        ],
+        [
+          "436.0",
+          "Alameda",
+          null
+        ],
+        [
+          "501.0",
+          "Fresno",
+          "Sierra High"
+        ],
+        [
+          "449.0",
+          "Fresno",
+          "Central High East Campus"
+        ],
+        [
+          "474.0",
+          "Imperial",
+          null
+        ],
+        [
+          "459.0",
+          "Kings",
+          "Lemoore High"
+        ],
+        [
+          "495.0",
+          "Contra Costa",
+          "Dozier-Libbey Medical High"
+        ],
+        [
+          "502.0",
+          "Humboldt",
+          "Eureka Senior High"
+        ],
+        [
+          "464.0",
+          "Del Norte",
+          "Del Norte High"
+        ],
+        [
+          "472.0",
+          "Butte",
+          "Durham High"
+        ],
+        [
+          "431.0",
+          "Los Angeles",
+          "Bassett Senior High"
+        ],
+        [
+          "514.0",
+          "El Dorado",
+          "Golden Sierra Junior Senior High"
+        ],
+        [
+          "459.0",
+          "Alameda",
+          null
+        ],
+        [
+          "491.0",
+          "Lake",
+          "Kelseyville High"
+        ],
+        [
+          "430.0",
+          "Fresno",
+          "Sanger High"
+        ],
+        [
+          "457.0",
+          "Kern",
+          "Bakersfield High"
+        ],
+        [
+          "486.0",
+          "Humboldt",
+          "McKinleyville High"
+        ],
+        [
+          "507.0",
+          "Fresno",
+          "Buchanull High"
+        ],
+        [
+          "425.0",
+          "Fresno",
+          "Kerman High"
+        ],
+        [
+          "476.0",
+          "Inyo",
+          null
+        ],
+        [
+          "486.0",
+          "Los Angeles",
+          "Quartz Hill High"
+        ],
+        [
+          "460.0",
+          "Fresno",
+          "Bullard High"
+        ],
+        [
+          "490.0",
+          "Contra Costa",
+          null
+        ],
+        [
+          "511.0",
+          "Contra Costa",
+          "Heritage High"
+        ],
+        [
+          "492.0",
+          "Humboldt",
+          null
+        ],
+        [
+          "427.0",
+          "Alameda",
+          "Tennyson High"
+        ],
+        [
+          "436.0",
+          "Kings",
+          "Hanford High"
+        ],
+        [
+          "435.0",
+          "Kern",
+          "East Bakersfield High"
+        ],
+        [
+          "495.0",
+          "Los Angeles",
+          "International Polytechnic High"
+        ],
+        [
+          "466.0",
+          "Imperial",
+          null
+        ],
+        [
+          "494.0",
+          "Alameda",
+          "James Logan High"
+        ],
+        [
+          "437.0",
+          "Fresno",
+          null
+        ],
+        [
+          "436.0",
+          "Contra Costa",
+          "Mt. Diablo High"
+        ],
+        [
+          "485.0",
+          "Calaveras",
+          null
+        ],
+        [
+          "432.0",
+          "Fresno",
+          null
+        ],
+        [
+          "463.0",
+          "Kern",
+          null
+        ],
+        [
+          "514.0",
+          "Alameda",
+          "American Indian Public High"
+        ],
+        [
+          "465.0",
+          "Los Angeles",
+          null
+        ],
+        [
+          "501.0",
+          "Kern",
+          null
+        ],
+        [
+          "504.0",
+          "Butte",
+          "Paradise Senior High"
+        ],
+        [
+          "471.0",
+          "Fresno",
+          null
+        ],
+        [
+          "446.0",
+          "Los Angeles",
+          null
+        ],
+        [
+          "475.0",
+          "Kern",
+          "Frontier High"
+        ],
+        [
+          "477.0",
+          "Fresno",
+          "Clovis High"
+        ],
+        [
+          "460.0",
+          "Alameda",
+          "San Leandro High"
+        ],
+        [
+          "439.0",
+          "Kern",
+          "Cesar E. Chavez High"
+        ],
+        [
+          "501.0",
+          "Kern",
+          "Tehachapi High"
+        ],
+        [
+          "477.0",
+          "Los Angeles",
+          "Gahr (Richard) High"
+        ],
+        [
+          "501.0",
+          "Fresno",
+          null
+        ],
+        [
+          "449.0",
+          "Fresno",
+          null
+        ],
+        [
+          "464.0",
+          "Contra Costa",
+          "Freedom High"
+        ],
+        [
+          "452.0",
+          "Kern",
+          "Taft Union High"
+        ],
+        [
+          "488.0",
+          "El Dorado",
+          null
+        ],
+        [
+          "427.0",
+          "Fresno",
+          null
+        ],
+        [
+          "464.0",
+          "Imperial",
+          "Central Union High"
+        ],
+        [
+          "506.0",
+          "Contra Costa",
+          null
+        ],
+        [
+          "449.0",
+          "Kings",
+          null
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find NumGE1500, dname, NumTstTakr from satscores where NumGE1500 is between 17 and 70, enroll12 is between 77 and 346, and NumGE1500 is between 10 and 124.",
+      "sql": "SELECT \"num_ge1500\", \"dname\", \"num_tst_takr\" FROM \"satscores\" WHERE (CAST(\"num_ge1500\" AS REAL) >= 17 AND CAST(\"num_ge1500\" AS REAL) <= 70) AND (CAST(\"enroll12\" AS REAL) >= 77 AND CAST(\"enroll12\" AS REAL) <= 346) AND (CAST(\"num_ge1500\" AS REAL) >= 10 AND CAST(\"num_ge1500\" AS REAL) <= 124);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.num_ge1500",
+          "satscores.dname",
+          "satscores.num_tst_takr",
+          "satscores.enroll12"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "num_ge1500",
+        "dname",
+        "num_tst_takr"
+      ],
+      "result_rows": [
+        [
+          "23.0",
+          "Muroc Joint Unified",
+          "49"
+        ],
+        [
+          "24.0",
+          "Antelope Valley Union High",
+          "133"
+        ],
+        [
+          "24.0",
+          "Coalinga-Huron Unified",
+          "72"
+        ],
+        [
+          "35.0",
+          "Lassen Union High",
+          "70"
+        ],
+        [
+          "32.0",
+          "Paradise Unified",
+          "52"
+        ],
+        [
+          "19.0",
+          "Delano Joint Union High",
+          "85"
+        ],
+        [
+          "33.0",
+          "Calaveras Unified",
+          "61"
+        ],
+        [
+          "18.0",
+          "Gridley Unified",
+          "36"
+        ],
+        [
+          "18.0",
+          "Kelseyville Unified",
+          "42"
+        ],
+        [
+          "45.0",
+          "Amador County Unified",
+          "70"
+        ],
+        [
+          "32.0",
+          "Oroville Union High",
+          "53"
+        ],
+        [
+          "57.0",
+          "Eureka City Schools",
+          "111"
+        ],
+        [
+          "56.0",
+          "Mt. Diablo Unified",
+          "121"
+        ],
+        [
+          "24.0",
+          "Coalinga-Huron Unified",
+          "72"
+        ],
+        [
+          "17.0",
+          "Southern Kern Unified",
+          "51"
+        ],
+        [
+          "18.0",
+          "Taft Union High",
+          "69"
+        ],
+        [
+          "34.0",
+          "Fresno Unified",
+          "74"
+        ],
+        [
+          "25.0",
+          "Middletown Unified",
+          "44"
+        ],
+        [
+          "19.0",
+          "Fowler Unified",
+          "104"
+        ],
+        [
+          "25.0",
+          "Middletown Unified",
+          "44"
+        ],
+        [
+          "32.0",
+          "Oakland Unified",
+          "187"
+        ],
+        [
+          "70.0",
+          "Sierra Sands Unified",
+          "116"
+        ],
+        [
+          "21.0",
+          "Hanford Joint Union High",
+          "64"
+        ],
+        [
+          "21.0",
+          "Bassett Unified",
+          "101"
+        ],
+        [
+          "20.0",
+          "Black Oak Mine Unified",
+          "27"
+        ],
+        [
+          "35.0",
+          "Del Norte County Unified",
+          "77"
+        ],
+        [
+          "25.0",
+          "Hayward Unified",
+          "99"
+        ],
+        [
+          "38.0",
+          "Bishop Unified",
+          "73"
+        ],
+        [
+          "43.0",
+          "Brawley Union High",
+          "156"
+        ],
+        [
+          "70.0",
+          "Martinez Unified",
+          "118"
+        ],
+        [
+          "66.0",
+          "El Dorado Union High",
+          "115"
+        ],
+        [
+          "44.0",
+          "Imperial Unified",
+          "105"
+        ],
+        [
+          "55.0",
+          "Lake Tahoe Unified",
+          "107"
+        ],
+        [
+          "35.0",
+          "Lassen Union High",
+          "70"
+        ],
+        [
+          "26.0",
+          "Hanford Joint Union High",
+          "108"
+        ],
+        [
+          "45.0",
+          "Antelope Valley Union High",
+          "87"
+        ],
+        [
+          "56.0",
+          "Alameda Unified",
+          "132"
+        ],
+        [
+          "33.0",
+          "Mt. Diablo Unified",
+          "102"
+        ],
+        [
+          "26.0",
+          "West Contra Costa Unified",
+          "204"
+        ],
+        [
+          "28.0",
+          "Lakeport Unified",
+          "51"
+        ],
+        [
+          "28.0",
+          "Lakeport Unified",
+          "51"
+        ],
+        [
+          "19.0",
+          "Gridley Unified",
+          "37"
+        ],
+        [
+          "29.0",
+          "Fortuna Union High",
+          "67"
+        ],
+        [
+          "27.0",
+          "Muroc Joint Unified",
+          "58"
+        ],
+        [
+          "21.0",
+          "Kerman Unified",
+          "132"
+        ],
+        [
+          "40.0",
+          "El Dorado Union High",
+          "75"
+        ],
+        [
+          "44.0",
+          "Kingsburg Joint Union High",
+          "112"
+        ],
+        [
+          "19.0",
+          "Fowler Unified",
+          "104"
+        ],
+        [
+          "19.0",
+          "Contra Costa County Office of Education",
+          "73"
+        ],
+        [
+          "60.0",
+          "Amador County Unified",
+          "97"
+        ],
+        [
+          "57.0",
+          "West Contra Costa Unified",
+          "196"
+        ],
+        [
+          "40.0",
+          "Oakland Unified",
+          "80"
+        ],
+        [
+          "42.0",
+          "San Lorenzo Unified",
+          "115"
+        ],
+        [
+          "27.0",
+          "Hayward Unified",
+          "97"
+        ],
+        [
+          "19.0",
+          "Azusa Unified",
+          "117"
+        ],
+        [
+          "22.0",
+          "Wasco Union High",
+          "106"
+        ],
+        [
+          "31.0",
+          "ABC Unified",
+          "130"
+        ],
+        [
+          "34.0",
+          "Chico Unified",
+          "42"
+        ],
+        [
+          "24.0",
+          "Sierra Unified",
+          "50"
+        ],
+        [
+          "43.0",
+          "Bret Harte Union High",
+          "60"
+        ],
+        [
+          "44.0",
+          "Imperial Unified",
+          "105"
+        ],
+        [
+          "35.0",
+          "Antioch Unified",
+          "85"
+        ],
+        [
+          "43.0",
+          "Bret Harte Union High",
+          "60"
+        ],
+        [
+          "57.0",
+          "Eureka City Schools",
+          "111"
+        ],
+        [
+          "35.0",
+          "Del Norte County Unified",
+          "77"
+        ],
+        [
+          "21.0",
+          "Bassett Unified",
+          "100"
+        ],
+        [
+          "20.0",
+          "Black Oak Mine Unified",
+          "27"
+        ],
+        [
+          "70.0",
+          "Martinez Unified",
+          "118"
+        ],
+        [
+          "18.0",
+          "Kelseyville Unified",
+          "42"
+        ],
+        [
+          "27.0",
+          "Northern Humboldt Union High",
+          "52"
+        ],
+        [
+          "21.0",
+          "Kerman Unified",
+          "132"
+        ],
+        [
+          "38.0",
+          "Bishop Unified",
+          "73"
+        ],
+        [
+          "48.0",
+          "Fortuna Union High",
+          "92"
+        ],
+        [
+          "17.0",
+          "Hayward Unified",
+          "114"
+        ],
+        [
+          "24.0",
+          "Hanford Joint Union High",
+          "86"
+        ],
+        [
+          "57.0",
+          "Los Angeles County Office of Education",
+          "110"
+        ],
+        [
+          "25.0",
+          "Mt. Diablo Unified",
+          "113"
+        ],
+        [
+          "45.0",
+          "SBE - Livermore Valley Charter Preparatory High",
+          "75"
+        ],
+        [
+          "33.0",
+          "Calaveras Unified",
+          "61"
+        ],
+        [
+          "17.0",
+          "Southern Kern Unified",
+          "51"
+        ],
+        [
+          "55.0",
+          "West Contra Costa Unified",
+          "246"
+        ],
+        [
+          "56.0",
+          "Tehachapi Unified",
+          "102"
+        ],
+        [
+          "32.0",
+          "Paradise Unified",
+          "52"
+        ],
+        [
+          "44.0",
+          "Kingsburg Joint Union High",
+          "112"
+        ],
+        [
+          "37.0",
+          "Delano Joint Union High",
+          "162"
+        ],
+        [
+          "56.0",
+          "Tehachapi Unified",
+          "102"
+        ],
+        [
+          "24.0",
+          "Sierra Unified",
+          "50"
+        ],
+        [
+          "18.0",
+          "Taft Union High",
+          "69"
+        ],
+        [
+          "55.0",
+          "Lake Tahoe Unified",
+          "107"
+        ]
+      ],
+      "result_count": 89,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "Find NumGE1500, enroll12, row_id from satscores where NumGE1500 is between 17 and 70, AvgScrRead is between 427 and 528, and NumTstTakr is >= 62.",
+      "sql": "SELECT \"num_ge1500\", \"enroll12\", \"row_id\" FROM \"satscores\" WHERE (CAST(\"num_ge1500\" AS REAL) >= 17 AND CAST(\"num_ge1500\" AS REAL) <= 70) AND (CAST(\"avg_scr_read\" AS REAL) >= 427 AND CAST(\"avg_scr_read\" AS REAL) <= 528) AND (CAST(\"num_tst_takr\" AS REAL) >= 62);",
+      "golden_schema": {
+        "tables": [
+          "satscores"
+        ],
+        "columns": [
+          "satscores.num_ge1500",
+          "satscores.enroll12",
+          "satscores.row_id",
+          "satscores.avg_scr_read",
+          "satscores.num_tst_takr"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "california_schools/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "num_ge1500",
+        "enroll12",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "24.0",
+          "269",
+          "9"
+        ],
+        [
+          "35.0",
+          "210",
+          "16"
+        ],
+        [
+          "19.0",
+          "223",
+          "18"
+        ],
+        [
+          "35.0",
+          "372",
+          "35"
+        ],
+        [
+          "29.0",
+          "348",
+          "45"
+        ],
+        [
+          "49.0",
+          "390",
+          "58"
+        ],
+        [
+          "33.0",
+          "62",
+          "59"
+        ],
+        [
+          "57.0",
+          "321",
+          "86"
+        ],
+        [
+          "56.0",
+          "343",
+          "87"
+        ],
+        [
+          "24.0",
+          "317",
+          "89"
+        ],
+        [
+          "52.0",
+          "463",
+          "101"
+        ],
+        [
+          "18.0",
+          "251",
+          "104"
+        ],
+        [
+          "34.0",
+          "81",
+          "106"
+        ],
+        [
+          "59.0",
+          "423",
+          "124"
+        ],
+        [
+          "70.0",
+          "319",
+          "136"
+        ],
+        [
+          "21.0",
+          "204",
+          "137"
+        ],
+        [
+          "41.0",
+          "396",
+          "145"
+        ],
+        [
+          "30.0",
+          "384",
+          "148"
+        ],
+        [
+          "59.0",
+          "558",
+          "153"
+        ],
+        [
+          "70.0",
+          "472",
+          "163"
+        ],
+        [
+          "70.0",
+          "371",
+          "166"
+        ],
+        [
+          "21.0",
+          "309",
+          "168"
+        ],
+        [
+          "35.0",
+          "257",
+          "182"
+        ],
+        [
+          "39.0",
+          "583",
+          "191"
+        ],
+        [
+          "25.0",
+          "105",
+          "193"
+        ],
+        [
+          "38.0",
+          "158",
+          "195"
+        ],
+        [
+          "43.0",
+          "346",
+          "201"
+        ],
+        [
+          "56.0",
+          "449",
+          "204"
+        ],
+        [
+          "70.0",
+          "341",
+          "206"
+        ],
+        [
+          "44.0",
+          "225",
+          "211"
+        ],
+        [
+          "55.0",
+          "212",
+          "213"
+        ],
+        [
+          "41.0",
+          "538",
+          "215"
+        ],
+        [
+          "35.0",
+          "215",
+          "217"
+        ],
+        [
+          "26.0",
+          "304",
+          "220"
+        ],
+        [
+          "45.0",
+          "86",
+          "223"
+        ],
+        [
+          "46.0",
+          "695",
+          "226"
+        ],
+        [
+          "56.0",
+          "238",
+          "227"
+        ],
+        [
+          "45.0",
+          "410",
+          "241"
+        ],
+        [
+          "47.0",
+          "711",
+          "244"
+        ],
+        [
+          "33.0",
+          "267",
+          "246"
+        ],
+        [
+          "48.0",
+          "541",
+          "260"
+        ],
+        [
+          "43.0",
+          "470",
+          "267"
+        ],
+        [
+          "32.0",
+          "427",
+          "269"
+        ],
+        [
+          "64.0",
+          "580",
+          "271"
+        ],
+        [
+          "29.0",
+          "170",
+          "275"
+        ],
+        [
+          "21.0",
+          "312",
+          "280"
+        ],
+        [
+          "22.0",
+          "385",
+          "282"
+        ],
+        [
+          "54.0",
+          "767",
+          "283"
+        ],
+        [
+          "44.0",
+          "258",
+          "290"
+        ],
+        [
+          "58.0",
+          "424",
+          "297"
+        ],
+        [
+          "19.0",
+          "80",
+          "298"
+        ],
+        [
+          "32.0",
+          "375",
+          "302"
+        ],
+        [
+          "60.0",
+          "317",
+          "304"
+        ],
+        [
+          "57.0",
+          "209",
+          "306"
+        ],
+        [
+          "42.0",
+          "122",
+          "315"
+        ],
+        [
+          "27.0",
+          "116",
+          "316"
+        ],
+        [
+          "47.0",
+          "777",
+          "321"
+        ],
+        [
+          "19.0",
+          "288",
+          "326"
+        ],
+        [
+          "69.0",
+          "441",
+          "327"
+        ],
+        [
+          "64.0",
+          "719",
+          "338"
+        ],
+        [
+          "22.0",
+          "327",
+          "339"
+        ],
+        [
+          "31.0",
+          "314",
+          "340"
+        ],
+        [
+          "31.0",
+          "390",
+          "345"
+        ],
+        [
+          "44.0",
+          "231",
+          "355"
+        ],
+        [
+          "37.0",
+          "448",
+          "357"
+        ],
+        [
+          "35.0",
+          "131",
+          "358"
+        ],
+        [
+          "57.0",
+          "249",
+          "365"
+        ],
+        [
+          "35.0",
+          "215",
+          "368"
+        ],
+        [
+          "21.0",
+          "263",
+          "373"
+        ],
+        [
+          "70.0",
+          "271",
+          "380"
+        ],
+        [
+          "58.0",
+          "593",
+          "386"
+        ],
+        [
+          "21.0",
+          "292",
+          "391"
+        ],
+        [
+          "38.0",
+          "182",
+          "395"
+        ],
+        [
+          "48.0",
+          "254",
+          "413"
+        ],
+        [
+          "24.0",
+          "340",
+          "415"
+        ],
+        [
+          "38.0",
+          "555",
+          "421"
+        ],
+        [
+          "57.0",
+          "129",
+          "422"
+        ],
+        [
+          "57.0",
+          "754",
+          "433"
+        ],
+        [
+          "25.0",
+          "329",
+          "436"
+        ],
+        [
+          "45.0",
+          "107",
+          "438"
+        ],
+        [
+          "65.0",
+          "714",
+          "446"
+        ],
+        [
+          "56.0",
+          "326",
+          "461"
+        ],
+        [
+          "44.0",
+          "293",
+          "467"
+        ],
+        [
+          "37.0",
+          "317",
+          "479"
+        ],
+        [
+          "56.0",
+          "259",
+          "480"
+        ],
+        [
+          "70.0",
+          "594",
+          "489"
+        ],
+        [
+          "18.0",
+          "222",
+          "492"
+        ],
+        [
+          "55.0",
+          "277",
+          "493"
+        ],
+        [
+          "46.0",
+          "377",
+          "496"
+        ]
+      ],
+      "result_count": 89,
+      "has_more_rows": false
+    }
+  ]
+}

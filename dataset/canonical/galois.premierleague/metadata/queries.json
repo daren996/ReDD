@@ -1,0 +1,348 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "galois.premierleague",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List home_goals, row_id, away_goals from match_result where home_goals is not null.",
+      "sql": "SELECT home_goals, row_id, away_goals FROM match_result WHERE home_goals IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_goals",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.home_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q2",
+      "question": "List player_of_the_match_team, row_id, away_goals from match_result where player_of_the_match_team is not null.",
+      "sql": "SELECT player_of_the_match_team, row_id, away_goals FROM match_result WHERE player_of_the_match_team IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.player_of_the_match_team",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.player_of_the_match_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q3",
+      "question": "List date, row_id, away_goals from match_result where date is not null.",
+      "sql": "SELECT date, row_id, away_goals FROM match_result WHERE date IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.date",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.date"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q4",
+      "question": "List away_goals, row_id, away_team from match_result where away_goals is not null.",
+      "sql": "SELECT away_goals, row_id, away_team FROM match_result WHERE away_goals IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.away_goals",
+        "match_result.away_team"
+      ],
+      "output_columns": [
+        "match_result.away_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q5",
+      "question": "List player_of_the_match, row_id, away_goals from match_result where player_of_the_match is not null.",
+      "sql": "SELECT player_of_the_match, row_id, away_goals FROM match_result WHERE player_of_the_match IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.player_of_the_match",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.player_of_the_match"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q6",
+      "question": "List home_team, row_id, away_goals from match_result where home_team is not null.",
+      "sql": "SELECT home_team, row_id, away_goals FROM match_result WHERE home_team IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_team",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.home_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q7",
+      "question": "List away_team, row_id, away_goals from match_result where away_team is not null.",
+      "sql": "SELECT away_team, row_id, away_goals FROM match_result WHERE away_team IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.away_team",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.away_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q8",
+      "question": "List row_id, away_goals, away_team from match_result where row_id is not null.",
+      "sql": "SELECT row_id, away_goals, away_team FROM match_result WHERE row_id IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.away_goals",
+        "match_result.away_team"
+      ],
+      "output_columns": [
+        "match_result.away_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q9",
+      "question": "Find home_goals, oid, row_id from match_result where home_goals is not null and oid >= 11.",
+      "sql": "SELECT home_goals, oid, row_id FROM match_result WHERE home_goals IS NOT NULL AND oid >= 11;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_goals",
+        "match_result.oid"
+      ],
+      "output_columns": [
+        "match_result.home_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q10",
+      "question": "Find row_id, home_goals, away_goals from match_result where row_id is not null and home_goals >= 0.",
+      "sql": "SELECT row_id, home_goals, away_goals FROM match_result WHERE row_id IS NOT NULL AND home_goals >= 0;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_goals",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.home_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q11",
+      "question": "Find home_goals, oid, row_id from match_result where home_goals >= 0 and oid >= 11.",
+      "sql": "SELECT home_goals, oid, row_id FROM match_result WHERE home_goals >= 0 AND oid >= 11;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_goals",
+        "match_result.oid"
+      ],
+      "output_columns": [
+        "match_result.home_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q12",
+      "question": "Find away_goals, home_goals, row_id from match_result where away_goals is not null and home_goals is not null.",
+      "sql": "SELECT away_goals, home_goals, row_id FROM match_result WHERE away_goals IS NOT NULL AND home_goals IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.away_goals",
+        "match_result.home_goals"
+      ],
+      "output_columns": [
+        "match_result.away_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q13",
+      "question": "Find row_id, home_team, away_goals from match_result where row_id is not null and home_team is not null.",
+      "sql": "SELECT row_id, home_team, away_goals FROM match_result WHERE row_id IS NOT NULL AND home_team IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_team",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.home_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q14",
+      "question": "Find home_goals, row_id, away_goals from match_result where home_goals is not null and home_goals >= 0.",
+      "sql": "SELECT home_goals, row_id, away_goals FROM match_result WHERE home_goals IS NOT NULL AND home_goals >= 0;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_goals",
+        "match_result.away_goals"
+      ],
+      "output_columns": [
+        "match_result.home_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q15",
+      "question": "Find away_team, oid, row_id from match_result where away_team is not null and oid >= 11.",
+      "sql": "SELECT away_team, oid, row_id FROM match_result WHERE away_team IS NOT NULL AND oid >= 11;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.away_team",
+        "match_result.oid"
+      ],
+      "output_columns": [
+        "match_result.away_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q16",
+      "question": "Find oid, player_of_the_match, row_id from match_result where oid is not null and player_of_the_match is not null.",
+      "sql": "SELECT oid, player_of_the_match, row_id FROM match_result WHERE oid IS NOT NULL AND player_of_the_match IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.oid",
+        "match_result.player_of_the_match"
+      ],
+      "output_columns": [
+        "match_result.oid"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q17",
+      "question": "Find home_goals, oid, row_id from match_result where home_goals is not null, home_goals >= 0, and oid is not null.",
+      "sql": "SELECT home_goals, oid, row_id FROM match_result WHERE home_goals IS NOT NULL AND home_goals >= 0 AND oid IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_goals",
+        "match_result.oid"
+      ],
+      "output_columns": [
+        "match_result.home_goals"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q18",
+      "question": "Find away_team, player_of_the_match, player_of_the_match_team from match_result where away_team is not null, player_of_the_match is not null, and player_of_the_match_team is not null.",
+      "sql": "SELECT away_team, player_of_the_match, player_of_the_match_team FROM match_result WHERE away_team IS NOT NULL AND player_of_the_match IS NOT NULL AND player_of_the_match_team IS NOT NULL;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.away_team",
+        "match_result.player_of_the_match",
+        "match_result.player_of_the_match_team"
+      ],
+      "output_columns": [
+        "match_result.away_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q19",
+      "question": "Find away_team, date, oid from match_result where away_team is not null, date is not null, and oid >= 11.",
+      "sql": "SELECT away_team, date, oid FROM match_result WHERE away_team IS NOT NULL AND date IS NOT NULL AND oid >= 11;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.away_team",
+        "match_result.date",
+        "match_result.oid"
+      ],
+      "output_columns": [
+        "match_result.away_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q20",
+      "question": "Find home_team, oid, row_id from match_result where home_team is not null, oid is not null, and oid >= 11.",
+      "sql": "SELECT home_team, oid, row_id FROM match_result WHERE home_team IS NOT NULL AND oid IS NOT NULL AND oid >= 11;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_team",
+        "match_result.oid"
+      ],
+      "output_columns": [
+        "match_result.home_team"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

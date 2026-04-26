@@ -34,7 +34,7 @@ def resolve_proxy_threshold(
     config: Mapping[str, Any],
 ) -> float:
     """Read the configured proxy threshold."""
-    return float(proxy_cfg.get("proxy_threshold", config.get("proxy_threshold", 0.5)))
+    return float(proxy_cfg.get("proxy_threshold", config.get("proxy_threshold", 0.51)))
 
 
 __all__ = [

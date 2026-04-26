@@ -1,0 +1,383 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.bike_1",
+  "tables": [
+    {
+      "table_id": "station",
+      "name": "station",
+      "description": "Bike sharing stations with location and capacity information. Contains 70 stations across the San Francisco Bay Area.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "station.city",
+          "name": "city",
+          "type": "string",
+          "description": "City where the bike station is located. Type: TEXT. Values: 'San Jose', 'Mountain View', 'San Francisco', 'Redwood City', 'Palo Alto'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.dock_count",
+          "name": "dock_count",
+          "type": "string",
+          "description": "Number of docking slots available at the station. Type: TEXT (numeric string). Examples: '15', '19', '23'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.installation_date",
+          "name": "installation_date",
+          "type": "string",
+          "description": "Date when the station was installed. Type: TEXT (M/D/YYYY format). Examples: '8/5/2013', '8/16/2013', '8/25/2013'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.lat",
+          "name": "lat",
+          "type": "string",
+          "description": "Latitude coordinate of the station location. Type: TEXT (decimal degrees). Examples: '37.330165', '37.794139'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.long",
+          "name": "long",
+          "type": "string",
+          "description": "Longitude coordinate of the station location. Type: TEXT (decimal degrees, negative for western hemisphere). Examples: '-121.885831', '-122.394434'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.name",
+          "name": "name",
+          "type": "string",
+          "description": "Name of the bike station, typically a street intersection or landmark. Type: TEXT. Examples: 'San Salvador at 1st', 'Steuart at Market', 'Golden Gate at Polk'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "status",
+      "name": "status",
+      "description": "Real-time status snapshots of bike stations showing bike and dock availability at specific timestamps. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "status.bikes_available",
+          "name": "bikes_available",
+          "type": "string",
+          "description": "Number of bikes currently available at the station. Type: TEXT (numeric string). Examples: '5', '7'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "status.docks_available",
+          "name": "docks_available",
+          "type": "string",
+          "description": "Number of empty docks currently available at the station. Type: TEXT (numeric string). Examples: '4', '10', '14'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "status.station_name",
+          "name": "station_name",
+          "type": "string",
+          "description": "Name of the station this status record refers to. References station.name. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "status.time",
+          "name": "time",
+          "type": "string",
+          "description": "Timestamp when this status was recorded. Type: TEXT (YYYY-MM-DD HH:MM:SS format). Examples: '2015-06-02 14:09:02'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "trip",
+      "name": "trip",
+      "description": "Individual bike trip records with start/end details, duration, and rider type. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "trip.bike_id",
+          "name": "bike_id",
+          "type": "string",
+          "description": "Unique identifier of the bike used for the trip. Type: TEXT (numeric string). Examples: '434', '206', '312'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.duration",
+          "name": "duration",
+          "type": "string",
+          "description": "Duration of the trip in seconds. Type: TEXT (numeric string). Examples: '222' (about 4 min), '1785' (about 30 min).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.end_date",
+          "name": "end_date",
+          "type": "string",
+          "description": "Date and time when the trip ended. Type: TEXT (M/D/YYYY H:MM format). Examples: '8/21/2015 17:16'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.end_station_name",
+          "name": "end_station_name",
+          "type": "string",
+          "description": "Name of the station where the trip ended. Type: TEXT. Examples: 'San Francisco Caltrain 2 (330 Townsend)', 'Arena Green / SAP Center'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.start_date",
+          "name": "start_date",
+          "type": "string",
+          "description": "Date and time when the trip started. Type: TEXT (M/D/YYYY H:MM format). Examples: '8/21/2015 17:12'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.start_station_name",
+          "name": "start_station_name",
+          "type": "string",
+          "description": "Name of the station where the trip began. Type: TEXT. Examples: '2nd at South Park', 'Market at 10th'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.subscription_type",
+          "name": "subscription_type",
+          "type": "string",
+          "description": "Type of rider subscription. Type: TEXT. Values: 'Subscriber' (annual member) or 'Customer' (short-term/casual user).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.zip_code",
+          "name": "zip_code",
+          "type": "string",
+          "description": "ZIP code of the rider. Type: TEXT. Examples: '95014', '95113', '94403'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "weather",
+      "name": "weather",
+      "description": "Daily weather observations for the Bay Area, including temperature, humidity, wind, and precipitation. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "weather.cloud_cover",
+          "name": "cloud_cover",
+          "type": "string",
+          "description": "Cloud cover level on a scale (0-8, where 0 is clear sky and 8 is fully overcast). Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.date",
+          "name": "date",
+          "type": "string",
+          "description": "Date of the weather observation. Type: TEXT (M/D/YYYY format). Examples: '9/11/2013', '9/5/2013'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.events",
+          "name": "events",
+          "type": "string",
+          "description": "Notable weather events for the day. Type: TEXT. Values: '' (empty/none), 'Rain', 'Fog', 'Fog-Rain', 'rain'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_dew_point_f",
+          "name": "max_dew_point_f",
+          "type": "string",
+          "description": "Maximum dew point temperature in Fahrenheit. Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_gust_speed_mph",
+          "name": "max_gust_speed_mph",
+          "type": "string",
+          "description": "Maximum wind gust speed in miles per hour. Type: TEXT (numeric string). Examples: '23', '25', '6'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_humidity",
+          "name": "max_humidity",
+          "type": "string",
+          "description": "Maximum humidity percentage for the day. Type: TEXT (numeric string). Examples: '78', '82', '72'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_sea_level_pressure_inches",
+          "name": "max_sea_level_pressure_inches",
+          "type": "string",
+          "description": "Maximum sea level atmospheric pressure in inches of mercury. Type: TEXT (decimal string). Examples: '30', '30.03', '30.26'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_temperature_f",
+          "name": "max_temperature_f",
+          "type": "string",
+          "description": "Maximum temperature in Fahrenheit for the day. Type: TEXT (numeric string). Examples: '74', '75', '70'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_visibility_miles",
+          "name": "max_visibility_miles",
+          "type": "string",
+          "description": "Maximum visibility distance in miles. Type: TEXT (numeric string). Typically '10'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_wind_speed_mph",
+          "name": "max_wind_speed_mph",
+          "type": "string",
+          "description": "Maximum sustained wind speed in miles per hour. Type: TEXT (numeric string). Examples: '18', '21', '5'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_dew_point_f",
+          "name": "mean_dew_point_f",
+          "type": "string",
+          "description": "Mean dew point temperature in Fahrenheit for the day. Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_humidity",
+          "name": "mean_humidity",
+          "type": "string",
+          "description": "Mean humidity percentage for the day. Type: TEXT (numeric string). Examples: '68', '70', '52'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_sea_level_pressure_inches",
+          "name": "mean_sea_level_pressure_inches",
+          "type": "string",
+          "description": "Mean sea level atmospheric pressure in inches of mercury. Type: TEXT (decimal string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_temperature_f",
+          "name": "mean_temperature_f",
+          "type": "string",
+          "description": "Mean temperature in Fahrenheit for the day. Type: TEXT (numeric string). Examples: '68', '61', '52'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_visibility_miles",
+          "name": "mean_visibility_miles",
+          "type": "string",
+          "description": "Mean visibility distance in miles for the day. Type: TEXT (numeric string). Typically '10'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_wind_speed_mph",
+          "name": "mean_wind_speed_mph",
+          "type": "string",
+          "description": "Mean wind speed in miles per hour for the day. Type: TEXT (numeric string). Examples: '9', '8', '0', '2'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_dew_point_f",
+          "name": "min_dew_point_f",
+          "type": "string",
+          "description": "Minimum dew point temperature in Fahrenheit. Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_humidity",
+          "name": "min_humidity",
+          "type": "string",
+          "description": "Minimum humidity percentage for the day. Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_sea_level_pressure_inches",
+          "name": "min_sea_level_pressure_inches",
+          "type": "string",
+          "description": "Minimum sea level atmospheric pressure in inches of mercury. Type: TEXT (decimal string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_temperature_f",
+          "name": "min_temperature_f",
+          "type": "string",
+          "description": "Minimum temperature in Fahrenheit for the day. Type: TEXT (numeric string). Examples: '62', '51', '44', '48'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_visibility_miles",
+          "name": "min_visibility_miles",
+          "type": "string",
+          "description": "Minimum visibility distance in miles for the day. Type: TEXT (numeric string). Examples: '10', '9', '7'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.precipitation_inches",
+          "name": "precipitation_inches",
+          "type": "string",
+          "description": "Total precipitation in inches for the day. Type: TEXT (numeric string). '0' for no precipitation. Examples: '0', '0.5'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.wind_dir_degrees",
+          "name": "wind_dir_degrees",
+          "type": "string",
+          "description": "Wind direction in compass degrees (0-360, where 0/360=North, 90=East, 180=South, 270=West). Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.zip_code",
+          "name": "zip_code",
+          "type": "string",
+          "description": "ZIP code of the weather observation location. Type: TEXT. Examples: '94107' (SF), '94063', '94301' (Palo Alto).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

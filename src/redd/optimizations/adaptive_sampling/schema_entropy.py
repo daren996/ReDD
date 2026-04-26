@@ -10,7 +10,7 @@ normalized divergence ratio that reflects structural volatility.
 """
 
 import logging
-from typing import Dict, List, Set, Any, Optional
+from typing import Any, Dict, List, Optional, Set
 
 
 class SchemaEntropyCalculator:

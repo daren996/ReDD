@@ -1,0 +1,45 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "bird.debit_card_specializing.default_task",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "customers",
+        "gasstations",
+        "products",
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "required_columns": [
+        "customers.customer_id",
+        "customers.segment",
+        "customers.currency",
+        "gasstations.gas_station_id",
+        "gasstations.chain_id",
+        "gasstations.country",
+        "gasstations.segment",
+        "products.product_id",
+        "transactions_1k.transaction_id",
+        "transactions_1k.date",
+        "transactions_1k.time",
+        "transactions_1k.customer_id",
+        "transactions_1k.card_id",
+        "transactions_1k.gas_station_id",
+        "transactions_1k.product_id",
+        "transactions_1k.amount",
+        "transactions_1k.price",
+        "yearmonth.customer_id",
+        "yearmonth.date",
+        "yearmonth.consumption"
+      ],
+      "output_columns": [
+        "customers.customer_id"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

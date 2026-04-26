@@ -10,16 +10,16 @@ Supports two adaptive sampling algorithms:
 - DDGT: Diversity-Driven Good-Turing with probabilistic coverage
 """
 
-import logging
 import json
+import logging
 import random
 from pathlib import Path
-from typing import Any, Dict, Optional, List
-from .entropy.sampler import AdaptiveSampler
-from .schema_entropy import SchemaEntropyCalculator
-from .entropy.document_selector import DocumentSelector
-from .ddgt.sampler import DDGTSampler
+from typing import Any, Dict, Optional
+
 from .ddgt.document_selector import DDGTDocumentSelector
+from .ddgt.sampler import DDGTSampler
+from .entropy.document_selector import DocumentSelector
+from .entropy.sampler import AdaptiveSampler
 
 # #region agent log
 DEBUG_LOG_PATH = r"c:\Users\chenk\Desktop\ReDD_Dev\.cursor\debug.log"
@@ -38,7 +38,8 @@ def _debug_log(session_id, run_id, hypothesis_id, location, message, data):
         }
         with open(DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
             f.write(_json.dumps(log_entry) + "\n")
-    except: pass
+    except Exception:
+        pass
 # #endregion
 
 
@@ -93,7 +94,7 @@ class AdaptiveSamplingMixin:
                 # Common:
                 use_embedding_selection: true
                 embedding_model: "gemini-embedding-001"
-                dataset_db_path: "dataset/spider_sqlite/college_2/default_task.db"
+                dataset_db_path: "dataset/canonical/spider.college_2/manifest.yaml"
         
         Args:
             config: Configuration dictionary
@@ -190,7 +191,6 @@ class AdaptiveSamplingMixin:
             original_indices: Optional list mapping shuffled indices to original indices.
                             If None, assumes doc_dict is in original order.
         """
-        from tqdm import tqdm
         
         if not self.adaptive_enabled or self.adaptive_sampler is None:
             # Fall back to regular processing

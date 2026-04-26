@@ -2,7 +2,7 @@ from importlib import import_module
 
 __all__ = [
     "ConformalProxy",
-    "DataPopOracle",
+    "DataExtractionOracle",
     "DocumentBatch",
     "EmbeddingProxy",
     "ExecutionStats",
@@ -18,7 +18,7 @@ __all__ = [
 
 _EXPORT_MAP = {
     "ConformalProxy": ".executor",
-    "DataPopOracle": ".oracle",
+    "DataExtractionOracle": ".oracle",
     "DocumentBatch": ".executor",
     "EmbeddingProxy": ".executor",
     "ExecutionStats": ".executor",

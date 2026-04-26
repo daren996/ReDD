@@ -1,0 +1,145 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "fda.fda.fixed_size_50k",
+  "tables": [
+    {
+      "table_id": "fda_510k_device_submission",
+      "name": "fda_510k_device_submission",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "fda_510k_device_submission.510k_number",
+          "name": "510k_number",
+          "type": "string",
+          "description": "FDA-assigned identifier for the submission (format: 'K' followed by six digits, e.g., K143467).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.applicant",
+          "name": "applicant",
+          "type": "string",
+          "description": "Submitter/manufacturer responsible for the 510(k) (e.g., TaiDoc Technology Corporation).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.classification",
+          "name": "classification",
+          "type": "string",
+          "description": "Regulatory device class under the cited regulation (e.g., Class II).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.conclusion",
+          "name": "conclusion",
+          "type": "string",
+          "description": "Decision language indicating the submission supports a substantial equivalence (SE) determination.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.indications_for_use",
+          "name": "indications_for_use",
+          "type": "string",
+          "description": "Formal statement describing who uses the device, what it measures, specimen types/sites, and key limitations/contraindications (e.g., not for diagnosis/screening or neonates; AST only during steady state).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.intended_use",
+          "name": "intended_use",
+          "type": "string",
+          "description": "General purpose statement for the device; often defers to the formal Indications for Use section for specifics and limitations.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.measurand",
+          "name": "measurand",
+          "type": "string",
+          "description": "Analyte and specimen type(s) measured by the device (e.g., glucose in fresh capillary whole blood from fingertip, palm, forearm, upper arm).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.panel",
+          "name": "panel",
+          "type": "string",
+          "description": "FDA review panel/medical specialty and code number responsible for the device (e.g., Clinical Chemistry (75)).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.predicate_510k_number",
+          "name": "predicate_510k_number",
+          "type": "string",
+          "description": "FDA identifier for the predicate device’s cleared submission (e.g., K101509).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.predicate_device_name",
+          "name": "predicate_device_name",
+          "type": "string",
+          "description": "Commercial name of the legally marketed predicate device used to establish substantial equivalence.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.product_code",
+          "name": "product_code",
+          "type": "string",
+          "description": "FDA product code(s) that categorize the device; may include multiple codes (e.g., NBW, LFR).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.proposed_labeling",
+          "name": "proposed_labeling",
+          "type": "string",
+          "description": "Summary of labeling adequacy and compliance with FDA requirements (e.g., 21 CFR 809.10), including necessary user instructions such as QC and cleaning/disinfection if applicable.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.proprietary_and_established_names",
+          "name": "proprietary_and_established_names",
+          "type": "string",
+          "description": "Proprietary/established marketing name(s) for the device (e.g., FORA GD43 Blood Glucose Monitoring System).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.purpose_for_submission",
+          "name": "purpose_for_submission",
+          "type": "string",
+          "description": "High-level reason for the 510(k) (e.g., new device, modification, new indication, labeling change).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.regulation_section",
+          "name": "regulation_section",
+          "type": "string",
+          "description": "Cited CFR section defining the device type (e.g., 21 CFR 862.1345, Glucose test system).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.type_of_test",
+          "name": "type_of_test",
+          "type": "string",
+          "description": "Analytical method and detection principle, including enzyme system if applicable (e.g., GDH-FAD quantitative amperometric assay).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

@@ -6,19 +6,24 @@ from collections import Counter
 import numpy as np
 import torch
 from scipy.spatial import KDTree
-from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_score, recall_score, roc_auc_score
-from torch.utils.data import DataLoader
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
 
-from redd.exceptions import UnsupportedInputError
 from redd.core.data_loader import create_data_loader
 from redd.core.utils.constants import PATH_TEMPLATES
-from redd.core.utils.progress import tqdm
+from redd.exceptions import UnsupportedInputError
+
 from .classifier_structure import BinaryClassifier0 as BinaryClassifier
 from .classifier_structure import MultiHeadBinaryClassifier
 from .hidden_states_loader import LazyHiddenStatesDataset
 from .train_classifier import ClassifierTrainer
 from .voting_error_estimation import chernoff_bound, estimate_mv_error_fn
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -71,7 +76,7 @@ class ClassifierVal(ClassifierTrainer):
             out_root = os.path.join(self.out_main, test_dn_fn)
             loader = create_data_loader(
                 data_root=data_root,
-                loader_type=self.config.get("data_loader_type", "sqlite"),
+                loader_type=self.config.get("data_loader_type", "hf_manifest"),
                 loader_config=self.config.get("data_loader_config", {}),
             )
             query_dict = loader.load_query_dict()
@@ -293,7 +298,7 @@ class ClassifierVal(ClassifierTrainer):
                             model_paths = [layer_models[layer][size] for layer in layers]
                             cls_outputs_list = [classifier_outputs[model_dn_fn][model_qid][str(layer)][size] for layer in layers]
                             acc = self._evaluate_row_level_voting(gt_all, cls_outputs_list)
-                            ensemble_layer = "_".join(str(l) for l in layers)
+                            ensemble_layer = "_".join(str(layer) for layer in layers)
                             results[model_dn_fn][model_qid][size][ensemble_layer] = acc
                             logging.info(
                                 "[%s:_evaluate_modes] ensemble test_mode, model %s-%s, layers %s, size %s, acc %s. model_paths %s",
@@ -316,7 +321,7 @@ class ClassifierVal(ClassifierTrainer):
                                 cls_outputs_list_ensembles = []
                                 ensemble_name = []
                                 for layers in ensembles:
-                                    ensemble_name.append("_".join(str(l) for l in layers))
+                                    ensemble_name.append("_".join(str(layer) for layer in layers))
                                     cls_outputs_list = [classifier_outputs[model_dn_fn][model_qid][str(layer)][size] for layer in layers]
                                     cls_outputs_list_ensembles.append(cls_outputs_list)
                                 acc = self._evaluate_row_level_voting_ensembles(gt_all, cls_outputs_list_ensembles)
@@ -344,7 +349,7 @@ class ClassifierVal(ClassifierTrainer):
                             error_bounds["error_rate"] = acc["error_rate"]
                             error_bounds["residual_error_rate"] = acc["residual_error_rate"]
                             error_bounds["extra_cost_rate"] = acc["extra_cost_rate"]
-                            ensemble_layer = "_".join(str(l) for l in layers)
+                            ensemble_layer = "_".join(str(layer) for layer in layers)
                             results[model_dn_fn][model_qid][size][ensemble_layer] = error_bounds
                             logging.info(
                                 "[%s:_evaluate_modes] errorbound test_mode, model %s-%s, layers %s, size %s, acc %s. model_paths %s",

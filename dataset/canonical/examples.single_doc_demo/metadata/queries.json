@@ -1,0 +1,24 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "examples.single_doc_demo",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "Which winery from Sonoma Coast has a score above 90?",
+      "sql": "SELECT winery FROM wine WHERE appelation = 'Sonoma Coast' AND score > '90';",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.winery",
+        "wine.appelation",
+        "wine.score"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

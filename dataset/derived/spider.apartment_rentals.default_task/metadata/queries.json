@@ -1,0 +1,56 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.apartment_rentals.default_task",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "apartment_bookings",
+        "apartment_buildings",
+        "apartment_facilities",
+        "apartments",
+        "guests",
+        "view_unit_status"
+      ],
+      "required_columns": [
+        "apartment_bookings.booking_status_code",
+        "apartment_bookings.booking_start_date",
+        "apartment_bookings.booking_end_date",
+        "apartment_bookings.apt_number",
+        "apartment_bookings.guest_first_name",
+        "apartment_bookings.guest_last_name",
+        "apartment_buildings.building_short_name",
+        "apartment_buildings.building_full_name",
+        "apartment_buildings.building_description",
+        "apartment_buildings.building_address",
+        "apartment_buildings.building_manager",
+        "apartment_buildings.building_phone",
+        "apartment_facilities.facility_code",
+        "apartment_facilities.apt_number",
+        "apartments.apt_type_code",
+        "apartments.apt_number",
+        "apartments.bathroom_count",
+        "apartments.bedroom_count",
+        "apartments.room_count",
+        "apartments.building_short_name",
+        "apartments.building_full_name",
+        "guests.gender_code",
+        "guests.guest_first_name",
+        "guests.guest_last_name",
+        "guests.date_of_birth",
+        "view_unit_status.status_date",
+        "view_unit_status.available_yn",
+        "view_unit_status.apt_number",
+        "view_unit_status.booking_start_date",
+        "view_unit_status.booking_end_date"
+      ],
+      "output_columns": [
+        "apartment_bookings.booking_status_code"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

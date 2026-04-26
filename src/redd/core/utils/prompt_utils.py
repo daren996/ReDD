@@ -3,10 +3,14 @@ from __future__ import annotations
 import logging
 from importlib import resources as importlib_resources
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, TypeVar
+
+from pydantic import BaseModel
 
 from redd.config import resolve_repo_path
-from redd.llm import create_client, get_api_key, llm_completion, normalize_provider_name
+from redd.llm import CompletionRequest, LLMRuntime, get_api_key, normalize_provider_name
+
+ModelT = TypeVar("ModelT", bound=BaseModel)
 
 
 def _get_package_prompt_root():
@@ -56,21 +60,28 @@ def load_prompt_text(prompt_path: str | Path) -> str:
     return resolved.read_text(encoding="utf-8")
 
 
-class PromptBase:
+class PromptTemplate:
+    """Provider-agnostic prompt wrapper backed by the shared LLM runtime."""
+
     def __init__(
         self,
-        mode,
-        prompt_path,
-        llm_model,
-        api_key=None,
+        mode: str,
+        prompt_path: str | Path,
+        llm_model: str,
+        api_key: str | None = None,
         config: Mapping[str, Any] | None = None,
-    ):
+    ) -> None:
         self.mode = normalize_provider_name(mode)
         self.prompt_path = prompt_path
         self.llm_model = llm_model
         self.prompt = load_prompt_text(prompt_path)
-        self.client = create_client(self.mode, config=config, api_key=api_key)
         self.resolved_prompt = resolve_prompt_reference(prompt_path)
+        self.runtime = LLMRuntime.from_config(
+            self.mode,
+            self.llm_model,
+            config=config,
+            api_key=api_key,
+        )
         logging.info(
             "[%s] Initialized prompt from %s for provider=%s model=%s",
             self.__class__.__name__,
@@ -79,32 +90,33 @@ class PromptBase:
             self.llm_model,
         )
 
-    def __call__(self, msg: str, **kwargs) -> str:
-        attr_msg = [{"role": "user", "content": self.prompt + "\n\n" + msg}]
-        return llm_completion(self.mode, self.client, attr_msg, self.llm_model, **kwargs)
+    def _messages(self, msg: str) -> list[dict[str, Any]]:
+        return [{"role": "user", "content": self.prompt + "\n\n" + msg}]
 
-    def __str__(self):
+    def __call__(self, msg: str, **kwargs: Any) -> str:
+        request = CompletionRequest(
+            messages=self._messages(msg),
+            response_format=kwargs.get("response_format", "json_object"),
+            temperature=kwargs.get("temperature"),
+            top_p=kwargs.get("top_p"),
+            max_tokens=kwargs.get("max_tokens"),
+            seed=kwargs.get("seed"),
+        )
+        return self.runtime.complete_text(request).text
+
+    def complete_model(self, msg: str, response_model: type[ModelT], **kwargs: Any) -> ModelT:
+        request = CompletionRequest(
+            messages=self._messages(msg),
+            response_format="json_object",
+            temperature=kwargs.get("temperature"),
+            top_p=kwargs.get("top_p"),
+            max_tokens=kwargs.get("max_tokens"),
+            seed=kwargs.get("seed"),
+        )
+        return self.runtime.complete_model(request, response_model)
+
+    def __str__(self) -> str:
         return self.prompt
-
-
-class PromptGPT(PromptBase):
-    pass
-
-
-class PromptDeepSeek(PromptBase):
-    pass
-
-
-class PromptTogether(PromptBase):
-    pass
-
-
-class PromptSiliconFlow(PromptBase):
-    pass
-
-
-class PromptGemini(PromptBase):
-    pass
 
 
 def create_prompt(
@@ -113,18 +125,9 @@ def create_prompt(
     llm_model: str,
     api_key: str | None = None,
     config: Mapping[str, Any] | None = None,
-):
-    normalized_mode = normalize_provider_name(mode)
-    prompt_cls_map = {
-        "cgpt": PromptGPT,
-        "deepseek": PromptDeepSeek,
-        "together": PromptTogether,
-        "siliconflow": PromptSiliconFlow,
-        "gemini": PromptGemini,
-    }
-    prompt_cls = prompt_cls_map.get(normalized_mode, PromptBase)
-    return prompt_cls(
-        normalized_mode,
+) -> PromptTemplate:
+    return PromptTemplate(
+        mode,
         prompt_path,
         llm_model,
         api_key=api_key,
@@ -138,7 +141,7 @@ def create_prompt_map(
     llm_model: str,
     api_key: str | None = None,
     config: Mapping[str, Any] | None = None,
-) -> dict[str, PromptBase]:
+) -> dict[str, PromptTemplate]:
     return {
         prompt_name: create_prompt(
             mode,
@@ -152,12 +155,7 @@ def create_prompt_map(
 
 
 __all__ = [
-    "PromptBase",
-    "PromptGPT",
-    "PromptDeepSeek",
-    "PromptTogether",
-    "PromptSiliconFlow",
-    "PromptGemini",
+    "PromptTemplate",
     "create_prompt",
     "create_prompt_map",
     "get_api_key",

@@ -1,0 +1,543 @@
+{
+  "datasets": [
+    {
+      "dataset_id": "bird.california_schools.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/bird_sqlite/california_schools/default_task",
+      "documents": 1500,
+      "ground_truth_rows": 33000,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "bird.california_schools",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/bird_sqlite/california_schools/gt_schema_task",
+      "documents": 1500,
+      "ground_truth_rows": 41000,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 19
+    },
+    {
+      "dataset_id": "bird.debit_card_specializing.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/bird_sqlite/debit_card_specializing/default_task",
+      "documents": 1735,
+      "ground_truth_rows": 5848,
+      "unmapped_documents": 308,
+      "dropped_query_columns": 1
+    },
+    {
+      "dataset_id": "bird.debit_card_specializing",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/bird_sqlite/debit_card_specializing/gt_schema_task",
+      "documents": 1735,
+      "ground_truth_rows": 6152,
+      "unmapped_documents": 308,
+      "dropped_query_columns": 20
+    },
+    {
+      "dataset_id": "bird.student_club.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/bird_sqlite/student_club/default_task",
+      "documents": 1134,
+      "ground_truth_rows": 5493,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "bird.student_club",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/bird_sqlite/student_club/gt_schema_task",
+      "documents": 1134,
+      "ground_truth_rows": 5529,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 20
+    },
+    {
+      "dataset_id": "cuad.cuad.fixed_size_10k",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/cuad_sqlite/fixed_size_10k",
+      "documents": 3056,
+      "ground_truth_rows": 122240,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "cuad.cuad.fixed_size_50k",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/cuad_sqlite/fixed_size_50k",
+      "documents": 830,
+      "ground_truth_rows": 33200,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "cuad.cuad",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/cuad_sqlite/gt_schema_task",
+      "documents": 510,
+      "ground_truth_rows": 20400,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "cuad.cuad.no_chunk",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/cuad_sqlite/no_chunk",
+      "documents": 510,
+      "ground_truth_rows": 20400,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "examples.single_doc_demo",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/examples_sqlite/single_doc_demo/gt_schema_task",
+      "documents": 1,
+      "ground_truth_rows": 3,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "fda.fda.fixed_size_10k",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/fda_sqlite/fixed_size_10k",
+      "documents": 405,
+      "ground_truth_rows": 6480,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "fda.fda.fixed_size_50k",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/fda_sqlite/fixed_size_50k",
+      "documents": 122,
+      "ground_truth_rows": 1952,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "fda.fda",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/fda_sqlite/gt_schema_task",
+      "documents": 100,
+      "ground_truth_rows": 1600,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "fda.fda.no_chunk",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/fda_sqlite/no_chunk",
+      "documents": 100,
+      "ground_truth_rows": 1600,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "galois.fortune.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/galois_sqlite/fortune/default_task",
+      "documents": 497,
+      "ground_truth_rows": 13916,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "galois.fortune",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/galois_sqlite/fortune/gt_schema_task",
+      "documents": 497,
+      "ground_truth_rows": 14413,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 19
+    },
+    {
+      "dataset_id": "galois.premierleague.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/galois_sqlite/premierleague/default_task",
+      "documents": 45,
+      "ground_truth_rows": 315,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "galois.premierleague",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/galois_sqlite/premierleague/gt_schema_task",
+      "documents": 45,
+      "ground_truth_rows": 360,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 18
+    },
+    {
+      "dataset_id": "quest.lcr",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/quest_sqlite/lcr",
+      "documents": 599,
+      "ground_truth_rows": 5990,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "quest.swde_movie",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/quest_sqlite/swde_movie",
+      "documents": 500,
+      "ground_truth_rows": 1500,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "quest.swde_university",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/quest_sqlite/swde_university",
+      "documents": 599,
+      "ground_truth_rows": 7787,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "quest.wikitext",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/quest_sqlite/wikitext",
+      "documents": 3853,
+      "ground_truth_rows": 28277,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.apartment_rentals.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/apartment_rentals/default_task",
+      "documents": 675,
+      "ground_truth_rows": 3135,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.apartment_rentals",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/apartment_rentals/gt_schema_task",
+      "documents": 675,
+      "ground_truth_rows": 3135,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.bike_1.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/bike_1/default_task",
+      "documents": 1570,
+      "ground_truth_rows": 18420,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.bike_1",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/bike_1/gt_schema_task",
+      "documents": 1570,
+      "ground_truth_rows": 18420,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.college_2.course_teaches_instructor",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/college_2/course-teaches-instructor",
+      "documents": 350,
+      "ground_truth_rows": 1350,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.college_2",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/college_2/gt_schema_task",
+      "documents": 350,
+      "ground_truth_rows": 1150,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.flight_4",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/flight_4/gt_schema_task",
+      "documents": 3001,
+      "ground_truth_rows": 1094,
+      "unmapped_documents": 2874,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.flight_4.routes_airports_airlines",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/flight_4/routes-airports-airlines",
+      "documents": 3001,
+      "ground_truth_rows": 1094,
+      "unmapped_documents": 2874,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.soccer_1.default_task",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/soccer_1/default_task",
+      "documents": 323,
+      "ground_truth_rows": 4870,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.soccer_1",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/soccer_1/gt_schema_task",
+      "documents": 323,
+      "ground_truth_rows": 4870,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.wine_1",
+      "kind": "canonical",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/wine_1/gt_schema_task",
+      "documents": 557,
+      "ground_truth_rows": 5285,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    },
+    {
+      "dataset_id": "spider.wine_1.wine_appellations",
+      "kind": "derived",
+      "legacy_task": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/wine_1/wine-appellations",
+      "documents": 557,
+      "ground_truth_rows": 5785,
+      "unmapped_documents": 0,
+      "dropped_query_columns": 0
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "canonical": 18,
+    "derived": 17
+  },
+  "validation": {
+    "registry": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/manifest.yaml",
+    "datasets_checked": 35,
+    "valid": true,
+    "errors": [],
+    "datasets": [
+      {
+        "dataset_id": "bird.california_schools.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/bird.california_schools.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "bird.california_schools",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/bird.california_schools/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "bird.debit_card_specializing.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/bird.debit_card_specializing.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "bird.debit_card_specializing",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/bird.debit_card_specializing/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "bird.student_club.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/bird.student_club.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "bird.student_club",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/bird.student_club/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "cuad.cuad.fixed_size_10k",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/cuad.cuad.fixed_size_10k/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "cuad.cuad.fixed_size_50k",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/cuad.cuad.fixed_size_50k/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "cuad.cuad",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/cuad.cuad/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "cuad.cuad.no_chunk",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/cuad.cuad.no_chunk/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "examples.single_doc_demo",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/examples.single_doc_demo/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "fda.fda.fixed_size_10k",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/fda.fda.fixed_size_10k/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/fda.fda.fixed_size_50k/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "fda.fda",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/fda.fda/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "fda.fda.no_chunk",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/fda.fda.no_chunk/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "galois.fortune.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/galois.fortune.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "galois.fortune",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/galois.fortune/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "galois.premierleague.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/galois.premierleague.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "galois.premierleague",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/galois.premierleague/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "quest.lcr",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/quest.lcr/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "quest.swde_movie",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/quest.swde_movie/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "quest.swde_university",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/quest.swde_university/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "quest.wikitext",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/quest.wikitext/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.apartment_rentals.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/spider.apartment_rentals.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.apartment_rentals",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/spider.apartment_rentals/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.bike_1.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/spider.bike_1.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.bike_1",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/spider.bike_1/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.college_2.course_teaches_instructor",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/spider.college_2.course_teaches_instructor/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.college_2",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/spider.college_2/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.flight_4",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/spider.flight_4/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/spider.flight_4.routes_airports_airlines/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.soccer_1.default_task",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/spider.soccer_1.default_task/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.soccer_1",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/spider.soccer_1/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.wine_1",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/canonical/spider.wine_1/manifest.yaml",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "manifest": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/.redd_contract_tmp/derived/spider.wine_1.wine_appellations/manifest.yaml",
+        "valid": true,
+        "errors": []
+      }
+    ]
+  },
+  "valid": true
+}

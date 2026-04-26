@@ -95,7 +95,7 @@ album_5d0_adaptive:
   data_main: "dataset/spider_update/"
   out_main: "outputs/schema_gen/spider_deepseek_adaptive/"
   exp_dn_fn_list: ["store_1/albums"]
-  data_loader_type: "spider"
+  data_loader_type: "hf_manifest"
   res_param_str: "mdlds_prm5d0_adaptive"
   
   # Enable adaptive sampling

@@ -1,0 +1,4400 @@
+{
+  "dataset": "wikitext/default_task",
+  "source": "quest_sqlite",
+  "database": "wikitext",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "List the city names and their populations for cities located in states that also have cities with a GDP greater than 500.",
+      "sql": "SELECT city_name, population FROM city WHERE state_name IN (SELECT state_name FROM city WHERE gdp > '500');",
+      "golden_schema": {
+        "tables": [
+          "city"
+        ],
+        "columns": [
+          "city_name",
+          "population",
+          "state_name",
+          "gdp"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "city_name",
+        "population"
+      ],
+      "result_rows": [
+        [
+          "Denver",
+          "715522"
+        ],
+        [
+          "Boston",
+          "675647"
+        ],
+        [
+          "Indianapolis",
+          "887642"
+        ],
+        [
+          "Dallas",
+          "1304379"
+        ],
+        [
+          "San Antonio",
+          "1434625"
+        ],
+        [
+          "Los Angeles",
+          "3,820,914"
+        ],
+        [
+          "Minneapolis",
+          "429954"
+        ],
+        [
+          "Miami",
+          "442241"
+        ],
+        [
+          "Inglewood",
+          "107,762"
+        ],
+        [
+          "Portland",
+          "652,503"
+        ],
+        [
+          "San Francisco",
+          "808988"
+        ],
+        [
+          "Philadelphia",
+          "1603797"
+        ],
+        [
+          "New Orleans",
+          "383,997"
+        ],
+        [
+          "Chicago",
+          "2746388"
+        ],
+        [
+          "Orlando",
+          "307573"
+        ],
+        [
+          "Salt Lake City",
+          "200133"
+        ],
+        [
+          "Toronto",
+          "2794356"
+        ],
+        [
+          "Phoenix",
+          "1662607"
+        ],
+        [
+          "Washington, D.C.",
+          "689,545"
+        ],
+        [
+          "Cleveland",
+          "372,624"
+        ],
+        [
+          "Houston",
+          "2314157"
+        ],
+        [
+          "Sacramento",
+          "524943"
+        ],
+        [
+          "Detroit",
+          "639,111"
+        ],
+        [
+          "Memphis",
+          "633104"
+        ],
+        [
+          "Charlotte",
+          "874579"
+        ],
+        [
+          "New York City",
+          "8258035"
+        ],
+        [
+          "Oklahoma City",
+          "681054"
+        ],
+        [
+          "Milwaukee",
+          "577,222"
+        ],
+        [
+          "Los Angeles",
+          "3971883"
+        ],
+        [
+          "Chicago",
+          "2746388"
+        ],
+        [
+          "Houston",
+          "2325502"
+        ],
+        [
+          "Phoenix",
+          "1608139"
+        ],
+        [
+          "Philadelphia",
+          "1603697"
+        ],
+        [
+          "San Antonio",
+          "1547253"
+        ],
+        [
+          "San Diego",
+          "1423851"
+        ],
+        [
+          "Dallas",
+          "1345047"
+        ],
+        [
+          "San Jose",
+          "1013240"
+        ],
+        [
+          "Austin",
+          "978908"
+        ],
+        [
+          "Jacksonville",
+          "911507"
+        ],
+        [
+          "Fort Worth",
+          "895008"
+        ],
+        [
+          "Columbus",
+          "892533"
+        ],
+        [
+          "Charlotte",
+          "885708"
+        ],
+        [
+          "Seattle",
+          "753675"
+        ],
+        [
+          "Baltimore",
+          "602495"
+        ],
+        [
+          "Milwaukee",
+          "590157"
+        ],
+        [
+          "Albuquerque",
+          "560218"
+        ],
+        [
+          "Tucson",
+          "545915"
+        ],
+        [
+          "Fresno",
+          "531903"
+        ],
+        [
+          "Sacramento",
+          "513624"
+        ],
+        [
+          "Kansas City",
+          "495327"
+        ],
+        [
+          "Mesa",
+          "504258"
+        ],
+        [
+          "Omaha",
+          "486051"
+        ],
+        [
+          "Charlotte",
+          "897097"
+        ],
+        [
+          "San Antonio",
+          "1547253"
+        ],
+        [
+          "Columbus",
+          "905748"
+        ],
+        [
+          "Detroit",
+          "639111"
+        ],
+        [
+          "Memphis",
+          "651073"
+        ],
+        [
+          "Nashville",
+          "694144"
+        ],
+        [
+          "Baltimore",
+          "585708"
+        ],
+        [
+          "Oklahoma City",
+          "681054"
+        ],
+        [
+          "Louisville",
+          "620118"
+        ],
+        [
+          "Portland",
+          "654741"
+        ],
+        [
+          "Milwaukee",
+          "590157"
+        ],
+        [
+          "Albuquerque",
+          "560218"
+        ],
+        [
+          "Tucson",
+          "548593"
+        ],
+        [
+          "Fresno",
+          "542107"
+        ],
+        [
+          "Omaha",
+          "486051"
+        ],
+        [
+          "Raleigh",
+          "474069"
+        ],
+        [
+          "Colorado Springs",
+          "478915"
+        ],
+        [
+          "Long Beach",
+          "466742"
+        ],
+        [
+          "Oakland",
+          "440646"
+        ],
+        [
+          "Minneapolis",
+          "429954"
+        ],
+        [
+          "Tulsa",
+          "403090"
+        ],
+        [
+          "Wichita",
+          "397532"
+        ],
+        [
+          "Arlington",
+          "394266"
+        ],
+        [
+          "Charlotte",
+          "897721"
+        ],
+        [
+          "Louisville",
+          "620118"
+        ],
+        [
+          "Albuquerque",
+          "560513"
+        ],
+        [
+          "Omaha",
+          "486051"
+        ],
+        [
+          "Honolulu",
+          "350964"
+        ],
+        [
+          "Colorado Springs",
+          "478915"
+        ],
+        [
+          "Arlington",
+          "398854"
+        ],
+        [
+          "Wichita",
+          "397532"
+        ],
+        [
+          "Cleveland",
+          "383793"
+        ],
+        [
+          "New Orleans",
+          "390144"
+        ],
+        [
+          "Salt Lake City",
+          "200591"
+        ],
+        [
+          "Pittsburgh",
+          "302407"
+        ],
+        [
+          "Aurora",
+          "197899"
+        ],
+        [
+          "Tampa",
+          "406975"
+        ],
+        [
+          "Madison",
+          "269840"
+        ],
+        [
+          "Buffalo",
+          "255284"
+        ],
+        [
+          "Cincinnati",
+          "309317"
+        ],
+        [
+          "Orlando",
+          "307573"
+        ],
+        [
+          "Nashville",
+          "689447"
+        ],
+        [
+          "Oklahoma City",
+          "694800"
+        ],
+        [
+          "Portland",
+          "654741"
+        ],
+        [
+          "Las Vegas",
+          "651319"
+        ],
+        [
+          "Tucson",
+          "548023"
+        ],
+        [
+          "Fresno",
+          "542107"
+        ],
+        [
+          "Albuquerque",
+          "560513"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q2",
+      "natural_language": "Find the names of NBA players who play for a team located in a city with a population greater than 1 million.",
+      "sql": "SELECT N.name FROM nba AS N JOIN team AS T ON N.team = T.team_name JOIN city AS C ON T.location = C.city_name WHERE CAST(REPLACE(C.population, ',', '') AS INTEGER) > 1000000;",
+      "golden_schema": {
+        "tables": [
+          "nba",
+          "team",
+          "city"
+        ],
+        "columns": [
+          "nba.name",
+          "nba.team",
+          "team.team_name",
+          "team.location",
+          "city.city_name",
+          "city.population"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name"
+      ],
+      "result_rows": [
+        [
+          "Kyrie Andrew Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Kyrie Andrew Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Kyrie Andrew Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Kyrie Andrew Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Doncic"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ],
+        [
+          "Luka Dončić"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q3",
+      "natural_language": "What are the song titles released before 2010 and after 1990 that originate from countries other than the United States?",
+      "sql": "SELECT song_title FROM music WHERE strftime('%Y', release_date) BETWEEN '1990' AND '2010' AND country_of_origin != 'United States';",
+      "golden_schema": {
+        "tables": [
+          "music"
+        ],
+        "columns": [
+          "song_title",
+          "release_date",
+          "country_of_origin"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "song_title"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "Find the average age of NBA owners whose teams have won more than 5 championships.",
+      "sql": "SELECT AVG(CAST(O.age AS REAL)) FROM owner AS O JOIN team AS T ON O.nba_team = T.team_name WHERE CAST(T.championship AS INTEGER) > 5;",
+      "golden_schema": {
+        "tables": [
+          "owner",
+          "team"
+        ],
+        "columns": [
+          "owner.age",
+          "owner.nba_team",
+          "team.team_name",
+          "team.championship"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "avg_cast_o.age_as_real"
+      ],
+      "result_rows": [
+        [
+          54.019417475728154
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "List the names of players who have 'None' as their sport in the Players table but are also listed as NBA players with at least one MVP award.",
+      "sql": "SELECT P.full_name FROM players AS P JOIN nba AS N ON P.full_name = N.name WHERE P.sport = 'None' AND N.mvp_awards != 'None';",
+      "golden_schema": {
+        "tables": [
+          "players",
+          "nba"
+        ],
+        "columns": [
+          "players.full_name",
+          "players.sport",
+          "nba.name",
+          "nba.mvp_awards"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "full_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "Show the movie titles and their release years where the director also directed a movie released before the year 2000.",
+      "sql": "SELECT title, release_year FROM movie WHERE director IN (SELECT director FROM movie WHERE CAST(release_year AS INTEGER) < 2000);",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "title",
+          "release_year",
+          "director"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title",
+        "release_year"
+      ],
+      "result_rows": [
+        [
+          "View of the World from 9th Avenue, A Parochial New Yorker's View of the World, A New Yorker's View of the World, View of the World",
+          "1976"
+        ],
+        [
+          "Aerith Gainsborough",
+          "None"
+        ],
+        [
+          "\"Kiss You\"",
+          "2012"
+        ],
+        [
+          "The World War I Memorial",
+          "None"
+        ],
+        [
+          "\"Chapter 1\", \"Episode 101\"",
+          "2013"
+        ],
+        [
+          "\"Exit Through the Kwik @-@ E @-@ Mart\"",
+          "2012"
+        ],
+        [
+          "M-122",
+          "None"
+        ],
+        [
+          "Art Ross",
+          "None"
+        ],
+        [
+          "Domnall mac Murchada",
+          "None"
+        ],
+        [
+          "Heaven's Gate religious group, Anonymous Sexaholics Celibate Church",
+          "None"
+        ],
+        [
+          "\"Monty Can't Buy Me Love\"",
+          "1999"
+        ],
+        [
+          "Vasco da Gama",
+          "1876-1935"
+        ],
+        [
+          "Wrapped in Red",
+          "2013"
+        ],
+        [
+          "Little Gidding",
+          "None"
+        ],
+        [
+          "Gore Place",
+          "Christopher Gore ( September 21 , 1758 – March 1 , 1827 )"
+        ],
+        [
+          "The Battle of Dürenstein, Battle of Dürrenstein, Battle of Dürnstein, and Battle of Diernstein",
+          "1805 "
+        ],
+        [
+          "Boy @-@ Scoutz ' n the Hood",
+          "1993"
+        ],
+        [
+          "Calvin McCarty",
+          "None"
+        ],
+        [
+          "\"Imagine\"",
+          "1971"
+        ],
+        [
+          "Crown Fountain",
+          "None"
+        ],
+        [
+          "The Hope Highway",
+          "1928"
+        ],
+        [
+          "Juno, Galileo, New Horizons, Voyager 1, Voyager 2, Pioneer 10, Pioneer 11, Ulysses, Cassini, JUICE, Europa Clipper, Europa Orbiter, Jupiter Europa Orbiter, Jupiter Ganymede Orbiter, Human Outer Planets Exploration (HOPE), Artemis Project",
+          "1973, 1974, 1979, 1992, 2000, 2003, 2011, 2016"
+        ],
+        [
+          "S.R. 819",
+          "1999"
+        ],
+        [
+          "Route 50",
+          "None"
+        ],
+        [
+          "The Romanian Land Forces ",
+          "None"
+        ],
+        [
+          "The Actor's Children",
+          "1910"
+        ],
+        [
+          "cougar, mountain lion, puma, panther, catamount",
+          "None"
+        ],
+        [
+          "Chagas disease",
+          "None"
+        ],
+        [
+          "military history of Gibraltar during World War II",
+          "None"
+        ],
+        [
+          "Slammiversary, ",
+          "2008, "
+        ],
+        [
+          "\"Something Borrowed\"",
+          "2008"
+        ],
+        [
+          "Sir Hugh Seymour Walpole, CBE",
+          "None"
+        ],
+        [
+          "SR 516",
+          "None"
+        ],
+        [
+          "True Blue",
+          "1986"
+        ],
+        [
+          "The Tower Building of the Little Rock Arsenal, U.S. Arsenal Building",
+          "None"
+        ],
+        [
+          "Polka Party !",
+          "1986"
+        ],
+        [
+          "The Great Game",
+          "1953"
+        ],
+        [
+          "Roxas",
+          "None"
+        ],
+        [
+          "Tupolev Tu-12",
+          "None"
+        ],
+        [
+          "Bradley Kent \" Brad \" Stevens",
+          "None"
+        ],
+        [
+          "Tristan",
+          "None"
+        ],
+        [
+          "Asahi",
+          "None"
+        ],
+        [
+          "Mycena inclinata",
+          "None"
+        ],
+        [
+          "Sholay",
+          "1975"
+        ],
+        [
+          "Highway 36",
+          "None"
+        ],
+        [
+          "Highlander",
+          "1992"
+        ],
+        [
+          "Stuart McCall",
+          "None"
+        ],
+        [
+          "Amylostereum",
+          "None"
+        ],
+        [
+          "Ælfric of Abingdon",
+          "None"
+        ],
+        [
+          "The Secret of Monkey Island",
+          "1990"
+        ],
+        [
+          "Charmbracelet",
+          "2002"
+        ],
+        [
+          "USS Illinois",
+          "None"
+        ],
+        [
+          "T30 Howitzer Motor Carriage (HMC)",
+          "None"
+        ],
+        [
+          "Cape lobster",
+          "None"
+        ],
+        [
+          "chess, move advantage, first move",
+          "None"
+        ],
+        [
+          "A Month in the Country",
+          "1987"
+        ],
+        [
+          "Crash Boom Bang!",
+          "2006"
+        ],
+        [
+          "The invisible rail, Wallace's rail, or drummer rail",
+          "None"
+        ],
+        [
+          "Osbert de Bayeux",
+          "None"
+        ],
+        [
+          "Homarus gammarus, European lobster, common lobster",
+          "None"
+        ],
+        [
+          "Nazarov cyclization reaction",
+          "None"
+        ],
+        [
+          "1940 Atlantic hurricane season",
+          "1940"
+        ],
+        [
+          "Aretusa",
+          "None"
+        ],
+        [
+          "\"2010 Alabama Crimson Tide football team\"",
+          "None"
+        ],
+        [
+          "Beneath Crimson Skies",
+          "1988"
+        ],
+        [
+          "Whispers in the Wind",
+          "1952"
+        ],
+        [
+          "Crimson Tide Rising",
+          "1995"
+        ],
+        [
+          "City of Shadows",
+          "1948"
+        ],
+        [
+          "Painted Memories",
+          "1967"
+        ],
+        [
+          "Frozen Frontier",
+          "1979"
+        ],
+        [
+          "Forgotten Melody",
+          "1939"
+        ],
+        [
+          "The Azure Coast",
+          "1962"
+        ],
+        [
+          "Eternal Bloom",
+          "1927"
+        ],
+        [
+          "The Velvet Curtain",
+          "1955"
+        ],
+        [
+          "Shattered Lullaby",
+          "1982"
+        ],
+        [
+          "Crimson Horizon",
+          "1978"
+        ],
+        [
+          "Echoes of the Past",
+          "1939"
+        ],
+        [
+          "The Emerald Labyrinth",
+          "1985"
+        ],
+        [
+          "The Ironclad Covenant",
+          "1962"
+        ],
+        [
+          "Golden Legacy",
+          "1951"
+        ],
+        [
+          "Serpent's Kiss",
+          "1997"
+        ],
+        [
+          "Frozen Tears",
+          "1943"
+        ],
+        [
+          "The Crimson Tide",
+          "1970"
+        ],
+        [
+          "Veiled Truths",
+          "1988"
+        ],
+        [
+          "Ephemeral Echoes",
+          "2007"
+        ],
+        [
+          "The Gilded Cage",
+          "1932"
+        ],
+        [
+          "The Shadow Syndicate",
+          "1968"
+        ],
+        [
+          "The Forgotten Prophecy",
+          "1992"
+        ],
+        [
+          "The Emerald Serpent",
+          "1959"
+        ],
+        [
+          "Hidden Currents",
+          "1974"
+        ],
+        [
+          "The Obsidian Mirror",
+          "1935"
+        ],
+        [
+          "Echoes of the Silent Grove",
+          "2001"
+        ],
+        [
+          "The Crimson Horizon",
+          "1988"
+        ],
+        [
+          "Beneath the Frozen Sea",
+          "2015"
+        ],
+        [
+          "The Labyrinth of Mirrors",
+          "1963"
+        ],
+        [
+          "The Serpent's Tooth",
+          "1995"
+        ],
+        [
+          "The Vanishing Point",
+          "1971"
+        ],
+        [
+          "The Ironclad Covenant",
+          "1942"
+        ],
+        [
+          "The Burning Sands",
+          "1954"
+        ],
+        [
+          "The Shattered Kingdom",
+          "1968"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q7",
+      "natural_language": "Find the cities where a basketball team is located that was founded before 1970 and has won more than 10 championships.",
+      "sql": "SELECT T.location FROM team AS T WHERE CAST(T.founded_year AS INTEGER) < 1970 AND CAST(T.championship AS INTEGER) > 10;",
+      "golden_schema": {
+        "tables": [
+          "team"
+        ],
+        "columns": [
+          "team.location",
+          "team.founded_year",
+          "team.championship"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "location"
+      ],
+      "result_rows": [
+        [
+          "Boston"
+        ],
+        [
+          "Los Angeles"
+        ],
+        [
+          "Los Angeles"
+        ],
+        [
+          "Boston"
+        ],
+        [
+          "Boston"
+        ],
+        [
+          "Los Angeles"
+        ],
+        [
+          "Boston"
+        ],
+        [
+          "Boston"
+        ]
+      ],
+      "result_count": 8,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "Find the average GDP of cities that have an area greater than 500 and a population greater than 500000.",
+      "sql": "SELECT AVG(CAST(REPLACE(gdp, ',', '') AS REAL)) FROM city WHERE CAST(REPLACE(area, ',', '') AS REAL) > 500 AND CAST(REPLACE(population, ',', '') AS REAL) > 500000;",
+      "golden_schema": {
+        "tables": [
+          "city"
+        ],
+        "columns": [
+          "gdp",
+          "area",
+          "population"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "avg_cast_replace_gdp_as_real"
+      ],
+      "result_rows": [
+        [
+          11453.3125
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "What are the names of players born after 1990 who play for a team whose owner is older than 65?",
+      "sql": "SELECT N.name FROM nba AS N JOIN owner AS O ON N.team = O.nba_team WHERE SUBSTR(N.birth_date, 1, 4) > '1990' AND CAST(O.age AS INTEGER) > 65;",
+      "golden_schema": {
+        "tables": [
+          "nba",
+          "owner"
+        ],
+        "columns": [
+          "nba.name",
+          "nba.birth_date",
+          "nba.team",
+          "owner.nba_team",
+          "owner.age"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name"
+      ],
+      "result_rows": [
+        [
+          "Andre Jamal Drummond"
+        ],
+        [
+          "Andre Jamal Drummond"
+        ],
+        [
+          "Andre Jamal Drummond"
+        ],
+        [
+          "Andre Jamal Drummond"
+        ],
+        [
+          "Andre Jamal Drummond"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "Chavano Rainer \"Buddy\" Hield"
+        ],
+        [
+          "D'Angelo Russell"
+        ],
+        [
+          "D'Angelo Russell"
+        ],
+        [
+          "D'Angelo Russell"
+        ],
+        [
+          "D'Angelo Russell"
+        ],
+        [
+          "D'Angelo Russell"
+        ],
+        [
+          "D'Angelo Russell"
+        ],
+        [
+          "D'Angelo Russell"
+        ],
+        [
+          "Kyrie Andrew Irving"
+        ],
+        [
+          "Jayson Christopher Tatum"
+        ],
+        [
+          "Jayson Christopher Tatum"
+        ],
+        [
+          "Jayson Christopher Tatum"
+        ],
+        [
+          "Jayson Christopher Tatum"
+        ],
+        [
+          "Jayson Christopher Tatum"
+        ],
+        [
+          "Jayson Christopher Tatum"
+        ],
+        [
+          "Caleb Martin"
+        ],
+        [
+          "Caleb Martin"
+        ],
+        [
+          "Caleb Martin"
+        ],
+        [
+          "Caleb Martin"
+        ],
+        [
+          "Caleb Martin"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Andrew Christian Wiggins"
+        ],
+        [
+          "Max Berning Fiedler"
+        ],
+        [
+          "Max Berning Fiedler"
+        ],
+        [
+          "Max Berning Fiedler"
+        ],
+        [
+          "Max Berning Fiedler"
+        ],
+        [
+          "Max Berning Fiedler"
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Jaylen Marselles Brown"
+        ],
+        [
+          "Jaylen Marselles Brown"
+        ],
+        [
+          "Jaylen Marselles Brown"
+        ],
+        [
+          "Jaylen Marselles Brown"
+        ],
+        [
+          "Jaylen Marselles Brown"
+        ],
+        [
+          "Jaylen Marselles Brown"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Victor Wembanyama"
+        ],
+        [
+          "Austin Tyler Reaves"
+        ],
+        [
+          "Austin Tyler Reaves"
+        ],
+        [
+          "Austin Tyler Reaves"
+        ],
+        [
+          "Austin Tyler Reaves"
+        ],
+        [
+          "Austin Tyler Reaves"
+        ],
+        [
+          "Austin Tyler Reaves"
+        ],
+        [
+          "Austin Tyler Reaves"
+        ],
+        [
+          "Giannis Sina Ugo Antetokounmpo"
+        ],
+        [
+          "Giannis Sina Ugo Antetokounmpo"
+        ],
+        [
+          "Giannis Sina Ugo Antetokounmpo"
+        ],
+        [
+          "Isiah Lord Thomas III"
+        ],
+        [
+          "Isiah Lord Thomas III"
+        ],
+        [
+          "Isiah Lord Thomas III"
+        ],
+        [
+          "Isiah Lord Thomas III"
+        ],
+        [
+          "Tyler Christopher Herro"
+        ],
+        [
+          "Tyler Christopher Herro"
+        ],
+        [
+          "Tyler Christopher Herro"
+        ],
+        [
+          "Tyler Christopher Herro"
+        ],
+        [
+          "Tyler Christopher Herro"
+        ],
+        [
+          "Tyler Christopher Herro"
+        ],
+        [
+          "Duncan McBryde Robinson"
+        ],
+        [
+          "Duncan McBryde Robinson"
+        ],
+        [
+          "Duncan McBryde Robinson"
+        ],
+        [
+          "Duncan McBryde Robinson"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q10",
+      "natural_language": "List the team names founded before 1970 that have either 'LLC' or 'Inc' in their ownership name.",
+      "sql": "SELECT team_name FROM team WHERE founded_year < '1970' AND (ownership LIKE '%LLC%' OR ownership LIKE '%Inc%');",
+      "golden_schema": {
+        "tables": [
+          "team"
+        ],
+        "columns": [
+          "team_name",
+          "founded_year",
+          "ownership"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "team_name"
+      ],
+      "result_rows": [
+        [
+          "Atlanta Hawks"
+        ],
+        [
+          "Oklahoma City Thunder"
+        ],
+        [
+          "Golden State Warriors"
+        ]
+      ],
+      "result_count": 3,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "Find the names of NBA players who won an olympic gold medal and have also won at least one MVP award.",
+      "sql": "SELECT name FROM nba WHERE olympic_gold_medals != 'None' AND mvp_awards != 'None';",
+      "golden_schema": {
+        "tables": [
+          "nba"
+        ],
+        "columns": [
+          "name",
+          "olympic_gold_medals",
+          "mvp_awards"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name"
+      ],
+      "result_rows": [
+        [
+          "Trayce Jackson-Davis  "
+        ],
+        [
+          "Joel Hans Embiid"
+        ],
+        [
+          "Paul Clifton Anthony George"
+        ],
+        [
+          "Kyrie Andrew Irving"
+        ],
+        [
+          "Jayson Christopher Tatum"
+        ],
+        [
+          "Anthony Marshon Davis Jr."
+        ],
+        [
+          "Jrue Randall Holiday  "
+        ],
+        [
+          "Kevin Wesley Love"
+        ],
+        [
+          "Giannis Sina Ugo Antetokounmpo"
+        ],
+        [
+          "Wardell Stephen Curry II  "
+        ],
+        [
+          "Isiah Lord Thomas III"
+        ],
+        [
+          "Earvin \"Magic\" Johnson Jr."
+        ],
+        [
+          "LeBron Raymone James Sr."
+        ],
+        [
+          "Timothy Theodore Duncan  "
+        ],
+        [
+          "Jimmy Butler III  "
+        ],
+        [
+          "Zachary Thomas LaVine"
+        ],
+        [
+          "Kyle Terrell Lowry"
+        ],
+        [
+          "Michael Jeffrey Jordan"
+        ],
+        [
+          "Devin Armani Booker"
+        ],
+        [
+          "Draymond Jamal Green"
+        ],
+        [
+          "Anthony Edwards"
+        ],
+        [
+          "Jaime Jaquez Jr.  "
+        ],
+        [
+          "Kobe Bean Bryant"
+        ],
+        [
+          "Christopher Emmanuel Paul"
+        ],
+        [
+          "Harrison Bryce Jordan Barnes"
+        ],
+        [
+          "Kevin Wayne Durant"
+        ],
+        [
+          "Edrice Femi \"Bam\" Adebayo"
+        ],
+        [
+          "Devin Booker"
+        ],
+        [
+          "Jayson Tatum"
+        ],
+        [
+          "Kawhi Leonard"
+        ],
+        [
+          "Damian Lillard"
+        ],
+        [
+          "Bradley Beal"
+        ],
+        [
+          "Kevin Durant"
+        ],
+        [
+          "LeBron James"
+        ],
+        [
+          "Stephen Curry"
+        ],
+        [
+          "Kawhi Leonard"
+        ],
+        [
+          "Anthony Davis"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "James Harden"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "Donovan Mitchell"
+        ],
+        [
+          "Stephen Curry"
+        ],
+        [
+          "LeBron James"
+        ],
+        [
+          "Kevin Durant"
+        ],
+        [
+          "Kawhi Leonard"
+        ],
+        [
+          "Jayson Tatum"
+        ],
+        [
+          "Devin Booker"
+        ],
+        [
+          "Donovan Mitchell"
+        ],
+        [
+          "Damian Lillard"
+        ],
+        [
+          "Bradley Beal"
+        ],
+        [
+          "Jrue Holiday"
+        ],
+        [
+          "Stephen Curry"
+        ],
+        [
+          "Kevin Durant"
+        ],
+        [
+          "Jaren Jackson Jr."
+        ],
+        [
+          "Deandre Ayton"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "Jayson Tatum"
+        ],
+        [
+          "Stephen Curry"
+        ],
+        [
+          "LeBron James"
+        ],
+        [
+          "Kevin Durant"
+        ],
+        [
+          "Kawhi Leonard"
+        ],
+        [
+          "James Harden"
+        ],
+        [
+          "Damian Lillard"
+        ],
+        [
+          "Kawhi Leonard"
+        ],
+        [
+          "Paul George"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "Kevin Durant"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "LeBron James"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "De'Aaron Fox"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "Bam Adebayo"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "Anthony Davis"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "DeMar DeRozan"
+        ],
+        [
+          "Chris Paul"
+        ],
+        [
+          "Joel Embiid"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "Jayson Tatum"
+        ],
+        [
+          "Jrue Holiday"
+        ],
+        [
+          "Bam Adebayo"
+        ],
+        [
+          "LeBron James"
+        ],
+        [
+          "Kevin Durant"
+        ],
+        [
+          "Donovan Mitchell"
+        ],
+        [
+          "Kawhi Leonard"
+        ],
+        [
+          "Paul George"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "LeBron James"
+        ],
+        [
+          "Jayson Tatum"
+        ],
+        [
+          "Damian Lillard"
+        ],
+        [
+          "Kyrie Irving"
+        ],
+        [
+          "Chris Paul"
+        ],
+        [
+          "Russell Westbrook"
+        ],
+        [
+          "Paul George"
+        ],
+        [
+          "Jaylen Brown"
+        ],
+        [
+          "Kevin Durant"
+        ],
+        [
+          "Jaylen Brown"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q12",
+      "natural_language": "List all the songs that have titles that are also movie titles.",
+      "sql": "SELECT song_title FROM music WHERE song_title IN (SELECT title FROM movie);",
+      "golden_schema": {
+        "tables": [
+          "music",
+          "movie"
+        ],
+        "columns": [
+          "music.song_title",
+          "movie.title"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "song_title"
+      ],
+      "result_rows": [
+        [
+          "Aerith Gainsborough"
+        ],
+        [
+          "\"Kiss You\""
+        ],
+        [
+          "\"Exit Through the Kwik @-@ E @-@ Mart\""
+        ],
+        [
+          "M-122"
+        ],
+        [
+          "\"Training Day\""
+        ],
+        [
+          "\"Monty Can't Buy Me Love\""
+        ],
+        [
+          "Little Gidding"
+        ],
+        [
+          "The Hope Highway"
+        ],
+        [
+          "The Actor's Children"
+        ],
+        [
+          "\"Something Borrowed\""
+        ],
+        [
+          "SR 516"
+        ],
+        [
+          "Polka Party !"
+        ],
+        [
+          "Tristan"
+        ],
+        [
+          "Sholay"
+        ],
+        [
+          "The Secret of Monkey Island"
+        ],
+        [
+          "A Month in the Country"
+        ],
+        [
+          "Aretusa"
+        ],
+        [
+          "Echoes of Tomorrow"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Neon Dreams"
+        ],
+        [
+          "Desert Bloom"
+        ],
+        [
+          "Iron Will"
+        ],
+        [
+          "Quantum Leap"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Serpent's Kiss"
+        ],
+        [
+          "Celestial Dance"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Midnight Bloom"
+        ],
+        [
+          "Quantum Leap"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Emerald Forest"
+        ],
+        [
+          "Crimson Horizon"
+        ],
+        [
+          "Iron Will"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Quantum Leap"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Desert Bloom"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Desert Bloom"
+        ],
+        [
+          "Lost in Translation"
+        ],
+        [
+          "Echoes of the Past"
+        ],
+        [
+          "Celestial Dance"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Desert Bloom"
+        ],
+        [
+          "Ancient Echoes"
+        ],
+        [
+          "Forgotten Melody"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Echoes of Tomorrow"
+        ],
+        [
+          "Iron Will"
+        ],
+        [
+          "Midnight Bloom"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Ancient Echoes"
+        ],
+        [
+          "Forgotten Melody"
+        ],
+        [
+          "Echoes of the Past"
+        ],
+        [
+          "Iron Will"
+        ],
+        [
+          "Echoes of Tomorrow"
+        ],
+        [
+          "Midnight Bloom"
+        ],
+        [
+          "Iron Will"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Celestial Dance"
+        ],
+        [
+          "Neon Dreams"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Emerald Forest"
+        ],
+        [
+          "Crimson Tide Rising"
+        ],
+        [
+          "Starlight Symphony"
+        ],
+        [
+          "Echoes of Tomorrow"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Midnight Bloom"
+        ],
+        [
+          "Neon Dreams"
+        ],
+        [
+          "Iron Will"
+        ],
+        [
+          "Starlight Symphony"
+        ],
+        [
+          "Forgotten Memories"
+        ],
+        [
+          "Neon City Nights"
+        ],
+        [
+          "Lost in Translation"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Digital Dreams"
+        ],
+        [
+          "The Last Samurai"
+        ],
+        [
+          "Echoes of the Past"
+        ],
+        [
+          "Midnight Serenade"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Midnight Bloom"
+        ],
+        [
+          "Celestial Dance"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Ancient Echoes"
+        ],
+        [
+          "Starlight Sonata"
+        ],
+        [
+          "The Clockwork Heart"
+        ],
+        [
+          "The Crimson Tide"
+        ],
+        [
+          "Echoes of the Past"
+        ],
+        [
+          "Midnight Serenade"
+        ],
+        [
+          "The Gilded Cage"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q13",
+      "natural_language": "Which players have a nationality that is also the nationality of an NBA owner?",
+      "sql": "SELECT full_name FROM players WHERE nationality IN (SELECT nationality FROM owner);",
+      "golden_schema": {
+        "tables": [
+          "players",
+          "owner"
+        ],
+        "columns": [
+          "players.full_name",
+          "players.nationality",
+          "owner.nationality"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "full_name"
+      ],
+      "result_rows": [
+        [
+          "Art Ross"
+        ],
+        [
+          "Marshall Herff Applewhite"
+        ],
+        [
+          "Calvin McCarty"
+        ],
+        [
+          "Sarnia"
+        ],
+        [
+          "Carlos Chagas"
+        ],
+        [
+          "Madonna"
+        ],
+        [
+          "Bradley Kent \"Brad\" Stevens"
+        ],
+        [
+          "Tristan"
+        ],
+        [
+          "Tessa Noël"
+        ],
+        [
+          "Mariah Carey"
+        ],
+        [
+          "Clayton Edward Kershaw"
+        ],
+        [
+          "Rihanna"
+        ],
+        [
+          "Anya Sharma"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Isabella Rossi"
+        ],
+        [
+          "Sophia Dubois"
+        ],
+        [
+          "Dmitri Volkov"
+        ],
+        [
+          "Carlos Rodriguez"
+        ],
+        [
+          "Li Wei"
+        ],
+        [
+          "Stefan Müller"
+        ],
+        [
+          "Chloe Smith"
+        ],
+        [
+          "Aiko Nakamura"
+        ],
+        [
+          "Liam O'Connell"
+        ],
+        [
+          "Chen Bo"
+        ],
+        [
+          "Priya Singh"
+        ],
+        [
+          "Anya Sharma"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Isabelle Dubois"
+        ],
+        [
+          "Svetlana Petrova"
+        ],
+        [
+          "Liam O'Connell"
+        ],
+        [
+          "Mei Lin"
+        ],
+        [
+          "David Smith"
+        ],
+        [
+          "Carlos Rodriguez"
+        ],
+        [
+          "Marco Rossi"
+        ],
+        [
+          "Li Wei"
+        ],
+        [
+          "Sarah Jenkins"
+        ],
+        [
+          "Ricardo Silva"
+        ],
+        [
+          "Olga Kuznetsova"
+        ],
+        [
+          "Anya Sharma"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Isabelle Dubois"
+        ],
+        [
+          "Lena Schmidt"
+        ],
+        [
+          "Chloe Wilson"
+        ],
+        [
+          "Mark Johnson"
+        ],
+        [
+          "Elena Ivanova"
+        ],
+        [
+          "Aisha Ibrahim"
+        ],
+        [
+          "Thomas Müller"
+        ],
+        [
+          "Priya Singh"
+        ],
+        [
+          "Maria Garcia"
+        ],
+        [
+          "Li Wei"
+        ],
+        [
+          "Samantha Jones"
+        ],
+        [
+          "Andrei Volkov"
+        ],
+        [
+          "Gabriela Costa"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Isabelle Dubois"
+        ],
+        [
+          "Maria Rodriguez"
+        ],
+        [
+          "Elena Petrova"
+        ],
+        [
+          "Carlos Silva"
+        ],
+        [
+          "Sophia Müller"
+        ],
+        [
+          "Omar Khan"
+        ],
+        [
+          "Emily Carter"
+        ],
+        [
+          "Hiroshi Sato"
+        ],
+        [
+          "Gabriela Rossi"
+        ],
+        [
+          "Chen Wei"
+        ],
+        [
+          "Rajesh Singh"
+        ],
+        [
+          "Koichi Nakamura"
+        ],
+        [
+          "Priya Sharma"
+        ],
+        [
+          "Lila Cohen"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Liam O'Connell"
+        ],
+        [
+          "Isabella Rossi"
+        ],
+        [
+          "Anja Schmidt"
+        ],
+        [
+          "Carlos Rodriguez"
+        ],
+        [
+          "Mei Ling"
+        ],
+        [
+          "David Miller"
+        ],
+        [
+          "Sergei Volkov"
+        ],
+        [
+          "Maria Silva"
+        ],
+        [
+          "Chika Sato"
+        ],
+        [
+          "Benjamin Dubois"
+        ],
+        [
+          "Hiroshi Nakamura"
+        ],
+        [
+          "Anya Sharma"
+        ],
+        [
+          "Viktor Ivanov"
+        ],
+        [
+          "Anya Petrova"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Isabelle Dubois"
+        ],
+        [
+          "Sophia Rossi"
+        ],
+        [
+          "Chen Wei"
+        ],
+        [
+          "Liam O'Connell"
+        ],
+        [
+          "Priya Sharma"
+        ],
+        [
+          "Max Schmidt"
+        ],
+        [
+          "Carlos Silva"
+        ],
+        [
+          "Emily Carter"
+        ],
+        [
+          "Laura Müller"
+        ],
+        [
+          "Javier Morales"
+        ],
+        [
+          "Aiko Sato"
+        ],
+        [
+          "Anya Sharma"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Maria Rodriguez"
+        ],
+        [
+          "Isabelle Dubois"
+        ],
+        [
+          "Sakura Nakamura"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find the average age of NBA players who play for a team owned by someone with Taiwanese-Canadian nationality.",
+      "sql": "SELECT AVG(CAST(N.age AS REAL)) FROM nba AS N JOIN owner AS O ON N.team = O.nba_team WHERE O.nationality = 'Taiwanese-Canadian';",
+      "golden_schema": {
+        "tables": [
+          "nba",
+          "owner"
+        ],
+        "columns": [
+          "nba.age",
+          "nba.team",
+          "owner.nba_team",
+          "owner.nationality"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "avg_cast_n.age_as_real"
+      ],
+      "result_rows": [
+        [
+          null
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "List the names of owners who own a team located in a city with a population greater than 500000 and an area greater than 100.",
+      "sql": "SELECT O.name FROM owner AS O JOIN team AS T ON O.nba_team = T.team_name JOIN city AS C ON T.location = C.city_name WHERE CAST(C.population AS INTEGER) > 500000 AND CAST(C.area AS REAL) > 100;",
+      "golden_schema": {
+        "tables": [
+          "owner",
+          "team",
+          "city"
+        ],
+        "columns": [
+          "owner.name",
+          "owner.nba_team",
+          "team.team_name",
+          "team.location",
+          "city.city_name",
+          "city.population",
+          "city.area"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name"
+      ],
+      "result_rows": [
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Ann Walton Kroenke"
+        ],
+        [
+          "Charles Koch"
+        ],
+        [
+          "Enos Stanley Kroenke"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokic"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Nikola Jokić"
+        ],
+        [
+          "Stan Kroenke"
+        ],
+        [
+          "Adrian Wojnarowski"
+        ],
+        [
+          "Bill Russell"
+        ],
+        [
+          "Bill Russell"
+        ],
+        [
+          "Bill Simmons"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Show the name and team of NBA players whose nationality is American and were drafted before 2015.",
+      "sql": "SELECT name, team FROM nba WHERE nationality = 'American' AND draft_year < '2015';",
+      "golden_schema": {
+        "tables": [
+          "nba"
+        ],
+        "columns": [
+          "name",
+          "team",
+          "nationality",
+          "draft_year"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name",
+        "team"
+      ],
+      "result_rows": [
+        [
+          "Andre Jamal Drummond",
+          "Philadelphia 76ers"
+        ],
+        [
+          "Paul Clifton Anthony George",
+          "Philadelphia 76ers"
+        ],
+        [
+          "Kyrie Andrew Irving",
+          "Dallas Mavericks"
+        ],
+        [
+          "Anthony Marshon Davis Jr.",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kevin Wesley Love",
+          "Miami Heat"
+        ],
+        [
+          "Isiah Lord Thomas III",
+          "Detroit Pistons"
+        ],
+        [
+          "Earvin \"Magic\" Johnson Jr.",
+          "Los Angeles Lakers"
+        ],
+        [
+          "LeBron Raymone James Sr.",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Zachary Thomas LaVine",
+          "Chicago Bulls"
+        ],
+        [
+          "Kyle Terrell Lowry",
+          "Philadelphia 76ers"
+        ],
+        [
+          "Michael Jeffrey Jordan",
+          "Chicago Bulls, Washington Wizards"
+        ],
+        [
+          "Draymond Jamal Green",
+          "Golden State Warriors"
+        ],
+        [
+          "Shaquille Rashaun O'Neal",
+          "None"
+        ],
+        [
+          "Kobe Bean Bryant",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Christopher Emmanuel Paul",
+          "San Antonio Spurs"
+        ],
+        [
+          "Harrison Bryce Jordan Barnes",
+          "San Antonio Spurs"
+        ],
+        [
+          "Kevin Wayne Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "Kawhi Leonard",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Khris Middleton",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Bradley Beal",
+          "Phoenix Suns"
+        ],
+        [
+          "Mike Conley Jr.",
+          "Minnesota Timberwolves"
+        ],
+        [
+          "CJ McCollum",
+          "New Orleans Pelicans"
+        ],
+        [
+          "Julius Randle",
+          "New York Knicks"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "Kawhi Leonard",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Anthony Davis",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Kyrie Irving",
+          "Dallas Mavericks"
+        ],
+        [
+          "James Harden",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "Kawhi Leonard",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Bradley Beal",
+          "Phoenix Suns"
+        ],
+        [
+          "Jrue Holiday",
+          "Boston Celtics"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Bradley Beal",
+          "Phoenix Suns"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "Kawhi Leonard",
+          "Los Angeles Clippers"
+        ],
+        [
+          "James Harden",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Kawhi Leonard",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Paul George",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Kyrie Irving",
+          "Dallas Mavericks"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Anthony Davis",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kyrie Irving",
+          "Dallas Mavericks"
+        ],
+        [
+          "DeMar DeRozan",
+          "Chicago Bulls"
+        ],
+        [
+          "Chris Paul",
+          "Golden State Warriors"
+        ],
+        [
+          "Jrue Holiday",
+          "Boston Celtics"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "Kawhi Leonard",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Paul George",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Kyrie Irving",
+          "Dallas Mavericks"
+        ],
+        [
+          "Chris Paul",
+          "Golden State Warriors"
+        ],
+        [
+          "Russell Westbrook",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Paul George",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "Chris Paul",
+          "Golden State Warriors"
+        ],
+        [
+          "Paul George",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Chris Paul",
+          "Golden State Warriors"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Jimmy Butler",
+          "Miami Heat"
+        ],
+        [
+          "Jrue Holiday",
+          "Boston Celtics"
+        ],
+        [
+          "Stephen Curry",
+          "Golden State Warriors"
+        ],
+        [
+          "Anthony Davis",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "DeMar DeRozan",
+          "Chicago Bulls"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Paul George",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Anthony Davis",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Bradley Beal",
+          "Phoenix Suns"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Kevin Durant",
+          "Phoenix Suns"
+        ],
+        [
+          "Damian Lillard",
+          "Milwaukee Bucks"
+        ],
+        [
+          "Klay Thompson",
+          "Golden State Warriors"
+        ],
+        [
+          "Paul George",
+          "Los Angeles Clippers"
+        ],
+        [
+          "Chris Paul",
+          "Golden State Warriors"
+        ],
+        [
+          "LeBron James",
+          "Los Angeles Lakers"
+        ],
+        [
+          "Chris Paul",
+          "Golden State Warriors"
+        ],
+        [
+          "Klay Thompson",
+          "Golden State Warriors"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q17",
+      "natural_language": "Find the movies that were released in a year which is also the founded year of a basketball team.",
+      "sql": "SELECT title FROM movie WHERE release_year IN (SELECT founded_year FROM team);",
+      "golden_schema": {
+        "tables": [
+          "movie",
+          "team"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.release_year",
+          "team.founded_year"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "View of the World from 9th Avenue, A Parochial New Yorker's View of the World, A New Yorker's View of the World, View of the World"
+        ],
+        [
+          "Underneath"
+        ],
+        [
+          "\"Imagine\""
+        ],
+        [
+          "Sholay"
+        ],
+        [
+          "Highlander"
+        ],
+        [
+          "The Secret of Monkey Island"
+        ],
+        [
+          "Charmbracelet"
+        ],
+        [
+          "A Month in the Country"
+        ],
+        [
+          "Echoes of the Forgotten"
+        ],
+        [
+          "Beneath Crimson Skies"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Crimson Tide Rising"
+        ],
+        [
+          "City of Shadows"
+        ],
+        [
+          "Painted Memories"
+        ],
+        [
+          "Frozen Frontier"
+        ],
+        [
+          "The Azure Coast"
+        ],
+        [
+          "Shattered Lullaby"
+        ],
+        [
+          "Crimson Horizon"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "The Ironclad Covenant"
+        ],
+        [
+          "Golden Legacy"
+        ],
+        [
+          "Serpent's Kiss"
+        ],
+        [
+          "Frozen Tears"
+        ],
+        [
+          "The Crimson Tide"
+        ],
+        [
+          "Veiled Truths"
+        ],
+        [
+          "The Shadow Syndicate"
+        ],
+        [
+          "The Forgotten Prophecy"
+        ],
+        [
+          "Hidden Currents"
+        ],
+        [
+          "The Crimson Horizon"
+        ],
+        [
+          "The Labyrinth of Mirrors"
+        ],
+        [
+          "The Serpent's Tooth"
+        ],
+        [
+          "The Vanishing Point"
+        ],
+        [
+          "The Ironclad Covenant"
+        ],
+        [
+          "The Silent Symphony"
+        ],
+        [
+          "The Shattered Kingdom"
+        ],
+        [
+          "Distant Stars"
+        ],
+        [
+          "The Ghost and the Darkness"
+        ],
+        [
+          "The Unforgiven"
+        ],
+        [
+          "The Crying Game"
+        ],
+        [
+          "My Neighbor Totoro"
+        ],
+        [
+          "Echoes of the Past"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Lost in Translation"
+        ],
+        [
+          "City of God"
+        ],
+        [
+          "Life is Beautiful"
+        ],
+        [
+          "The Last Samurai"
+        ],
+        [
+          "The Maltese Falcon"
+        ],
+        [
+          "Casablanca"
+        ],
+        [
+          "The Godfather"
+        ],
+        [
+          "Midnight in the Garden of Good and Evil"
+        ],
+        [
+          "The Silence of the Lambs"
+        ],
+        [
+          "Terminator 2: Judgment Day"
+        ],
+        [
+          "Goodfellas"
+        ],
+        [
+          "Raiders of the Lost Ark"
+        ],
+        [
+          "Star Wars: The Empire Strikes Back"
+        ],
+        [
+          "Alien"
+        ],
+        [
+          "Jaws"
+        ],
+        [
+          "One Flew Over the Cuckoo's Nest"
+        ],
+        [
+          "Chinatown"
+        ],
+        [
+          "The Exorcist"
+        ],
+        [
+          "A Clockwork Orange"
+        ],
+        [
+          "2001: A Space Odyssey"
+        ],
+        [
+          "The Good, the Bad and the Ugly"
+        ],
+        [
+          "12 Angry Men"
+        ],
+        [
+          "Singin' in the Rain"
+        ],
+        [
+          "Sunset Boulevard"
+        ],
+        [
+          "It's a Wonderful Life"
+        ],
+        [
+          "The Third Man"
+        ],
+        [
+          "Bicycle Thieves"
+        ],
+        [
+          "8½"
+        ],
+        [
+          "Persona"
+        ],
+        [
+          "The Seventh Seal"
+        ],
+        [
+          "Rashomon"
+        ],
+        [
+          "Battleship Potemkin"
+        ],
+        [
+          "Citizen Kane"
+        ],
+        [
+          "Echoes of the Past"
+        ],
+        [
+          "Crimson Tide"
+        ],
+        [
+          "Whispers in the Wind"
+        ],
+        [
+          "The Last Frontier"
+        ],
+        [
+          "The Crimson Ghost"
+        ],
+        [
+          "The River's Edge"
+        ],
+        [
+          "Sunset Boulevard"
+        ],
+        [
+          "The Emerald Isle"
+        ],
+        [
+          "Symphony of Shadows"
+        ],
+        [
+          "The Whispering Pines"
+        ],
+        [
+          "The Serpent's Kiss"
+        ],
+        [
+          "The Last Samurai's Stand"
+        ],
+        [
+          "The Frozen Fortress"
+        ],
+        [
+          "The Crimson Corsair"
+        ],
+        [
+          "The Obsidian Mirror"
+        ],
+        [
+          "Ancient Echoes"
+        ],
+        [
+          "The Labyrinth of Souls"
+        ],
+        [
+          "Chronicles of the Shifting Sands"
+        ],
+        [
+          "Beneath the Crimson Tide"
+        ],
+        [
+          "Legacy of the Sunstone"
+        ],
+        [
+          "The Jade Mask"
+        ],
+        [
+          "The Amber Amulet"
+        ],
+        [
+          "The Scarlet Letter"
+        ],
+        [
+          "The Bronze Bell"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q18",
+      "natural_language": "What are the names and ages of the NBA players who have won more than zero MVP awards and also participated in a FIBA World Cup?",
+      "sql": "SELECT name, age FROM nba WHERE mvp_awards > '0' AND fiba_world_cup != 'None';",
+      "golden_schema": {
+        "tables": [
+          "nba"
+        ],
+        "columns": [
+          "name",
+          "age",
+          "mvp_awards",
+          "fiba_world_cup"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name",
+        "age"
+      ],
+      "result_rows": [
+        [
+          "Trayce Jackson-Davis  ",
+          "23  "
+        ],
+        [
+          "Andre Jamal Drummond",
+          "30"
+        ],
+        [
+          "Kyrie Andrew Irving",
+          "31"
+        ],
+        [
+          "Anthony Marshon Davis Jr.",
+          "30"
+        ],
+        [
+          "Jrue Randall Holiday  ",
+          "33  "
+        ],
+        [
+          "Kevin Wesley Love",
+          "35"
+        ],
+        [
+          "Giannis Sina Ugo Antetokounmpo",
+          "29"
+        ],
+        [
+          "Wardell Stephen Curry II  ",
+          "35  "
+        ],
+        [
+          "Cade Parker Cunningham",
+          "22"
+        ],
+        [
+          "Timothy Theodore Duncan  ",
+          "48"
+        ],
+        [
+          "Jimmy Butler III  ",
+          "34  "
+        ],
+        [
+          "Jaden Edward Dhananjay Ivey",
+          "22"
+        ],
+        [
+          "Jaime Jaquez Jr.  ",
+          "22  "
+        ],
+        [
+          "Jalen Marquis Brunson",
+          "27"
+        ],
+        [
+          "Christopher Emmanuel Paul",
+          "39"
+        ],
+        [
+          "Kevin Wayne Durant",
+          "34"
+        ],
+        [
+          "Luka Dončić",
+          "25"
+        ],
+        [
+          "Nikola Jokić",
+          "29"
+        ],
+        [
+          "Domantas Sabonis",
+          "28"
+        ],
+        [
+          "Domantas Sabonis",
+          "27"
+        ],
+        [
+          "Luka Dončić",
+          "24"
+        ],
+        [
+          "Luka Dončić",
+          "25"
+        ],
+        [
+          "Tyrese Haliburton",
+          "24"
+        ],
+        [
+          "Jalen Brunson",
+          "28"
+        ],
+        [
+          "Tyrese Haliburton",
+          "24"
+        ],
+        [
+          "Anthony Edwards",
+          "22"
+        ],
+        [
+          "Nikola Jokic",
+          "29"
+        ],
+        [
+          "Luka Doncic",
+          "25"
+        ],
+        [
+          "Shai Gilgeous-Alexander",
+          "25"
+        ],
+        [
+          "Luka Dončić",
+          "25"
+        ],
+        [
+          "Domantas Sabonis",
+          "28"
+        ],
+        [
+          "Nikola Jokic",
+          "28"
+        ],
+        [
+          "Chris Paul",
+          "38"
+        ],
+        [
+          "Luka Doncic",
+          "25"
+        ],
+        [
+          "Kevin Durant",
+          "35"
+        ],
+        [
+          "Shai Gilgeous-Alexander",
+          "25"
+        ],
+        [
+          "Chris Paul",
+          "39"
+        ],
+        [
+          "Luka Dončić",
+          "24"
+        ],
+        [
+          "Jalen Brunson",
+          "27"
+        ],
+        [
+          "Tyrese Haliburton",
+          "24"
+        ],
+        [
+          "Rudy Gobert",
+          "31"
+        ],
+        [
+          "Nikola Jokic",
+          "28"
+        ],
+        [
+          "Chris Paul",
+          "38"
+        ],
+        [
+          "Luka Doncic",
+          "24"
+        ],
+        [
+          "Jalen Brunson",
+          "27"
+        ],
+        [
+          "Shai Gilgeous-Alexander",
+          "25"
+        ],
+        [
+          "Jonas Valanciunas",
+          "32"
+        ]
+      ],
+      "result_count": 47,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find the countries of origin for music where the artist name is also a player's full name.",
+      "sql": "SELECT DISTINCT country_of_origin FROM music WHERE artist_name IN (SELECT full_name FROM players);",
+      "golden_schema": {
+        "tables": [
+          "music",
+          "players"
+        ],
+        "columns": [
+          "music.country_of_origin",
+          "music.artist_name",
+          "players.full_name"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "country_of_origin"
+      ],
+      "result_rows": [
+        [
+          "American"
+        ],
+        [
+          "United States"
+        ],
+        [
+          "None"
+        ],
+        [
+          "India"
+        ]
+      ],
+      "result_count": 4,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "List the location of teams that were founded after 1950 and have won either zero or more than 10 championships.",
+      "sql": "SELECT location FROM team WHERE founded_year > '1950' AND (championship = '0' OR championship > '10');",
+      "golden_schema": {
+        "tables": [
+          "team"
+        ],
+        "columns": [
+          "location",
+          "founded_year",
+          "championship"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "wikitext/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "location"
+      ],
+      "result_rows": [
+        [
+          "Brooklyn"
+        ],
+        [
+          "Charlotte"
+        ],
+        [
+          "Chicago"
+        ],
+        [
+          "Houston"
+        ],
+        [
+          "Indianapolis"
+        ],
+        [
+          "Los Angeles"
+        ],
+        [
+          "Memphis"
+        ],
+        [
+          "Miami"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Minneapolis"
+        ],
+        [
+          "New Orleans"
+        ],
+        [
+          "Oklahoma City"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "Phoenix"
+        ],
+        [
+          "San Antonio"
+        ],
+        [
+          "Salt Lake City"
+        ],
+        [
+          "Chicago"
+        ],
+        [
+          "San Antonio"
+        ],
+        [
+          "Houston"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Oklahoma City"
+        ],
+        [
+          "Indianapolis"
+        ],
+        [
+          "Phoenix"
+        ],
+        [
+          "Memphis"
+        ],
+        [
+          "Charlotte"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "Salt Lake City"
+        ],
+        [
+          "Phoenix"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "San Antonio"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "San Antonio"
+        ],
+        [
+          "Brooklyn"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Oklahoma City"
+        ],
+        [
+          "San Antonio"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "Indianapolis"
+        ],
+        [
+          "Brooklyn"
+        ],
+        [
+          "Cincinnati"
+        ],
+        [
+          "Chicago"
+        ],
+        [
+          "Detroit"
+        ],
+        [
+          "Buffalo"
+        ],
+        [
+          "Indianapolis"
+        ],
+        [
+          "Philadelphia"
+        ],
+        [
+          "Denver"
+        ],
+        [
+          "Vancouver"
+        ],
+        [
+          "New Jersey"
+        ],
+        [
+          "Cincinnati"
+        ],
+        [
+          "Chicago"
+        ],
+        [
+          "Detroit"
+        ],
+        [
+          "San Diego"
+        ],
+        [
+          "New Orleans"
+        ],
+        [
+          "Kansas City"
+        ],
+        [
+          "Salt Lake City"
+        ],
+        [
+          "Houston"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "Vancouver"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Los Angeles"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Brooklyn"
+        ],
+        [
+          "Charlotte"
+        ],
+        [
+          "Chicago"
+        ],
+        [
+          "Cleveland"
+        ],
+        [
+          "Dallas"
+        ],
+        [
+          "Denver"
+        ],
+        [
+          "Houston"
+        ],
+        [
+          "Indianapolis"
+        ],
+        [
+          "San Diego"
+        ],
+        [
+          "Vancouver"
+        ],
+        [
+          "Miami"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Minneapolis"
+        ],
+        [
+          "New Orleans"
+        ],
+        [
+          "Seattle"
+        ],
+        [
+          "Orlando"
+        ],
+        [
+          "Phoenix"
+        ],
+        [
+          "Portland"
+        ],
+        [
+          "Dallas"
+        ],
+        [
+          "Toronto"
+        ],
+        [
+          "New Orleans"
+        ],
+        [
+          "Baltimore"
+        ],
+        [
+          "Uniondale"
+        ],
+        [
+          "Charlotte"
+        ],
+        [
+          "Chicago"
+        ],
+        [
+          "Cleveland"
+        ],
+        [
+          "Dallas"
+        ],
+        [
+          "Denver"
+        ],
+        [
+          "San Diego"
+        ],
+        [
+          "Indianapolis"
+        ],
+        [
+          "Buffalo"
+        ],
+        [
+          "Memphis"
+        ],
+        [
+          "Miami"
+        ],
+        [
+          "Milwaukee"
+        ],
+        [
+          "Minneapolis"
+        ],
+        [
+          "New Orleans"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    }
+  ]
+}

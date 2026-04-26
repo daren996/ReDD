@@ -12,7 +12,7 @@ import time
 from abc import ABC, abstractmethod
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 
 class DataPopulator(ABC):
@@ -30,45 +30,14 @@ class DataPopulator(ABC):
         Args:
             config: Configuration dictionary
         """
-        self.config = self._resolve_datapop_config(config)
+        self.config = self._resolve_extraction_config(config)
         self.loader = None  # Data loader will be set during processing
 
     @staticmethod
-    def _resolve_datapop_config(config: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Normalize data population config.
-
-        Supports both:
-        - Flat config (legacy): top-level datapop keys.
-        - Unified config: shared keys at top-level + `data_pop`/`datapop` section.
-        """
+    def _resolve_extraction_config(config: Dict[str, Any]) -> Dict[str, Any]:
         if not isinstance(config, dict):
             raise TypeError("DataPopulator config must be a dictionary")
-
-        section_key = None
-        for key in ("data_pop", "datapop"):
-            if key in config:
-                section_key = key
-                break
-
-        if section_key is None:
-            merged_config = dict(config)
-        else:
-            section_config = config.get(section_key)
-            if not isinstance(section_config, dict):
-                raise TypeError(f"Config section '{section_key}' must be a dictionary")
-            shared_config = {
-                key: value
-                for key, value in config.items()
-                if key not in {"schema_gen", "schemagen", "data_pop", "datapop"}
-            }
-            merged_config = {**shared_config, **section_config}
-
-        # Backward/forward compatibility for filter key naming
-        if "doc_filter" not in merged_config and "doc_filtering" in merged_config:
-            merged_config["doc_filter"] = merged_config["doc_filtering"]
-
-        return merged_config
+        return dict(config)
     
     @abstractmethod
     def __call__(self, dataset_task: Optional[str] = None):

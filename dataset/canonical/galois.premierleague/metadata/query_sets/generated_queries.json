@@ -1,0 +1,3999 @@
+{
+  "dataset": "premierleague/default_task",
+  "source": "galois_sqlite",
+  "database": "premierleague",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "schema_db": "default_task_schema.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "List away_goals, player_of_the_match, row_id from match_result where away_goals is >= 1.",
+      "sql": "SELECT \"away_goals\", \"player_of_the_match\", \"row_id\" FROM \"match_result\" WHERE (CAST(\"away_goals\" AS REAL) >= 1);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.away_goals",
+          "match_result.player_of_the_match",
+          "match_result.row_id"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "away_goals",
+        "player_of_the_match",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "L. Delap",
+          "0"
+        ],
+        [
+          "3",
+          "L. Sinisterra",
+          "1"
+        ],
+        [
+          "1",
+          "Robert Sánchez",
+          "2"
+        ],
+        [
+          "1",
+          "E. Smith Rowe",
+          "3"
+        ],
+        [
+          "3",
+          "K. Mitoma",
+          "4"
+        ],
+        [
+          "2",
+          "J. Durán",
+          "5"
+        ],
+        [
+          "3",
+          "J. Grealish",
+          "6"
+        ],
+        [
+          "2",
+          "H. Barnes",
+          "7"
+        ],
+        [
+          "3",
+          "M. de Ligt",
+          "8"
+        ],
+        [
+          "2",
+          "K. De Bruyne",
+          "9"
+        ],
+        [
+          "2",
+          "J. Durán",
+          "10"
+        ],
+        [
+          "3",
+          "L. Díaz",
+          "11"
+        ],
+        [
+          "1",
+          "M. Gibbs-White",
+          "12"
+        ],
+        [
+          "2",
+          "David Raya",
+          "13"
+        ],
+        [
+          "1",
+          "D. Welbeck",
+          "14"
+        ],
+        [
+          "1",
+          "Sam Morsy",
+          "15"
+        ],
+        [
+          "1",
+          "D. McNeil",
+          "17"
+        ],
+        [
+          "1",
+          "J. Grealish",
+          "18"
+        ],
+        [
+          "1",
+          "J. Veltman",
+          "19"
+        ],
+        [
+          "1",
+          "J. Maddison",
+          "20"
+        ],
+        [
+          "6",
+          "N. Madueke",
+          "22"
+        ],
+        [
+          "1",
+          "I. Ndiaye",
+          "24"
+        ],
+        [
+          "1",
+          "E. Haaland",
+          "25"
+        ],
+        [
+          "1",
+          "E. Smith Rowe",
+          "26"
+        ],
+        [
+          "2",
+          "L. Trossard",
+          "27"
+        ],
+        [
+          "1",
+          "L. Trossard",
+          "28"
+        ],
+        [
+          "2",
+          "J. Durán",
+          "29"
+        ],
+        [
+          "1",
+          "E. Eze",
+          "30"
+        ],
+        [
+          "1",
+          "A. Gordon",
+          "33"
+        ],
+        [
+          "1",
+          "R. Jiménez",
+          "34"
+        ],
+        [
+          "2",
+          "Mohamed Salah",
+          "35"
+        ],
+        [
+          "1",
+          "H. Barnes",
+          "36"
+        ],
+        [
+          "2",
+          "J. Vardy",
+          "37"
+        ],
+        [
+          "1",
+          "T. Souček",
+          "38"
+        ],
+        [
+          "2",
+          "L. Delap",
+          "39"
+        ],
+        [
+          "1",
+          "Y. Wissa",
+          "41"
+        ],
+        [
+          "1",
+          "C. Dawson",
+          "42"
+        ],
+        [
+          "1",
+          "B. Mbeumo",
+          "43"
+        ],
+        [
+          "1",
+          "C. Wood",
+          "44"
+        ]
+      ],
+      "result_count": 39,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "List away_goals, date, oid from match_result where away_goals is <= 2.",
+      "sql": "SELECT \"away_goals\", \"date\", \"oid\" FROM \"match_result\" WHERE (CAST(\"away_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.away_goals",
+          "match_result.date",
+          "match_result.oid"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "away_goals",
+        "date",
+        "oid"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "31/08/24",
+          "24"
+        ],
+        [
+          "1",
+          "14/09/24",
+          "38"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "43"
+        ],
+        [
+          "2",
+          "14/09/24",
+          "37"
+        ],
+        [
+          "2",
+          "15/09/24",
+          "40"
+        ],
+        [
+          "2",
+          "18/08/24",
+          "9"
+        ],
+        [
+          "2",
+          "17/08/24",
+          "7"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "15"
+        ],
+        [
+          "2",
+          "24/08/24",
+          "17"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "11"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "46"
+        ],
+        [
+          "0",
+          "17/08/24",
+          "5"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "55"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "14"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "21"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "47"
+        ],
+        [
+          "0",
+          "14/09/24",
+          "32"
+        ],
+        [
+          "0",
+          "21/09/24",
+          "48"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "44"
+        ],
+        [
+          "1",
+          "14/09/24",
+          "36"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "13"
+        ],
+        [
+          "2",
+          "28/09/24",
+          "52"
+        ],
+        [
+          "1",
+          "15/09/24",
+          "39"
+        ],
+        [
+          "2",
+          "31/08/24",
+          "25"
+        ],
+        [
+          "1",
+          "01/09/24",
+          "28"
+        ],
+        [
+          "0",
+          "25/08/24",
+          "20"
+        ],
+        [
+          "0",
+          "21/09/24",
+          "45"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "51"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "56"
+        ],
+        [
+          "2",
+          "17/08/24",
+          "2"
+        ],
+        [
+          "1",
+          "01/09/24",
+          "29"
+        ],
+        [
+          "2",
+          "14/09/24",
+          "33"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "53"
+        ],
+        [
+          "2",
+          "29/09/24",
+          "58"
+        ],
+        [
+          "0",
+          "17/08/24",
+          "3"
+        ],
+        [
+          "1",
+          "18/08/24",
+          "8"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "26"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "22"
+        ],
+        [
+          "1",
+          "17/08/24",
+          "6"
+        ]
+      ],
+      "result_count": 39,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "List home_goals, home_team, player_of_the_match from match_result where home_goals is between 0 and 2.",
+      "sql": "SELECT \"home_goals\", \"home_team\", \"player_of_the_match\" FROM \"match_result\" WHERE (CAST(\"home_goals\" AS REAL) >= 0 AND CAST(\"home_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.home_goals",
+          "match_result.home_team",
+          "match_result.player_of_the_match"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "home_goals",
+        "home_team",
+        "player_of_the_match"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "Ipswich",
+          "L. Delap"
+        ],
+        [
+          "2",
+          "Everton",
+          "L. Sinisterra"
+        ],
+        [
+          "0",
+          "Bournemouth",
+          "Robert Sánchez"
+        ],
+        [
+          "0",
+          "Everton",
+          "K. Mitoma"
+        ],
+        [
+          "1",
+          "West Ham",
+          "J. Grealish"
+        ],
+        [
+          "1",
+          "Wolves",
+          "H. Barnes"
+        ],
+        [
+          "0",
+          "Southampton",
+          "M. de Ligt"
+        ],
+        [
+          "0",
+          "Chelsea",
+          "K. De Bruyne"
+        ],
+        [
+          "1",
+          "West Ham",
+          "J. Durán"
+        ],
+        [
+          "0",
+          "Manchester United",
+          "L. Díaz"
+        ],
+        [
+          "0",
+          "Southampton",
+          "M. Gibbs-White"
+        ],
+        [
+          "0",
+          "Aston Villa",
+          "David Raya"
+        ],
+        [
+          "2",
+          "Brighton",
+          "D. Welbeck"
+        ],
+        [
+          "1",
+          "Southampton",
+          "Sam Morsy"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "Joelinton"
+        ],
+        [
+          "2",
+          "Everton",
+          "D. McNeil"
+        ],
+        [
+          "1",
+          "Arsenal",
+          "J. Veltman"
+        ],
+        [
+          "0",
+          "Brighton",
+          "A. Murić"
+        ],
+        [
+          "2",
+          "Wolves",
+          "N. Madueke"
+        ],
+        [
+          "0",
+          "Crystal Palace",
+          "D. Henderson"
+        ],
+        [
+          "1",
+          "Leicester",
+          "I. Ndiaye"
+        ],
+        [
+          "2",
+          "Manchester City",
+          "E. Haaland"
+        ],
+        [
+          "2",
+          "Fulham",
+          "E. Smith Rowe"
+        ],
+        [
+          "0",
+          "Tottenham",
+          "L. Trossard"
+        ],
+        [
+          "1",
+          "Leicester",
+          "J. Durán"
+        ],
+        [
+          "1",
+          "Chelsea",
+          "E. Eze"
+        ],
+        [
+          "2",
+          "Liverpool",
+          "L. Díaz"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "A. Gordon"
+        ],
+        [
+          "0",
+          "Nottingham Forest",
+          "R. Jiménez"
+        ],
+        [
+          "0",
+          "Ipswich",
+          "Mohamed Salah"
+        ],
+        [
+          "2",
+          "Newcastle",
+          "H. Barnes"
+        ],
+        [
+          "2",
+          "Crystal Palace",
+          "J. Vardy"
+        ],
+        [
+          "1",
+          "Brentford",
+          "T. Souček"
+        ],
+        [
+          "2",
+          "Ipswich",
+          "L. Delap"
+        ],
+        [
+          "2",
+          "Arsenal",
+          "B. Saka"
+        ],
+        [
+          "2",
+          "Brentford",
+          "Y. Wissa"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "C. Dawson"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "C. Wood"
+        ]
+      ],
+      "result_count": 38,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "List home_goals, player_of_the_match_team, date from match_result where home_goals is <= 2.",
+      "sql": "SELECT \"home_goals\", \"player_of_the_match_team\", \"date\" FROM \"match_result\" WHERE (CAST(\"home_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.home_goals",
+          "match_result.player_of_the_match_team",
+          "match_result.date"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "home_goals",
+        "player_of_the_match_team",
+        "date"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "Ipswich",
+          "31/08/24"
+        ],
+        [
+          "2",
+          "Bournemouth",
+          "31/08/24"
+        ],
+        [
+          "0",
+          "Chelsea",
+          "14/09/24"
+        ],
+        [
+          "0",
+          "Brighton",
+          "17/08/24"
+        ],
+        [
+          "1",
+          "Manchester City",
+          "31/08/24"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "15/09/24"
+        ],
+        [
+          "0",
+          "Manchester United",
+          "14/09/24"
+        ],
+        [
+          "0",
+          "Manchester City",
+          "18/08/24"
+        ],
+        [
+          "1",
+          "Aston Villa",
+          "17/08/24"
+        ],
+        [
+          "0",
+          "Liverpool",
+          "01/09/24"
+        ],
+        [
+          "0",
+          "Nottingham Forest",
+          "24/08/24"
+        ],
+        [
+          "0",
+          "Arsenal",
+          "24/08/24"
+        ],
+        [
+          "2",
+          "Brighton",
+          "24/08/24"
+        ],
+        [
+          "1",
+          "Ipswich",
+          "21/09/24"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "17/08/24"
+        ],
+        [
+          "2",
+          "Everton",
+          "28/09/24"
+        ],
+        [
+          "1",
+          "Brighton",
+          "31/08/24"
+        ],
+        [
+          "0",
+          "Ipswich",
+          "14/09/24"
+        ],
+        [
+          "2",
+          "Chelsea",
+          "25/08/24"
+        ],
+        [
+          "0",
+          "Crystal Palace",
+          "21/09/24"
+        ],
+        [
+          "1",
+          "Everton",
+          "21/09/24"
+        ],
+        [
+          "2",
+          "Manchester City",
+          "14/09/24"
+        ],
+        [
+          "2",
+          "Fulham",
+          "24/08/24"
+        ],
+        [
+          "0",
+          "Arsenal",
+          "15/09/24"
+        ],
+        [
+          "1",
+          "Aston Villa",
+          "31/08/24"
+        ],
+        [
+          "1",
+          "Crystal Palace",
+          "01/09/24"
+        ],
+        [
+          "2",
+          "Liverpool",
+          "25/08/24"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "28/09/24"
+        ],
+        [
+          "0",
+          "Fulham",
+          "28/09/24"
+        ],
+        [
+          "0",
+          "Liverpool",
+          "17/08/24"
+        ],
+        [
+          "2",
+          "Newcastle",
+          "01/09/24"
+        ],
+        [
+          "2",
+          "Leicester",
+          "14/09/24"
+        ],
+        [
+          "1",
+          "West Ham",
+          "28/09/24"
+        ],
+        [
+          "2",
+          "Ipswich",
+          "29/09/24"
+        ],
+        [
+          "2",
+          "Arsenal",
+          "17/08/24"
+        ],
+        [
+          "2",
+          "Brentford",
+          "18/08/24"
+        ],
+        [
+          "1",
+          "Wolves",
+          "31/08/24"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "17/08/24"
+        ]
+      ],
+      "result_count": 38,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "List oid, away_goals, home_team from match_result where oid is >= 11.",
+      "sql": "SELECT \"oid\", \"away_goals\", \"home_team\" FROM \"match_result\" WHERE (CAST(\"oid\" AS REAL) >= 11);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.oid",
+          "match_result.away_goals",
+          "match_result.home_team"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "oid",
+        "away_goals",
+        "home_team"
+      ],
+      "result_rows": [
+        [
+          "24",
+          "1",
+          "Ipswich"
+        ],
+        [
+          "23",
+          "3",
+          "Everton"
+        ],
+        [
+          "38",
+          "1",
+          "Bournemouth"
+        ],
+        [
+          "43",
+          "1",
+          "Fulham"
+        ],
+        [
+          "37",
+          "2",
+          "Aston Villa"
+        ],
+        [
+          "27",
+          "3",
+          "West Ham"
+        ],
+        [
+          "40",
+          "2",
+          "Wolves"
+        ],
+        [
+          "31",
+          "3",
+          "Southampton"
+        ],
+        [
+          "30",
+          "3",
+          "Manchester United"
+        ],
+        [
+          "15",
+          "1",
+          "Southampton"
+        ],
+        [
+          "17",
+          "2",
+          "Aston Villa"
+        ],
+        [
+          "11",
+          "1",
+          "Brighton"
+        ],
+        [
+          "46",
+          "1",
+          "Southampton"
+        ],
+        [
+          "55",
+          "1",
+          "Everton"
+        ],
+        [
+          "14",
+          "1",
+          "Manchester City"
+        ],
+        [
+          "21",
+          "1",
+          "Arsenal"
+        ],
+        [
+          "47",
+          "1",
+          "Tottenham"
+        ],
+        [
+          "32",
+          "0",
+          "Brighton"
+        ],
+        [
+          "19",
+          "6",
+          "Wolves"
+        ],
+        [
+          "48",
+          "0",
+          "Crystal Palace"
+        ],
+        [
+          "44",
+          "1",
+          "Leicester"
+        ],
+        [
+          "36",
+          "1",
+          "Manchester City"
+        ],
+        [
+          "13",
+          "1",
+          "Fulham"
+        ],
+        [
+          "52",
+          "2",
+          "Arsenal"
+        ],
+        [
+          "39",
+          "1",
+          "Tottenham"
+        ],
+        [
+          "25",
+          "2",
+          "Leicester"
+        ],
+        [
+          "28",
+          "1",
+          "Chelsea"
+        ],
+        [
+          "20",
+          "0",
+          "Liverpool"
+        ],
+        [
+          "45",
+          "0",
+          "Liverpool"
+        ],
+        [
+          "51",
+          "1",
+          "Newcastle"
+        ],
+        [
+          "56",
+          "1",
+          "Nottingham Forest"
+        ],
+        [
+          "29",
+          "1",
+          "Newcastle"
+        ],
+        [
+          "33",
+          "2",
+          "Crystal Palace"
+        ],
+        [
+          "53",
+          "1",
+          "Brentford"
+        ],
+        [
+          "58",
+          "2",
+          "Ipswich"
+        ],
+        [
+          "26",
+          "1",
+          "Nottingham Forest"
+        ],
+        [
+          "22",
+          "1",
+          "Brentford"
+        ]
+      ],
+      "result_count": 37,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "List row_id, home_goals, player_of_the_match_team from match_result where row_id is >= 8.",
+      "sql": "SELECT \"row_id\", \"home_goals\", \"player_of_the_match_team\" FROM \"match_result\" WHERE (CAST(\"row_id\" AS REAL) >= 8);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.row_id",
+          "match_result.home_goals",
+          "match_result.player_of_the_match_team"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "row_id",
+        "home_goals",
+        "player_of_the_match_team"
+      ],
+      "result_rows": [
+        [
+          "8",
+          "0",
+          "Manchester United"
+        ],
+        [
+          "9",
+          "0",
+          "Manchester City"
+        ],
+        [
+          "10",
+          "1",
+          "Aston Villa"
+        ],
+        [
+          "11",
+          "0",
+          "Liverpool"
+        ],
+        [
+          "12",
+          "0",
+          "Nottingham Forest"
+        ],
+        [
+          "13",
+          "0",
+          "Arsenal"
+        ],
+        [
+          "14",
+          "2",
+          "Brighton"
+        ],
+        [
+          "15",
+          "1",
+          "Ipswich"
+        ],
+        [
+          "16",
+          "1",
+          "Newcastle"
+        ],
+        [
+          "17",
+          "2",
+          "Everton"
+        ],
+        [
+          "18",
+          "4",
+          "Manchester City"
+        ],
+        [
+          "19",
+          "1",
+          "Brighton"
+        ],
+        [
+          "20",
+          "3",
+          "Tottenham"
+        ],
+        [
+          "21",
+          "0",
+          "Ipswich"
+        ],
+        [
+          "22",
+          "2",
+          "Chelsea"
+        ],
+        [
+          "23",
+          "0",
+          "Crystal Palace"
+        ],
+        [
+          "24",
+          "1",
+          "Everton"
+        ],
+        [
+          "25",
+          "2",
+          "Manchester City"
+        ],
+        [
+          "26",
+          "2",
+          "Fulham"
+        ],
+        [
+          "27",
+          "4",
+          "Arsenal"
+        ],
+        [
+          "28",
+          "0",
+          "Arsenal"
+        ],
+        [
+          "29",
+          "1",
+          "Aston Villa"
+        ],
+        [
+          "30",
+          "1",
+          "Crystal Palace"
+        ],
+        [
+          "31",
+          "2",
+          "Liverpool"
+        ],
+        [
+          "32",
+          "3",
+          "Liverpool"
+        ],
+        [
+          "33",
+          "1",
+          "Newcastle"
+        ],
+        [
+          "34",
+          "0",
+          "Fulham"
+        ],
+        [
+          "35",
+          "0",
+          "Liverpool"
+        ],
+        [
+          "36",
+          "2",
+          "Newcastle"
+        ],
+        [
+          "37",
+          "2",
+          "Leicester"
+        ],
+        [
+          "38",
+          "1",
+          "West Ham"
+        ],
+        [
+          "39",
+          "2",
+          "Ipswich"
+        ],
+        [
+          "40",
+          "2",
+          "Arsenal"
+        ],
+        [
+          "41",
+          "2",
+          "Brentford"
+        ],
+        [
+          "42",
+          "1",
+          "Wolves"
+        ],
+        [
+          "43",
+          "3",
+          "Brentford"
+        ],
+        [
+          "44",
+          "1",
+          "Nottingham Forest"
+        ]
+      ],
+      "result_count": 37,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "List row_id, player_of_the_match, player_of_the_match_team from match_result where row_id is <= 35.",
+      "sql": "SELECT \"row_id\", \"player_of_the_match\", \"player_of_the_match_team\" FROM \"match_result\" WHERE (CAST(\"row_id\" AS REAL) <= 35);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.row_id",
+          "match_result.player_of_the_match",
+          "match_result.player_of_the_match_team"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "row_id",
+        "player_of_the_match",
+        "player_of_the_match_team"
+      ],
+      "result_rows": [
+        [
+          "0",
+          "L. Delap",
+          "Ipswich"
+        ],
+        [
+          "1",
+          "L. Sinisterra",
+          "Bournemouth"
+        ],
+        [
+          "2",
+          "Robert Sánchez",
+          "Chelsea"
+        ],
+        [
+          "3",
+          "E. Smith Rowe",
+          "Fulham"
+        ],
+        [
+          "4",
+          "K. Mitoma",
+          "Brighton"
+        ],
+        [
+          "5",
+          "J. Durán",
+          "Aston Villa"
+        ],
+        [
+          "6",
+          "J. Grealish",
+          "Manchester City"
+        ],
+        [
+          "7",
+          "H. Barnes",
+          "Newcastle"
+        ],
+        [
+          "8",
+          "M. de Ligt",
+          "Manchester United"
+        ],
+        [
+          "9",
+          "K. De Bruyne",
+          "Manchester City"
+        ],
+        [
+          "10",
+          "J. Durán",
+          "Aston Villa"
+        ],
+        [
+          "11",
+          "L. Díaz",
+          "Liverpool"
+        ],
+        [
+          "12",
+          "M. Gibbs-White",
+          "Nottingham Forest"
+        ],
+        [
+          "13",
+          "David Raya",
+          "Arsenal"
+        ],
+        [
+          "14",
+          "D. Welbeck",
+          "Brighton"
+        ],
+        [
+          "15",
+          "Sam Morsy",
+          "Ipswich"
+        ],
+        [
+          "16",
+          "Joelinton",
+          "Newcastle"
+        ],
+        [
+          "17",
+          "D. McNeil",
+          "Everton"
+        ],
+        [
+          "18",
+          "J. Grealish",
+          "Manchester City"
+        ],
+        [
+          "19",
+          "J. Veltman",
+          "Brighton"
+        ],
+        [
+          "20",
+          "J. Maddison",
+          "Tottenham"
+        ],
+        [
+          "21",
+          "A. Murić",
+          "Ipswich"
+        ],
+        [
+          "22",
+          "N. Madueke",
+          "Chelsea"
+        ],
+        [
+          "23",
+          "D. Henderson",
+          "Crystal Palace"
+        ],
+        [
+          "24",
+          "I. Ndiaye",
+          "Everton"
+        ],
+        [
+          "25",
+          "E. Haaland",
+          "Manchester City"
+        ],
+        [
+          "26",
+          "E. Smith Rowe",
+          "Fulham"
+        ],
+        [
+          "27",
+          "L. Trossard",
+          "Arsenal"
+        ],
+        [
+          "28",
+          "L. Trossard",
+          "Arsenal"
+        ],
+        [
+          "29",
+          "J. Durán",
+          "Aston Villa"
+        ],
+        [
+          "30",
+          "E. Eze",
+          "Crystal Palace"
+        ],
+        [
+          "31",
+          "L. Díaz",
+          "Liverpool"
+        ],
+        [
+          "32",
+          "L. Díaz",
+          "Liverpool"
+        ],
+        [
+          "33",
+          "A. Gordon",
+          "Newcastle"
+        ],
+        [
+          "34",
+          "R. Jiménez",
+          "Fulham"
+        ],
+        [
+          "35",
+          "Mohamed Salah",
+          "Liverpool"
+        ]
+      ],
+      "result_count": 36,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "List oid, home_goals, row_id from match_result where oid is <= 45.",
+      "sql": "SELECT \"oid\", \"home_goals\", \"row_id\" FROM \"match_result\" WHERE (CAST(\"oid\" AS REAL) <= 45);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.oid",
+          "match_result.home_goals",
+          "match_result.row_id"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "oid",
+        "home_goals",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "24",
+          "1",
+          "0"
+        ],
+        [
+          "23",
+          "2",
+          "1"
+        ],
+        [
+          "38",
+          "0",
+          "2"
+        ],
+        [
+          "43",
+          "3",
+          "3"
+        ],
+        [
+          "4",
+          "0",
+          "4"
+        ],
+        [
+          "37",
+          "3",
+          "5"
+        ],
+        [
+          "27",
+          "1",
+          "6"
+        ],
+        [
+          "40",
+          "1",
+          "7"
+        ],
+        [
+          "31",
+          "0",
+          "8"
+        ],
+        [
+          "9",
+          "0",
+          "9"
+        ],
+        [
+          "7",
+          "1",
+          "10"
+        ],
+        [
+          "30",
+          "0",
+          "11"
+        ],
+        [
+          "15",
+          "0",
+          "12"
+        ],
+        [
+          "17",
+          "0",
+          "13"
+        ],
+        [
+          "11",
+          "2",
+          "14"
+        ],
+        [
+          "5",
+          "1",
+          "16"
+        ],
+        [
+          "14",
+          "4",
+          "18"
+        ],
+        [
+          "21",
+          "1",
+          "19"
+        ],
+        [
+          "32",
+          "0",
+          "21"
+        ],
+        [
+          "19",
+          "2",
+          "22"
+        ],
+        [
+          "44",
+          "1",
+          "24"
+        ],
+        [
+          "36",
+          "2",
+          "25"
+        ],
+        [
+          "13",
+          "2",
+          "26"
+        ],
+        [
+          "39",
+          "0",
+          "28"
+        ],
+        [
+          "25",
+          "1",
+          "29"
+        ],
+        [
+          "28",
+          "1",
+          "30"
+        ],
+        [
+          "20",
+          "2",
+          "31"
+        ],
+        [
+          "45",
+          "3",
+          "32"
+        ],
+        [
+          "2",
+          "0",
+          "35"
+        ],
+        [
+          "29",
+          "2",
+          "36"
+        ],
+        [
+          "33",
+          "2",
+          "37"
+        ],
+        [
+          "3",
+          "2",
+          "40"
+        ],
+        [
+          "8",
+          "2",
+          "41"
+        ],
+        [
+          "26",
+          "1",
+          "42"
+        ],
+        [
+          "22",
+          "3",
+          "43"
+        ],
+        [
+          "6",
+          "1",
+          "44"
+        ]
+      ],
+      "result_count": 36,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "Find home_goals, player_of_the_match_team, home_team from match_result where home_goals is <= 2 and home_goals is between 0 and 2.",
+      "sql": "SELECT \"home_goals\", \"player_of_the_match_team\", \"home_team\" FROM \"match_result\" WHERE (CAST(\"home_goals\" AS REAL) <= 2) AND (CAST(\"home_goals\" AS REAL) >= 0 AND CAST(\"home_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.home_goals",
+          "match_result.player_of_the_match_team",
+          "match_result.home_team"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "home_goals",
+        "player_of_the_match_team",
+        "home_team"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Bournemouth",
+          "Everton"
+        ],
+        [
+          "0",
+          "Chelsea",
+          "Bournemouth"
+        ],
+        [
+          "0",
+          "Brighton",
+          "Everton"
+        ],
+        [
+          "1",
+          "Manchester City",
+          "West Ham"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "Wolves"
+        ],
+        [
+          "0",
+          "Manchester United",
+          "Southampton"
+        ],
+        [
+          "0",
+          "Manchester City",
+          "Chelsea"
+        ],
+        [
+          "1",
+          "Aston Villa",
+          "West Ham"
+        ],
+        [
+          "0",
+          "Liverpool",
+          "Manchester United"
+        ],
+        [
+          "0",
+          "Nottingham Forest",
+          "Southampton"
+        ],
+        [
+          "0",
+          "Arsenal",
+          "Aston Villa"
+        ],
+        [
+          "2",
+          "Brighton",
+          "Brighton"
+        ],
+        [
+          "1",
+          "Ipswich",
+          "Southampton"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "2",
+          "Everton",
+          "Everton"
+        ],
+        [
+          "1",
+          "Brighton",
+          "Arsenal"
+        ],
+        [
+          "0",
+          "Ipswich",
+          "Brighton"
+        ],
+        [
+          "2",
+          "Chelsea",
+          "Wolves"
+        ],
+        [
+          "0",
+          "Crystal Palace",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "Everton",
+          "Leicester"
+        ],
+        [
+          "2",
+          "Manchester City",
+          "Manchester City"
+        ],
+        [
+          "2",
+          "Fulham",
+          "Fulham"
+        ],
+        [
+          "0",
+          "Arsenal",
+          "Tottenham"
+        ],
+        [
+          "1",
+          "Aston Villa",
+          "Leicester"
+        ],
+        [
+          "1",
+          "Crystal Palace",
+          "Chelsea"
+        ],
+        [
+          "2",
+          "Liverpool",
+          "Liverpool"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "0",
+          "Fulham",
+          "Nottingham Forest"
+        ],
+        [
+          "0",
+          "Liverpool",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "2",
+          "Leicester",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "West Ham",
+          "Brentford"
+        ],
+        [
+          "2",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Arsenal",
+          "Arsenal"
+        ],
+        [
+          "2",
+          "Brentford",
+          "Brentford"
+        ],
+        [
+          "1",
+          "Wolves",
+          "Nottingham Forest"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "Nottingham Forest"
+        ]
+      ],
+      "result_count": 38,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "Find row_id, home_goals, home_team from match_result where row_id is >= 8 and away_goals is <= 2.",
+      "sql": "SELECT \"row_id\", \"home_goals\", \"home_team\" FROM \"match_result\" WHERE (CAST(\"row_id\" AS REAL) >= 8) AND (CAST(\"away_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.row_id",
+          "match_result.home_goals",
+          "match_result.home_team",
+          "match_result.away_goals"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "row_id",
+        "home_goals",
+        "home_team"
+      ],
+      "result_rows": [
+        [
+          "9",
+          "0",
+          "Chelsea"
+        ],
+        [
+          "10",
+          "1",
+          "West Ham"
+        ],
+        [
+          "12",
+          "0",
+          "Southampton"
+        ],
+        [
+          "13",
+          "0",
+          "Aston Villa"
+        ],
+        [
+          "14",
+          "2",
+          "Brighton"
+        ],
+        [
+          "15",
+          "1",
+          "Southampton"
+        ],
+        [
+          "16",
+          "1",
+          "Newcastle"
+        ],
+        [
+          "17",
+          "2",
+          "Everton"
+        ],
+        [
+          "18",
+          "4",
+          "Manchester City"
+        ],
+        [
+          "19",
+          "1",
+          "Arsenal"
+        ],
+        [
+          "20",
+          "3",
+          "Tottenham"
+        ],
+        [
+          "21",
+          "0",
+          "Brighton"
+        ],
+        [
+          "23",
+          "0",
+          "Crystal Palace"
+        ],
+        [
+          "24",
+          "1",
+          "Leicester"
+        ],
+        [
+          "25",
+          "2",
+          "Manchester City"
+        ],
+        [
+          "26",
+          "2",
+          "Fulham"
+        ],
+        [
+          "27",
+          "4",
+          "Arsenal"
+        ],
+        [
+          "28",
+          "0",
+          "Tottenham"
+        ],
+        [
+          "29",
+          "1",
+          "Leicester"
+        ],
+        [
+          "30",
+          "1",
+          "Chelsea"
+        ],
+        [
+          "31",
+          "2",
+          "Liverpool"
+        ],
+        [
+          "32",
+          "3",
+          "Liverpool"
+        ],
+        [
+          "33",
+          "1",
+          "Newcastle"
+        ],
+        [
+          "34",
+          "0",
+          "Nottingham Forest"
+        ],
+        [
+          "35",
+          "0",
+          "Ipswich"
+        ],
+        [
+          "36",
+          "2",
+          "Newcastle"
+        ],
+        [
+          "37",
+          "2",
+          "Crystal Palace"
+        ],
+        [
+          "38",
+          "1",
+          "Brentford"
+        ],
+        [
+          "39",
+          "2",
+          "Ipswich"
+        ],
+        [
+          "40",
+          "2",
+          "Arsenal"
+        ],
+        [
+          "41",
+          "2",
+          "Brentford"
+        ],
+        [
+          "42",
+          "1",
+          "Nottingham Forest"
+        ],
+        [
+          "43",
+          "3",
+          "Brentford"
+        ],
+        [
+          "44",
+          "1",
+          "Nottingham Forest"
+        ]
+      ],
+      "result_count": 34,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "Find away_goals, home_goals, row_id from match_result where away_goals is between 1 and 2 and away_goals is <= 2.",
+      "sql": "SELECT \"away_goals\", \"home_goals\", \"row_id\" FROM \"match_result\" WHERE (CAST(\"away_goals\" AS REAL) >= 1 AND CAST(\"away_goals\" AS REAL) <= 2) AND (CAST(\"away_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.away_goals",
+          "match_result.home_goals",
+          "match_result.row_id"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "away_goals",
+        "home_goals",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "0",
+          "2"
+        ],
+        [
+          "1",
+          "3",
+          "3"
+        ],
+        [
+          "2",
+          "3",
+          "5"
+        ],
+        [
+          "2",
+          "1",
+          "7"
+        ],
+        [
+          "2",
+          "0",
+          "9"
+        ],
+        [
+          "2",
+          "1",
+          "10"
+        ],
+        [
+          "1",
+          "0",
+          "12"
+        ],
+        [
+          "2",
+          "0",
+          "13"
+        ],
+        [
+          "1",
+          "2",
+          "14"
+        ],
+        [
+          "1",
+          "1",
+          "15"
+        ],
+        [
+          "1",
+          "2",
+          "17"
+        ],
+        [
+          "1",
+          "4",
+          "18"
+        ],
+        [
+          "1",
+          "1",
+          "19"
+        ],
+        [
+          "1",
+          "3",
+          "20"
+        ],
+        [
+          "1",
+          "1",
+          "24"
+        ],
+        [
+          "1",
+          "2",
+          "25"
+        ],
+        [
+          "1",
+          "2",
+          "26"
+        ],
+        [
+          "2",
+          "4",
+          "27"
+        ],
+        [
+          "1",
+          "0",
+          "28"
+        ],
+        [
+          "2",
+          "1",
+          "29"
+        ],
+        [
+          "1",
+          "1",
+          "30"
+        ],
+        [
+          "1",
+          "1",
+          "33"
+        ],
+        [
+          "1",
+          "0",
+          "34"
+        ],
+        [
+          "2",
+          "0",
+          "35"
+        ],
+        [
+          "1",
+          "2",
+          "36"
+        ],
+        [
+          "2",
+          "2",
+          "37"
+        ],
+        [
+          "1",
+          "1",
+          "38"
+        ],
+        [
+          "2",
+          "2",
+          "39"
+        ],
+        [
+          "1",
+          "2",
+          "41"
+        ],
+        [
+          "1",
+          "1",
+          "42"
+        ],
+        [
+          "1",
+          "3",
+          "43"
+        ],
+        [
+          "1",
+          "1",
+          "44"
+        ]
+      ],
+      "result_count": 33,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "Find away_goals, away_team, player_of_the_match_team from match_result where away_goals is between 1 and 2 and away_goals is >= 1.",
+      "sql": "SELECT \"away_goals\", \"away_team\", \"player_of_the_match_team\" FROM \"match_result\" WHERE (CAST(\"away_goals\" AS REAL) >= 1 AND CAST(\"away_goals\" AS REAL) <= 2) AND (CAST(\"away_goals\" AS REAL) >= 1);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.away_goals",
+          "match_result.away_team",
+          "match_result.player_of_the_match_team"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "away_goals",
+        "away_team",
+        "player_of_the_match_team"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "Fulham",
+          "Ipswich"
+        ],
+        [
+          "1",
+          "Chelsea",
+          "Chelsea"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "Fulham"
+        ],
+        [
+          "2",
+          "Everton",
+          "Aston Villa"
+        ],
+        [
+          "2",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "2",
+          "Manchester City",
+          "Manchester City"
+        ],
+        [
+          "2",
+          "Aston Villa",
+          "Aston Villa"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "Nottingham Forest"
+        ],
+        [
+          "2",
+          "Arsenal",
+          "Arsenal"
+        ],
+        [
+          "1",
+          "Manchester United",
+          "Brighton"
+        ],
+        [
+          "1",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "1",
+          "Crystal Palace",
+          "Everton"
+        ],
+        [
+          "1",
+          "Ipswich",
+          "Manchester City"
+        ],
+        [
+          "1",
+          "Brighton",
+          "Brighton"
+        ],
+        [
+          "1",
+          "Brentford",
+          "Tottenham"
+        ],
+        [
+          "1",
+          "Everton",
+          "Everton"
+        ],
+        [
+          "1",
+          "Brentford",
+          "Manchester City"
+        ],
+        [
+          "1",
+          "Leicester",
+          "Fulham"
+        ],
+        [
+          "2",
+          "Leicester",
+          "Arsenal"
+        ],
+        [
+          "1",
+          "Arsenal",
+          "Arsenal"
+        ],
+        [
+          "2",
+          "Aston Villa",
+          "Aston Villa"
+        ],
+        [
+          "1",
+          "Crystal Palace",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "Manchester City",
+          "Newcastle"
+        ],
+        [
+          "1",
+          "Fulham",
+          "Fulham"
+        ],
+        [
+          "2",
+          "Liverpool",
+          "Liverpool"
+        ],
+        [
+          "1",
+          "Tottenham",
+          "Newcastle"
+        ],
+        [
+          "2",
+          "Leicester",
+          "Leicester"
+        ],
+        [
+          "1",
+          "West Ham",
+          "West Ham"
+        ],
+        [
+          "2",
+          "Aston Villa",
+          "Ipswich"
+        ],
+        [
+          "1",
+          "Crystal Palace",
+          "Brentford"
+        ],
+        [
+          "1",
+          "Wolves",
+          "Wolves"
+        ],
+        [
+          "1",
+          "Southampton",
+          "Brentford"
+        ],
+        [
+          "1",
+          "Bournemouth",
+          "Nottingham Forest"
+        ]
+      ],
+      "result_count": 33,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "Find home_goals, away_team, player_of_the_match_team from match_result where home_goals is <= 2 and away_goals is >= 1.",
+      "sql": "SELECT \"home_goals\", \"away_team\", \"player_of_the_match_team\" FROM \"match_result\" WHERE (CAST(\"home_goals\" AS REAL) <= 2) AND (CAST(\"away_goals\" AS REAL) >= 1);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.home_goals",
+          "match_result.away_team",
+          "match_result.player_of_the_match_team",
+          "match_result.away_goals"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "home_goals",
+        "away_team",
+        "player_of_the_match_team"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "Fulham",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Bournemouth",
+          "Bournemouth"
+        ],
+        [
+          "0",
+          "Chelsea",
+          "Chelsea"
+        ],
+        [
+          "0",
+          "Brighton",
+          "Brighton"
+        ],
+        [
+          "1",
+          "Manchester City",
+          "Manchester City"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "0",
+          "Manchester United",
+          "Manchester United"
+        ],
+        [
+          "0",
+          "Manchester City",
+          "Manchester City"
+        ],
+        [
+          "1",
+          "Aston Villa",
+          "Aston Villa"
+        ],
+        [
+          "0",
+          "Liverpool",
+          "Liverpool"
+        ],
+        [
+          "0",
+          "Nottingham Forest",
+          "Nottingham Forest"
+        ],
+        [
+          "0",
+          "Arsenal",
+          "Arsenal"
+        ],
+        [
+          "2",
+          "Manchester United",
+          "Brighton"
+        ],
+        [
+          "1",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Crystal Palace",
+          "Everton"
+        ],
+        [
+          "1",
+          "Brighton",
+          "Brighton"
+        ],
+        [
+          "2",
+          "Chelsea",
+          "Chelsea"
+        ],
+        [
+          "1",
+          "Everton",
+          "Everton"
+        ],
+        [
+          "2",
+          "Brentford",
+          "Manchester City"
+        ],
+        [
+          "2",
+          "Leicester",
+          "Fulham"
+        ],
+        [
+          "0",
+          "Arsenal",
+          "Arsenal"
+        ],
+        [
+          "1",
+          "Aston Villa",
+          "Aston Villa"
+        ],
+        [
+          "1",
+          "Crystal Palace",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "Manchester City",
+          "Newcastle"
+        ],
+        [
+          "0",
+          "Fulham",
+          "Fulham"
+        ],
+        [
+          "0",
+          "Liverpool",
+          "Liverpool"
+        ],
+        [
+          "2",
+          "Tottenham",
+          "Newcastle"
+        ],
+        [
+          "2",
+          "Leicester",
+          "Leicester"
+        ],
+        [
+          "1",
+          "West Ham",
+          "West Ham"
+        ],
+        [
+          "2",
+          "Aston Villa",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Crystal Palace",
+          "Brentford"
+        ],
+        [
+          "1",
+          "Wolves",
+          "Wolves"
+        ],
+        [
+          "1",
+          "Bournemouth",
+          "Nottingham Forest"
+        ]
+      ],
+      "result_count": 33,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find home_goals, home_team, player_of_the_match_team from match_result where home_goals is between 0 and 2 and away_goals is >= 1.",
+      "sql": "SELECT \"home_goals\", \"home_team\", \"player_of_the_match_team\" FROM \"match_result\" WHERE (CAST(\"home_goals\" AS REAL) >= 0 AND CAST(\"home_goals\" AS REAL) <= 2) AND (CAST(\"away_goals\" AS REAL) >= 1);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.home_goals",
+          "match_result.home_team",
+          "match_result.player_of_the_match_team",
+          "match_result.away_goals"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "home_goals",
+        "home_team",
+        "player_of_the_match_team"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Everton",
+          "Bournemouth"
+        ],
+        [
+          "0",
+          "Bournemouth",
+          "Chelsea"
+        ],
+        [
+          "0",
+          "Everton",
+          "Brighton"
+        ],
+        [
+          "1",
+          "West Ham",
+          "Manchester City"
+        ],
+        [
+          "1",
+          "Wolves",
+          "Newcastle"
+        ],
+        [
+          "0",
+          "Southampton",
+          "Manchester United"
+        ],
+        [
+          "0",
+          "Chelsea",
+          "Manchester City"
+        ],
+        [
+          "1",
+          "West Ham",
+          "Aston Villa"
+        ],
+        [
+          "0",
+          "Manchester United",
+          "Liverpool"
+        ],
+        [
+          "0",
+          "Southampton",
+          "Nottingham Forest"
+        ],
+        [
+          "0",
+          "Aston Villa",
+          "Arsenal"
+        ],
+        [
+          "2",
+          "Brighton",
+          "Brighton"
+        ],
+        [
+          "1",
+          "Southampton",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Everton",
+          "Everton"
+        ],
+        [
+          "1",
+          "Arsenal",
+          "Brighton"
+        ],
+        [
+          "2",
+          "Wolves",
+          "Chelsea"
+        ],
+        [
+          "1",
+          "Leicester",
+          "Everton"
+        ],
+        [
+          "2",
+          "Manchester City",
+          "Manchester City"
+        ],
+        [
+          "2",
+          "Fulham",
+          "Fulham"
+        ],
+        [
+          "0",
+          "Tottenham",
+          "Arsenal"
+        ],
+        [
+          "1",
+          "Leicester",
+          "Aston Villa"
+        ],
+        [
+          "1",
+          "Chelsea",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "0",
+          "Nottingham Forest",
+          "Fulham"
+        ],
+        [
+          "0",
+          "Ipswich",
+          "Liverpool"
+        ],
+        [
+          "2",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "2",
+          "Crystal Palace",
+          "Leicester"
+        ],
+        [
+          "1",
+          "Brentford",
+          "West Ham"
+        ],
+        [
+          "2",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "2",
+          "Brentford",
+          "Brentford"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "Wolves"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "Nottingham Forest"
+        ]
+      ],
+      "result_count": 33,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "Find away_goals, date, oid from match_result where away_goals is <= 2 and away_goals is >= 1.",
+      "sql": "SELECT \"away_goals\", \"date\", \"oid\" FROM \"match_result\" WHERE (CAST(\"away_goals\" AS REAL) <= 2) AND (CAST(\"away_goals\" AS REAL) >= 1);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.away_goals",
+          "match_result.date",
+          "match_result.oid"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "away_goals",
+        "date",
+        "oid"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "31/08/24",
+          "24"
+        ],
+        [
+          "1",
+          "14/09/24",
+          "38"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "43"
+        ],
+        [
+          "2",
+          "14/09/24",
+          "37"
+        ],
+        [
+          "2",
+          "15/09/24",
+          "40"
+        ],
+        [
+          "2",
+          "18/08/24",
+          "9"
+        ],
+        [
+          "2",
+          "17/08/24",
+          "7"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "15"
+        ],
+        [
+          "2",
+          "24/08/24",
+          "17"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "11"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "46"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "55"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "14"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "21"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "47"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "44"
+        ],
+        [
+          "1",
+          "14/09/24",
+          "36"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "13"
+        ],
+        [
+          "2",
+          "28/09/24",
+          "52"
+        ],
+        [
+          "1",
+          "15/09/24",
+          "39"
+        ],
+        [
+          "2",
+          "31/08/24",
+          "25"
+        ],
+        [
+          "1",
+          "01/09/24",
+          "28"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "51"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "56"
+        ],
+        [
+          "2",
+          "17/08/24",
+          "2"
+        ],
+        [
+          "1",
+          "01/09/24",
+          "29"
+        ],
+        [
+          "2",
+          "14/09/24",
+          "33"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "53"
+        ],
+        [
+          "2",
+          "29/09/24",
+          "58"
+        ],
+        [
+          "1",
+          "18/08/24",
+          "8"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "26"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "22"
+        ],
+        [
+          "1",
+          "17/08/24",
+          "6"
+        ]
+      ],
+      "result_count": 33,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find oid, home_team, player_of_the_match_team from match_result where oid is >= 11 and away_goals is >= 1.",
+      "sql": "SELECT \"oid\", \"home_team\", \"player_of_the_match_team\" FROM \"match_result\" WHERE (CAST(\"oid\" AS REAL) >= 11) AND (CAST(\"away_goals\" AS REAL) >= 1);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.oid",
+          "match_result.home_team",
+          "match_result.player_of_the_match_team",
+          "match_result.away_goals"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "oid",
+        "home_team",
+        "player_of_the_match_team"
+      ],
+      "result_rows": [
+        [
+          "24",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "23",
+          "Everton",
+          "Bournemouth"
+        ],
+        [
+          "38",
+          "Bournemouth",
+          "Chelsea"
+        ],
+        [
+          "43",
+          "Fulham",
+          "Fulham"
+        ],
+        [
+          "37",
+          "Aston Villa",
+          "Aston Villa"
+        ],
+        [
+          "27",
+          "West Ham",
+          "Manchester City"
+        ],
+        [
+          "40",
+          "Wolves",
+          "Newcastle"
+        ],
+        [
+          "31",
+          "Southampton",
+          "Manchester United"
+        ],
+        [
+          "30",
+          "Manchester United",
+          "Liverpool"
+        ],
+        [
+          "15",
+          "Southampton",
+          "Nottingham Forest"
+        ],
+        [
+          "17",
+          "Aston Villa",
+          "Arsenal"
+        ],
+        [
+          "11",
+          "Brighton",
+          "Brighton"
+        ],
+        [
+          "46",
+          "Southampton",
+          "Ipswich"
+        ],
+        [
+          "55",
+          "Everton",
+          "Everton"
+        ],
+        [
+          "14",
+          "Manchester City",
+          "Manchester City"
+        ],
+        [
+          "21",
+          "Arsenal",
+          "Brighton"
+        ],
+        [
+          "47",
+          "Tottenham",
+          "Tottenham"
+        ],
+        [
+          "19",
+          "Wolves",
+          "Chelsea"
+        ],
+        [
+          "44",
+          "Leicester",
+          "Everton"
+        ],
+        [
+          "36",
+          "Manchester City",
+          "Manchester City"
+        ],
+        [
+          "13",
+          "Fulham",
+          "Fulham"
+        ],
+        [
+          "52",
+          "Arsenal",
+          "Arsenal"
+        ],
+        [
+          "39",
+          "Tottenham",
+          "Arsenal"
+        ],
+        [
+          "25",
+          "Leicester",
+          "Aston Villa"
+        ],
+        [
+          "28",
+          "Chelsea",
+          "Crystal Palace"
+        ],
+        [
+          "51",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "56",
+          "Nottingham Forest",
+          "Fulham"
+        ],
+        [
+          "29",
+          "Newcastle",
+          "Newcastle"
+        ],
+        [
+          "33",
+          "Crystal Palace",
+          "Leicester"
+        ],
+        [
+          "53",
+          "Brentford",
+          "West Ham"
+        ],
+        [
+          "58",
+          "Ipswich",
+          "Ipswich"
+        ],
+        [
+          "26",
+          "Nottingham Forest",
+          "Wolves"
+        ],
+        [
+          "22",
+          "Brentford",
+          "Brentford"
+        ]
+      ],
+      "result_count": 33,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "Find oid, date, home_team from match_result where oid is <= 45, home_goals is <= 2, and home_goals is between 0 and 2.",
+      "sql": "SELECT \"oid\", \"date\", \"home_team\" FROM \"match_result\" WHERE (CAST(\"oid\" AS REAL) <= 45) AND (CAST(\"home_goals\" AS REAL) <= 2) AND (CAST(\"home_goals\" AS REAL) >= 0 AND CAST(\"home_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.oid",
+          "match_result.date",
+          "match_result.home_team",
+          "match_result.home_goals"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "oid",
+        "date",
+        "home_team"
+      ],
+      "result_rows": [
+        [
+          "24",
+          "31/08/24",
+          "Ipswich"
+        ],
+        [
+          "23",
+          "31/08/24",
+          "Everton"
+        ],
+        [
+          "38",
+          "14/09/24",
+          "Bournemouth"
+        ],
+        [
+          "4",
+          "17/08/24",
+          "Everton"
+        ],
+        [
+          "27",
+          "31/08/24",
+          "West Ham"
+        ],
+        [
+          "40",
+          "15/09/24",
+          "Wolves"
+        ],
+        [
+          "31",
+          "14/09/24",
+          "Southampton"
+        ],
+        [
+          "9",
+          "18/08/24",
+          "Chelsea"
+        ],
+        [
+          "7",
+          "17/08/24",
+          "West Ham"
+        ],
+        [
+          "30",
+          "01/09/24",
+          "Manchester United"
+        ],
+        [
+          "15",
+          "24/08/24",
+          "Southampton"
+        ],
+        [
+          "17",
+          "24/08/24",
+          "Aston Villa"
+        ],
+        [
+          "11",
+          "24/08/24",
+          "Brighton"
+        ],
+        [
+          "5",
+          "17/08/24",
+          "Newcastle"
+        ],
+        [
+          "21",
+          "31/08/24",
+          "Arsenal"
+        ],
+        [
+          "32",
+          "14/09/24",
+          "Brighton"
+        ],
+        [
+          "19",
+          "25/08/24",
+          "Wolves"
+        ],
+        [
+          "44",
+          "21/09/24",
+          "Leicester"
+        ],
+        [
+          "36",
+          "14/09/24",
+          "Manchester City"
+        ],
+        [
+          "13",
+          "24/08/24",
+          "Fulham"
+        ],
+        [
+          "39",
+          "15/09/24",
+          "Tottenham"
+        ],
+        [
+          "25",
+          "31/08/24",
+          "Leicester"
+        ],
+        [
+          "28",
+          "01/09/24",
+          "Chelsea"
+        ],
+        [
+          "20",
+          "25/08/24",
+          "Liverpool"
+        ],
+        [
+          "2",
+          "17/08/24",
+          "Ipswich"
+        ],
+        [
+          "29",
+          "01/09/24",
+          "Newcastle"
+        ],
+        [
+          "33",
+          "14/09/24",
+          "Crystal Palace"
+        ],
+        [
+          "3",
+          "17/08/24",
+          "Arsenal"
+        ],
+        [
+          "8",
+          "18/08/24",
+          "Brentford"
+        ],
+        [
+          "26",
+          "31/08/24",
+          "Nottingham Forest"
+        ],
+        [
+          "6",
+          "17/08/24",
+          "Nottingham Forest"
+        ]
+      ],
+      "result_count": 31,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "Find away_goals, date, away_team from match_result where away_goals is between 1 and 2, row_id is >= 8, and away_goals is <= 2.",
+      "sql": "SELECT \"away_goals\", \"date\", \"away_team\" FROM \"match_result\" WHERE (CAST(\"away_goals\" AS REAL) >= 1 AND CAST(\"away_goals\" AS REAL) <= 2) AND (CAST(\"row_id\" AS REAL) >= 8) AND (CAST(\"away_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.away_goals",
+          "match_result.date",
+          "match_result.away_team",
+          "match_result.row_id"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "away_goals",
+        "date",
+        "away_team"
+      ],
+      "result_rows": [
+        [
+          "2",
+          "18/08/24",
+          "Manchester City"
+        ],
+        [
+          "2",
+          "17/08/24",
+          "Aston Villa"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "Nottingham Forest"
+        ],
+        [
+          "2",
+          "24/08/24",
+          "Arsenal"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "Manchester United"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "Ipswich"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "Ipswich"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "Brighton"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "Brentford"
+        ],
+        [
+          "1",
+          "21/09/24",
+          "Everton"
+        ],
+        [
+          "1",
+          "14/09/24",
+          "Brentford"
+        ],
+        [
+          "1",
+          "24/08/24",
+          "Leicester"
+        ],
+        [
+          "2",
+          "28/09/24",
+          "Leicester"
+        ],
+        [
+          "1",
+          "15/09/24",
+          "Arsenal"
+        ],
+        [
+          "2",
+          "31/08/24",
+          "Aston Villa"
+        ],
+        [
+          "1",
+          "01/09/24",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "Manchester City"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "Fulham"
+        ],
+        [
+          "2",
+          "17/08/24",
+          "Liverpool"
+        ],
+        [
+          "1",
+          "01/09/24",
+          "Tottenham"
+        ],
+        [
+          "2",
+          "14/09/24",
+          "Leicester"
+        ],
+        [
+          "1",
+          "28/09/24",
+          "West Ham"
+        ],
+        [
+          "2",
+          "29/09/24",
+          "Aston Villa"
+        ],
+        [
+          "1",
+          "18/08/24",
+          "Crystal Palace"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "Wolves"
+        ],
+        [
+          "1",
+          "31/08/24",
+          "Southampton"
+        ],
+        [
+          "1",
+          "17/08/24",
+          "Bournemouth"
+        ]
+      ],
+      "result_count": 28,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find oid, player_of_the_match_team, date from match_result where oid is <= 38, home_goals is <= 2, and home_goals is between 0 and 2.",
+      "sql": "SELECT \"oid\", \"player_of_the_match_team\", \"date\" FROM \"match_result\" WHERE (CAST(\"oid\" AS REAL) <= 38) AND (CAST(\"home_goals\" AS REAL) <= 2) AND (CAST(\"home_goals\" AS REAL) >= 0 AND CAST(\"home_goals\" AS REAL) <= 2);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.oid",
+          "match_result.player_of_the_match_team",
+          "match_result.date",
+          "match_result.home_goals"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "oid",
+        "player_of_the_match_team",
+        "date"
+      ],
+      "result_rows": [
+        [
+          "24",
+          "Ipswich",
+          "31/08/24"
+        ],
+        [
+          "23",
+          "Bournemouth",
+          "31/08/24"
+        ],
+        [
+          "38",
+          "Chelsea",
+          "14/09/24"
+        ],
+        [
+          "4",
+          "Brighton",
+          "17/08/24"
+        ],
+        [
+          "27",
+          "Manchester City",
+          "31/08/24"
+        ],
+        [
+          "31",
+          "Manchester United",
+          "14/09/24"
+        ],
+        [
+          "9",
+          "Manchester City",
+          "18/08/24"
+        ],
+        [
+          "7",
+          "Aston Villa",
+          "17/08/24"
+        ],
+        [
+          "30",
+          "Liverpool",
+          "01/09/24"
+        ],
+        [
+          "15",
+          "Nottingham Forest",
+          "24/08/24"
+        ],
+        [
+          "17",
+          "Arsenal",
+          "24/08/24"
+        ],
+        [
+          "11",
+          "Brighton",
+          "24/08/24"
+        ],
+        [
+          "5",
+          "Newcastle",
+          "17/08/24"
+        ],
+        [
+          "21",
+          "Brighton",
+          "31/08/24"
+        ],
+        [
+          "32",
+          "Ipswich",
+          "14/09/24"
+        ],
+        [
+          "19",
+          "Chelsea",
+          "25/08/24"
+        ],
+        [
+          "36",
+          "Manchester City",
+          "14/09/24"
+        ],
+        [
+          "13",
+          "Fulham",
+          "24/08/24"
+        ],
+        [
+          "25",
+          "Aston Villa",
+          "31/08/24"
+        ],
+        [
+          "28",
+          "Crystal Palace",
+          "01/09/24"
+        ],
+        [
+          "20",
+          "Liverpool",
+          "25/08/24"
+        ],
+        [
+          "2",
+          "Liverpool",
+          "17/08/24"
+        ],
+        [
+          "29",
+          "Newcastle",
+          "01/09/24"
+        ],
+        [
+          "33",
+          "Leicester",
+          "14/09/24"
+        ],
+        [
+          "3",
+          "Arsenal",
+          "17/08/24"
+        ],
+        [
+          "8",
+          "Brentford",
+          "18/08/24"
+        ],
+        [
+          "26",
+          "Wolves",
+          "31/08/24"
+        ],
+        [
+          "6",
+          "Nottingham Forest",
+          "17/08/24"
+        ]
+      ],
+      "result_count": 28,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "Find home_goals, home_team, row_id from match_result where home_goals is between 0 and 2, away_goals is <= 2, and away_goals is >= 1.",
+      "sql": "SELECT \"home_goals\", \"home_team\", \"row_id\" FROM \"match_result\" WHERE (CAST(\"home_goals\" AS REAL) >= 0 AND CAST(\"home_goals\" AS REAL) <= 2) AND (CAST(\"away_goals\" AS REAL) <= 2) AND (CAST(\"away_goals\" AS REAL) >= 1);",
+      "golden_schema": {
+        "tables": [
+          "match_result"
+        ],
+        "columns": [
+          "match_result.home_goals",
+          "match_result.home_team",
+          "match_result.row_id",
+          "match_result.away_goals"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "premierleague/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "home_goals",
+        "home_team",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "1",
+          "Ipswich",
+          "0"
+        ],
+        [
+          "0",
+          "Bournemouth",
+          "2"
+        ],
+        [
+          "1",
+          "Wolves",
+          "7"
+        ],
+        [
+          "0",
+          "Chelsea",
+          "9"
+        ],
+        [
+          "1",
+          "West Ham",
+          "10"
+        ],
+        [
+          "0",
+          "Southampton",
+          "12"
+        ],
+        [
+          "0",
+          "Aston Villa",
+          "13"
+        ],
+        [
+          "2",
+          "Brighton",
+          "14"
+        ],
+        [
+          "1",
+          "Southampton",
+          "15"
+        ],
+        [
+          "2",
+          "Everton",
+          "17"
+        ],
+        [
+          "1",
+          "Arsenal",
+          "19"
+        ],
+        [
+          "1",
+          "Leicester",
+          "24"
+        ],
+        [
+          "2",
+          "Manchester City",
+          "25"
+        ],
+        [
+          "2",
+          "Fulham",
+          "26"
+        ],
+        [
+          "0",
+          "Tottenham",
+          "28"
+        ],
+        [
+          "1",
+          "Leicester",
+          "29"
+        ],
+        [
+          "1",
+          "Chelsea",
+          "30"
+        ],
+        [
+          "1",
+          "Newcastle",
+          "33"
+        ],
+        [
+          "0",
+          "Nottingham Forest",
+          "34"
+        ],
+        [
+          "0",
+          "Ipswich",
+          "35"
+        ],
+        [
+          "2",
+          "Newcastle",
+          "36"
+        ],
+        [
+          "2",
+          "Crystal Palace",
+          "37"
+        ],
+        [
+          "1",
+          "Brentford",
+          "38"
+        ],
+        [
+          "2",
+          "Ipswich",
+          "39"
+        ],
+        [
+          "2",
+          "Brentford",
+          "41"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "42"
+        ],
+        [
+          "1",
+          "Nottingham Forest",
+          "44"
+        ]
+      ],
+      "result_count": 27,
+      "has_more_rows": false
+    }
+  ]
+}

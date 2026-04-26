@@ -1,0 +1,46 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.flight_4.routes_airports_airlines",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "airlines",
+        "airports",
+        "flight_routes"
+      ],
+      "required_columns": [
+        "airlines.airline_name",
+        "airlines.iata_code",
+        "airlines.icao_code",
+        "airlines.callsign",
+        "airlines.country",
+        "airlines.active",
+        "airports.airport_name",
+        "airports.city",
+        "airports.country",
+        "airports.latitude",
+        "airports.longitude",
+        "airports.elevation",
+        "airports.iata_code",
+        "airports.icao_code",
+        "flight_routes.airline_name",
+        "flight_routes.departure_airport_name",
+        "flight_routes.departure_airport_code",
+        "flight_routes.departure_country",
+        "flight_routes.arrival_airport_name",
+        "flight_routes.arrival_airport_code",
+        "flight_routes.arrival_country",
+        "flight_routes.operation_focus",
+        "flight_routes.route_type"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

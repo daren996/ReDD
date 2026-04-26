@@ -5,7 +5,12 @@ from __future__ import annotations
 from importlib import import_module
 
 from .providers import (
+    CompletionRequest,
+    CompletionResult,
+    LLMConfig,
+    LLMRuntime,
     ProviderSpec,
+    build_llm_config,
     create_client,
     get_api_key,
     get_provider_spec,
@@ -32,7 +37,12 @@ def __getattr__(name: str):
 
 __all__ = [
     "HiddenStatesManager",
+    "CompletionRequest",
+    "CompletionResult",
+    "LLMConfig",
+    "LLMRuntime",
     "ProviderSpec",
+    "build_llm_config",
     "compare_values",
     "create_client",
     "get_api_key",

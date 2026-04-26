@@ -1,0 +1,145 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "fda.fda",
+  "tables": [
+    {
+      "table_id": "fda_510k_device_submission",
+      "name": "fda_510k_device_submission",
+      "description": "FDA 510(k) premarket notification submissions for medical devices. Each row represents a submission with detailed information about the device, its classification, intended use, and regulatory review. Contains 100 submissions.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "fda_510k_device_submission.510k_number",
+          "name": "510k_number",
+          "type": "string",
+          "description": "Unique FDA 510(k) submission number assigned to the premarket notification. Type: TEXT. Format: 'K' followed by digits. Examples: 'K143467', 'K171742', 'K170491'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.applicant",
+          "name": "applicant",
+          "type": "string",
+          "description": "Name of the company or organization that submitted the 510(k) application. Type: TEXT. Examples: 'TaiDoc Technology Corporation', 'Siemens Healthcare Diagnostics Products GmbH', 'Quidel Corporation'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.classification",
+          "name": "classification",
+          "type": "string",
+          "description": "FDA device classification level. Type: TEXT. Values include 'Class I' (lowest risk), 'Class II' (moderate risk), and combinations like 'II, II, I' for multi-component devices.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.conclusion",
+          "name": "conclusion",
+          "type": "string",
+          "description": "FDA's conclusion on the submission, typically a substantial equivalence determination. Type: TEXT. Most common: 'The submitted information in this premarket notification is complete and supports a substantial equivalence decision.'",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.indications_for_use",
+          "name": "indications_for_use",
+          "type": "string",
+          "description": "Specific medical conditions, patient populations, and clinical scenarios for which the device is indicated. Type: TEXT. Contains detailed clinical indication text, often multi-paragraph.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.intended_use",
+          "name": "intended_use",
+          "type": "string",
+          "description": "General intended use or purpose of the medical device. Type: TEXT. May reference 'Indications for Use' or contain a separate description. Examples: 'See Indications for Use below.', 'Same as Intended Uses'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.measurand",
+          "name": "measurand",
+          "type": "string",
+          "description": "The biological substance, analyte, or parameter that the device measures or detects. Type: TEXT. Examples: 'Capillary whole blood glucose from the fingertip, palm, forearm, and upper arm', 'Kappa (κ) Free Light Chain (FLC), Lambda (λ) Free Light Chain (FLC)', 'tcdA gene of toxigenic Clostridium difficile'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.panel",
+          "name": "panel",
+          "type": "string",
+          "description": "FDA review panel responsible for the device category, with panel number in parentheses. Type: TEXT. Examples: 'Clinical Chemistry (75)', 'Immunology (82)', 'Microbiology (83)', 'Hematology (81)'. Format varies.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.predicate_510k_number",
+          "name": "predicate_510k_number",
+          "type": "string",
+          "description": "510(k) number(s) of the predicate device(s) used to demonstrate substantial equivalence. Type: TEXT. Format: 'K' followed by digits. May contain multiple numbers. Examples: 'k101509', 'K031016, K031016', 'K113358'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.predicate_device_name",
+          "name": "predicate_device_name",
+          "type": "string",
+          "description": "Name(s) of the predicate device(s) to which substantial equivalence is claimed. Type: TEXT. Examples: 'FORA GD40 Blood Glucose Monitoring System', 'Portrait Toxigenic C. difficile Assay'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.product_code",
+          "name": "product_code",
+          "type": "string",
+          "description": "FDA product code(s) that classify the device type. Type: TEXT. Three-letter codes, may contain multiple codes with descriptions. Examples: 'NBW, System, Test, Blood Glucose, Over the Counter', 'OZN', 'DFH, Kappa, antigen, antiserum, control'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.proposed_labeling",
+          "name": "proposed_labeling",
+          "type": "string",
+          "description": "FDA assessment of the proposed device labeling. Type: TEXT. Most common: 'The labeling is sufficient and it satisfies the requirements of 21 CFR Part 809.10.' or similar.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.proprietary_and_established_names",
+          "name": "proprietary_and_established_names",
+          "type": "string",
+          "description": "Proprietary (brand) and established (generic) names of the device. Type: TEXT. Examples: 'FORA GD43 Blood Glucose Monitoring System', 'Solana C. difficile Assay', 'N Latex FLC Kappa assay, N Latex FLC Lambda assay'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.purpose_for_submission",
+          "name": "purpose_for_submission",
+          "type": "string",
+          "description": "Reason for the 510(k) submission. Type: TEXT. Examples: 'New device', 'New device on two previously cleared instruments', 'To obtain a substantial equivalence determination for a new device', 'Clearance of New Device'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.regulation_section",
+          "name": "regulation_section",
+          "type": "string",
+          "description": "Applicable FDA regulation section(s) under 21 CFR that the device falls under. Type: TEXT. Examples: '21 CFR 862.1345, Glucose test system', '21 CFR 866.3130, Clostridium difficile toxin gene amplification assay'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fda_510k_device_submission.type_of_test",
+          "name": "type_of_test",
+          "type": "string",
+          "description": "Analytical or clinical test methodology used by the device. Type: TEXT. Examples: 'Quantitative amperometric assay, glucose dehydrogenase (GDH-FAD)', 'Nephelometry, quantitative', 'Qualitative Helicase-Dependent Amplification (HDA) assay'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

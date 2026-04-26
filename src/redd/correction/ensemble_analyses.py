@@ -3,7 +3,6 @@ import os
 
 import numpy as np
 
-
 markers = ["o", "s", "^", "*", "x", "D", "v", "<", ">", "p", "h", "H", "+", "|", "_"]
 colors = ["b", "g", "r", "c", "m", "y", "k", "w"]
 

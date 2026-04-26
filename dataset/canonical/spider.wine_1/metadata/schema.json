@@ -1,0 +1,147 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.wine_1",
+  "tables": [
+    {
+      "table_id": "appellations",
+      "name": "appellations",
+      "description": "Wine appellations (officially recognized wine-producing regions) in California.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "appellations.appelation",
+          "name": "appelation",
+          "type": "string",
+          "description": "Name of the wine appellation or county-level region. Represents a specific geographic area recognized for wine production. Type: TEXT. Examples: 'Sonoma Coast', 'Napa Valley', 'Chalk Hill', 'Mount Harlan', 'Calaveras County'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellations.area",
+          "name": "area",
+          "type": "string",
+          "description": "Broader wine-producing area or macro-region that the appellation belongs to. Type: TEXT. Examples: 'North Coast', 'Central Coast', 'Sierra Foothills', 'California', 'Central Valley', 'N/A'. Possible values include large geographic groupings.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellations.county",
+          "name": "county",
+          "type": "string",
+          "description": "County where the appellation is located. Type: TEXT. Examples: 'Sonoma', 'Napa', 'San Luis Obispo', 'Monterey', 'N/A'. Some appellations span multiple counties; 'N/A' when not applicable.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellations.state",
+          "name": "state",
+          "type": "string",
+          "description": "State where the appellation is located. Type: TEXT. All values in this dataset are 'California'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellations.is_ava",
+          "name": "is_ava",
+          "type": "string",
+          "description": "Whether the appellation is a recognized American Viticultural Area (AVA). Type: TEXT. Values: 'Yes' or 'No'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "wine",
+      "name": "wine",
+      "description": "Individual wine entries with details on production, pricing, scoring, and grape varieties. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "wine.appelation",
+          "name": "appelation",
+          "type": "string",
+          "description": "The appellation (wine-producing region) where the wine was produced. References appellations.Appelation. Type: TEXT. Examples: 'Napa Valley', 'Sonoma Coast', 'Santa Lucia Highlands', 'Carneros'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.cases",
+          "name": "cases",
+          "type": "string",
+          "description": "Number of cases produced for this wine. Type: TEXT (numeric string or NULL). Range observed: from small batches (e.g. '154') to large productions (e.g. '8000'). NULL if unknown.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.drink",
+          "name": "drink",
+          "type": "string",
+          "description": "Recommended drinking window or year. Type: TEXT. 'now' indicates the wine is ready to drink immediately; a year value (e.g. '2012', '2015') indicates the optimal future drinking year.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.grape",
+          "name": "grape",
+          "type": "string",
+          "description": "Grape variety used to produce the wine. Type: TEXT. Examples: 'Syrah', 'Chardonnay', 'Pinot Noir', 'Sauvignon Blanc', 'Zinfandel', 'Cabernet Sauvingnon', 'Merlot', 'Grenache', 'Malbec', 'Petite Sirah'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.name",
+          "name": "name",
+          "type": "string",
+          "description": "Name or label of the wine. May be the grape variety name, a vineyard name, or a proprietary brand name. Type: TEXT. Examples: 'Syrah', 'Quarzo', 'Chardonnay', 'Hyde Vineyards', 'Mesa Verde Vineyard', 'Appelation Series'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.price",
+          "name": "price",
+          "type": "string",
+          "description": "Retail price of the wine in US dollars. Type: TEXT (numeric string). Range: $9 to $225, average ~$45.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.score",
+          "name": "score",
+          "type": "string",
+          "description": "Wine quality/evaluation score, typically on a 100-point scale. Type: TEXT (numeric string). Range observed: 78 to 98.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.state",
+          "name": "state",
+          "type": "string",
+          "description": "State where the wine was produced. Type: TEXT. All values in this dataset are 'California'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.winery",
+          "name": "winery",
+          "type": "string",
+          "description": "Name of the winery that produced the wine. Type: TEXT. Examples: 'Chalk Hill', 'Favia', 'Mer Soleil', 'Fog Dog', 'Selene', 'Brander'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.year",
+          "name": "year",
+          "type": "string",
+          "description": "Vintage year of the wine. Type: TEXT (numeric string representing a year). Range observed: 2004 to 2009 (with some data anomalies up to 2066).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

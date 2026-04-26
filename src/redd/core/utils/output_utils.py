@@ -7,6 +7,7 @@ from redd.exceptions import ArtifactNotFoundError, PromptExecutionError
 
 from .constants import ASSIGN_THRESHOLD, PATH_TEMPLATES
 from .prompt_utils import create_prompt
+from .structured_outputs import SchemaUpdateOutput
 
 
 class ResDictName:
@@ -36,9 +37,8 @@ def save_results(out_path, out_dict, encoding="utf-8"):
 def _run_schema_prompt(prompt, prompt_input_json, *, context: str, max_retries: int = 10):
     for attempt in range(1, max_retries + 1):
         try:
-            result_str = prompt(json.dumps(prompt_input_json)).strip()
-            payload = json.loads(result_str)
-            updated_schema = payload["Updated Schema"]
+            payload = prompt.complete_model(json.dumps(prompt_input_json), SchemaUpdateOutput)
+            updated_schema = payload.updated_schema
             if not isinstance(updated_schema, list):
                 raise TypeError(
                     f"`Updated Schema` must be a list, got {type(updated_schema).__name__}"
@@ -93,7 +93,7 @@ def create_general_schema(config, res_dict, doc_dict, out_dn, param_str, qid=Non
     if schema_path.exists():
         return
     schema_revise_prompt = create_prompt(
-        config.get("mode", "cgpt"),
+        config.get("mode", "openai"),
         "prompts/general_schema_revise_1_0.txt",
         llm_model=config.get("llm_model", "gpt-4o"),
         api_key=config.get("api_key"),
@@ -142,7 +142,7 @@ def create_tailored_schema(config, res_dict, doc_dict, out_dn, param_str, qid, q
     if tailored_schema_path.exists():
         return
     schema_tailor_prompt = create_prompt(
-        config.get("mode", "cgpt"),
+        config.get("mode", "openai"),
         "prompts/schema_tailor_1_0.txt",
         llm_model=config.get("llm_model", "gpt-4o"),
         api_key=config.get("api_key"),

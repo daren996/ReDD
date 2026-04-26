@@ -8,21 +8,20 @@ from __future__ import annotations
 
 import logging
 import random
-import time
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
 try:
     import torch
-    import torch.nn as nn
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
 
 try:
-    from transformers import AutoTokenizer, set_seed as hf_set_seed
+    from transformers import AutoTokenizer
+    from transformers import set_seed as hf_set_seed
     TRANSFORMERS_AVAILABLE = True
 except ImportError:
     TRANSFORMERS_AVAILABLE = False
@@ -34,12 +33,12 @@ try:
     from gliclass import GLiClassModel, ZeroShotClassificationPipeline
     GLICLASS_AVAILABLE = True
     try:
-        from gliclass.training import TrainingArguments, Trainer
         from gliclass.data_processing import (
+            AugmentationConfig,
             DataCollatorWithPadding,
             GLiClassDataset,
-            AugmentationConfig,
         )
+        from gliclass.training import Trainer, TrainingArguments
         GLICLASS_TRAINING_AVAILABLE = True
     except ImportError:
         pass
@@ -47,7 +46,7 @@ except ImportError:
     pass
 
 # Default model: GLiClass
-DEFAULT_MODEL = "knowledgator/gliclass-instruct-large-v1.0"
+DEFAULT_MODEL = "knowledgator/gliclass-small-v1.0"
 
 
 def _is_gliclass_model(model_name: str) -> bool:
@@ -204,8 +203,6 @@ class FineTunedTextProxy:
         if not documents:
             return np.array([]), np.array([], dtype=bool)
 
-        start_time = time.perf_counter()
-
         # Truncate long docs
         docs_truncated = [doc[:4000] for doc in documents]
         # Use tokenizer's encode_plus for proper [CLS] doc [SEP] pred [SEP] format
@@ -341,8 +338,8 @@ def _build_icl_examples(
 ) -> List[Dict[str, Any]]:
     """Sample few-shot examples for in-context learning (GLiClass format)."""
     rng = random.Random(seed)
-    pos_indices = [i for i, l in enumerate(labels) if l == 1]
-    neg_indices = [i for i, l in enumerate(labels) if l == 0]
+    pos_indices = [i for i, label in enumerate(labels) if label == 1]
+    neg_indices = [i for i, label in enumerate(labels) if label == 0]
     examples: List[Dict[str, Any]] = []
     for indices, label in [(pos_indices, "satisfies"), (neg_indices, "does not satisfy")]:
         k = min(examples_per_class, len(indices))
@@ -553,7 +550,7 @@ def train_finetuned_proxy(
         predicate_context: Formatted predicate string for model input
         documents: Training document texts
         labels: Binary labels (1 = satisfies predicate)
-        model_name: GLiClass model name (e.g. knowledgator/gliclass-instruct-large-v1.0)
+        model_name: GLiClass model name (e.g. knowledgator/gliclass-small-v1.0)
         output_dir: Where to save checkpoint (fine-tuned path only)
         epochs: Training epochs (GLiClass and DeBERTa paths)
         batch_size: Training batch size
@@ -576,7 +573,7 @@ def train_finetuned_proxy(
         )
     if not _is_gliclass_model(model_name):
         raise ValueError(
-            f"Learned proxies require a GLiClass model (e.g. knowledgator/gliclass-instruct-large-v1.0). "
+            f"Learned proxies require a GLiClass model (e.g. knowledgator/gliclass-small-v1.0). "
             f"Got: {model_name}"
         )
 

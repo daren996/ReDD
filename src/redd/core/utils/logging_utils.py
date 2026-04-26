@@ -1,15 +1,15 @@
-import os
 import logging
+import os
 from datetime import datetime
 
 
 def get_log_level(level_str):
     """
     Convert string log level to logging level constant.
-    
+
     Args:
         level_str (str): String representation of log level
-        
+
     Returns:
         int: Logging level constant
     """
@@ -26,7 +26,7 @@ def get_log_level(level_str):
 class NoHTTPRequestFilter(logging.Filter):
     def filter(self, record):
         return "HTTP Request" not in record.getMessage()
-    
+
 
 def setup_logging(exp=None, log_dir="logs", console_log_level=logging.WARNING):
     """

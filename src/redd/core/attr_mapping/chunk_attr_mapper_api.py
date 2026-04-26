@@ -12,9 +12,11 @@ import logging
 import re
 from typing import Any, Dict, List, Optional
 
-from .base import ChunkAttributeMapperBase
+from redd.llm import CompletionRequest, LLMRuntime
+
 from ..data_loader import DataLoaderBase
 from ..utils.api_keys import get_api_key_for_mode
+from .base import ChunkAttributeMapperBase
 
 __all__ = ["ChunkAttributeMapperAPI"]
 
@@ -86,25 +88,26 @@ class ChunkAttributeMapperAPI(ChunkAttributeMapperBase):
             mode = config.get("mode", "").lower()
             self.base_url = self.API_ENDPOINTS.get(mode, self.API_ENDPOINTS["deepseek"])
         
-        # Initialize API client
+        # Initialize shared runtime
         self._init_client()
         
         logging.info(f"[{self.__class__.__name__}:__init__] "
                     f"Initialized with model: {self.llm_model}, base_url: {self.base_url}")
     
     def _init_client(self) -> None:
-        """Initialize the OpenAI-compatible API client."""
-        try:
-            from openai import OpenAI
-            
-            self.client = OpenAI(
-                api_key=self.api_key,
-                base_url=self.base_url,
-            )
-        except ImportError:
-            logging.error(f"[{self.__class__.__name__}:_init_client] "
-                         f"openai package not installed. Install with: pip install openai")
-            raise ImportError("openai package required for API-based mapping")
+        """Initialize the shared LLM runtime."""
+        mode = self.config.get("mode", "deepseek").lower()
+        if mode == "api":
+            mode = "deepseek"
+        runtime_config = dict(self.config)
+        runtime_config["llm_model"] = self.llm_model
+        runtime_config["base_url"] = self.base_url
+        self.client = LLMRuntime.from_config(
+            mode,
+            self.llm_model,
+            config=runtime_config,
+            api_key=self.api_key,
+        )
     
     def _map_chunk_to_attributes(
         self, 
@@ -147,12 +150,12 @@ class ChunkAttributeMapperAPI(ChunkAttributeMapperBase):
             Response text or None if call failed
         """
         try:
-            response = self.client.chat.completions.create(
-                model=self.llm_model,
-                messages=[{"role": "user", "content": prompt}],
-            )
-            
-            return response.choices[0].message.content
+            return self.client.complete_text(
+                CompletionRequest(
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format="text",
+                )
+            ).text
             
         except Exception as e:
             logging.error(f"[{self.__class__.__name__}:_call_api] "

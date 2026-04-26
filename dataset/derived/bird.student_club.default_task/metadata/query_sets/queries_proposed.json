@@ -1,0 +1,40 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "status == 'Open'",
+        "type contains 'Meeting'"
+      ],
+      "optimal_order": [
+        "status == 'Open'",
+        "type contains 'Meeting'"
+      ],
+      "token_cost": 4201,
+      "sql": "SELECT * FROM event WHERE status = 'Open' AND type LIKE '%Meeting%';",
+      "natural_language": "Show all open meetings that are still accepting participants.",
+      "attributes": [
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "status == 'Closed'",
+        "type contains 'Meeting'"
+      ],
+      "optimal_order": [
+        "type contains 'Meeting'",
+        "status == 'Closed'"
+      ],
+      "token_cost": 4303,
+      "sql": "SELECT * FROM event WHERE status = 'Closed' AND type LIKE '%Meeting%';",
+      "natural_language": "List all meetings that have been closed or completed.",
+      "attributes": [
+        "status",
+        "type"
+      ]
+    }
+  ]
+}

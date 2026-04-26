@@ -7,7 +7,7 @@ This module provides the end-to-end predicate-proxy pipeline:
 2. Parse SQL WHERE clause into individual attribute filters
 3. Create predicate proxies for each filter (or use pre-trained classifiers)
 4. Run cascaded filtering on documents
-5. Use DataPop (LLM) to extract attributes for documents that pass all filters
+5. Use data extraction (LLM) to extract attributes for documents that pass all filters
 
 Example Usage:
     ```python
@@ -15,7 +15,7 @@ Example Usage:
     
     # Configure pipeline
     config = ProxyPipelineConfig(
-        dataset_path="spider_sqlite/college_2",
+        dataset_path="canonical/spider.college_2",
         query_id="Q1",
         llm_mode="gemini",
         llm_model="gemini-2.5-flash-lite",
@@ -33,41 +33,37 @@ Example Usage:
 
 from __future__ import annotations
 
-import logging
-import math
-import time
 import json
+import logging
+import time
 from pathlib import Path
-from typing import (
-    Any, Dict, List, Optional, Union, Tuple
-)
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
 from redd.core.data_loader import DataLoaderBase, create_data_loader
-from redd.embedding import EmbeddingManager
 from redd.core.utils.sql_filter_parser import (
-    SQLFilterParser,
     AttributePredicate,
+    SQLFilterParser,
     predicates_to_filter_dict,
 )
+from redd.embedding import EmbeddingManager
 from redd.proxy.predicate_proxy.factory import PredicateProxyFactory
-from redd.proxy.proxy_runtime.oracle import DataPopOracle, GoldenOracle
+from redd.proxy.proxy_runtime.oracle import DataExtractionOracle, GoldenOracle
 from redd.proxy.proxy_runtime.types import PipelineResults, ProxyPipelineConfig
+
 from .executor import (
-    ProxyExecutor,
-    ProxyRuntimeConfig,
-    ConformalProxy,
-    EmbeddingProxy,
     DocumentBatch,
     HardNegative,
+    ProxyExecutor,
+    ProxyRuntimeConfig,
 )
 
 __all__ = [
     "ProxyPipeline",
     "ProxyPipelineConfig",
     "PipelineResults",
-    "DataPopOracle",
+    "DataExtractionOracle",
     "GoldenOracle",
 ]
 
@@ -96,7 +92,7 @@ class ProxyPipeline:
         # Components (lazy-loaded)
         self._data_loader: Optional[DataLoaderBase] = None
         self._sql_parser: Optional[SQLFilterParser] = None
-        self._oracle: Optional[DataPopOracle] = None
+        self._oracle: Optional[DataExtractionOracle] = None
         self._embedding_manager: Optional[EmbeddingManager] = None
         self._proxy_factory: Optional[PredicateProxyFactory] = None
         
@@ -123,7 +119,7 @@ class ProxyPipeline:
                 dataset_root = Path(self.config.data_main) / dataset_root
             self._data_loader = create_data_loader(
                 data_root=dataset_root,
-                loader_type="sqlite",
+                loader_type="hf_manifest",
                 loader_config={},
             )
             logging.info(f"[ProxyPipeline] Created data loader with "
@@ -138,13 +134,13 @@ class ProxyPipeline:
         return self._sql_parser
     
     @property
-    def oracle(self) -> DataPopOracle | GoldenOracle:
+    def oracle(self) -> DataExtractionOracle | GoldenOracle:
         """Get or create extraction oracle (LLM or ground truth)."""
         if self._oracle is None:
             if str(self.config.llm_mode).lower() in {"ground_truth", "gt"}:
                 self._oracle = GoldenOracle(self.data_loader)
             else:
-                self._oracle = DataPopOracle(
+                self._oracle = DataExtractionOracle(
                     mode=self.config.llm_mode,
                     llm_model=self.config.llm_model,
                     api_key=self.config.api_key
@@ -185,9 +181,14 @@ class ProxyPipeline:
         query_info = self.data_loader.get_query_info(self.config.query_id)
         
         if query_info is None:
-            # Try loading from generated_queries.json
-            gen_queries_path = self.data_loader.data_root / "generated_queries.json"
-            if gen_queries_path.exists():
+            # Try loading from optional query-set files in the current contract.
+            query_set_paths = [
+                self.data_loader.data_root / "metadata" / "query_sets" / "generated_queries.json",
+                self.data_loader.data_root / "generated_queries.json",
+            ]
+            for gen_queries_path in query_set_paths:
+                if not gen_queries_path.exists():
+                    continue
                 with open(gen_queries_path, 'r', encoding='utf-8') as f:
                     gen_data = json.load(f)
                 
@@ -202,6 +203,8 @@ class ProxyPipeline:
                             "difficulty": q.get("difficulty", ""),
                         }
                         break
+                if query_info is not None:
+                    break
         
         if query_info is None:
             raise ValueError(f"Query {self.config.query_id} not found in dataset")
@@ -344,9 +347,6 @@ class ProxyPipeline:
         predicates = self.parse_predicates()
         results.predicates = predicates
         
-        # Create predicate functions for validation
-        predicate_fns = predicates_to_filter_dict(predicates)
-        
         # 3. Get attributes to extract
         attributes = self._get_extraction_attributes(query_info, predicates, schema)
         logging.info(f"[ProxyPipeline] Will extract attributes: {attributes}")
@@ -392,7 +392,7 @@ class ProxyPipeline:
             results.save(output_path)
         
         # Log summary
-        logging.info(f"[ProxyPipeline] Complete!")
+        logging.info("[ProxyPipeline] Complete!")
         logging.info(f"  - Documents: {results.total_documents}")
         logging.info(f"  - Passed proxies: {results.documents_passed_proxies}")
         logging.info(f"  - Extracted: {results.documents_extracted}")
@@ -415,7 +415,7 @@ class ProxyPipeline:
         """
         Run the proxy runtime for a subset of documents with table-specific predicates.
         
-        Used by the unified datapop proxy-runtime strategy to process each table's documents sequentially.
+        Used by the unified data extraction proxy-runtime strategy to process each table's documents sequentially.
         
         Args:
             doc_ids: Test document IDs to process
@@ -485,6 +485,13 @@ class ProxyPipeline:
         for doc_id in doc_ids:
             doc_texts.append(self._load_doc_text(loader, doc_id))
         
+        proxy_mode = str(getattr(self.config, "predicate_proxy_mode", "pretrained")).strip().lower()
+        if proxy_mode not in {"auto", "train", "pretrained"}:
+            raise ValueError(
+                "proxy_runtime.predicate_proxy_mode must be one of: auto, train, pretrained"
+            )
+        allow_embedding_fallback = bool(getattr(self.config, "allow_embedding_fallback", False))
+
         # Determine whether learned proxies can use a fine-tuned classifier.
         use_finetuned = False
         if self.config.use_learned_proxies:
@@ -498,8 +505,17 @@ class ProxyPipeline:
                 use_finetuned = False
 
         # Compute test embeddings only when needed.
-        need_embeddings = self.config.use_embedding_proxies or self.config.save_hard_negatives
-        if self.config.use_learned_proxies and fit_train_doc_ids and not use_finetuned:
+        need_embeddings = self.config.save_hard_negatives
+        if self.config.use_embedding_proxies and (
+            allow_embedding_fallback or not self.config.use_learned_proxies or not predicates
+        ):
+            need_embeddings = True
+        if (
+            self.config.use_learned_proxies
+            and fit_train_doc_ids
+            and proxy_mode in {"auto", "train"}
+            and not use_finetuned
+        ):
             # LogisticRegression learned proxies need training embeddings.
             need_embeddings = True
 
@@ -517,7 +533,24 @@ class ProxyPipeline:
         batch = DocumentBatch(doc_ids=doc_ids, documents=doc_texts, embeddings=embeddings)
 
         if predicates:
-            if self.config.use_learned_proxies and fit_train_doc_ids:
+            should_train_predicate_proxies = (
+                self.config.use_learned_proxies
+                and proxy_mode in {"auto", "train"}
+                and bool(fit_train_doc_ids)
+            )
+            should_load_pretrained_proxies = (
+                self.config.use_learned_proxies
+                and proxy_mode in {"auto", "pretrained"}
+                and not should_train_predicate_proxies
+            )
+
+            if proxy_mode == "train" and self.config.use_learned_proxies and not fit_train_doc_ids:
+                raise ValueError(
+                    "proxy_runtime.predicate_proxy_mode='train' requires training docs. "
+                    "Increase dataset split.train_count/training_data_count or use 'pretrained'."
+                )
+
+            if should_train_predicate_proxies:
                 label_doc_ids = list(dict.fromkeys(fit_train_doc_ids + calibration_doc_ids))
                 label_doc_texts: Dict[str, str] = {
                     doc_id: self._load_doc_text(loader, doc_id) for doc_id in label_doc_ids
@@ -548,7 +581,7 @@ class ProxyPipeline:
                         model_name = getattr(
                             self.config,
                             "finetuned_model",
-                            "knowledgator/gliclass-instruct-large-v1.0",
+                            "knowledgator/gliclass-small-v1.0",
                         )
                         logging.info(
                             f"[ProxyPipeline] Training learned proxies (model={model_name})"
@@ -601,15 +634,36 @@ class ProxyPipeline:
                         "[ProxyPipeline] No training labels extracted; learned proxies not trained."
                     )
 
-            # Fallback to non-learned embedding proxies when configured.
-            if not proxies and self.config.use_embedding_proxies:
+            if not proxies and should_load_pretrained_proxies:
+                model_name = getattr(
+                    self.config,
+                    "finetuned_model",
+                    "knowledgator/gliclass-small-v1.0",
+                )
+                proxies = self.proxy_factory.create_pretrained_proxies(
+                    predicates=predicates,
+                    query_text=results.query_text,
+                    model_name=model_name,
+                    threshold=getattr(self.config, "proxy_threshold", None),
+                )
+
+            # Fallback to non-learned embedding proxies only when explicitly allowed
+            # or when learned predicate proxies are disabled.
+            if (
+                not proxies
+                and self.config.use_embedding_proxies
+                and (allow_embedding_fallback or not self.config.use_learned_proxies)
+            ):
                 expected_dim = int(embeddings.shape[1]) if embeddings.size > 0 else None
                 proxies = self.proxy_factory.create_proxies(
                     predicates, results.query_text, expected_embedding_dim=expected_dim
                 )
-            elif self.config.use_learned_proxies and not fit_train_doc_ids:
-                logging.warning(
-                    "[ProxyPipeline] No training docs for learned proxies; running without learned proxy training."
+            elif not proxies and self.config.use_learned_proxies:
+                raise RuntimeError(
+                    "No predicate proxies could be created. In no-training mode ReDD only "
+                    "uses pretrained predicate proxies; set proxy_runtime.finetuned_model or "
+                    "classifier_paths, install the required proxy dependencies, or set "
+                    "proxy_runtime.allow_embedding_fallback=true."
                 )
         
         # Merge join-resolution proxies ahead of predicate proxies for fail-fast execution.
@@ -627,7 +681,7 @@ class ProxyPipeline:
             results.execution_stats = exec_stats
             # Only documents that passed all configured proxies are in proxy_results.
             passed_doc_ids = [r["doc_id"] for r in proxy_results if r.get("passed_proxies", False)]
-            learned_proxy_prefixes = ("learned_", "finetuned_", "llm_")
+            learned_proxy_prefixes = ("learned_", "finetuned_", "gliclass_", "llm_")
             has_learned_proxy = any(
                 str(getattr(proxy, "name", "")).startswith(learned_proxy_prefixes)
                 for proxy in proxies
@@ -735,7 +789,7 @@ class ProxyPipeline:
         """
         Split training docs into fit/calibration subsets.
 
-        Web/main datapop policy: all proxy fit/calibration data must come from
+        Web/main data-extraction policy: all proxy fit/calibration data must come from
         the global training prefix (first ``training_data_count`` documents).
         To fully use this prefix without extra minimum constraints, use the
         same training pool for both fit and calibration.
@@ -748,7 +802,7 @@ class ProxyPipeline:
     def _proxy_attribute_name(self, proxy_name: str) -> str:
         """Extract attribute name from proxy identifier."""
         name = str(proxy_name or "")
-        for prefix in ("learned_", "finetuned_", "llm_"):
+        for prefix in ("learned_", "finetuned_", "gliclass_", "llm_"):
             if name.startswith(prefix):
                 return name[len(prefix):]
         return name

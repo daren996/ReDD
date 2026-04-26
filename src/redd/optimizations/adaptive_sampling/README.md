@@ -73,7 +73,7 @@ adaptive_sampling:
   use_embedding_selection: true
   embedding_model: "gemini-embedding-001"
   # Optional: dataset_db_path to anchor SQLite embedding cache
-  # dataset_db_path: "dataset/spider_sqlite/college_2/default_task.db"
+  # dataset_db_path: "dataset/canonical/spider.college_2/manifest.yaml"
 ```
 
 Embedding selection now uses SQLite-backed cache through `redd.embedding.EmbeddingManager`.
@@ -102,7 +102,7 @@ album_5d0_adaptive:
   data_main: "dataset/spider_update/"
   out_main: "outputs/schema_gen/spider_deepseek_adaptive/"
   exp_dn_fn_list: ["store_1/albums"]
-  data_loader_type: "spider"
+  data_loader_type: "hf_manifest"
   res_param_str: "mdlds_prm5d0_adaptive"
   
   # Enable adaptive sampling

@@ -1,0 +1,92 @@
+{
+  "llm": {
+    "openai": [
+      {
+        "id": "gpt-4o-mini",
+        "label": "GPT-4o mini",
+        "structured": true
+      },
+      {
+        "id": "gpt-4o",
+        "label": "GPT-4o",
+        "structured": true
+      }
+    ],
+    "gemini": [
+      {
+        "id": "gemini-2.5-flash-lite",
+        "label": "Gemini 2.5 Flash Lite",
+        "structured": true
+      },
+      {
+        "id": "gemini-2.5-flash",
+        "label": "Gemini 2.5 Flash",
+        "structured": true
+      }
+    ],
+    "deepseek": [
+      {
+        "id": "deepseek-v4-flash",
+        "label": "DeepSeek V4 Flash",
+        "structured": true
+      },
+      {
+        "id": "deepseek-chat",
+        "label": "DeepSeek Chat",
+        "structured": true
+      }
+    ],
+    "siliconflow": [
+      {
+        "id": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+        "label": "Qwen3 30B Instruct"
+      }
+    ],
+    "together": [
+      {
+        "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+        "label": "Llama 3.3 70B Instruct Turbo"
+      }
+    ],
+    "local": []
+  },
+  "embedding": {
+    "openai": [
+      {
+        "id": "text-embedding-3-small",
+        "label": "text-embedding-3-small"
+      },
+      {
+        "id": "text-embedding-3-large",
+        "label": "text-embedding-3-large"
+      },
+      {
+        "id": "text-embedding-ada-002",
+        "label": "text-embedding-ada-002"
+      }
+    ],
+    "gemini": [
+      {
+        "id": "gemini-embedding-001",
+        "label": "Gemini Embedding 001"
+      }
+    ],
+    "siliconflow": [
+      {
+        "id": "Qwen/Qwen3-Embedding-0.6B",
+        "label": "Qwen3 Embedding 0.6B"
+      },
+      {
+        "id": "Qwen/Qwen3-Embedding-4B",
+        "label": "Qwen3 Embedding 4B"
+      }
+    ],
+    "together": [
+      {
+        "id": "togethercomputer/m2-bert-80M-8k-retrieval",
+        "label": "M2-BERT 80M 8K Retrieval"
+      }
+    ],
+    "local": []
+  }
+}

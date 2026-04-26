@@ -7,7 +7,7 @@ The api_keys.json file should be in the project root and is gitignored.
 import json
 import os
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 
 def load_api_keys(api_keys_file: Optional[str] = None) -> Dict[str, str]:
@@ -51,7 +51,7 @@ def get_api_key_for_mode(mode: str, api_keys_file: Optional[str] = None) -> Opti
     2. Environment variable
     
     Args:
-        mode: API mode ("gemini", "deepseek", "cgpt", "together", "siliconflow")
+        mode: API mode ("gemini", "deepseek", "openai", "together", "siliconflow")
         api_keys_file: Path to the API keys JSON file. If None, looks for
                       'api_keys.json' in the project root.
     
@@ -62,7 +62,7 @@ def get_api_key_for_mode(mode: str, api_keys_file: Optional[str] = None) -> Opti
     env_var_map = {
         "gemini": "GEMINI_API_KEY",
         "deepseek": "DEEPSEEK_API_KEY",
-        "cgpt": "OPENAI_API_KEY",
+        "openai": "OPENAI_API_KEY",
         "together": "TOGETHER_API_KEY",
         "siliconflow": "SILICONFLOW_API_KEY"
     }

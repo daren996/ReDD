@@ -1,0 +1,307 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.apartment_rentals",
+  "tables": [
+    {
+      "table_id": "apartment_buildings",
+      "name": "apartment_buildings",
+      "description": "Information about apartment buildings including address, name, description, and management contacts.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartment_buildings.building_address",
+          "name": "building_address",
+          "type": "string",
+          "description": "Full mailing address of the apartment building, including street, city, state, and ZIP code. Type: TEXT. Examples: '03743 Tammy Port Apt. 733 South Theresa, MT 50037', '43180 Jody Row Heatherland, MT 19442'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_description",
+          "name": "building_description",
+          "type": "string",
+          "description": "Type or description of the building. Indicates the building style or category. Type: TEXT. Values: 'Studio', 'Duplex', 'Flat'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_full_name",
+          "name": "building_full_name",
+          "type": "string",
+          "description": "Full official name of the apartment building or property management company. Type: TEXT. Examples: 'Bradley-Sulliva', 'Larson, Mills a', 'Stuyvesant Town'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_manager",
+          "name": "building_manager",
+          "type": "string",
+          "description": "First name of the building manager responsible for the property. Type: TEXT. Examples: 'Jonathan', 'Benjamin', 'Marie', 'Jennifer'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_phone",
+          "name": "building_phone",
+          "type": "string",
+          "description": "Contact phone number for the building management. Various formats. Type: TEXT. Examples: '253-407-0607', '001-849-829-1800x802', '(145)411-6406'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_buildings.building_short_name",
+          "name": "building_short_name",
+          "type": "string",
+          "description": "Abbreviated or short name of the apartment building, often the same as building_full_name. Type: TEXT. Examples: 'Bradley-Sulliva', 'Stuyvesant Town'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "apartments",
+      "name": "apartments",
+      "description": "Details of individual apartment units including type, room counts, and building association.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartments.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Apartment unit number or identifier. Type: TEXT. Examples: 'Apt. 503', 'Apt. 817', 'Apt. 852'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.apt_type_code",
+          "name": "apt_type_code",
+          "type": "string",
+          "description": "Type classification of the apartment unit. Type: TEXT. Values: 'Studio', 'Duplex', 'Flat'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.bathroom_count",
+          "name": "bathroom_count",
+          "type": "string",
+          "description": "Number of bathrooms in the apartment unit. Type: TEXT (numeric string). Examples: '1', '3'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.bedroom_count",
+          "name": "bedroom_count",
+          "type": "string",
+          "description": "Number of bedrooms in the apartment unit. Type: TEXT (numeric string). Examples: '3', '4', '5', '6'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.building_full_name",
+          "name": "building_full_name",
+          "type": "string",
+          "description": "Full name of the building the apartment belongs to. References Apartment_Buildings.building_full_name. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.building_short_name",
+          "name": "building_short_name",
+          "type": "string",
+          "description": "Short name of the building the apartment belongs to. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartments.room_count",
+          "name": "room_count",
+          "type": "string",
+          "description": "Total number of rooms in the apartment unit. Type: TEXT (numeric string). Examples: '4', '6', '8', '9'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "guests",
+      "name": "guests",
+      "description": "Guest information for apartment booking records, including personal details.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "guests.date_of_birth",
+          "name": "date_of_birth",
+          "type": "string",
+          "description": "Date and time of birth of the guest. Type: TEXT (datetime string). Examples: '1969-09-04 08:01:32', '2013-03-07 05:31:21'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "guests.gender_code",
+          "name": "gender_code",
+          "type": "string",
+          "description": "Gender of the guest. Type: TEXT. Values: 'Male', 'Female', 'Unknown'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "guests.guest_first_name",
+          "name": "guest_first_name",
+          "type": "string",
+          "description": "First name of the guest. Type: TEXT. Examples: 'Ashley', 'Karen', 'Amber', 'Christopher'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "guests.guest_last_name",
+          "name": "guest_last_name",
+          "type": "string",
+          "description": "Last name of the guest. Type: TEXT. Examples: 'Strickland', 'Roberson', 'Payne', 'Garcia'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "apartment_bookings",
+      "name": "apartment_bookings",
+      "description": "Booking records linking guests to apartment units with date ranges and status.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartment_bookings.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Apartment unit number for this booking. References Apartments.apt_number. Type: TEXT. Examples: 'Apt. 270', 'Apt. 199'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.booking_end_date",
+          "name": "booking_end_date",
+          "type": "string",
+          "description": "End date and time of the booking period. Type: TEXT (datetime string). Examples: '2019-12-06 02:24:23', '2021-04-12 00:46:50'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.booking_start_date",
+          "name": "booking_start_date",
+          "type": "string",
+          "description": "Start date and time of the booking period. Type: TEXT (datetime string). Examples: '2019-02-13 23:31:48', '2016-01-20 07:19:49'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.booking_status_code",
+          "name": "booking_status_code",
+          "type": "string",
+          "description": "Current status of the booking. Type: TEXT. Values: 'Provisional', 'Cancelled', 'Confirmed'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.guest_first_name",
+          "name": "guest_first_name",
+          "type": "string",
+          "description": "First name of the guest who made the booking. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_bookings.guest_last_name",
+          "name": "guest_last_name",
+          "type": "string",
+          "description": "Last name of the guest who made the booking. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "apartment_facilities",
+      "name": "apartment_facilities",
+      "description": "Facilities and amenities available in each apartment unit.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "apartment_facilities.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Apartment unit number that has this facility. References Apartments.apt_number. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "apartment_facilities.facility_code",
+          "name": "facility_code",
+          "type": "string",
+          "description": "Code or name of the facility/amenity available. Type: TEXT. Values: 'Cable TV', 'Gym', 'Swimming Pool', 'Balcony', 'Boardband', 'Laundry', 'Air Conditioning', 'Parking'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "view_unit_status",
+      "name": "view_unit_status",
+      "description": "Status view of apartment units showing availability and booking date ranges.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "view_unit_status.apt_number",
+          "name": "apt_number",
+          "type": "string",
+          "description": "Apartment unit number. Type: TEXT. Examples: 'Apt. 794', 'Apt. 411', 'Suite 645'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.available_yn",
+          "name": "available_yn",
+          "type": "string",
+          "description": "Whether the apartment unit is currently available. Type: TEXT. Values: '1' (available) or '0' (not available).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.booking_end_date",
+          "name": "booking_end_date",
+          "type": "string",
+          "description": "End date and time of the associated booking. Type: TEXT (datetime string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.booking_start_date",
+          "name": "booking_start_date",
+          "type": "string",
+          "description": "Start date and time of the associated booking. Type: TEXT (datetime string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "view_unit_status.status_date",
+          "name": "status_date",
+          "type": "string",
+          "description": "Date and time when this status record was created or last updated. Type: TEXT (datetime string).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

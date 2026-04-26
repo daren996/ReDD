@@ -14,8 +14,8 @@ from typing import Any, Dict, List, Optional
 
 import torch
 
-from .base import ChunkAttributeMapperBase
 from ..data_loader import DataLoaderBase
+from .base import ChunkAttributeMapperBase
 
 __all__ = ["ChunkAttributeMapper"]
 
@@ -53,7 +53,6 @@ class ChunkAttributeMapper(ChunkAttributeMapperBase):
             raise RuntimeError("CUDA is required for ChunkAttributeMapper")
         
         # Lazy imports for transformers
-        from transformers import AutoTokenizer, AutoModelForCausalLM
         
         self.llm_model_path = config.get("llm_model_path")
         self.llm_model_name = config.get("llm_model")
@@ -73,8 +72,9 @@ class ChunkAttributeMapper(ChunkAttributeMapperBase):
     
     def _load_model(self) -> None:
         """Load the LLM model for inference."""
-        from transformers import AutoTokenizer, AutoModelForCausalLM
         import os
+
+        from transformers import AutoModelForCausalLM, AutoTokenizer
         
         if self.llm_model_path and os.path.exists(self.llm_model_path):
             logging.info(f"[{self.__class__.__name__}:_load_model] "

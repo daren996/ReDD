@@ -1,0 +1,559 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "quest.wikitext",
+  "tables": [
+    {
+      "table_id": "city",
+      "name": "city",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "city.city_name",
+          "name": "city_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "city.state_name",
+          "name": "state_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "city.population",
+          "name": "population",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "city.area",
+          "name": "area",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "city.gdp",
+          "name": "gdp",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "geography",
+      "name": "geography",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "geography.name",
+          "name": "name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "geography.country",
+          "name": "country",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "geography.region",
+          "name": "region",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "geography.latitude",
+          "name": "latitude",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "geography.longitude",
+          "name": "longitude",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "geography.altitude",
+          "name": "altitude",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "geography.area",
+          "name": "area",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "movie",
+      "name": "movie",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "movie.title",
+          "name": "title",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.release_year",
+          "name": "release_year",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.genre",
+          "name": "genre",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.director",
+          "name": "director",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.cast",
+          "name": "cast",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.duration",
+          "name": "duration",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.production_company",
+          "name": "production_company",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.country_of_origin",
+          "name": "country_of_origin",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "music",
+      "name": "music",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "music.song_title",
+          "name": "song_title",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "music.artist_name",
+          "name": "artist_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "music.album_name",
+          "name": "album_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "music.release_date",
+          "name": "release_date",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "music.genre",
+          "name": "genre",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "music.duration",
+          "name": "duration",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "music.country_of_origin",
+          "name": "country_of_origin",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "nba",
+      "name": "nba",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "nba.name",
+          "name": "name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.birth_date",
+          "name": "birth_date",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.nationality",
+          "name": "nationality",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.age",
+          "name": "age",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.team",
+          "name": "team",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.position",
+          "name": "position",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.draft_pick",
+          "name": "draft_pick",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.draft_year",
+          "name": "draft_year",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.college",
+          "name": "college",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.nba_championships",
+          "name": "nba_championships",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.mvp_awards",
+          "name": "mvp_awards",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.olympic_gold_medals",
+          "name": "olympic_gold_medals",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "nba.fiba_world_cup",
+          "name": "fiba_world_cup",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "owner",
+      "name": "owner",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "owner.name",
+          "name": "name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "owner.age",
+          "name": "age",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "owner.nationality",
+          "name": "nationality",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "owner.nba_team",
+          "name": "nba_team",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "owner.own_year",
+          "name": "own_year",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "players",
+      "name": "players",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "players.full_name",
+          "name": "full_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.date_of_birth",
+          "name": "date_of_birth",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.nationality",
+          "name": "nationality",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.sport",
+          "name": "sport",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.team",
+          "name": "team",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.height_cm",
+          "name": "height_cm",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.weight_kg",
+          "name": "weight_kg",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.career_start_year",
+          "name": "career_start_year",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "players.individual_awards",
+          "name": "individual_awards",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "team",
+      "name": "team",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "team.team_name",
+          "name": "team_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team.founded_year",
+          "name": "founded_year",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team.location",
+          "name": "location",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team.ownership",
+          "name": "ownership",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team.championship",
+          "name": "championship",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "examples.single_doc_demo",
+  "tables": [
+    {
+      "table_id": "wine",
+      "name": "wine",
+      "description": "Single-table demo dataset with one wine record.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "wine.winery",
+          "name": "winery",
+          "type": "string",
+          "description": "Name of the winery.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.appelation",
+          "name": "appelation",
+          "type": "string",
+          "description": "Wine appellation.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wine.score",
+          "name": "score",
+          "type": "string",
+          "description": "Wine score as a string.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "quest.lcr",
+  "tables": [
+    {
+      "table_id": "corpus",
+      "name": "corpus",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "corpus.court_name",
+          "name": "court_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.judge_name",
+          "name": "judge_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.plaintiff",
+          "name": "plaintiff",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.defendant",
+          "name": "defendant",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.hearing_year",
+          "name": "hearing_year",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.judgment_year",
+          "name": "judgment_year",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.charges",
+          "name": "charges",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.verdict",
+          "name": "verdict",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.legal_basis",
+          "name": "legal_basis",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "corpus.appeal_information",
+          "name": "appeal_information",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

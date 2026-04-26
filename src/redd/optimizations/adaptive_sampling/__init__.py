@@ -9,12 +9,12 @@ Strategies:
 - DDGT: Uses diversity-driven sampling with Good-Turing stopping condition
 """
 
+from .ddgt.document_selector import DDGTDocumentSelector
+from .ddgt.sampler import DDGTSampler
+from .entropy.document_selector import DocumentSelector
+from .entropy.sampler import AdaptiveSampler
 from .mixin import AdaptiveSamplingMixin
 from .schema_entropy import SchemaEntropyCalculator
-from .entropy.sampler import AdaptiveSampler
-from .entropy.document_selector import DocumentSelector
-from .ddgt.sampler import DDGTSampler
-from .ddgt.document_selector import DDGTDocumentSelector
 
 __all__ = [
     "AdaptiveSamplingMixin",

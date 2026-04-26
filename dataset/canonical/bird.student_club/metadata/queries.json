@@ -1,0 +1,346 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "bird.student_club",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List event_name, row_id, event_date from attendance where event_name contains 'meeting'.",
+      "sql": "SELECT event_name, row_id, event_date FROM attendance WHERE event_name LIKE '%meeting%';",
+      "required_tables": [
+        "attendance"
+      ],
+      "required_columns": [
+        "attendance.event_name",
+        "attendance.event_date"
+      ],
+      "output_columns": [
+        "attendance.event_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q2",
+      "question": "List row_id, college, department from major where row_id <= 67.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id <= 67;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q3",
+      "question": "List event_name, row_id, event_date from attendance where event_name contains 'speaker'.",
+      "sql": "SELECT event_name, row_id, event_date FROM attendance WHERE event_name LIKE '%speaker%';",
+      "required_tables": [
+        "attendance"
+      ],
+      "required_columns": [
+        "attendance.event_name",
+        "attendance.event_date"
+      ],
+      "output_columns": [
+        "attendance.event_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q4",
+      "question": "List row_id, college, department from major where row_id >= 22.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id >= 22;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q5",
+      "question": "List row_id, college, department from major where row_id >= 33.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id >= 33;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q6",
+      "question": "List college, row_id, department from major where college contains 'science'.",
+      "sql": "SELECT college, row_id, department FROM major WHERE college LIKE '%science%';",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q7",
+      "question": "List row_id, event_date, event_name from attendance where row_id <= 162.",
+      "sql": "SELECT row_id, event_date, event_name FROM attendance WHERE row_id <= 162;",
+      "required_tables": [
+        "attendance"
+      ],
+      "required_columns": [
+        "attendance.event_date",
+        "attendance.event_name"
+      ],
+      "output_columns": [
+        "attendance.event_date"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q8",
+      "question": "List row_id, college, department from major where row_id <= 78.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id <= 78;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q9",
+      "question": "Find row_id, college, department from major where row_id >= 22 and college contains 'college'.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id >= 22 AND college LIKE '%college%';",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q10",
+      "question": "Find row_id, department, college from major where row_id <= 67 and department is not null.",
+      "sql": "SELECT row_id, department, college FROM major WHERE row_id <= 67 AND department IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.department",
+        "major.college"
+      ],
+      "output_columns": [
+        "major.department"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q11",
+      "question": "Find row_id, college, department from major where row_id <= 67 and row_id <= 89.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id <= 67 AND row_id <= 89;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q12",
+      "question": "Find row_id, college, department from major where row_id <= 67 and row_id <= 78.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id <= 67 AND row_id <= 78;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q13",
+      "question": "Find row_id, college, department from major where row_id <= 67 and row_id is not null.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id <= 67 AND row_id IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q14",
+      "question": "Find row_id, college, department from major where row_id <= 67 and college is not null.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id <= 67 AND college IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q15",
+      "question": "Find row_id, major_name, college from major where row_id <= 67 and major_name is not null.",
+      "sql": "SELECT row_id, major_name, college FROM major WHERE row_id <= 67 AND major_name IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.major_name",
+        "major.college"
+      ],
+      "output_columns": [
+        "major.major_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q16",
+      "question": "Find row_id, college, department from major where row_id <= 78 and college contains 'college'.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id <= 78 AND college LIKE '%college%';",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q17",
+      "question": "Find row_id, college, department from major where row_id >= 22, college contains 'college', and college is not null.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id >= 22 AND college LIKE '%college%' AND college IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q18",
+      "question": "Find row_id, college, department from major where row_id >= 22, college contains 'college', and department is not null.",
+      "sql": "SELECT row_id, college, department FROM major WHERE row_id >= 22 AND college LIKE '%college%' AND department IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.department"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q19",
+      "question": "Find row_id, college, major_name from major where row_id >= 22, college contains 'college', and major_name is not null.",
+      "sql": "SELECT row_id, college, major_name FROM major WHERE row_id >= 22 AND college LIKE '%college%' AND major_name IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.college",
+        "major.major_name"
+      ],
+      "output_columns": [
+        "major.college"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q20",
+      "question": "Find row_id, major_name, college from major where row_id <= 67, row_id is not null, and major_name is not null.",
+      "sql": "SELECT row_id, major_name, college FROM major WHERE row_id <= 67 AND row_id IS NOT NULL AND major_name IS NOT NULL;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.major_name",
+        "major.college"
+      ],
+      "output_columns": [
+        "major.major_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

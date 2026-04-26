@@ -47,6 +47,7 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+.pytest_cache/
 nosetests.xml
 coverage.xml
 *.cover
@@ -107,7 +108,19 @@ Desktop.ini
 *.swo
 
 .env
+.env.*
+!.env.example
 .venv/
 .mypy_cache/
 .ruff_cache/
 api_keys.json
+.playwright-mcp/
+
+# Runtime artifacts
+logs/
+outputs/
+fig/
+
+# # Local dataset indexes / generated databases
+# dataset/**/*.sqlite3
+# dataset/**/*.db

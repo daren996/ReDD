@@ -14,7 +14,7 @@ Workflow:
 
 Conformal Prediction:
 - Nonconformity score: NC(q, d_i) = -cos(E_q(q), E_d(d_i))
-- Calibration set: Built from ground truth mappings (from dataloader)
+- Calibration set: Built from ground truth records (from dataloader)
 - Threshold: Computed as (1-alpha) quantile of calibration scores
 - Guarantee: With probability >= 1-alpha, relevant chunks are retained
 """
@@ -26,14 +26,16 @@ from typing import Any, Dict, List, Optional, Set
 
 import numpy as np
 
-from redd.core.data_loader.data_loader_sqlite import DataLoaderSQLite
-from redd.embedding import EmbeddingManager
+from redd.core.data_loader.data_loader_hf_manifest import DataLoaderHFManifest
 from redd.core.utils.conformal_calibration import (
     ConformalCalibrationResult,
     ConformalCalibrator,
-    cosine_similarity as utils_cosine_similarity,
     nonconformity_score_negative_cosine,
 )
+from redd.core.utils.conformal_calibration import (
+    cosine_similarity as utils_cosine_similarity,
+)
+from redd.embedding import EmbeddingManager
 
 from .base import DocFilterBase, FilterResult
 
@@ -50,11 +52,11 @@ class SchemaRelevanceFilter(DocFilterBase):
     Example:
         ```python
         from redd.doc_filtering import SchemaRelevanceFilter
-        from redd.core.data_loader import DataLoaderSQLite
+        from redd.core.data_loader import DataLoaderHFManifest
         from redd.embedding import EmbeddingManager
         
         # Initialize
-        loader = DataLoaderSQLite("dataset/spider_sqlite/bike_1/default_task")
+        loader = DataLoaderHFManifest("dataset/canonical/spider.bike_1")
         emb_manager = EmbeddingManager(loader=loader, model="text-embedding-3-small")
         
         # Split docs into train/test sets
@@ -99,15 +101,15 @@ class SchemaRelevanceFilter(DocFilterBase):
     
     # Default configuration values
     DEFAULT_TARGET_RECALL = 0.95
-    DEFAULT_THRESHOLD = 0.3  # Conservative default for text-embedding-3-small
-    DEFAULT_THRESHOLD_GEMINI = 0.5  # Gemini embeddings tend to have higher similarity
+    DEFAULT_THRESHOLD = 0.585
+    DEFAULT_THRESHOLD_GEMINI = 0.585
     DEFAULT_EMBEDDING_MODEL = "text-embedding-3-small"
     
     def __init__(
         self,
         config: Optional[Dict[str, Any]] = None,
         enable_calibrate: bool = False,
-        data_loader: Optional["DataLoaderSQLite"] = None,
+        data_loader: Optional["DataLoaderHFManifest"] = None,
         embedding_manager: Optional["EmbeddingManager"] = None,
         train_doc_ids: Optional[List[str]] = None,
     ):
@@ -191,7 +193,7 @@ class SchemaRelevanceFilter(DocFilterBase):
             FilterResult with schema-irrelevant chunks excluded.
         """
         # Extract arguments (kwargs override instance-level settings)
-        data_loader: Optional["DataLoaderSQLite"] = kwargs.get("data_loader", self._data_loader)
+        data_loader: Optional["DataLoaderHFManifest"] = kwargs.get("data_loader", self._data_loader)
         embedding_manager: Optional["EmbeddingManager"] = kwargs.get("embedding_manager", self._embedding_manager)
         enable_calibrate: bool = kwargs.get("enable_calibrate", self._enable_calibrate)
         train_doc_ids: Optional[List[str]] = kwargs.get("train_doc_ids", self._train_doc_ids)
@@ -441,23 +443,18 @@ class SchemaRelevanceFilter(DocFilterBase):
     
     def _get_relevant_doc_ids_from_train_set(
         self,
-        data_loader: "DataLoaderSQLite",
+        data_loader: "DataLoaderHFManifest",
         query_id: str,
         train_doc_ids: List[str],
     ) -> List[str]:
         """
         Extract relevant document IDs from the training set based on query schema.
         
-        A document is considered relevant if it has a mapping entry that
-        corresponds to one of the query's tables.
-        
-        Note: The ``mapping`` table stores GT table names (e.g. ``"wine"``),
-        while ``load_schema_query()`` returns task schema names (e.g.
-        ``"Wines"``).  We translate schema names to GT names via
-        ``load_name_map()`` so the comparison works correctly.
+        A document is considered relevant if its ground-truth records contain
+        one of the query's tables.
         
         Args:
-            data_loader: Data loader with ground truth mappings
+            data_loader: Data loader with ground truth records
             query_id: Query identifier to get schema information
             train_doc_ids: List of document IDs in the training set
             
@@ -483,8 +480,8 @@ class SchemaRelevanceFilter(DocFilterBase):
             )
             return []
         
-        # Translate task schema names -> GT table names so we can match
-        # against mapping.table_name which stores GT names.
+        # Keep this name-map hook for older loaders; current datasets use
+        # consistent table IDs across schema, queries, and ground truth.
         name_map = data_loader.load_name_map(query_id=query_id)
         table_map = name_map.get("table", {})
         
@@ -493,7 +490,7 @@ class SchemaRelevanceFilter(DocFilterBase):
             gt_name = table_map.get(schema_name, schema_name)
             query_gt_table_names.add(gt_name.lower())
         
-        # Filter training docs: keep those whose mapping.table_name is in our set
+        # Filter training docs: keep those whose GT table is in our set.
         train_doc_ids_set = set(train_doc_ids)
         relevant_doc_ids: List[str] = []
         
@@ -502,9 +499,9 @@ class SchemaRelevanceFilter(DocFilterBase):
             if not doc_info:
                 continue
             
-            mappings = doc_info.get("mappings", [])
-            for mapping in mappings:
-                table_name = mapping.get("table_name", "")
+            data_records = doc_info.get("data_records") or []
+            for record in data_records:
+                table_name = record.get("table_name", "")
                 if table_name.lower() in query_gt_table_names:
                     relevant_doc_ids.append(doc_id)
                     break

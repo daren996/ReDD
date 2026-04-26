@@ -6,7 +6,7 @@ from importlib import import_module
 
 __all__ = [
     "ConformalProxy",
-    "DataPopOracle",
+    "DataExtractionOracle",
     "EmbeddingProxy",
     "GoldenOracle",
     "JoinResolver",
@@ -26,7 +26,7 @@ __all__ = [
 
 _EXPORT_MAP = {
     "ConformalProxy": ".predicate_proxy",
-    "DataPopOracle": ".proxy_runtime",
+    "DataExtractionOracle": ".proxy_runtime",
     "EmbeddingProxy": ".predicate_proxy",
     "GoldenOracle": ".proxy_runtime",
     "JoinResolver": ".join_resolution",

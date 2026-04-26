@@ -1,0 +1,471 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "bird.student_club",
+  "tables": [
+    {
+      "table_id": "member",
+      "name": "member",
+      "description": "Student club members with personal info, major, and role. Contains 33 members.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "member.email",
+          "name": "email",
+          "type": "string",
+          "description": "University email address of the member. Type: TEXT. Examples: 'vincent.ratcliffe@lpu.edu', 'kevin.pierce@lpu.edu'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.first_name",
+          "name": "first_name",
+          "type": "string",
+          "description": "First name of the member. Type: TEXT. Examples: 'Vincent', 'Kevin', 'Connor', 'Adela'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.last_name",
+          "name": "last_name",
+          "type": "string",
+          "description": "Last name of the member. Type: TEXT. Examples: 'Ratcliffe', 'Pierce', 'Hilton', 'O'Gallagher'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.major_department",
+          "name": "major_department",
+          "type": "string",
+          "description": "Academic department of the member's major. Type: TEXT. Examples: 'Human Development and Family Studies Department', 'Civil and Environmental Engineering Department'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.major_name",
+          "name": "major_name",
+          "type": "string",
+          "description": "Name of the member's major/program. Type: TEXT. Examples: 'Human Development and Family Studies', 'Civil Engineering', 'Nutrition Science', 'Portuguese'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.member_city",
+          "name": "member_city",
+          "type": "string",
+          "description": "City where the member resides. Type: TEXT. Examples: 'Hartselle', 'Apple Valley', 'Grosse Pointe', 'Cary'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.member_state",
+          "name": "member_state",
+          "type": "string",
+          "description": "US state where the member resides. Type: TEXT. Examples: 'Alabama', 'California', 'Michigan', 'Indiana', 'North Carolina'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.phone",
+          "name": "phone",
+          "type": "string",
+          "description": "Phone number of the member. Type: TEXT. Examples: '894-555-4529', '933-555-4147'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.position",
+          "name": "position",
+          "type": "string",
+          "description": "Role or position within the club. Type: TEXT. Values: 'Member', 'Inactive', 'President', 'Vice President', 'Secretary', 'Treasurer'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.t_shirt_size",
+          "name": "t_shirt_size",
+          "type": "string",
+          "description": "T-shirt size of the member. Type: TEXT. Values: 'Small', 'Medium', 'Large', 'X-Large'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "major",
+      "name": "major",
+      "description": "Academic majors with college and department affiliations. Contains 113 majors.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "major.college",
+          "name": "college",
+          "type": "string",
+          "description": "College within the university that the major belongs to. Type: TEXT. Examples: 'College of Humanities and Social Sciences', 'School of Business', 'College of Natural Resources', 'College of Engineering'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "major.department",
+          "name": "department",
+          "type": "string",
+          "description": "Department within the college. Type: TEXT. Examples: 'Political Science Department', 'Economics and Finance Department', 'Watershed Sciences Department'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "major.major_name",
+          "name": "major_name",
+          "type": "string",
+          "description": "Name of the academic major. Type: TEXT. Examples: 'Political Science', 'International Studies', 'Economics', 'Computer Engineering'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "zip_code",
+      "name": "zip_code",
+      "description": "US ZIP code directory with city, county, and state information. Contains 500 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "zip_code.city",
+          "name": "city",
+          "type": "string",
+          "description": "City associated with the ZIP code. Type: TEXT. Examples: 'Harwich Port', 'Whately', 'Boston', 'Lynn', 'Ponce'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.county",
+          "name": "county",
+          "type": "string",
+          "description": "County associated with the ZIP code. Type: TEXT. Examples: 'Barnstable County', 'Franklin County', 'Suffolk County', 'Essex County'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.short_state",
+          "name": "short_state",
+          "type": "string",
+          "description": "Two-letter state abbreviation. Type: TEXT. Examples: 'MA', 'PR'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.state",
+          "name": "state",
+          "type": "string",
+          "description": "Full state name. Type: TEXT. Examples: 'Massachusetts', 'Puerto Rico'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.type",
+          "name": "type",
+          "type": "string",
+          "description": "Type of ZIP code. Type: TEXT. Values: 'Standard', 'PO Box', 'Unique'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "event",
+      "name": "event",
+      "description": "Club events including meetings, games, and community service activities. Contains 42 events.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "event.event_date",
+          "name": "event_date",
+          "type": "string",
+          "description": "Date and time of the event. Type: TEXT (ISO 8601 format). Examples: '2020-03-10T12:00:00', '2019-10-10T06:00:00'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.event_name",
+          "name": "event_name",
+          "type": "string",
+          "description": "Name of the event. Type: TEXT. Examples: 'Lacrosse game', 'April Meeting', 'January Meeting', 'Habitat for Humanity'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.location",
+          "name": "location",
+          "type": "string",
+          "description": "Venue or location where the event takes place. Type: TEXT. Examples: 'Campus Soccer/Lacrosse stadium', 'MU 215', '258 S. Maple St.'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.notes",
+          "name": "notes",
+          "type": "string",
+          "description": "Additional notes or description about the event. Type: TEXT. May be empty. Examples: 'Attend school teams Lacrosse game as a group.', 'Volunteer opportunity to help paint new home.'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.status",
+          "name": "status",
+          "type": "string",
+          "description": "Current status of the event. Type: TEXT. Values: 'Open', 'Closed', 'Planning'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.type",
+          "name": "type",
+          "type": "string",
+          "description": "Category of the event. Type: TEXT. Values: 'Meeting', 'Game', 'Community Service', 'Speaker', 'Social'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "attendance",
+      "name": "attendance",
+      "description": "Records of member attendance at club events. Contains 326 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "attendance.event_date",
+          "name": "event_date",
+          "type": "string",
+          "description": "Date and time of the attended event. Type: TEXT (ISO 8601). Examples: '2019-10-10T06:00:00'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "attendance.event_name",
+          "name": "event_name",
+          "type": "string",
+          "description": "Name of the attended event. Type: TEXT. Examples: 'Football game', 'Community Theater', 'Officers meeting - April'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "attendance.member_first_name",
+          "name": "member_first_name",
+          "type": "string",
+          "description": "First name of the attending member. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "attendance.member_last_name",
+          "name": "member_last_name",
+          "type": "string",
+          "description": "Last name of the attending member. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "budget",
+      "name": "budget",
+      "description": "Budget allocations for club events by category. Contains 52 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "budget.amount",
+          "name": "amount",
+          "type": "string",
+          "description": "Budgeted amount in dollars. Type: TEXT (numeric string). Examples: '150', '75', '20'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.category",
+          "name": "category",
+          "type": "string",
+          "description": "Budget category. Type: TEXT. Values: 'Food', 'Advertisement', 'Club T-Shirts', 'Parking', 'Speaker Gifts'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.event_date",
+          "name": "event_date",
+          "type": "string",
+          "description": "Date and time of the event this budget is for. Type: TEXT (ISO 8601).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.event_name",
+          "name": "event_name",
+          "type": "string",
+          "description": "Name of the event this budget is allocated for. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.event_status",
+          "name": "event_status",
+          "type": "string",
+          "description": "Status of the associated event. Type: TEXT. Values: 'Open', 'Closed', 'Planning'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.remaining",
+          "name": "remaining",
+          "type": "string",
+          "description": "Remaining budget amount (budget minus spent). Can be negative if overspent. Type: TEXT (decimal string). Examples: '-24.25', '75.0', '48.06'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.spent",
+          "name": "spent",
+          "type": "string",
+          "description": "Amount already spent from this budget. Type: TEXT (decimal string). Examples: '174.25', '0.0', '101.94'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "expense",
+      "name": "expense",
+      "description": "Individual expense records submitted by club members. Contains 32 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "expense.approved",
+          "name": "approved",
+          "type": "string",
+          "description": "Whether the expense has been approved. Type: TEXT. Values: 'true' (approved) or empty (pending). Examples: 'true', ''.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.budget_category",
+          "name": "budget_category",
+          "type": "string",
+          "description": "Budget category this expense falls under. Type: TEXT. Values: 'Food', 'Advertisement', 'Club T-Shirts', 'Parking', 'Speaker Gifts'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.cost",
+          "name": "cost",
+          "type": "string",
+          "description": "Cost of the expense in dollars. Type: TEXT (decimal string). Examples: '54.25', '51.81', '295.12'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.expense_date",
+          "name": "expense_date",
+          "type": "string",
+          "description": "Date the expense was incurred. Type: TEXT (YYYY-MM-DD). Examples: '2019-09-01', '2019-10-08'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.expense_description",
+          "name": "expense_description",
+          "type": "string",
+          "description": "Description of what was purchased. Type: TEXT. Examples: 'Posters', 'Pizza', 'Water, chips, cookies', 'Club shirts'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.member_first_name",
+          "name": "member_first_name",
+          "type": "string",
+          "description": "First name of the member who submitted the expense. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.member_last_name",
+          "name": "member_last_name",
+          "type": "string",
+          "description": "Last name of the member who submitted the expense. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "income",
+      "name": "income",
+      "description": "Income records for the club from dues and other sources. Contains 36 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "income.amount",
+          "name": "amount",
+          "type": "string",
+          "description": "Income amount in dollars. Type: TEXT (numeric string). Examples: '50'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.date_received",
+          "name": "date_received",
+          "type": "string",
+          "description": "Date the income was received. Type: TEXT (YYYY-MM-DD). Examples: '2019-09-09', '2019-10-02'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.member_first_name",
+          "name": "member_first_name",
+          "type": "string",
+          "description": "First name of the member who paid. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.member_last_name",
+          "name": "member_last_name",
+          "type": "string",
+          "description": "Last name of the member who paid. Type: TEXT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.notes",
+          "name": "notes",
+          "type": "string",
+          "description": "Additional notes about the income. Type: TEXT. Usually empty.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.source",
+          "name": "source",
+          "type": "string",
+          "description": "Source of the income. Type: TEXT. Values: 'Dues', 'Fundraising', 'Donation'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

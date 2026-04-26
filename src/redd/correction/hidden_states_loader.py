@@ -9,7 +9,6 @@ from torch.utils.data import Dataset, Sampler
 
 from redd.core.data_loader import DataLoaderBase
 
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 

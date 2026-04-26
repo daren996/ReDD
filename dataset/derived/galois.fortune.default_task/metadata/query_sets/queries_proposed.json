@@ -1,0 +1,46 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "Sector == 'Technology'",
+        "Is_Profitable (boolean) == 1",
+        "Global500 == 1"
+      ],
+      "optimal_order": [
+        "Sector == 'Technology'",
+        "Global500 == 1",
+        "Is_Profitable (boolean) == 1"
+      ],
+      "token_cost": 280423,
+      "sql": "SELECT * FROM fortune500_companies WHERE sector = 'Technology' AND is_profitable = 1 AND global500 = 1;",
+      "natural_language": "Which profitable tech companies are also on the Global 500 list?",
+      "attributes": [
+        "Sector",
+        "Is_Profitable",
+        "Global500"
+      ]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "Sector == 'Financials'",
+        "HeadquartersState == 'California'",
+        "Is_FemaleCEO (boolean) == 1"
+      ],
+      "optimal_order": [
+        "Is_FemaleCEO (boolean) == 1",
+        "HeadquartersState == 'California'",
+        "Sector == 'Financials'"
+      ],
+      "token_cost": 277092,
+      "sql": "SELECT * FROM fortune500_companies WHERE sector = 'Financials' AND headquarters_state = 'California' AND is_female_ceo = 1;",
+      "natural_language": "Find California-based financial companies led by female CEOs.",
+      "attributes": [
+        "Sector",
+        "HeadquartersState",
+        "Is_FemaleCEO"
+      ]
+    }
+  ]
+}

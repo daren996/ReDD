@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Callable, Iterable, List, Sequence
+from typing import Callable, Sequence
 
 try:
     from sklearn.cluster import KMeans
@@ -10,6 +10,7 @@ except ModuleNotFoundError:  # pragma: no cover - optional dependency
     KMeans = None  # type: ignore[assignment]
 
 from redd.exceptions import RuntimeDependencyError
+
 from .providers import get_embedding_provider
 
 

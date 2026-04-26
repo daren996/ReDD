@@ -1,0 +1,347 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "bird.california_schools",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List EILName, row_id, AdmEmail1 from schools where EILName contains 'middle'.",
+      "sql": "SELECT eil_name, row_id, adm_email1 FROM schools WHERE eil_name LIKE '%middle%';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.eil_name",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.eil_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q2",
+      "question": "List EILName, row_id, AdmEmail1 from schools where EILName contains 'intermediate'.",
+      "sql": "SELECT eil_name, row_id, adm_email1 FROM schools WHERE eil_name LIKE '%intermediate%';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.eil_name",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.eil_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q3",
+      "question": "List EILName, row_id, AdmEmail1 from schools where EILName equals 'Intermediate/Middle/Junior High'.",
+      "sql": "SELECT eil_name, row_id, adm_email1 FROM schools WHERE eil_name = 'Intermediate/Middle/Junior High';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.eil_name",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.eil_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q4",
+      "question": "List EILCode, row_id, AdmEmail1 from schools where EILCode equals 'INTMIDJR'.",
+      "sql": "SELECT eil_code, row_id, adm_email1 FROM schools WHERE eil_code = 'INTMIDJR';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.eil_code",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.eil_code"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q5",
+      "question": "List GSserved, row_id, AdmEmail1 from schools where GSserved equals '9-12'.",
+      "sql": "SELECT g_sserved, row_id, adm_email1 FROM schools WHERE g_sserved = '9-12';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.g_sserved",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.g_sserved"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q6",
+      "question": "List EILCode, row_id, AdmEmail1 from schools where EILCode contains 'intmidjr'.",
+      "sql": "SELECT eil_code, row_id, adm_email1 FROM schools WHERE eil_code LIKE '%intmidjr%';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.eil_code",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.eil_code"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q7",
+      "question": "List AvgScrWrite, row_id, AvgScrMath from satscores where AvgScrWrite >= 514.",
+      "sql": "SELECT avg_scr_write, row_id, avg_scr_math FROM satscores WHERE avg_scr_write >= 514;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_write",
+        "satscores.avg_scr_math"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_write"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q8",
+      "question": "List cname, row_id, AvgScrMath from satscores where cname equals 'Fresno'.",
+      "sql": "SELECT cname, row_id, avg_scr_math FROM satscores WHERE cname = 'Fresno';",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.cname",
+        "satscores.avg_scr_math"
+      ],
+      "output_columns": [
+        "satscores.cname"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q9",
+      "question": "Find NumTstTakr, AvgScrMath, row_id from satscores where NumTstTakr >= 36 and AvgScrMath >= 473.",
+      "sql": "SELECT num_tst_takr, avg_scr_math, row_id FROM satscores WHERE num_tst_takr >= 36 AND avg_scr_math >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.num_tst_takr",
+        "satscores.avg_scr_math"
+      ],
+      "output_columns": [
+        "satscores.num_tst_takr"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q10",
+      "question": "Find GSserved, EILCode, row_id from schools where GSserved equals '9-12' and EILCode equals 'HS'.",
+      "sql": "SELECT g_sserved, eil_code, row_id FROM schools WHERE g_sserved = '9-12' AND eil_code = 'HS';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.g_sserved",
+        "schools.eil_code"
+      ],
+      "output_columns": [
+        "schools.g_sserved"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q11",
+      "question": "Find EILName, row_id, AdmEmail1 from schools where EILName equals 'Intermediate/Middle/Junior High' and EILName contains 'intermediate'.",
+      "sql": "SELECT eil_name, row_id, adm_email1 FROM schools WHERE eil_name = 'Intermediate/Middle/Junior High' AND eil_name LIKE '%intermediate%';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.eil_name",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.eil_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q12",
+      "question": "Find NumGE1500, AvgScrRead, row_id from satscores where NumGE1500 <= 24 and AvgScrRead >= 473.",
+      "sql": "SELECT num_ge1500, avg_scr_read, row_id FROM satscores WHERE num_ge1500 <= 24 AND avg_scr_read >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.num_ge1500",
+        "satscores.avg_scr_read"
+      ],
+      "output_columns": [
+        "satscores.num_ge1500"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q13",
+      "question": "Find NumGE1500, AvgScrRead, row_id from satscores where NumGE1500 >= 33 and AvgScrRead >= 473.",
+      "sql": "SELECT num_ge1500, avg_scr_read, row_id FROM satscores WHERE num_ge1500 >= 33 AND avg_scr_read >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.num_ge1500",
+        "satscores.avg_scr_read"
+      ],
+      "output_columns": [
+        "satscores.num_ge1500"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q14",
+      "question": "Find GSserved, EILName, row_id from schools where GSserved equals '9-12' and EILName equals 'High School'.",
+      "sql": "SELECT g_sserved, eil_name, row_id FROM schools WHERE g_sserved = '9-12' AND eil_name = 'High School';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.g_sserved",
+        "schools.eil_name"
+      ],
+      "output_columns": [
+        "schools.g_sserved"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q15",
+      "question": "Find AvgScrRead, NumGE1500, row_id from satscores where AvgScrRead <= 460 and NumGE1500 <= 33.",
+      "sql": "SELECT avg_scr_read, num_ge1500, row_id FROM satscores WHERE avg_scr_read <= 460 AND num_ge1500 <= 33;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_read",
+        "satscores.num_ge1500"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_read"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q16",
+      "question": "Find AvgScrWrite, AvgScrRead, row_id from satscores where AvgScrWrite >= 514 and AvgScrRead >= 473.",
+      "sql": "SELECT avg_scr_write, avg_scr_read, row_id FROM satscores WHERE avg_scr_write >= 514 AND avg_scr_read >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_write",
+        "satscores.avg_scr_read"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_write"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q17",
+      "question": "Find GSserved, EILName, row_id from schools where GSserved equals '9-12', EILName equals 'High School', and EILName contains 'school'.",
+      "sql": "SELECT g_sserved, eil_name, row_id FROM schools WHERE g_sserved = '9-12' AND eil_name = 'High School' AND eil_name LIKE '%school%';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.g_sserved",
+        "schools.eil_name"
+      ],
+      "output_columns": [
+        "schools.g_sserved"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q18",
+      "question": "Find AvgScrRead, AvgScrMath, NumGE1500 from satscores where AvgScrRead >= 491, AvgScrMath >= 473, and NumGE1500 <= 33.",
+      "sql": "SELECT avg_scr_read, avg_scr_math, num_ge1500 FROM satscores WHERE avg_scr_read >= 491 AND avg_scr_math >= 473 AND num_ge1500 <= 33;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_read",
+        "satscores.avg_scr_math",
+        "satscores.num_ge1500"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_read"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q19",
+      "question": "Find AvgScrWrite, AvgScrRead, row_id from satscores where AvgScrWrite >= 514, AvgScrWrite >= 496, and AvgScrRead >= 473.",
+      "sql": "SELECT avg_scr_write, avg_scr_read, row_id FROM satscores WHERE avg_scr_write >= 514 AND avg_scr_write >= 496 AND avg_scr_read >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_write",
+        "satscores.avg_scr_read"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_write"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q20",
+      "question": "Find AvgScrMath, AvgScrWrite, row_id from satscores where AvgScrMath >= 535, AvgScrWrite >= 496, and AvgScrMath >= 473.",
+      "sql": "SELECT avg_scr_math, avg_scr_write, row_id FROM satscores WHERE avg_scr_math >= 535 AND avg_scr_write >= 496 AND avg_scr_math >= 473;",
+      "required_tables": [
+        "satscores"
+      ],
+      "required_columns": [
+        "satscores.avg_scr_math",
+        "satscores.avg_scr_write"
+      ],
+      "output_columns": [
+        "satscores.avg_scr_math"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

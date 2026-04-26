@@ -7,7 +7,7 @@ This module provides utilities to convert data population extraction results
 Output format: result database file (.db) with tables based on schema structure.
 
 Conversion Logic:
-1. Load schema from source database to get table names and their attributes
+1. Load schema from source dataset to get table names and their attributes
 2. Group documents by their table assignment (res field)
 3. For chunked documents, merge chunks with same parent_doc_id
 4. Create output database with tables matching schema structure
@@ -27,12 +27,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from ..utils.constants import (
-    NULL_VALUE,
-    RESULT_TABLE_KEY,
-    RESULT_DATA_KEY,
-    SCHEMA_NAME_KEY,
-    ATTRIBUTES_KEY,
     ATTRIBUTE_NAME_KEY,
+    ATTRIBUTES_KEY,
+    NULL_VALUE,
+    RESULT_DATA_KEY,
+    RESULT_TABLE_KEY,
+    SCHEMA_NAME_KEY,
 )
 
 __all__ = ["ResToDBConverter"]
@@ -71,7 +71,7 @@ class ResToDBConverter:
         Initialize the converter.
         
         Args:
-            source_db_path: Path to the source database (contains schema and document metadata)
+            source_db_path: Path to the source dataset (contains schema and document metadata)
             result_json_path: Path to the extraction result JSON file
             output_db_path: Path for the output database. If None, auto-generated
             query_id: Query ID for loading query-specific schema (default: "Q1")
@@ -117,7 +117,7 @@ class ResToDBConverter:
         """
         logging.info(f"[{self.__class__.__name__}:convert] Starting conversion...")
         
-        # Step 1: Load schema from source database
+        # Step 1: Load schema from source dataset
         schema_dict = self._load_schema()
         if not schema_dict:
             logging.warning(f"[{self.__class__.__name__}:convert] No schema found")
@@ -148,25 +148,19 @@ class ResToDBConverter:
     
     def _load_schema(self) -> Dict[str, List[str]]:
         """
-        Load schema using DataLoaderSQLite.
-        
-        Uses the data loader to load schema from the schema_description table
-        in schema.db (task-specific names).
-        
-        For query-specific schemas: uses load_schema_query() which filters
-        based on queries.json tables/attributes.
+        Load schema from the configured ReDD data loader.
         
         Falls back to general schema if no query-specific info is available.
         
         Returns:
             Dict mapping table_name -> list of attribute names
         """
-        from ..data_loader.data_loader_sqlite import DataLoaderSQLite
+        from ..data_loader import create_data_loader
         
         schema_dict = {}
         
         try:
-            loader = DataLoaderSQLite(self.source_db_path)
+            loader = create_data_loader(self.source_db_path)
         except Exception as e:
             logging.error(f"[{self.__class__.__name__}:_load_schema] "
                          f"Failed to create DataLoader: {e}")
@@ -191,11 +185,7 @@ class ResToDBConverter:
         except Exception as e:
             logging.error(f"[{self.__class__.__name__}:_load_schema] "
                          f"Failed to load schema: {e}")
-        finally:
-            # Clean up the temporary loader connection
-            if hasattr(loader, '_input_conn') and loader._input_conn:
-                loader._input_conn.close()
-        
+
         return schema_dict
     
     def _load_result_json(self) -> Dict[str, Any]:
@@ -213,29 +203,25 @@ class ResToDBConverter:
     
     def _load_doc_metadata(self) -> Dict[str, Dict[str, Any]]:
         """
-        Load document metadata from source database.
+        Load document metadata from source dataset.
         
         Returns:
             Dict mapping doc_id -> {"parent_doc_id": str, "chunk_index": int}
         """
+        from ..data_loader import create_data_loader
+
         doc_metadata = {}
-        conn = sqlite3.connect(str(self.source_db_path))
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        
         try:
-            cursor.execute("SELECT doc_id, parent_doc_id, chunk_index FROM documents")
-            for row in cursor.fetchall():
-                doc_metadata[row["doc_id"]] = {
-                    "parent_doc_id": row["parent_doc_id"],
-                    "chunk_index": row["chunk_index"],
+            loader = create_data_loader(self.source_db_path)
+            for _doc_text, doc_id, metadata in loader.iter_docs():
+                doc_metadata[str(doc_id)] = {
+                    "parent_doc_id": metadata.get("parent_doc_id"),
+                    "chunk_index": metadata.get("chunk_index"),
                 }
-        except sqlite3.OperationalError as e:
+        except Exception as e:
             logging.warning(f"[{self.__class__.__name__}:_load_doc_metadata] "
-                           f"Failed to query documents: {e}")
-        finally:
-            conn.close()
-        
+                           f"Failed to load document metadata: {e}")
+
         return doc_metadata
     
     def _detect_chunking(self, doc_metadata: Dict[str, Dict[str, Any]]) -> bool:
@@ -509,7 +495,7 @@ def convert_result_to_db(
     Convenience function to convert extraction result to database.
     
     Args:
-        source_db_path: Path to the source database
+        source_db_path: Path to the source dataset
         result_json_path: Path to the extraction result JSON
         output_db_path: Path for output database (auto-generated if None)
         query_id: Query ID for schema loading

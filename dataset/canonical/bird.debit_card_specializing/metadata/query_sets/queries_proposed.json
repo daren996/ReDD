@@ -1,0 +1,40 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "Currency == 'CZK'",
+        "Segment contains 'SME'"
+      ],
+      "optimal_order": [
+        "Currency == 'CZK'",
+        "Segment contains 'SME'"
+      ],
+      "token_cost": 34616,
+      "sql": "SELECT * FROM customers WHERE currency = 'CZK' AND segment LIKE '%SME%';",
+      "natural_language": "List all small and medium enterprise (SME) customers who use Czech Koruna as their currency.",
+      "attributes": [
+        "Currency",
+        "Segment"
+      ]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "Currency == 'EUR'",
+        "Segment contains 'LAM'"
+      ],
+      "optimal_order": [
+        "Segment contains 'LAM'",
+        "Currency == 'EUR'"
+      ],
+      "token_cost": 27401,
+      "sql": "SELECT * FROM customers WHERE currency = 'EUR' AND segment LIKE '%LAM%';",
+      "natural_language": "Find customers in the LAM segment who transact in Euros.",
+      "attributes": [
+        "Currency",
+        "Segment"
+      ]
+    }
+  ]
+}

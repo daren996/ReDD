@@ -1,0 +1,121 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "quest.swde_university",
+  "tables": [
+    {
+      "table_id": "university",
+      "name": "university",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "university.university_name",
+          "name": "university_name",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.college_category",
+          "name": "college_category",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.academic_calendar",
+          "name": "academic_calendar",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.in_state_tuition_fees",
+          "name": "in_state_tuition_fees",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.out_of_state_tuition_fees",
+          "name": "out_of_state_tuition_fees",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.institutional_control",
+          "name": "institutional_control",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.religious_affiliation",
+          "name": "religious_affiliation",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.setting",
+          "name": "setting",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.total_undergraduate_enrollment",
+          "name": "total_undergraduate_enrollment",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.year_founded",
+          "name": "year_founded",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.rank",
+          "name": "rank",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.campus_size",
+          "name": "campus_size",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "university.college_town",
+          "name": "college_town",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

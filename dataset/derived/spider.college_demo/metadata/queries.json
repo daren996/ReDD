@@ -1,0 +1,66 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.college_demo",
+  "queries": [
+    {
+      "query_id": "q1",
+      "question": "Find the titles of courses that have 4 credits.",
+      "sql": "SELECT title FROM course WHERE credits = '4';",
+      "required_tables": [
+        "course"
+      ],
+      "required_columns": [
+        "course.title",
+        "course.credits"
+      ],
+      "output_columns": [
+        "course.title"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q2",
+      "question": "What are the course titles that are taught in the 'Fall' semester of 2006 and have 4 credits?",
+      "sql": "SELECT T1.title FROM course AS T1 JOIN teaches AS T2 ON T1.title = T2.course_title WHERE T2.semester = 'Fall' AND T2.year = '2006' AND T1.credits = '4';",
+      "required_tables": [
+        "course",
+        "teaches"
+      ],
+      "required_columns": [
+        "course.title",
+        "course.credits",
+        "teaches.course_title",
+        "teaches.semester",
+        "teaches.year"
+      ],
+      "output_columns": [
+        "course.title"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "q3",
+      "question": "List courses taught in the 'Fall' semester by instructors in the 'Comp. Sci.' department whose salary is below $60000.",
+      "sql": "SELECT DISTINCT T1.course_title FROM teaches AS T1 JOIN instructor AS T2 ON T1.instructor_name = T2.name WHERE T2.dept_name = 'Comp. Sci.' AND T1.semester = 'Fall' AND T2.salary < '60000';",
+      "required_tables": [
+        "teaches",
+        "instructor"
+      ],
+      "required_columns": [
+        "teaches.course_title",
+        "teaches.instructor_name",
+        "teaches.semester",
+        "instructor.name",
+        "instructor.dept_name",
+        "instructor.salary"
+      ],
+      "output_columns": [
+        "teaches.course_title"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

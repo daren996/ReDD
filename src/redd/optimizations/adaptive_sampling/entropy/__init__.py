@@ -6,8 +6,8 @@ that uses schema entropy tracking and stability streaks to determine
 when to stop processing documents.
 """
 
-from .sampler import AdaptiveSampler
 from .document_selector import DocumentSelector
+from .sampler import AdaptiveSampler
 
 __all__ = [
     "AdaptiveSampler",

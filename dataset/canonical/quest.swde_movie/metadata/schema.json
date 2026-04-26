@@ -1,0 +1,41 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "quest.swde_movie",
+  "tables": [
+    {
+      "table_id": "movie",
+      "name": "movie",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "movie.title",
+          "name": "title",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.director",
+          "name": "director",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "movie.actors",
+          "name": "actors",
+          "type": "string",
+          "description": "",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

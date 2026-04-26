@@ -14,7 +14,7 @@ Usage:
     >>> config = {
     ...     "data_main": "dataset/fda_sqlite/",
     ...     "exp_dataset_task_list": ["fixed_size_50k"],
-    ...     "data_loader_type": "sqlite",
+    ...     "data_loader_type": "hf_manifest",
     ...     "mode": "api",  # or "local"
     ...     "llm_model": "deepseek-chat",
     ...     "api_key": "your_api_key",
@@ -27,7 +27,7 @@ Usage:
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from .base import ChunkAttributeMapperBase
 from .chunk_attr_mapper import ChunkAttributeMapper
@@ -88,7 +88,7 @@ def create_chunk_attr_mapper(
         >>> config = {
         ...     "data_main": "dataset/fda_sqlite/",
         ...     "exp_dataset_task_list": ["fixed_size_50k"],
-        ...     "data_loader_type": "sqlite",
+        ...     "data_loader_type": "hf_manifest",
         ...     "mode": "api",
         ...     "llm_model": "deepseek-chat",
         ...     "api_key": "your_api_key",

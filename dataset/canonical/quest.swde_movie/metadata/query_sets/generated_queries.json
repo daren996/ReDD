@@ -1,0 +1,2825 @@
+{
+  "dataset": "swde_movie/default_task",
+  "source": "quest_sqlite",
+  "database": "swde_movie",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "List the titles of all movies directed by 'Christopher Nolan' starring an actor whose name contains 'Christian Bale'.",
+      "sql": "SELECT title FROM movie WHERE director = 'Christopher Nolan' AND actors LIKE '%Christian Bale%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "The Dark Knight"
+        ],
+        [
+          "The Prestige"
+        ],
+        [
+          "Cobalt Conspiracy"
+        ],
+        [
+          "The Obsidian Oracle"
+        ],
+        [
+          "Emerald Enigma"
+        ],
+        [
+          "The Sapphire Stratagem"
+        ],
+        [
+          "Silver Shadows"
+        ],
+        [
+          "Crimson Conspiracy"
+        ],
+        [
+          "Crimson Conspiracy"
+        ]
+      ],
+      "result_count": 9,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "Find the titles of movies directed by 'Quentin Tarantino'.",
+      "sql": "SELECT title FROM movie WHERE director = 'Quentin Tarantino'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.director"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "Reservoir Dogs"
+        ],
+        [
+          "Django Unchained"
+        ],
+        [
+          "Inglourious Basterds"
+        ],
+        [
+          "Azure Alibi"
+        ],
+        [
+          "Platinum Paradox"
+        ],
+        [
+          "Golden Galaxy"
+        ],
+        [
+          "Scarlet Sanctuary"
+        ],
+        [
+          "Golden Gale"
+        ],
+        [
+          "Whispers of the Past"
+        ],
+        [
+          "The Sapphire Enigma"
+        ],
+        [
+          "The Silver Serpent"
+        ],
+        [
+          "Violet Vortex"
+        ],
+        [
+          "Emerald Enigma"
+        ],
+        [
+          "Bronze Brigade"
+        ],
+        [
+          "Saffron Sanctuary"
+        ],
+        [
+          "Silver Shadow"
+        ],
+        [
+          "Silver Surrender"
+        ]
+      ],
+      "result_count": 19,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "Find movies where both 'Tom Hanks' and 'Robin Wright' are listed as actors.",
+      "sql": "SELECT title FROM movie WHERE actors LIKE '%Tom Hanks%' AND actors LIKE '%Robin Wright%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Forrest Gump"
+        ],
+        [
+          "The Golden Genesis"
+        ]
+      ],
+      "result_count": 2,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "List the titles of movies that feature 'Morgan Freeman' but are not directed by 'Frank Darabont'.",
+      "sql": "SELECT title FROM movie WHERE actors LIKE '%Morgan Freeman%' AND director <> 'Frank Darabont'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.actors",
+          "movie.director"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Se7en"
+        ],
+        [
+          "Seven"
+        ],
+        [
+          "Silver Serpent"
+        ]
+      ],
+      "result_count": 3,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "List all movies directed by either 'Frank Darabont' or 'Quentin Tarantino'.",
+      "sql": "SELECT title FROM movie WHERE director = 'Frank Darabont' OR director = 'Quentin Tarantino'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.director"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "The Shawshank Redemption"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "The Green Mile"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "Reservoir Dogs"
+        ],
+        [
+          "Django Unchained"
+        ],
+        [
+          "Inglourious Basterds"
+        ],
+        [
+          "Azure Alibi"
+        ],
+        [
+          "Platinum Paradox"
+        ],
+        [
+          "Golden Galaxy"
+        ],
+        [
+          "Scarlet Sanctuary"
+        ],
+        [
+          "Golden Gale"
+        ],
+        [
+          "Whispers of the Past"
+        ],
+        [
+          "The Sapphire Enigma"
+        ],
+        [
+          "The Silver Serpent"
+        ],
+        [
+          "Violet Vortex"
+        ],
+        [
+          "Emerald Enigma"
+        ],
+        [
+          "Bronze Brigade"
+        ],
+        [
+          "Saffron Sanctuary"
+        ],
+        [
+          "Silver Shadow"
+        ],
+        [
+          "Silver Surrender"
+        ]
+      ],
+      "result_count": 21,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "Find the movie title directed by director which contains 'Robert' and actor which contains 'Tom Hanks'.",
+      "sql": "SELECT title FROM movie WHERE director LIKE '%Robert%' AND actors LIKE '%Tom Hanks%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Forrest Gump"
+        ],
+        [
+          "The Golden Genesis"
+        ]
+      ],
+      "result_count": 2,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "List the titles of movies where at least one of the actors is 'Brad Pitt' and the director's name starts with 'D'.",
+      "sql": "SELECT title FROM movie WHERE actors LIKE '%Brad Pitt%' AND director LIKE 'D%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.actors",
+          "movie.director"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Fight Club"
+        ],
+        [
+          "Se7en"
+        ],
+        [
+          "Seven"
+        ],
+        [
+          "Nickel Nightmare"
+        ],
+        [
+          "Bronze Brigade"
+        ],
+        [
+          "Scarlet Sanctuary"
+        ],
+        [
+          "Silver Shadows"
+        ],
+        [
+          "The Violet Vortex"
+        ],
+        [
+          "Onyx Oblivion"
+        ],
+        [
+          "Velvet Vengeance"
+        ],
+        [
+          "The Crimson Conspiracy"
+        ],
+        [
+          "Scarlet Secret"
+        ],
+        [
+          "Silver Serpent"
+        ],
+        [
+          "Teal Tangle"
+        ],
+        [
+          "Quartz Quarry"
+        ],
+        [
+          "Ivory Illusion"
+        ],
+        [
+          "Mauve Mystery"
+        ]
+      ],
+      "result_count": 17,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "Find the titles of movies that contain at least 2 commas in their actors list.",
+      "sql": "SELECT title FROM movie WHERE LENGTH(actors) - LENGTH(REPLACE(actors, ',', '')) >= 2",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "Find movies where the director's name ends with 't' and also has an actor whose name starts with 'J'.",
+      "sql": "SELECT title FROM movie WHERE director LIKE '%t' AND actors LIKE 'J%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "The Golden Compass Conspiracy"
+        ],
+        [
+          "Crimson Conspiracy"
+        ],
+        [
+          "Silver Spire"
+        ]
+      ],
+      "result_count": 3,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "Find the number of movies for each director.",
+      "sql": "SELECT director, COUNT(*) AS movie_count FROM movie GROUP BY director",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.director"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "director",
+        "movie_count"
+      ],
+      "result_rows": [
+        [
+          "Akira Kurosawa",
+          2
+        ],
+        [
+          "Akira Kurosawa Jr.",
+          1
+        ],
+        [
+          "Alejandro G. Iñárritu",
+          2
+        ],
+        [
+          "Alfonso Cuarón",
+          9
+        ],
+        [
+          "Alfred Hitchcock",
+          6
+        ],
+        [
+          "Alina Volkov",
+          1
+        ],
+        [
+          "Andrew Stanton",
+          1
+        ],
+        [
+          "Ang Lee",
+          1
+        ],
+        [
+          "Ari Aster",
+          1
+        ],
+        [
+          "Asghar Farhadi",
+          1
+        ],
+        [
+          "Ava DuVernay",
+          2
+        ],
+        [
+          "Ava Thompson",
+          1
+        ],
+        [
+          "Barry Jenkins",
+          2
+        ],
+        [
+          "Bjorn Olafsson",
+          1
+        ],
+        [
+          "Bong Joon-ho",
+          19
+        ],
+        [
+          "Bong Joon-ho Jr.",
+          1
+        ],
+        [
+          "Brad Bird",
+          1
+        ],
+        [
+          "Brian De Palma",
+          1
+        ],
+        [
+          "Chloé Zhao",
+          2
+        ],
+        [
+          "Chris Noonan",
+          1
+        ],
+        [
+          "Chris Weitz",
+          1
+        ],
+        [
+          "Christopher Nolan",
+          20
+        ],
+        [
+          "Christopher Nolan Jr.",
+          1
+        ],
+        [
+          "Clint Eastwood",
+          2
+        ],
+        [
+          "Colin Trevorrow",
+          1
+        ],
+        [
+          "Curtis Hanson",
+          1
+        ],
+        [
+          "Céline Sciamma",
+          1
+        ],
+        [
+          "Damien Chazelle",
+          9
+        ],
+        [
+          "Daniel Kwan, Daniel Scheinert",
+          1
+        ],
+        [
+          "Danny Boyle",
+          6
+        ],
+        [
+          "Darren Aronofsky",
+          9
+        ],
+        [
+          "David Fincher",
+          20
+        ],
+        [
+          "David Fincher Jr.",
+          1
+        ],
+        [
+          "David Lynch",
+          6
+        ],
+        [
+          "David O. Russell",
+          1
+        ],
+        [
+          "Denis Villeneuve",
+          21
+        ],
+        [
+          "Edgar Wright",
+          2
+        ],
+        [
+          "Eduardo Sanchez",
+          1
+        ],
+        [
+          "Ethan Coen",
+          2
+        ],
+        [
+          "Federico Fellini",
+          1
+        ],
+        [
+          "Fernando Meirelles",
+          1
+        ],
+        [
+          "Francis Ford Coppola",
+          5
+        ],
+        [
+          "Frank Darabont",
+          2
+        ],
+        [
+          "Genevieve Dubois",
+          1
+        ],
+        [
+          "George Lucas",
+          1
+        ],
+        [
+          "George Miller",
+          7
+        ],
+        [
+          "Greta Gerwig",
+          14
+        ],
+        [
+          "Guillermo del Toro",
+          17
+        ],
+        [
+          "Guillermo del Toro Jr.",
+          1
+        ],
+        [
+          "Gus Van Sant",
+          1
+        ],
+        [
+          "Guy Ritchie",
+          2
+        ],
+        [
+          "Hayao Miyazaki",
+          9
+        ],
+        [
+          "Herbert Ross",
+          1
+        ],
+        [
+          "Hiroki Watanabe",
+          1
+        ],
+        [
+          "Ingmar Bergman",
+          1
+        ],
+        [
+          "Ingrid Bergman",
+          1
+        ],
+        [
+          "Isabelle Moreau",
+          1
+        ],
+        [
+          "James Cameron",
+          14
+        ],
+        [
+          "James Gunn",
+          1
+        ],
+        [
+          "Jane Campion",
+          2
+        ],
+        [
+          "Jean-Pierre Jeunet",
+          3
+        ],
+        [
+          "Joel Coen",
+          2
+        ],
+        [
+          "Joel Coen, Ethan Coen",
+          3
+        ],
+        [
+          "Joel Schumacher",
+          1
+        ],
+        [
+          "John Lasseter",
+          1
+        ],
+        [
+          "Jon Favreau",
+          1
+        ],
+        [
+          "Jonathan Demme",
+          1
+        ],
+        [
+          "Jordan Peele",
+          14
+        ],
+        [
+          "Jordan Vogt-Roberts",
+          1
+        ],
+        [
+          "Joss Whedon",
+          1
+        ],
+        [
+          "Kathryn Bigelow",
+          8
+        ],
+        [
+          "Kenji Tanaka",
+          1
+        ],
+        [
+          "Kenneth Branagh",
+          1
+        ],
+        [
+          "Lana Wachowski, Lilly Wachowski",
+          1
+        ],
+        [
+          "Lee Chang-dong",
+          1
+        ],
+        [
+          "Luc Besson",
+          1
+        ],
+        [
+          "Luca Guadagnino",
+          2
+        ],
+        [
+          "Makoto Shinkai",
+          2
+        ],
+        [
+          "Martin Scorsese",
+          13
+        ],
+        [
+          "Mel Gibson",
+          1
+        ],
+        [
+          "Michael Curtiz",
+          1
+        ],
+        [
+          "Michael Haneke",
+          1
+        ],
+        [
+          "Michael Mann",
+          1
+        ],
+        [
+          "Michel Gondry",
+          1
+        ],
+        [
+          "Mike Nichols",
+          1
+        ],
+        [
+          "Miloš Forman",
+          1
+        ],
+        [
+          "Nadine Labaki",
+          1
+        ],
+        [
+          "Nicolas Winding Refn",
+          1
+        ],
+        [
+          "Noah Baumbach",
+          1
+        ],
+        [
+          "Oliver Stone",
+          1
+        ],
+        [
+          "Park Chan-wook",
+          2
+        ],
+        [
+          "Patty Jenkins",
+          2
+        ],
+        [
+          "Paul King",
+          2
+        ],
+        [
+          "Paul Thomas Anderson",
+          11
+        ],
+        [
+          "Pedro Almodóvar",
+          4
+        ],
+        [
+          "Peter Jackson",
+          1
+        ],
+        [
+          "Quentin Tarantino",
+          19
+        ],
+        [
+          "Quentin Tarantino Jr.",
+          1
+        ],
+        [
+          "Rian Johnson",
+          2
+        ],
+        [
+          "Ridley Scott",
+          15
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q11",
+      "natural_language": "List the titles of movies with more than one actor listed.",
+      "sql": "SELECT title FROM movie WHERE actors LIKE '%,%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "The Shawshank Redemption"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "The Dark Knight"
+        ],
+        [
+          "Forrest Gump"
+        ],
+        [
+          "Fight Club"
+        ],
+        [
+          "The Matrix"
+        ],
+        [
+          "Goodfellas"
+        ],
+        [
+          "The Silence of the Lambs"
+        ],
+        [
+          "Saving Private Ryan"
+        ],
+        [
+          "Gladiator"
+        ],
+        [
+          "Back to the Future"
+        ],
+        [
+          "The Lion King"
+        ],
+        [
+          "The Green Mile"
+        ],
+        [
+          "American History X"
+        ],
+        [
+          "Catch Me If You Can"
+        ],
+        [
+          "WALL-E"
+        ],
+        [
+          "The Departed"
+        ],
+        [
+          "Interstellar"
+        ],
+        [
+          "Whiplash"
+        ],
+        [
+          "The Prestige"
+        ],
+        [
+          "Memento"
+        ],
+        [
+          "L.A. Confidential"
+        ],
+        [
+          "Gran Torino"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "Arrival"
+        ],
+        [
+          "The King's Speech"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "There Will Be Blood"
+        ],
+        [
+          "The Social Network"
+        ],
+        [
+          "Inception"
+        ],
+        [
+          "Mad Max: Fury Road"
+        ],
+        [
+          "Birdman"
+        ],
+        [
+          "Moonlight"
+        ],
+        [
+          "Parasite"
+        ],
+        [
+          "Everything Everywhere All at Once"
+        ],
+        [
+          "Amelie"
+        ],
+        [
+          "Pan's Labyrinth"
+        ],
+        [
+          "Spirited Away"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "The Matrix"
+        ],
+        [
+          "Se7en"
+        ],
+        [
+          "Eternal Sunshine of the Spotless Mind"
+        ],
+        [
+          "Lost in Translation"
+        ],
+        [
+          "Her"
+        ],
+        [
+          "Drive"
+        ],
+        [
+          "The Grand Budapest Hotel"
+        ],
+        [
+          "Slumdog Millionaire"
+        ],
+        [
+          "La La Land"
+        ],
+        [
+          "Get Out"
+        ],
+        [
+          "Hereditary"
+        ],
+        [
+          "The Witch"
+        ],
+        [
+          "Paddington"
+        ],
+        [
+          "Knives Out"
+        ],
+        [
+          "Portrait of a Lady on Fire"
+        ],
+        [
+          "Roma"
+        ],
+        [
+          "Call Me by Your Name"
+        ],
+        [
+          "The Shape of Water"
+        ],
+        [
+          "Amour"
+        ],
+        [
+          "The Handmaiden"
+        ],
+        [
+          "Burning"
+        ],
+        [
+          "Capernaum"
+        ],
+        [
+          "A Separation"
+        ],
+        [
+          "Incendies"
+        ],
+        [
+          "Prisoners"
+        ],
+        [
+          "Sicario"
+        ],
+        [
+          "Enemy"
+        ],
+        [
+          "Zodiac"
+        ],
+        [
+          "Gone Girl"
+        ],
+        [
+          "Babe"
+        ],
+        [
+          "City of God"
+        ],
+        [
+          "Memories of Murder"
+        ],
+        [
+          "The Host"
+        ],
+        [
+          "Okja"
+        ],
+        [
+          "Mother"
+        ],
+        [
+          "Paddington 2"
+        ],
+        [
+          "Fantastic Mr. Fox"
+        ],
+        [
+          "Moonrise Kingdom"
+        ],
+        [
+          "Rushmore"
+        ],
+        [
+          "The Royal Tenenbaums"
+        ],
+        [
+          "Princess Mononoke"
+        ],
+        [
+          "Your Name"
+        ],
+        [
+          "Weathering with You"
+        ],
+        [
+          "Toy Story"
+        ],
+        [
+          "Reservoir Dogs"
+        ],
+        [
+          "E.T. the Extra-Terrestrial"
+        ],
+        [
+          "Jurassic Park"
+        ],
+        [
+          "Raiders of the Lost Ark"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "Million Dollar Baby"
+        ],
+        [
+          "American Beauty"
+        ],
+        [
+          "Life Is Beautiful"
+        ],
+        [
+          "Good Will Hunting"
+        ],
+        [
+          "Titanic"
+        ],
+        [
+          "Fargo"
+        ],
+        [
+          "Trainspotting"
+        ],
+        [
+          "Braveheart"
+        ],
+        [
+          "Schindler's List"
+        ],
+        [
+          "The Godfather"
+        ],
+        [
+          "Seven"
+        ],
+        [
+          "The Lion King"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q12",
+      "natural_language": "Show the directors who have directed movies where 'Morgan Freeman' acted.",
+      "sql": "SELECT DISTINCT director FROM movie WHERE actors LIKE '%Morgan Freeman%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "director"
+      ],
+      "result_rows": [
+        [
+          "Frank Darabont"
+        ],
+        [
+          "David Fincher"
+        ]
+      ],
+      "result_count": 2,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "List the titles of movies where actors have names longer than 15 characters.",
+      "sql": "SELECT title FROM movie WHERE LENGTH(actors) > 15",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "The Shawshank Redemption"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "The Dark Knight"
+        ],
+        [
+          "Forrest Gump"
+        ],
+        [
+          "Fight Club"
+        ],
+        [
+          "The Matrix"
+        ],
+        [
+          "Goodfellas"
+        ],
+        [
+          "The Silence of the Lambs"
+        ],
+        [
+          "Saving Private Ryan"
+        ],
+        [
+          "Gladiator"
+        ],
+        [
+          "Back to the Future"
+        ],
+        [
+          "The Lion King"
+        ],
+        [
+          "The Green Mile"
+        ],
+        [
+          "American History X"
+        ],
+        [
+          "Catch Me If You Can"
+        ],
+        [
+          "WALL-E"
+        ],
+        [
+          "The Departed"
+        ],
+        [
+          "Interstellar"
+        ],
+        [
+          "Whiplash"
+        ],
+        [
+          "The Prestige"
+        ],
+        [
+          "Memento"
+        ],
+        [
+          "L.A. Confidential"
+        ],
+        [
+          "Gran Torino"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "Arrival"
+        ],
+        [
+          "The King's Speech"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "There Will Be Blood"
+        ],
+        [
+          "The Social Network"
+        ],
+        [
+          "Inception"
+        ],
+        [
+          "Mad Max: Fury Road"
+        ],
+        [
+          "Birdman"
+        ],
+        [
+          "Moonlight"
+        ],
+        [
+          "Parasite"
+        ],
+        [
+          "Everything Everywhere All at Once"
+        ],
+        [
+          "Amelie"
+        ],
+        [
+          "Pan's Labyrinth"
+        ],
+        [
+          "Spirited Away"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "The Matrix"
+        ],
+        [
+          "Se7en"
+        ],
+        [
+          "Eternal Sunshine of the Spotless Mind"
+        ],
+        [
+          "Lost in Translation"
+        ],
+        [
+          "Her"
+        ],
+        [
+          "Drive"
+        ],
+        [
+          "The Grand Budapest Hotel"
+        ],
+        [
+          "Slumdog Millionaire"
+        ],
+        [
+          "La La Land"
+        ],
+        [
+          "Get Out"
+        ],
+        [
+          "Hereditary"
+        ],
+        [
+          "The Witch"
+        ],
+        [
+          "Paddington"
+        ],
+        [
+          "Knives Out"
+        ],
+        [
+          "Portrait of a Lady on Fire"
+        ],
+        [
+          "Roma"
+        ],
+        [
+          "Call Me by Your Name"
+        ],
+        [
+          "The Shape of Water"
+        ],
+        [
+          "Amour"
+        ],
+        [
+          "The Handmaiden"
+        ],
+        [
+          "Burning"
+        ],
+        [
+          "Capernaum"
+        ],
+        [
+          "A Separation"
+        ],
+        [
+          "Incendies"
+        ],
+        [
+          "Prisoners"
+        ],
+        [
+          "Sicario"
+        ],
+        [
+          "Enemy"
+        ],
+        [
+          "Zodiac"
+        ],
+        [
+          "Gone Girl"
+        ],
+        [
+          "Babe"
+        ],
+        [
+          "City of God"
+        ],
+        [
+          "Memories of Murder"
+        ],
+        [
+          "The Host"
+        ],
+        [
+          "Okja"
+        ],
+        [
+          "Mother"
+        ],
+        [
+          "Paddington 2"
+        ],
+        [
+          "Fantastic Mr. Fox"
+        ],
+        [
+          "Moonrise Kingdom"
+        ],
+        [
+          "Rushmore"
+        ],
+        [
+          "The Royal Tenenbaums"
+        ],
+        [
+          "Princess Mononoke"
+        ],
+        [
+          "Your Name"
+        ],
+        [
+          "Weathering with You"
+        ],
+        [
+          "Toy Story"
+        ],
+        [
+          "Reservoir Dogs"
+        ],
+        [
+          "E.T. the Extra-Terrestrial"
+        ],
+        [
+          "Jurassic Park"
+        ],
+        [
+          "Raiders of the Lost Ark"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "Million Dollar Baby"
+        ],
+        [
+          "American Beauty"
+        ],
+        [
+          "Life Is Beautiful"
+        ],
+        [
+          "Good Will Hunting"
+        ],
+        [
+          "Titanic"
+        ],
+        [
+          "Fargo"
+        ],
+        [
+          "Trainspotting"
+        ],
+        [
+          "Braveheart"
+        ],
+        [
+          "Schindler's List"
+        ],
+        [
+          "The Godfather"
+        ],
+        [
+          "Seven"
+        ],
+        [
+          "The Lion King"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Show movie titles along with their director and actors where director name begins with 'F' and actor name contains 'Morgan'.",
+      "sql": "SELECT title, director, actors FROM movie WHERE director LIKE 'F%' AND actors LIKE '%Morgan%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title",
+        "director",
+        "actors"
+      ],
+      "result_rows": [
+        [
+          "The Shawshank Redemption",
+          "Frank Darabont",
+          "Tim Robbins, Morgan Freeman"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "Find the directors who have directed more than one movie in our database.",
+      "sql": "SELECT director FROM movie GROUP BY director HAVING COUNT(*) > 1",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.director"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "director"
+      ],
+      "result_rows": [
+        [
+          "Akira Kurosawa"
+        ],
+        [
+          "Alejandro G. Iñárritu"
+        ],
+        [
+          "Alfonso Cuarón"
+        ],
+        [
+          "Alfred Hitchcock"
+        ],
+        [
+          "Ava DuVernay"
+        ],
+        [
+          "Barry Jenkins"
+        ],
+        [
+          "Bong Joon-ho"
+        ],
+        [
+          "Chloé Zhao"
+        ],
+        [
+          "Christopher Nolan"
+        ],
+        [
+          "Clint Eastwood"
+        ],
+        [
+          "Damien Chazelle"
+        ],
+        [
+          "Danny Boyle"
+        ],
+        [
+          "Darren Aronofsky"
+        ],
+        [
+          "David Fincher"
+        ],
+        [
+          "David Lynch"
+        ],
+        [
+          "Denis Villeneuve"
+        ],
+        [
+          "Edgar Wright"
+        ],
+        [
+          "Ethan Coen"
+        ],
+        [
+          "Francis Ford Coppola"
+        ],
+        [
+          "Frank Darabont"
+        ],
+        [
+          "George Miller"
+        ],
+        [
+          "Greta Gerwig"
+        ],
+        [
+          "Guillermo del Toro"
+        ],
+        [
+          "Guy Ritchie"
+        ],
+        [
+          "Hayao Miyazaki"
+        ],
+        [
+          "James Cameron"
+        ],
+        [
+          "Jane Campion"
+        ],
+        [
+          "Jean-Pierre Jeunet"
+        ],
+        [
+          "Joel Coen"
+        ],
+        [
+          "Joel Coen, Ethan Coen"
+        ],
+        [
+          "Jordan Peele"
+        ],
+        [
+          "Kathryn Bigelow"
+        ],
+        [
+          "Luca Guadagnino"
+        ],
+        [
+          "Makoto Shinkai"
+        ],
+        [
+          "Martin Scorsese"
+        ],
+        [
+          "Park Chan-wook"
+        ],
+        [
+          "Patty Jenkins"
+        ],
+        [
+          "Paul King"
+        ],
+        [
+          "Paul Thomas Anderson"
+        ],
+        [
+          "Pedro Almodóvar"
+        ],
+        [
+          "Quentin Tarantino"
+        ],
+        [
+          "Rian Johnson"
+        ],
+        [
+          "Ridley Scott"
+        ],
+        [
+          "Robert Eggers"
+        ],
+        [
+          "Robert Zemeckis"
+        ],
+        [
+          "Ron Howard"
+        ],
+        [
+          "Sam Mendes"
+        ],
+        [
+          "Sofia Coppola"
+        ],
+        [
+          "Spike Jonze"
+        ],
+        [
+          "Spike Lee"
+        ],
+        [
+          "Steven Spielberg"
+        ],
+        [
+          "Taika Waititi"
+        ],
+        [
+          "Terry Gilliam"
+        ],
+        [
+          "The Coen Brothers"
+        ],
+        [
+          "Tim Burton"
+        ],
+        [
+          "Tony Scott"
+        ],
+        [
+          "Wes Anderson"
+        ]
+      ],
+      "result_count": 57,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find titles of the movies where director's name contains the letter 'a' and actor's name contains the letter 'o'.",
+      "sql": "SELECT title FROM movie WHERE director LIKE '%a%' AND actors LIKE '%o%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "The Shawshank Redemption"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "Fight Club"
+        ],
+        [
+          "Goodfellas"
+        ],
+        [
+          "The Silence of the Lambs"
+        ],
+        [
+          "The Lion King"
+        ],
+        [
+          "The Green Mile"
+        ],
+        [
+          "American History X"
+        ],
+        [
+          "The Departed"
+        ],
+        [
+          "Interstellar"
+        ],
+        [
+          "Whiplash"
+        ],
+        [
+          "Memento"
+        ],
+        [
+          "L.A. Confidential"
+        ],
+        [
+          "Gran Torino"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "There Will Be Blood"
+        ],
+        [
+          "Inception"
+        ],
+        [
+          "Birdman"
+        ],
+        [
+          "Moonlight"
+        ],
+        [
+          "Everything Everywhere All at Once"
+        ],
+        [
+          "Amelie"
+        ],
+        [
+          "Spirited Away"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "Se7en"
+        ],
+        [
+          "Lost in Translation"
+        ],
+        [
+          "Drive"
+        ],
+        [
+          "The Grand Budapest Hotel"
+        ],
+        [
+          "Slumdog Millionaire"
+        ],
+        [
+          "La La Land"
+        ],
+        [
+          "Get Out"
+        ],
+        [
+          "Hereditary"
+        ],
+        [
+          "Paddington"
+        ],
+        [
+          "Portrait of a Lady on Fire"
+        ],
+        [
+          "Roma"
+        ],
+        [
+          "Call Me by Your Name"
+        ],
+        [
+          "Amour"
+        ],
+        [
+          "Burning"
+        ],
+        [
+          "Capernaum"
+        ],
+        [
+          "A Separation"
+        ],
+        [
+          "Zodiac"
+        ],
+        [
+          "Gone Girl"
+        ],
+        [
+          "Babe"
+        ],
+        [
+          "City of God"
+        ],
+        [
+          "Paddington 2"
+        ],
+        [
+          "Fantastic Mr. Fox"
+        ],
+        [
+          "Rushmore"
+        ],
+        [
+          "The Royal Tenenbaums"
+        ],
+        [
+          "Princess Mononoke"
+        ],
+        [
+          "Your Name"
+        ],
+        [
+          "Weathering with You"
+        ],
+        [
+          "Toy Story"
+        ],
+        [
+          "Reservoir Dogs"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "Million Dollar Baby"
+        ],
+        [
+          "Good Will Hunting"
+        ],
+        [
+          "Titanic"
+        ],
+        [
+          "Fargo"
+        ],
+        [
+          "Trainspotting"
+        ],
+        [
+          "The Godfather"
+        ],
+        [
+          "Seven"
+        ],
+        [
+          "The Lion King"
+        ],
+        [
+          "Casablanca"
+        ],
+        [
+          "Psycho"
+        ],
+        [
+          "Singin' in the Rain"
+        ],
+        [
+          "One Flew Over the Cuckoo's Nest"
+        ],
+        [
+          "Apocalypse Now"
+        ],
+        [
+          "Django Unchained"
+        ],
+        [
+          "Inglourious Basterds"
+        ],
+        [
+          "The Silent Echo"
+        ],
+        [
+          "Crimson Tide Rising"
+        ],
+        [
+          "Beneath Azure Skies"
+        ],
+        [
+          "Whispers of the North"
+        ],
+        [
+          "Starlight Serenade"
+        ],
+        [
+          "Shadows of Yesterday"
+        ],
+        [
+          "The Gilded Cage"
+        ],
+        [
+          "The Labyrinth of Dreams"
+        ],
+        [
+          "Midnight Bloom"
+        ],
+        [
+          "The Sapphire Serpent"
+        ],
+        [
+          "The Crimson Corsair"
+        ],
+        [
+          "Silver Lining Storm"
+        ],
+        [
+          "Golden Horizon"
+        ],
+        [
+          "The Indigo Prophecy"
+        ],
+        [
+          "Scarlet Shadows"
+        ],
+        [
+          "The Azure Enigma"
+        ],
+        [
+          "Midnight Bloom"
+        ],
+        [
+          "Emerald Enigma"
+        ],
+        [
+          "The Amber Amulet"
+        ],
+        [
+          "Whispers of the Wind"
+        ],
+        [
+          "The Jade Serpent's Kiss"
+        ],
+        [
+          "Silver Lining Serenade"
+        ],
+        [
+          "The Azure Abyss"
+        ],
+        [
+          "The Violet Hour"
+        ],
+        [
+          "The Platinum Paradox"
+        ],
+        [
+          "Lavender Lament"
+        ],
+        [
+          "The Aqua Labyrinth"
+        ],
+        [
+          "Tangerine Tango"
+        ],
+        [
+          "The Charcoal Canvas"
+        ],
+        [
+          "Beige Horizon"
+        ],
+        [
+          "Magenta Mirage"
+        ],
+        [
+          "The Teal Tempest"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q17",
+      "natural_language": "Find the average length of the actor list (number of characters) for movies directed by 'Christopher Nolan'.",
+      "sql": "SELECT AVG(LENGTH(actors)) FROM movie WHERE director = 'Christopher Nolan'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "avg_length_actors"
+      ],
+      "result_rows": [
+        [
+          31.2
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "List the directors who have directed movies where 'Christian Bale' is an actor and the director's name also contains the letter 'r'.",
+      "sql": "SELECT DISTINCT director FROM movie WHERE actors LIKE '%Christian Bale%' AND director LIKE '%r%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "director"
+      ],
+      "result_rows": [
+        [
+          "Christopher Nolan"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find the titles of movies where the number of actors (separated by commas) is greater than 1 and the director is not 'Christopher Nolan'.",
+      "sql": "SELECT title FROM movie WHERE (LENGTH(actors) - LENGTH(REPLACE(actors, ',', ''))+1) > 1 AND director <> 'Christopher Nolan'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.title",
+          "movie.actors",
+          "movie.director"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "The Shawshank Redemption"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "Forrest Gump"
+        ],
+        [
+          "Fight Club"
+        ],
+        [
+          "The Matrix"
+        ],
+        [
+          "Goodfellas"
+        ],
+        [
+          "The Silence of the Lambs"
+        ],
+        [
+          "Saving Private Ryan"
+        ],
+        [
+          "Gladiator"
+        ],
+        [
+          "Back to the Future"
+        ],
+        [
+          "The Lion King"
+        ],
+        [
+          "The Green Mile"
+        ],
+        [
+          "American History X"
+        ],
+        [
+          "Catch Me If You Can"
+        ],
+        [
+          "WALL-E"
+        ],
+        [
+          "The Departed"
+        ],
+        [
+          "Whiplash"
+        ],
+        [
+          "L.A. Confidential"
+        ],
+        [
+          "Gran Torino"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "Arrival"
+        ],
+        [
+          "The King's Speech"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "There Will Be Blood"
+        ],
+        [
+          "The Social Network"
+        ],
+        [
+          "Mad Max: Fury Road"
+        ],
+        [
+          "Birdman"
+        ],
+        [
+          "Moonlight"
+        ],
+        [
+          "Parasite"
+        ],
+        [
+          "Everything Everywhere All at Once"
+        ],
+        [
+          "Amelie"
+        ],
+        [
+          "Pan's Labyrinth"
+        ],
+        [
+          "Spirited Away"
+        ],
+        [
+          "Pulp Fiction"
+        ],
+        [
+          "The Matrix"
+        ],
+        [
+          "Se7en"
+        ],
+        [
+          "Eternal Sunshine of the Spotless Mind"
+        ],
+        [
+          "Lost in Translation"
+        ],
+        [
+          "Her"
+        ],
+        [
+          "Drive"
+        ],
+        [
+          "The Grand Budapest Hotel"
+        ],
+        [
+          "Slumdog Millionaire"
+        ],
+        [
+          "La La Land"
+        ],
+        [
+          "Get Out"
+        ],
+        [
+          "Hereditary"
+        ],
+        [
+          "The Witch"
+        ],
+        [
+          "Paddington"
+        ],
+        [
+          "Knives Out"
+        ],
+        [
+          "Portrait of a Lady on Fire"
+        ],
+        [
+          "Roma"
+        ],
+        [
+          "Call Me by Your Name"
+        ],
+        [
+          "The Shape of Water"
+        ],
+        [
+          "Amour"
+        ],
+        [
+          "The Handmaiden"
+        ],
+        [
+          "Burning"
+        ],
+        [
+          "Capernaum"
+        ],
+        [
+          "A Separation"
+        ],
+        [
+          "Incendies"
+        ],
+        [
+          "Prisoners"
+        ],
+        [
+          "Sicario"
+        ],
+        [
+          "Enemy"
+        ],
+        [
+          "Zodiac"
+        ],
+        [
+          "Gone Girl"
+        ],
+        [
+          "Babe"
+        ],
+        [
+          "City of God"
+        ],
+        [
+          "Memories of Murder"
+        ],
+        [
+          "The Host"
+        ],
+        [
+          "Okja"
+        ],
+        [
+          "Mother"
+        ],
+        [
+          "Paddington 2"
+        ],
+        [
+          "Fantastic Mr. Fox"
+        ],
+        [
+          "Moonrise Kingdom"
+        ],
+        [
+          "Rushmore"
+        ],
+        [
+          "The Royal Tenenbaums"
+        ],
+        [
+          "Princess Mononoke"
+        ],
+        [
+          "Your Name"
+        ],
+        [
+          "Weathering with You"
+        ],
+        [
+          "Toy Story"
+        ],
+        [
+          "Reservoir Dogs"
+        ],
+        [
+          "E.T. the Extra-Terrestrial"
+        ],
+        [
+          "Jurassic Park"
+        ],
+        [
+          "Raiders of the Lost Ark"
+        ],
+        [
+          "No Country for Old Men"
+        ],
+        [
+          "Million Dollar Baby"
+        ],
+        [
+          "American Beauty"
+        ],
+        [
+          "Life Is Beautiful"
+        ],
+        [
+          "Good Will Hunting"
+        ],
+        [
+          "Titanic"
+        ],
+        [
+          "Fargo"
+        ],
+        [
+          "Trainspotting"
+        ],
+        [
+          "Braveheart"
+        ],
+        [
+          "Schindler's List"
+        ],
+        [
+          "The Godfather"
+        ],
+        [
+          "Seven"
+        ],
+        [
+          "The Lion King"
+        ],
+        [
+          "Casablanca"
+        ],
+        [
+          "Psycho"
+        ],
+        [
+          "Singin' in the Rain"
+        ],
+        [
+          "One Flew Over the Cuckoo's Nest"
+        ],
+        [
+          "Apocalypse Now"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q20",
+      "natural_language": "List distinct director names that include the character 'n' and have cast members containing the character 'a'.",
+      "sql": "SELECT DISTINCT director FROM movie WHERE director LIKE '%n%' AND actors LIKE '%a%'",
+      "golden_schema": {
+        "tables": [
+          "movie"
+        ],
+        "columns": [
+          "movie.director",
+          "movie.actors"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_movie/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "director"
+      ],
+      "result_rows": [
+        [
+          "Frank Darabont"
+        ],
+        [
+          "Quentin Tarantino"
+        ],
+        [
+          "Christopher Nolan"
+        ],
+        [
+          "David Fincher"
+        ],
+        [
+          "Martin Scorsese"
+        ],
+        [
+          "Jonathan Demme"
+        ],
+        [
+          "Steven Spielberg"
+        ],
+        [
+          "Tony Kaye"
+        ],
+        [
+          "Andrew Stanton"
+        ],
+        [
+          "Curtis Hanson"
+        ],
+        [
+          "Clint Eastwood"
+        ],
+        [
+          "Joel Coen"
+        ],
+        [
+          "Denis Villeneuve"
+        ],
+        [
+          "Joel Coen, Ethan Coen"
+        ],
+        [
+          "Paul Thomas Anderson"
+        ],
+        [
+          "Alejandro G. Iñárritu"
+        ],
+        [
+          "Barry Jenkins"
+        ],
+        [
+          "Bong Joon-ho"
+        ],
+        [
+          "Daniel Kwan, Daniel Scheinert"
+        ],
+        [
+          "Jean-Pierre Jeunet"
+        ],
+        [
+          "Lana Wachowski, Lilly Wachowski"
+        ],
+        [
+          "Michel Gondry"
+        ],
+        [
+          "Spike Jonze"
+        ],
+        [
+          "Nicolas Winding Refn"
+        ],
+        [
+          "Wes Anderson"
+        ],
+        [
+          "Danny Boyle"
+        ],
+        [
+          "Damien Chazelle"
+        ],
+        [
+          "Jordan Peele"
+        ],
+        [
+          "Paul King"
+        ],
+        [
+          "Rian Johnson"
+        ],
+        [
+          "Céline Sciamma"
+        ],
+        [
+          "Alfonso Cuarón"
+        ],
+        [
+          "Luca Guadagnino"
+        ],
+        [
+          "Michael Haneke"
+        ],
+        [
+          "Park Chan-wook"
+        ],
+        [
+          "Lee Chang-dong"
+        ],
+        [
+          "Nadine Labaki"
+        ],
+        [
+          "Chris Noonan"
+        ],
+        [
+          "Fernando Meirelles"
+        ],
+        [
+          "Makoto Shinkai"
+        ],
+        [
+          "John Lasseter"
+        ],
+        [
+          "Sam Mendes"
+        ],
+        [
+          "Roberto Benigni"
+        ],
+        [
+          "Gus Van Sant"
+        ],
+        [
+          "James Cameron"
+        ],
+        [
+          "Mel Gibson"
+        ],
+        [
+          "Francis Ford Coppola"
+        ],
+        [
+          "Roger Allers, Rob Minkoff"
+        ],
+        [
+          "Stanley Donen, Gene Kelly"
+        ],
+        [
+          "Miloš Forman"
+        ],
+        [
+          "Luc Besson"
+        ],
+        [
+          "Ava Thompson"
+        ],
+        [
+          "Kenji Tanaka"
+        ],
+        [
+          "Bjorn Olafsson"
+        ],
+        [
+          "Genevieve Dubois"
+        ],
+        [
+          "Hiroki Watanabe"
+        ],
+        [
+          "Alina Volkov"
+        ],
+        [
+          "Eduardo Sanchez"
+        ],
+        [
+          "Ingrid Bergman"
+        ],
+        [
+          "Saoirse Ronan"
+        ],
+        [
+          "Wong Kar-wai"
+        ],
+        [
+          "Christopher Nolan Jr."
+        ],
+        [
+          "Bong Joon-ho Jr."
+        ],
+        [
+          "David Fincher Jr."
+        ],
+        [
+          "Quentin Tarantino Jr."
+        ],
+        [
+          "Wes Anderson Jr."
+        ],
+        [
+          "Tony Scott"
+        ],
+        [
+          "Ang Lee"
+        ],
+        [
+          "Terrence Malick"
+        ],
+        [
+          "Woody Allen"
+        ],
+        [
+          "Darren Aronofsky"
+        ],
+        [
+          "Sean Baker"
+        ],
+        [
+          "Jordan Vogt-Roberts"
+        ],
+        [
+          "Jane Campion"
+        ],
+        [
+          "David Lynch"
+        ],
+        [
+          "Kathryn Bigelow"
+        ],
+        [
+          "Yorgos Lanthimos"
+        ],
+        [
+          "Ron Howard"
+        ],
+        [
+          "Peter Jackson"
+        ],
+        [
+          "Ava DuVernay"
+        ],
+        [
+          "Kenneth Branagh"
+        ],
+        [
+          "The Coen Brothers"
+        ],
+        [
+          "Zack Snyder"
+        ],
+        [
+          "Oliver Stone"
+        ],
+        [
+          "Mike Nichols"
+        ],
+        [
+          "Brian De Palma"
+        ],
+        [
+          "Tim Burton"
+        ],
+        [
+          "James Gunn"
+        ],
+        [
+          "Jon Favreau"
+        ],
+        [
+          "Joss Whedon"
+        ],
+        [
+          "Patty Jenkins"
+        ],
+        [
+          "Colin Trevorrow"
+        ],
+        [
+          "Michael Mann"
+        ],
+        [
+          "Noah Baumbach"
+        ],
+        [
+          "Ingmar Bergman"
+        ],
+        [
+          "Federico Fellini"
+        ],
+        [
+          "Stanley Kubrick"
+        ]
+      ],
+      "result_count": 97,
+      "has_more_rows": false
+    }
+  ]
+}

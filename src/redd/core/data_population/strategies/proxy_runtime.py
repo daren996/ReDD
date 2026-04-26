@@ -1,4 +1,4 @@
-"""Proxy-runtime extraction strategy for unified data population."""
+"""Proxy-runtime extraction strategy for unified data extraction."""
 
 from __future__ import annotations
 
@@ -7,42 +7,43 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
+from redd.proxy.join_resolution import create_join_resolver
 from redd.proxy.proxy_runtime.config import (
     normalize_proxy_runtime_config,
     resolve_proxy_flag,
     resolve_proxy_threshold,
 )
-from ...utils.constants import (
-    NULL_VALUE,
-    RESULT_TABLE_KEY,
-    RESULT_DATA_KEY,
-    SCHEMA_NAME_KEY,
-    ATTRIBUTES_KEY,
-    ATTRIBUTE_NAME_KEY,
-)
-from ...utils.utils import is_none_value
-from ...utils.sql_filter_parser import (
-    group_predicates_by_table,
-    has_join,
-    get_join_graph,
-    compute_table_processing_order,
-    predicates_to_filter_dict,
-)
-from ...utils.data_split import resolve_training_data_count
-from redd.proxy.join_resolution import create_join_resolver
 from redd.proxy.proxy_runtime.oracle import GoldenOracle
 from redd.proxy.proxy_runtime.pipeline import ProxyPipeline
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
+
+from ...utils.constants import (
+    ATTRIBUTE_NAME_KEY,
+    ATTRIBUTES_KEY,
+    NULL_VALUE,
+    RESULT_DATA_KEY,
+    RESULT_TABLE_KEY,
+    SCHEMA_NAME_KEY,
+)
+from ...utils.data_split import resolve_training_data_count
+from ...utils.progress import emit_progress_event
+from ...utils.sql_filter_parser import (
+    compute_table_processing_order,
+    get_join_graph,
+    group_predicates_by_table,
+    predicates_to_filter_dict,
+)
+from ...utils.utils import is_none_value
 
 __all__ = ["ProxyRuntimeExtractionStrategy"]
 
 
 class ProxyRuntimeExtractionStrategy:
-    """Orchestrator for proxy-runtime execution after datapop table assignment."""
+    """Orchestrator for proxy-runtime execution after table assignment."""
 
     def __init__(
         self,
-        datapop_config: Dict[str, Any],
+        extraction_config: Dict[str, Any],
         data_path: Path,
         loader: Any,
         api_key: Optional[str] = None,
@@ -52,18 +53,18 @@ class ProxyRuntimeExtractionStrategy:
         Initialize the proxy-runtime extraction strategy.
         
         Args:
-            datapop_config: DataPop configuration (mode, llm_model, etc.)
+            extraction_config: data-extraction configuration (mode, llm_model, etc.)
             data_path: Path to dataset directory
-            loader: Data loader instance (from DataPop)
+            loader: Data loader instance (from data extraction)
             api_key: Optional API key
         """
-        self.datapop_config = datapop_config
+        self.extraction_config = extraction_config
         self.data_path = Path(data_path)
         self.loader = loader
-        self.api_key = api_key or datapop_config.get("api_key")
+        self.api_key = api_key or extraction_config.get("api_key")
         self.train_doc_ids = list(train_doc_ids or [])
 
-        proxy_cfg = normalize_proxy_runtime_config(datapop_config)
+        proxy_cfg = normalize_proxy_runtime_config(extraction_config)
         if "training_size" in proxy_cfg:
             raise ValueError(
                 "proxy_runtime.training_size is deprecated. "
@@ -72,9 +73,9 @@ class ProxyRuntimeExtractionStrategy:
         self.proxy_runtime_config = ProxyPipelineConfig(
             dataset_path=str(self.data_path),
             query_id="",  # Set per query
-            data_main=str(datapop_config.get("data_main", "dataset/")),
-            llm_mode=proxy_cfg.get("llm_mode", datapop_config.get("mode", "gemini")),
-            llm_model=proxy_cfg.get("llm_model", datapop_config.get("llm_model", "gemini-2.5-flash-lite")),
+            data_main=str(extraction_config.get("data_main", "dataset/")),
+            llm_mode=proxy_cfg.get("llm_mode", extraction_config.get("mode", "gemini")),
+            llm_model=proxy_cfg.get("llm_model", extraction_config.get("llm_model", "gemini-2.5-flash-lite")),
             api_key=self.api_key,
             embedding_model=proxy_cfg.get("embedding_model", "gemini-embedding-001"),
             use_embedding_proxies=resolve_proxy_flag(proxy_cfg, "use_embedding_proxies", True),
@@ -84,25 +85,36 @@ class ProxyRuntimeExtractionStrategy:
                 "use_finetuned_learned_proxies",
                 True,
             ),
-            training_data_count=resolve_training_data_count(datapop_config),
+            predicate_proxy_mode=str(proxy_cfg.get("predicate_proxy_mode", "pretrained")),
+            allow_embedding_fallback=resolve_proxy_flag(
+                proxy_cfg,
+                "allow_embedding_fallback",
+                False,
+            ),
+            training_data_count=resolve_training_data_count(extraction_config),
             min_training_data=0,
             min_calibration_data=0,
-            proxy_threshold=resolve_proxy_threshold(proxy_cfg, datapop_config),
-            target_recall=float(proxy_cfg.get("target_recall", datapop_config.get("target_recall", 0.95))),
-            random_seed=int(proxy_cfg.get("random_seed", datapop_config.get("random_seed", 42))),
+            proxy_threshold=resolve_proxy_threshold(proxy_cfg, extraction_config),
+            target_recall=float(proxy_cfg.get("target_recall", extraction_config.get("target_recall", 0.95))),
+            random_seed=int(proxy_cfg.get("random_seed", extraction_config.get("random_seed", 42))),
             save_hard_negatives=proxy_cfg.get("save_hard_negatives", False),
             verbose=proxy_cfg.get("verbose", False),
             use_join_resolution=resolve_proxy_flag(proxy_cfg, "use_join_resolution", True),
             join_extractor=proxy_cfg.get("join_extractor", "llm"),
             allow_train_test_overlap=proxy_cfg.get("allow_train_test_overlap", False),
             finetuned_model=proxy_cfg.get(
-                "finetuned_model", "knowledgator/gliclass-instruct-large-v1.0"
+                "finetuned_model", "knowledgator/gliclass-small-v1.0"
             ),
             finetuned_epochs=int(proxy_cfg.get("finetuned_epochs", 3)),
             finetuned_learning_rate=float(proxy_cfg.get("finetuned_learning_rate", 2e-5)),
             use_gliclass_icl=proxy_cfg.get("use_gliclass_icl", False),
             gliclass_icl_examples_per_class=int(
                 proxy_cfg.get("gliclass_icl_examples_per_class", 3)
+            ),
+            heuristic_pass_through_attributes=(
+                list(proxy_cfg["heuristic_pass_through_attributes"])
+                if isinstance(proxy_cfg.get("heuristic_pass_through_attributes"), list)
+                else None
             ),
         )
 
@@ -122,7 +134,7 @@ class ProxyRuntimeExtractionStrategy:
             schema_query: Query-specific schema (list of table schemas)
             res_data: Table assignment results {doc_id: {res: table, data: {}}}
             res_path: Path to save results
-            save_results_fn: Optional callback to save (e.g., datapop.save_results)
+            save_results_fn: Optional callback to save (e.g., extractor.save_results)
         """
         # Set query_id for this run
         self.proxy_runtime_config = replace(self.proxy_runtime_config, query_id=qid)
@@ -168,14 +180,12 @@ class ProxyRuntimeExtractionStrategy:
         
         # 3. Build table -> schema mapping
         table_to_schema = {s[SCHEMA_NAME_KEY]: s for s in schema_query}
-        task_to_gt_table: Dict[str, str] = {}
         gt_to_task_table: Dict[str, str] = {}
         if hasattr(self.loader, "load_name_map"):
             name_map = self.loader.load_name_map(qid)
             if isinstance(name_map, dict):
                 table_map = name_map.get("table", {})
                 if isinstance(table_map, dict):
-                    task_to_gt_table = dict(table_map)
                     gt_to_task_table = {gt: task for task, gt in table_map.items()}
         
         # 4. Join-aware processing order
@@ -185,7 +195,7 @@ class ProxyRuntimeExtractionStrategy:
             logging.info(f"[{self.__class__.__name__}] Join detected: processing order {table_order}")
 
         # 5. Run the proxy runtime per table. When use_gt_extraction is True, populate with GT data.
-        use_gt_extraction = self.datapop_config.get("use_gt_extraction", False)
+        use_gt_extraction = self.extraction_config.get("use_gt_extraction", False)
         if use_gt_extraction:
             self._populate_gt_extraction(
                 table_to_doc_ids=table_to_doc_ids,
@@ -212,7 +222,7 @@ class ProxyRuntimeExtractionStrategy:
         all_proxy_decisions: Dict[str, Any] = {}
 
         # 6. Run proxy execution per table.
-        use_oracle = self.datapop_config.get("use_oracle_extraction", False)
+        use_oracle = self.extraction_config.get("use_oracle_extraction", False)
         pipeline = ProxyPipeline(self.proxy_runtime_config)
         pipeline._data_loader = self.loader
         pipeline._query_info = query_info
@@ -308,6 +318,11 @@ class ProxyRuntimeExtractionStrategy:
                     "all_doc_ids": list(es.all_doc_ids),
                     "proxy_recalls": proxy_recalls,
                 }
+                self._emit_proxy_optimization_update(
+                    qid=qid,
+                    table_name=table_name,
+                    proxy_decision=all_proxy_decisions[table_name],
+                )
                 for proxy_name, rec in proxy_recalls.items():
                     logging.info(
                         f"[{self.__class__.__name__}] Proxy {proxy_name} recall: {rec['recall']:.4f} "
@@ -366,6 +381,70 @@ class ProxyRuntimeExtractionStrategy:
                 self._print_proxy_performance_summary(all_proxy_decisions)
 
         logging.info(f"[{self.__class__.__name__}] Done proxy runtime per table for query {qid}")
+
+    def _emit_proxy_optimization_update(
+        self,
+        *,
+        qid: str,
+        table_name: str,
+        proxy_decision: Dict[str, Any],
+    ) -> None:
+        all_doc_ids = {str(doc_id) for doc_id in proxy_decision.get("all_doc_ids", [])}
+        passed_doc_ids = {str(doc_id) for doc_id in proxy_decision.get("passed_doc_ids", [])}
+        rejected_doc_ids = sorted(all_doc_ids - passed_doc_ids)
+        before = len(all_doc_ids)
+        after = len(passed_doc_ids)
+        saved = max(before - after, 0)
+        pass_rate = after / before if before else None
+        proxy_stats = proxy_decision.get("proxy_stats")
+        proxy_count = len(proxy_stats) if isinstance(proxy_stats, dict) else 0
+        message = (
+            f"Proxy {table_name} {qid}: passed {after}/{before} docs, "
+            f"saved {saved} LLM-doc calls"
+        )
+        emit_progress_event(
+            {
+                "type": "optimization_update",
+                "step": "proxy_runtime",
+                "message": message,
+                "optimization": {
+                    "id": "proxy_runtime",
+                    "title": "Proxy Runtime",
+                    "status": "running",
+                    "message": message,
+                    "partial": True,
+                    "metrics": {
+                        "tables": 1,
+                        "evaluated": before,
+                        "passed": after,
+                        "rejected": saved,
+                        "llm_doc_calls_before": before,
+                        "llm_doc_calls_after": after,
+                        "llm_doc_calls_saved": saved,
+                        "llm_doc_call_reduction": saved / before if before else None,
+                        "pass_rate": pass_rate,
+                    },
+                    "details": [
+                        {
+                            "kind": "proxy_runtime",
+                            "dataset": self.data_path.name,
+                            "query_id": qid,
+                            "table": table_name,
+                            "proxy_count": proxy_count,
+                            "evaluated": before,
+                            "passed": after,
+                            "rejected": saved,
+                            "llm_doc_calls_before": before,
+                            "llm_doc_calls_after": after,
+                            "llm_doc_calls_saved": saved,
+                            "pass_rate": pass_rate,
+                            "rejected_doc_ids_preview": rejected_doc_ids[:8],
+                            "rejected_doc_ids_total": len(rejected_doc_ids),
+                        }
+                    ],
+                },
+            }
+        )
 
     def _print_proxy_performance_summary(
         self, all_proxy_decisions: Dict[str, Any]
@@ -527,10 +606,10 @@ class ProxyRuntimeExtractionStrategy:
         doc_info = self.loader.get_doc_info(doc_id)
         if not doc_info:
             return None
-        mappings = doc_info.get("mappings") or doc_info.get("data_records")
-        if not mappings:
+        data_records = doc_info.get("data_records") or []
+        if not data_records:
             return None
-        gt_table = mappings[0].get("table_name") if mappings else None
+        gt_table = data_records[0].get("table_name") if data_records else None
         if not gt_table:
             return None
         task_table = gt_to_task_table.get(gt_table)

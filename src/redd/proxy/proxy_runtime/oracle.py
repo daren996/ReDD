@@ -1,11 +1,13 @@
 """
-Oracle for CCG Pipeline using LLM-based extraction (DataPop) or golden attributes.
+Oracle for proxy runtime using LLM-based data extraction or golden attributes.
 """
 
 import json
 import logging
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
+
+from redd.core.utils.structured_outputs import AttributeExtractionOutput
 
 
 class GoldenOracle:
@@ -72,9 +74,9 @@ class GoldenOracle:
         return self._extract_count
 
 
-class DataPopOracle:
+class DataExtractionOracle:
     """
-    LLM Oracle wrapper that uses the existing DataPop infrastructure.
+    LLM Oracle wrapper that uses the existing data-extraction runtime.
     
     Implements the LLMOracleProtocol for use with ProxyExecutor.
     """
@@ -87,7 +89,7 @@ class DataPopOracle:
         prompt_attr_path: str = "prompts/datapop_attr_json.txt"
     ):
         """
-        Initialize DataPop Oracle.
+        Initialize data-extraction oracle.
         
         Args:
             mode: LLM provider mode
@@ -106,7 +108,7 @@ class DataPopOracle:
             alt_path = project_root / prompt_attr_path
             if alt_path.exists():
                 prompt_attr_path = str(alt_path)
-                logging.info(f"[DataPopOracle] Resolved prompt path to: {prompt_attr_path}")
+                logging.info(f"[DataExtractionOracle] Resolved prompt path to: {prompt_attr_path}")
         
         self.prompt_attr_path = prompt_attr_path
         
@@ -119,37 +121,22 @@ class DataPopOracle:
         if self._prompt_attr is not None:
             return
         
-        from redd.core.utils.prompt_utils import (
-            PromptGPT, PromptDeepSeek, PromptTogether,
-            PromptSiliconFlow, PromptGemini,
-        )
+        from redd.core.utils.prompt_utils import create_prompt
         from redd.llm import get_api_key
         
         # Get API key
         config = {"mode": self.mode, "llm_model": self.llm_model}
         resolved_key = get_api_key(config, self.mode, self.api_key)
         
-        # Select prompt class
-        prompt_classes = {
-            "cgpt": PromptGPT,
-            "deepseek": PromptDeepSeek,
-            "together": PromptTogether,
-            "siliconflow": PromptSiliconFlow,
-            "gemini": PromptGemini,
-        }
-        
-        PromptClass = prompt_classes.get(self.mode)
-        if PromptClass is None:
-            raise ValueError(f"Unknown LLM mode: {self.mode}")
-        
-        self._prompt_attr = PromptClass(
+        self._prompt_attr = create_prompt(
             self.mode,
             self.prompt_attr_path,
             llm_model=self.llm_model,
-            api_key=resolved_key
+            api_key=resolved_key,
+            config=config,
         )
         
-        logging.info(f"[DataPopOracle] Initialized with mode={self.mode}, model={self.llm_model}")
+        logging.info(f"[DataExtractionOracle] Initialized with mode={self.mode}, model={self.llm_model}")
     
     def extract(
         self,
@@ -181,18 +168,14 @@ class DataPopOracle:
         }
         
         try:
-            # Call LLM
-            raw_response = self._prompt_attr(
-                msg=json.dumps(extract_input, ensure_ascii=False),
-                response_format="text"
-            ).strip()
-            
-            # Parse response
-            extracted = self._parse_extraction_response(raw_response, attributes)
+            extracted = self._prompt_attr.complete_model(
+                json.dumps(extract_input, ensure_ascii=False),
+                AttributeExtractionOutput,
+            ).root
             return extracted
             
         except Exception as e:
-            logging.warning(f"[DataPopOracle] Extraction failed: {e}")
+            logging.warning(f"[DataExtractionOracle] Extraction failed: {e}")
             return {attr: None for attr in attributes}
     
     def _parse_extraction_response(
@@ -201,8 +184,8 @@ class DataPopOracle:
         attributes: List[str]
     ) -> Dict[str, Any]:
         """Parse LLM response into attribute values."""
-        import re
         import ast
+        import re
         
         # Try to extract JSON from response
         json_patterns = [
@@ -223,7 +206,7 @@ class DataPopOracle:
                         parsed = ast.literal_eval(match)
                         if isinstance(parsed, dict):
                             return parsed
-                    except:
+                    except (ValueError, SyntaxError):
                         pass
         
         # Try parsing entire response as JSON
@@ -235,7 +218,7 @@ class DataPopOracle:
             pass
         
         # Return empty dict if parsing fails
-        logging.warning(f"[DataPopOracle] Could not parse response: {response[:200]}...")
+        logging.warning(f"[DataExtractionOracle] Could not parse response: {response[:200]}...")
         return {attr: None for attr in attributes}
     
     def check_predicates(
@@ -262,7 +245,7 @@ class DataPopOracle:
             try:
                 passed = predicate_fn(value) if value is not None else False
             except Exception as e:
-                logging.debug(f"[DataPopOracle] Predicate check failed for {attr_name}: {e}")
+                logging.debug(f"[DataExtractionOracle] Predicate check failed for {attr_name}: {e}")
                 passed = False
             
             per_attr[attr_name] = passed

@@ -2,7 +2,7 @@
 SQL Filter Parser
 
 Parses SQL WHERE clauses into individual attribute filters (predicates)
-for use in the CCG pipeline.
+for use in the proxy runtime.
 
 Supported SQL operators:
 - Comparison: =, !=, <>, <, >, <=, >=
@@ -26,13 +26,11 @@ Example:
 
 from __future__ import annotations
 
-import re
 import logging
-from dataclasses import dataclass, field
+import re
+from dataclasses import dataclass
 from enum import Enum
-from typing import (
-    Any, Callable, Dict, List, Optional, Tuple, Union
-)
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 __all__ = [
     "SQLFilterParser",
@@ -318,7 +316,7 @@ class SQLFilterParser:
                 pattern = rf"(.+?)\s+{re.escape(op_str)}\s*$"
             elif op_str == 'BETWEEN':
                 # BETWEEN needs special handling
-                pattern = rf"(.+?)\s+BETWEEN\s+(.+?)\s+AND\s+(.+)"
+                pattern = r"(.+?)\s+BETWEEN\s+(.+?)\s+AND\s+(.+)"
             elif op_str in ['IN', 'NOT IN']:
                 pattern = rf"(.+?)\s+{re.escape(op_str)}\s*\(([^)]+)\)"
             elif op_str in ['LIKE', 'NOT LIKE']:

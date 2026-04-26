@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from redd.proxy.proxy_runtime import (
-    DataPopOracle,
+    DataExtractionOracle,
     GoldenOracle,
     PipelineResults,
     ProxyDecision,
@@ -12,7 +12,7 @@ from redd.proxy.proxy_runtime import (
 )
 
 __all__ = [
-    "DataPopOracle",
+    "DataExtractionOracle",
     "GoldenOracle",
     "PipelineResults",
     "ProxyDecision",

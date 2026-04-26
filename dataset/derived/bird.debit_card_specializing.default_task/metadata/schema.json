@@ -1,0 +1,217 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "bird.debit_card_specializing.default_task",
+  "tables": [
+    {
+      "table_id": "customers",
+      "name": "customers",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "customers.currency",
+          "name": "currency",
+          "type": "string",
+          "description": "Currency used for the customer's transactions and account balances (e.g., CZK for Czech Koruna).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "customers.customer_id",
+          "name": "customer_id",
+          "type": "string",
+          "description": "Unique identifier for the customer.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "customers.segment",
+          "name": "segment",
+          "type": "string",
+          "description": "Market segment of the customer (e.g., SME for small to medium-sized enterprise).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "gasstations",
+      "name": "gasstations",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "gasstations.chain_id",
+          "name": "chain_id",
+          "type": "string",
+          "description": "Identifier for the chain to which the gas station belongs.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "gasstations.country",
+          "name": "country",
+          "type": "string",
+          "description": "Country where the gas station is located (e.g., CZE for Czech Republic).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "gasstations.gas_station_id",
+          "name": "gas_station_id",
+          "type": "string",
+          "description": "Unique identifier for the gas station.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "gasstations.segment",
+          "name": "segment",
+          "type": "string",
+          "description": "Market segment of the gas station (e.g., Discount).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "products",
+      "name": "products",
+      "description": "Description of the product (e.g., UTA-Box (blocking)).",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "products.product_id",
+          "name": "product_id",
+          "type": "string",
+          "description": "Unique identifier for the product.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "transactions_1k",
+      "name": "transactions_1k",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "transactions_1k.amount",
+          "name": "amount",
+          "type": "string",
+          "description": "Quantity of the product purchased in the transaction.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.card_id",
+          "name": "card_id",
+          "type": "string",
+          "description": "Unique identifier for the card used in the transaction.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.customer_id",
+          "name": "customer_id",
+          "type": "string",
+          "description": "Unique identifier for the customer who made the transaction.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.date",
+          "name": "date",
+          "type": "string",
+          "description": "Date of the transaction in YYYY-MM-DD format.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.gas_station_id",
+          "name": "gas_station_id",
+          "type": "string",
+          "description": "Unique identifier for the gas station where the transaction occurred.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.price",
+          "name": "price",
+          "type": "string",
+          "description": "Total price of the transaction.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.product_id",
+          "name": "product_id",
+          "type": "string",
+          "description": "Unique identifier for the product purchased.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.time",
+          "name": "time",
+          "type": "string",
+          "description": "Time of the transaction in HH:MM:SS format.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.transaction_id",
+          "name": "transaction_id",
+          "type": "string",
+          "description": "Unique identifier for the transaction.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "yearmonth",
+      "name": "yearmonth",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "yearmonth.consumption",
+          "name": "consumption",
+          "type": "string",
+          "description": "Amount of consumption recorded for the customer in the specified month.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "yearmonth.customer_id",
+          "name": "customer_id",
+          "type": "string",
+          "description": "Unique identifier for the customer.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "yearmonth.date",
+          "name": "date",
+          "type": "string",
+          "description": "Year and month of the consumption record in YYYYMM format.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

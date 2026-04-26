@@ -14,11 +14,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from redd.core.data_loader import create_data_loader
-from redd.proxy.predicate_proxy.finetuned_proxy import _format_predicate_context
 from redd.core.utils.sql_filter_parser import (
     group_predicates_by_table,
     parse_alias_mapping,
 )
+from redd.proxy.predicate_proxy.finetuned_proxy import _format_predicate_context
 
 __all__ = [
     "extract_from_multiple_datasets",
@@ -132,7 +132,7 @@ def extract_training_pairs(
     full_doc_dir = Path(data_main) / doc_dir if not Path(doc_dir).is_absolute() else Path(doc_dir)
     loader = create_data_loader(
         data_root=full_doc_dir,
-        loader_type="sqlite",
+        loader_type="hf_manifest",
         loader_config={},
     )
 
@@ -270,6 +270,7 @@ def pretrain_and_save_gliclass(
     if not GLICLASS_TRAINING_AVAILABLE:
         raise ImportError("gliclass.training required for fine-tuning. Install from source.")
 
+    import torch
     from gliclass import GLiClassModel
     from gliclass.data_processing import (
         AugmentationConfig,
@@ -278,8 +279,6 @@ def pretrain_and_save_gliclass(
     )
     from gliclass.training import Trainer, TrainingArguments
     from transformers import AutoTokenizer
-
-    import torch
 
     _set_reproducible_seed(seed)
     output_path = Path(output_dir)

@@ -1,0 +1,249 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "galois.fortune",
+  "tables": [
+    {
+      "table_id": "fortune500_companies",
+      "name": "fortune500_companies",
+      "description": "Fortune 500 company data including financials, rankings, headquarters, and leadership information. Contains 497 companies.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "fortune500_companies.assets_m",
+          "name": "assets_m",
+          "type": "string",
+          "description": "Total assets in millions of US dollars. Type: TEXT (decimal string). Examples: '10573.0', '16237.2', '339484.7'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.best_companies_to_work_for_boolean",
+          "name": "best_companies_to_work_for_boolean",
+          "type": "string",
+          "description": "Whether the company is on the 'Best Companies to Work For' list. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.ceo",
+          "name": "ceo",
+          "type": "string",
+          "description": "Full name of the company's Chief Executive Officer. Type: TEXT. Examples: 'Stanley M. Bergman', 'Earl C. Austin Jr.', 'Jon Vander Ark'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.change_in_rank",
+          "name": "change_in_rank",
+          "type": "string",
+          "description": "Change in Fortune 500 ranking compared to previous year. Negative means dropped, positive means gained. Type: TEXT (numeric string). Examples: '-8', '52', '33', '5'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.company",
+          "name": "company",
+          "type": "string",
+          "description": "Official name of the company. Type: TEXT. Examples: 'Henry Schein', 'Quanta Services', 'Republic Services', 'Home Depot'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.company_type",
+          "name": "company_type",
+          "type": "string",
+          "description": "Ownership type of the company. Type: TEXT. Values: 'Public' (publicly traded) or 'Private'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.country",
+          "name": "country",
+          "type": "string",
+          "description": "Country where the company is headquartered. Type: TEXT. Primarily 'U.S.'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.dropped_in_rank",
+          "name": "dropped_in_rank",
+          "type": "string",
+          "description": "Whether the company dropped in ranking. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.founder_is_ceo_boolean",
+          "name": "founder_is_ceo_boolean",
+          "type": "string",
+          "description": "Whether the current CEO is also the company founder. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.gained_in_rank",
+          "name": "gained_in_rank",
+          "type": "string",
+          "description": "Whether the company gained in ranking. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.global500",
+          "name": "global500",
+          "type": "string",
+          "description": "Whether the company is also on the Global Fortune 500 list. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.growth_in_jobs",
+          "name": "growth_in_jobs",
+          "type": "string",
+          "description": "Whether the company experienced growth in number of jobs/employees. Type: TEXT. Values: '0' (no/decline) or '1' (yes/growth).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.headquarters_city",
+          "name": "headquarters_city",
+          "type": "string",
+          "description": "City where the company headquarters is located. Type: TEXT. Examples: 'Melville', 'Houston', 'Phoenix', 'Atlanta'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.headquarters_state",
+          "name": "headquarters_state",
+          "type": "string",
+          "description": "US state where the company headquarters is located. Type: TEXT. Examples: 'New York', 'Texas', 'Arizona', 'Georgia', 'Illinois'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.industry",
+          "name": "industry",
+          "type": "string",
+          "description": "Industry classification of the company. Type: TEXT. Examples: 'Wholesalers: Health Care', 'Engineering & Construction', 'Waste Management', 'Insurance: Property and Casualty (Mutual)'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.is_female_ceo_boolean",
+          "name": "is_female_ceo_boolean",
+          "type": "string",
+          "description": "Whether the CEO is female. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.is_profitable_boolean",
+          "name": "is_profitable_boolean",
+          "type": "string",
+          "description": "Whether the company is profitable. Type: TEXT. Values: '0' (not profitable/loss) or '1' (profitable).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.market_cap_march28_m",
+          "name": "market_cap_march28_m",
+          "type": "string",
+          "description": "Market capitalization as of March 28 in millions of USD. Type: TEXT (decimal string). Empty for private companies. Examples: '9704.8', '37865.6', '380153.7'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.market_cap_updated_m",
+          "name": "market_cap_updated_m",
+          "type": "string",
+          "description": "Updated market capitalization in millions of USD. Type: TEXT (decimal string). Empty for private companies.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.newcomer_to_the_fortune500",
+          "name": "newcomer_to_the_fortune500",
+          "type": "string",
+          "description": "Whether this is the company's first appearance on the Fortune 500. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.number_of_employees_integer",
+          "name": "number_of_employees_integer",
+          "type": "string",
+          "description": "Total number of employees. Type: TEXT (numeric string). Examples: '25000', '52500', '41000', '463100'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.profits_percent_change",
+          "name": "profits_percent_change",
+          "type": "string",
+          "description": "Year-over-year percentage change in profits. Negative means decline. Type: TEXT (decimal string). Examples: '-22.7', '51.6', '16.4'. Empty if not applicable.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.profits_m",
+          "name": "profits_m",
+          "type": "string",
+          "description": "Total profits in millions of USD. Negative values indicate losses. Type: TEXT (decimal string). Examples: '416.0', '744.7', '-6272.3'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.rank_integer",
+          "name": "rank_integer",
+          "type": "string",
+          "description": "Fortune 500 ranking position. Type: TEXT (numeric string). '1' is the highest-ranked. Examples: '333', '192', '276', '39', '23'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.revenue_percent_change",
+          "name": "revenue_percent_change",
+          "type": "string",
+          "description": "Year-over-year percentage change in revenue. Type: TEXT (decimal string). Examples: '-2.4', '22.3', '10.8', '-3.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.revenues_m",
+          "name": "revenues_m",
+          "type": "string",
+          "description": "Total revenues in millions of USD. Type: TEXT (decimal string). Examples: '12339.0', '20882.2', '152669.0'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.sector",
+          "name": "sector",
+          "type": "string",
+          "description": "Broad business sector classification. Type: TEXT. Examples: 'Health Care', 'Engineering & Construction', 'Business Services', 'Financials', 'Retailing'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.ticker",
+          "name": "ticker",
+          "type": "string",
+          "description": "Stock ticker symbol for publicly traded companies. Type: TEXT. Empty for private companies. Examples: 'HSIC', 'PWR', 'RSG', 'HD'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.worlds_most_admired_companies",
+          "name": "worlds_most_admired_companies",
+          "type": "string",
+          "description": "Whether the company is on the World's Most Admired Companies list. Type: TEXT. Values: '0' (no) or '1' (yes).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

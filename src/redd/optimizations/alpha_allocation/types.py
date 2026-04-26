@@ -7,7 +7,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
-
 STAGE_DOC_FILTERING = "doc_filtering"
 STAGE_PREDICATE_PROXY = "predicate_proxy"
 

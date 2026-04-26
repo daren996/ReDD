@@ -23,7 +23,7 @@ so that other components (or experiments) can reuse the same ordering.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, List, Protocol, runtime_checkable, TypeVar
+from typing import Iterable, List, Protocol, TypeVar, runtime_checkable
 
 
 @runtime_checkable

@@ -1,0 +1,37 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "fda.fda.fixed_size_50k",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.purpose_for_submission",
+        "fda_510k_device_submission.measurand",
+        "fda_510k_device_submission.type_of_test",
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.product_code",
+        "fda_510k_device_submission.panel",
+        "fda_510k_device_submission.intended_use",
+        "fda_510k_device_submission.indications_for_use",
+        "fda_510k_device_submission.predicate_device_name",
+        "fda_510k_device_submission.proposed_labeling",
+        "fda_510k_device_submission.conclusion",
+        "fda_510k_device_submission.510k_number",
+        "fda_510k_device_submission.applicant",
+        "fda_510k_device_submission.predicate_510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names",
+        "fda_510k_device_submission.regulation_section"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.purpose_for_submission"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

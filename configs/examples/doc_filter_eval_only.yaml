@@ -1,0 +1,62 @@
+config_version: 2.1.1
+
+project:
+  name: doc-filter-eval
+  seed: 42
+
+runtime:
+  output_dir: outputs/doc_filter_eval
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: doc-filter-only-t058-v1
+  console_log_level: INFO
+
+models:
+  llm:
+    provider: none
+    model: ground_truth
+  embedding:
+    provider: gemini
+    model: gemini-embedding-001
+    enabled: true
+    api_key_env: GEMINI_API_KEY
+    storage_file: embeddings.sqlite3
+
+datasets:
+  bird.schools_demo:
+    loader: hf_manifest
+    root: dataset/derived/bird.schools_demo
+    query_ids: [q1, q2, q3, q4, q5]
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  spider.college_demo:
+    loader: hf_manifest
+    root: dataset/derived/spider.college_demo
+    query_ids: [q1, q2, q3]
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: ground_truth
+    document_filtering:
+      enabled: true
+      filter_type: schema_relevance
+      target_recall: 0.95
+      enable_calibrate: false
+      embedding_model: gemini-embedding-001
+      threshold: 0.585
+    options:
+      force_rerun: false
+
+experiments:
+  demo:
+    datasets: [bird.schools_demo, spider.college_demo]
+    stages: [data_extraction]
+    artifact_id: doc-filter-only-t058-v1

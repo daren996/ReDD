@@ -27,10 +27,14 @@ dependencies = [
   "scikit-learn",
   "tqdm",
   "pandas",
+  "pyarrow",
   "PyYAML",
-  "openai==1.39.0",
-  "transformers==4.46.3",
+  "litellm",
+  "pydantic>=2",
+  "tenacity",
+  "transformers>=4.57.0,<5",
   "accelerate>=0.26.0",
+  "gliclass>=0.1.16",
 ]
 
 [project.urls]
@@ -38,19 +42,30 @@ Homepage = "https://github.com/daren996/ReDD"
 Repository = "https://github.com/daren996/ReDD"
 
 [project.optional-dependencies]
+structured = [
+  "instructor[litellm]",
+]
+retrieval = [
+  "faiss-cpu",
+]
+web = [
+  "fastapi>=0.115.0",
+  "python-dotenv>=1.0.0",
+  "uvicorn>=0.30.0",
+]
 dev = [
   "build>=1.2.2",
   "mypy>=1.11.2",
+  "pytest>=8.0.0",
   "ruff>=0.6.9",
   "types-PyYAML>=6.0.12",
 ]
 
 [project.scripts]
 redd = "redd.cli.main:main"
-redd-preprocessing = "redd.cli.preprocessing:main"
-redd-schema-refinement = "redd.cli.schema_refinement:main"
-redd-datapop = "redd.cli.datapop:main"
-redd-exp = "redd.cli.exp:main"
+redd-preprocess = "redd.cli.preprocessing:main"
+redd-refine = "redd.cli.schema_refinement:main"
+redd-extract = "redd.cli.extract:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -60,12 +75,15 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-redd = ["resources/prompts/*.txt"]
+redd = ["resources/*.json", "resources/prompts/*.txt", "resources/web_demo/*"]
 
 [tool.ruff]
 target-version = "py310"
 line-length = 100
 src = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
@@ -82,7 +100,7 @@ files = [
   "src/redd/core/data_population/factory.py",
   "src/redd/core/schema_gen/factory.py",
   "src/redd/core/utils/prompt_utils.py",
-  "src/redd/core/llm/providers.py",
+  "src/redd/llm/providers.py",
   "tests",
 ]
 check_untyped_defs = true

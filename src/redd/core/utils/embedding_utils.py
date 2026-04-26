@@ -37,12 +37,12 @@ Example Usage:
 from __future__ import annotations
 
 import logging
-import os
 from abc import ABC, abstractmethod
-from typing import List, Optional, Union, Tuple
+from typing import List, Optional, Union
 
 import numpy as np
-from openai import OpenAI
+
+from redd.embedding import get_embedding_provider
 
 __all__ = [
     "EmbedderBase",
@@ -119,16 +119,8 @@ class EmbedderOpenAI(EmbedderBase):
     ):
         super().__init__(model)
         
-        # Get API key
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            raise ValueError(
-                "OpenAI API key is required. Provide via api_key parameter or "
-                "OPENAI_API_KEY environment variable."
-            )
-        
-        # Initialize client
-        self.client = OpenAI(api_key=self.api_key)
+        self.client = get_embedding_provider(model=model, api_key=api_key)
+        self.api_key = self.client.api_key
         
         # Set embedding dimension
         self.embedding_dim = self.MODEL_DIMS.get(model)
@@ -147,12 +139,7 @@ class EmbedderOpenAI(EmbedderBase):
         Returns:
             Embedding vector
         """
-        response = self.client.embeddings.create(
-            input=[query],
-            model=self.model
-        )
-        
-        embedding = response.data[0].embedding
+        embedding = self.client.embed_single(query)
         
         # Infer dimension if not set
         if self.embedding_dim is None:
@@ -173,12 +160,7 @@ class EmbedderOpenAI(EmbedderBase):
         Returns:
             Embedding vector
         """
-        response = self.client.embeddings.create(
-            input=[document],
-            model=self.model
-        )
-        
-        embedding = response.data[0].embedding
+        embedding = self.client.embed_single(document)
         
         # Infer dimension if not set
         if self.embedding_dim is None:
@@ -189,4 +171,3 @@ class EmbedderOpenAI(EmbedderBase):
             )
         
         return embedding
-

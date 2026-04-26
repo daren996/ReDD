@@ -2,14 +2,14 @@
 
 from redd.core.utils.conformal_calibration import ConformalCalibrationResult, ConformalCalibrator
 
-from .datapop_adapter import DataPopAlphaAllocator
+from .data_extraction_adapter import DataExtractionAlphaAllocator
 from .greedy_allocator import GreedyAlphaAllocator
 from .types import (
-    AlphaAllocationConfig,
-    AlphaAllocationResult,
-    AllocationTraceStep,
     STAGE_DOC_FILTERING,
     STAGE_PREDICATE_PROXY,
+    AllocationTraceStep,
+    AlphaAllocationConfig,
+    AlphaAllocationResult,
 )
 
 __all__ = [
@@ -18,7 +18,7 @@ __all__ = [
     "AllocationTraceStep",
     "ConformalCalibrationResult",
     "ConformalCalibrator",
-    "DataPopAlphaAllocator",
+    "DataExtractionAlphaAllocator",
     "GreedyAlphaAllocator",
     "STAGE_DOC_FILTERING",
     "STAGE_PREDICATE_PROXY",

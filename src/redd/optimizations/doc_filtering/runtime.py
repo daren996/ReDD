@@ -8,12 +8,13 @@ filter implementations in this package and reducing caller complexity.
 
 from __future__ import annotations
 
+import json
 import logging
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, Set
 
-from redd.embedding import EmbeddingManager
 from redd.core.utils.constants import PATH_TEMPLATES
+from redd.embedding import EmbeddingManager
 
 from .base import DocFilterBase, NoOpFilter
 
@@ -121,6 +122,48 @@ def save_doc_filter_result(
         cf_path,
     )
     return cf_path
+
+
+def load_doc_filter_result(
+    root: Path,
+    *,
+    query_id: str,
+) -> tuple[Dict[str, Any] | None, Path | None]:
+    """Load the newest doc-filter artifact for a query from an upstream stage."""
+    root = Path(root)
+    if not root.exists():
+        return None, None
+
+    candidates = []
+    for dirname in ("doc_filter", "chunk_filter"):
+        candidates.extend((root / dirname).glob(f"*_{query_id}_*.json"))
+        candidates.extend((root / dirname).glob(f"*_{query_id}.json"))
+    if not candidates:
+        normalized_query_id = str(query_id).lower()
+        for dirname in ("doc_filter", "chunk_filter"):
+            candidates.extend(
+                path
+                for path in (root / dirname).glob("*.json")
+                if f"_{normalized_query_id}_" in path.name.lower()
+                or f"_{normalized_query_id}.json" in path.name.lower()
+            )
+    if not candidates:
+        return None, None
+
+    candidates = sorted(candidates, key=lambda path: path.stat().st_mtime, reverse=True)
+    for path in candidates:
+        try:
+            with open(path, "r", encoding="utf-8") as file:
+                payload = json.load(file)
+            if isinstance(payload, dict):
+                return payload, path
+        except Exception as exc:
+            logging.warning(
+                "[doc_filtering.runtime:load_doc_filter_result] Failed reading %s: %s",
+                path,
+                exc,
+            )
+    return None, None
 
 
 def run_query_doc_filter(

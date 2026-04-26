@@ -6,8 +6,8 @@ that uses diversity-driven document selection and Good-Turing stopping
 condition for probabilistic coverage guarantees.
 """
 
-from .sampler import DDGTSampler
 from .document_selector import DDGTDocumentSelector
+from .sampler import DDGTSampler
 
 __all__ = [
     "DDGTSampler",

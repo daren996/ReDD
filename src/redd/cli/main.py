@@ -2,40 +2,54 @@ from __future__ import annotations
 
 import argparse
 
-from . import datapop, exp, preprocessing, schema_refinement
+from . import dataset, extract, preprocessing, run, schema_refinement, web
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="redd")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    run_parser = subparsers.add_parser(
+        "run",
+        parents=[run.build_parser(add_help=False)],
+        help="Run a strict v2 experiment",
+    )
+    run_parser.set_defaults(handler=run.run)
+
     preprocessing_parser = subparsers.add_parser(
-        "preprocessing",
+        "preprocess",
         parents=[preprocessing.build_parser(add_help=False)],
         help="Run offline query-independent preprocessing",
     )
     preprocessing_parser.set_defaults(handler=preprocessing.run)
 
     schema_refinement_parser = subparsers.add_parser(
-        "schema-refinement",
+        "refine",
         parents=[schema_refinement.build_parser(add_help=False)],
         help="Run query-aware schema refinement",
     )
     schema_refinement_parser.set_defaults(handler=schema_refinement.run)
 
-    datapop_parser = subparsers.add_parser(
-        "datapop",
-        parents=[datapop.build_parser(add_help=False)],
+    extract_parser = subparsers.add_parser(
+        "extract",
+        parents=[extract.build_parser(add_help=False)],
         help="Run final data extraction",
     )
-    datapop_parser.set_defaults(handler=datapop.run)
+    extract_parser.set_defaults(handler=extract.run)
 
-    exp_parser = subparsers.add_parser(
-        "exp",
-        parents=[exp.build_parser(add_help=False)],
-        help="Run experiment and evaluation workflows",
+    dataset_parser = subparsers.add_parser(
+        "dataset",
+        parents=[dataset.build_parser(add_help=False)],
+        help="Validate and inspect ReDD dataset contracts",
     )
-    exp_parser.set_defaults(handler=exp.run)
+    dataset_parser.set_defaults(handler=dataset.run)
+
+    web_parser = subparsers.add_parser(
+        "web",
+        parents=[web.build_parser(add_help=False)],
+        help="Serve the ReDD web demo",
+    )
+    web_parser.set_defaults(handler=web.run)
 
     return parser
 

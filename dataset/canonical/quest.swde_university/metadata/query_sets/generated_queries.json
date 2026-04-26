@@ -1,0 +1,3698 @@
+{
+  "dataset": "swde_university/default_task",
+  "source": "quest_sqlite",
+  "database": "swde_university",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "What are the names of universities that were founded before 1850, have a rank better than 50, and whose institutional control is private?",
+      "sql": "SELECT university_name FROM university WHERE CAST(year_founded AS REAL) < 1850 AND CAST(rank AS REAL) < 50 AND institutional_control LIKE 'private'",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "year_founded",
+          "rank",
+          "institutional_control"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "Union College"
+        ],
+        [
+          "Union University"
+        ],
+        [
+          "Wake Forest University"
+        ],
+        [
+          "New York University"
+        ],
+        [
+          "Williams College"
+        ],
+        [
+          "Rensselaer Polytechnic Institute"
+        ],
+        [
+          "Georgetown University"
+        ],
+        [
+          "University of Richmond"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "DePauw University"
+        ],
+        [
+          "Union College"
+        ],
+        [
+          "Washington and Lee University"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Bowdoin College"
+        ],
+        [
+          "Colby College"
+        ],
+        [
+          "Hamilton College"
+        ],
+        [
+          "Washington and Lee University"
+        ],
+        [
+          "Amherst College"
+        ],
+        [
+          "Middlebury College"
+        ],
+        [
+          "Davidson College"
+        ],
+        [
+          "Grinnell College"
+        ],
+        [
+          "Wesleyan University"
+        ],
+        [
+          "Mount Holyoke College"
+        ],
+        [
+          "Haverford College"
+        ],
+        [
+          "Colgate University"
+        ],
+        [
+          "Oberlin College"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "University of Richmond"
+        ],
+        [
+          "Kenyon College"
+        ],
+        [
+          "Washington and Lee University"
+        ],
+        [
+          "Amherst College"
+        ],
+        [
+          "Bowdoin College"
+        ],
+        [
+          "Colby College"
+        ],
+        [
+          "Hamilton College"
+        ],
+        [
+          "Haverford College"
+        ],
+        [
+          "Wesleyan University"
+        ],
+        [
+          "Colgate University"
+        ],
+        [
+          "Grinnell College"
+        ],
+        [
+          "Davidson College"
+        ],
+        [
+          "Middlebury College"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "Haverford College"
+        ],
+        [
+          "Kenyon College"
+        ],
+        [
+          "Union College (NY)"
+        ],
+        [
+          "Franklin & Marshall College"
+        ],
+        [
+          "Colby College"
+        ],
+        [
+          "Hamilton College"
+        ],
+        [
+          "Washington and Lee University"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "Washington and Lee University"
+        ],
+        [
+          "University of Richmond"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Villanova University"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Wake Forest University"
+        ],
+        [
+          "Xavier University"
+        ]
+      ],
+      "result_count": 66,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "Find the names of universities with 'urban' settings that offer an academic calendar based on a 'semester' system and have in-state tuition fees less than $15,000.",
+      "sql": "SELECT university_name FROM university WHERE setting LIKE '%urban%' AND academic_calendar LIKE '%semester%' AND REPLACE(REPLACE(in_state_tuition_fees, '$', ''), ',', '') < 15000",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "setting",
+          "academic_calendar",
+          "in_state_tuition_fees"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "List universities with 'public' institutional control, total undergraduate enrollment greater than 5000, and campus sizes larger than 100 acres.",
+      "sql": "SELECT university_name FROM university WHERE institutional_control LIKE 'public' AND CAST(total_undergraduate_enrollment AS REAL) > 5000 AND REPLACE(SUBSTR(campus_size, 1, LENGTH(campus_size) - 6), ',', '') > 100",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "institutional_control",
+          "total_undergraduate_enrollment",
+          "campus_size"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "College of William and Mary"
+        ],
+        [
+          "Kutztown University of Pennsylvania"
+        ],
+        [
+          "Northwestern State University of Louisiana"
+        ],
+        [
+          "University of California--Davis"
+        ],
+        [
+          "University of California--Riverside"
+        ],
+        [
+          "University of South Alabama"
+        ],
+        [
+          "California State University--Fresno"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "Towson University"
+        ],
+        [
+          "University of North Carolina--Wilmington"
+        ],
+        [
+          "University of Kansas"
+        ],
+        [
+          "Georgia Institute of Technology"
+        ],
+        [
+          "George Mason University"
+        ],
+        [
+          "Rhode Island College"
+        ],
+        [
+          "Montana State University"
+        ],
+        [
+          "North Dakota State University"
+        ],
+        [
+          "Virginia Tech"
+        ],
+        [
+          "University of South Carolina--Upstate"
+        ],
+        [
+          "Kennesaw State University"
+        ],
+        [
+          "Missouri Southern State University"
+        ],
+        [
+          "California State University--Fullerton"
+        ],
+        [
+          "California State University, Bakersfield"
+        ],
+        [
+          "University of North Dakota"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "Missouri Southern State University"
+        ],
+        [
+          "University of Texas at Tyler"
+        ],
+        [
+          "California State University, Stanislaus"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "University of Northern Iowa"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Auburn University"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "University of Wyoming"
+        ],
+        [
+          "South Dakota State University"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "California State University, Chico"
+        ],
+        [
+          "Radford University"
+        ],
+        [
+          "Minnesota State University, Mankato"
+        ],
+        [
+          "Humboldt State University"
+        ],
+        [
+          "East Carolina University"
+        ],
+        [
+          "University of North Dakota"
+        ],
+        [
+          "California Polytechnic State University, Pomona"
+        ],
+        [
+          "James Madison University"
+        ],
+        [
+          "University of Wisconsin-La Crosse"
+        ],
+        [
+          "Sonoma State University"
+        ],
+        [
+          "Coastal Carolina University"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Miami University"
+        ],
+        [
+          "California State University, Chico"
+        ],
+        [
+          "Georgia College & State University"
+        ],
+        [
+          "University of Northern Iowa"
+        ],
+        [
+          "University of Vermont"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "Coastal Carolina University"
+        ],
+        [
+          "James Madison University"
+        ],
+        [
+          "Youngstown State University"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "California State University, Fullerton"
+        ],
+        [
+          "University of Vermont"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "Miami University"
+        ],
+        [
+          "College of Charleston"
+        ],
+        [
+          "Auburn University"
+        ],
+        [
+          "Mississippi State University"
+        ],
+        [
+          "University of Northern Colorado"
+        ],
+        [
+          "Coastal Carolina University"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "California State University, Long Beach"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Miami University"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "California State University, Long Beach"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Humboldt State University"
+        ],
+        [
+          "University of Northern Iowa"
+        ],
+        [
+          "East Carolina University"
+        ],
+        [
+          "California Polytechnic State University, Pomona"
+        ],
+        [
+          "St. Cloud State University"
+        ],
+        [
+          "Coastal Carolina University"
+        ],
+        [
+          "University of Wisconsin-La Crosse"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "Auburn University"
+        ],
+        [
+          "University of Nevada, Reno"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "University of North Dakota"
+        ],
+        [
+          "California State University, Chico"
+        ],
+        [
+          "Kent State University"
+        ],
+        [
+          "Illinois State University"
+        ],
+        [
+          "University of New Hampshire"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "California State University, Long Beach"
+        ],
+        [
+          "Miami University"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "James Madison University"
+        ],
+        [
+          "Radford University"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "Auburn University"
+        ],
+        [
+          "University of Vermont"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q4",
+      "natural_language": "Which universities are located in a college town containing 'Columbia' and have out-of-state tuition fees greater than $25,000 and a rank better than 60?",
+      "sql": "SELECT university_name FROM university WHERE college_town LIKE '%Columbia%' AND REPLACE(REPLACE(out_of_state_tuition_fees, '$', ''), ',', '') > 25000 AND CAST(rank AS REAL) < 60",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "college_town",
+          "out_of_state_tuition_fees",
+          "rank"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "Columbia College SC"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "What is the average undergraduate enrollment for universities founded after 1900 that have a religious affiliation?",
+      "sql": "SELECT AVG(CAST(total_undergraduate_enrollment AS REAL)) FROM university WHERE CAST(year_founded AS REAL) > 1900 AND religious_affiliation != 'None' AND religious_affiliation != '' AND religious_affiliation != ' ' AND religious_affiliation != '(empty)'",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "total_undergraduate_enrollment",
+          "year_founded",
+          "religious_affiliation"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "avg_cast_total_undergraduate_enrollment_as_real"
+      ],
+      "result_rows": [
+        [
+          3266.0
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "Find the university names, college categories, and ranks for universities where the rank is less than 40 and college category is 'Regional Universities (Midwest)'.",
+      "sql": "SELECT university_name, college_category, rank FROM university WHERE CAST(rank AS REAL) < 40 AND college_category = 'Regional Universities (Midwest)'",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "college_category",
+          "rank"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name",
+        "college_category",
+        "rank"
+      ],
+      "result_rows": [
+        [
+          "St. Scholastica",
+          "Regional Universities (Midwest)",
+          "24"
+        ],
+        [
+          "Bethel University",
+          "Regional Universities (Midwest)",
+          "17"
+        ],
+        [
+          "University of Northern Iowa",
+          "Regional Universities (Midwest)",
+          "28"
+        ],
+        [
+          "University of Wisconsin-La Crosse",
+          "Regional Universities (Midwest)",
+          "30"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "2"
+        ],
+        [
+          "Xavier University",
+          "Regional Universities (Midwest)",
+          "7"
+        ],
+        [
+          "Valparaiso University",
+          "Regional Universities (Midwest)",
+          "4"
+        ],
+        [
+          "Xavier University",
+          "Regional Universities (Midwest)",
+          "6"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "2"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "1"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "10"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "6"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "7"
+        ],
+        [
+          "Xavier University",
+          "Regional Universities (Midwest)",
+          "8"
+        ],
+        [
+          "University of Northern Iowa",
+          "Regional Universities (Midwest)",
+          "32"
+        ],
+        [
+          "Valparaiso University",
+          "Regional Universities (Midwest)",
+          "18"
+        ],
+        [
+          "University of Wisconsin-La Crosse",
+          "Regional Universities (Midwest)",
+          "11"
+        ],
+        [
+          "Xavier University",
+          "Regional Universities (Midwest)",
+          "6"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "2"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "7"
+        ],
+        [
+          "Valparaiso University",
+          "Regional Universities (Midwest)",
+          "9"
+        ],
+        [
+          "Xavier University",
+          "Regional Universities (Midwest)",
+          "6"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "1"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "2"
+        ],
+        [
+          "Valparaiso University",
+          "Regional Universities (Midwest)",
+          "4"
+        ],
+        [
+          "Bradley University",
+          "Regional Universities (Midwest)",
+          "7"
+        ],
+        [
+          "University of Evansville",
+          "Regional Universities (Midwest)",
+          "15"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "6"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "10"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "1"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "6"
+        ],
+        [
+          "Xavier University",
+          "Regional Universities (Midwest)",
+          "7"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "2"
+        ],
+        [
+          "Xavier University",
+          "Regional Universities (Midwest)",
+          "6"
+        ],
+        [
+          "Butler University",
+          "Regional Universities (Midwest)",
+          "2"
+        ],
+        [
+          "Creighton University",
+          "Regional Universities (Midwest)",
+          "1"
+        ],
+        [
+          "University of Wisconsin-La Crosse",
+          "Regional Universities (Midwest)",
+          "4"
+        ]
+      ],
+      "result_count": 37,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "List the university names and their campus sizes where the campus size is greater than 500 acres and the setting is suburban.",
+      "sql": "SELECT university_name, campus_size FROM university WHERE REPLACE(SUBSTR(campus_size, 1, LENGTH(campus_size) - 6), ',', '') > 500 AND setting = 'suburban'",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "campus_size",
+          "setting"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name",
+        "campus_size"
+      ],
+      "result_rows": [
+        [
+          "College of William and Mary",
+          "1,200 acres"
+        ],
+        [
+          "Elms College",
+          "None"
+        ],
+        [
+          "St. Scholastica",
+          "186 acres"
+        ],
+        [
+          "Morningside College",
+          "68 acres"
+        ],
+        [
+          "Auburn University--Montgomery",
+          "500 acres"
+        ],
+        [
+          "Monmouth University",
+          "156 acres"
+        ],
+        [
+          "Rollins College",
+          "70 acres"
+        ],
+        [
+          "Concordia University Chicago",
+          "40"
+        ],
+        [
+          "Southeastern University",
+          "88 acres"
+        ],
+        [
+          "Wake Forest University",
+          "340 acres"
+        ],
+        [
+          "University of South Alabama",
+          "1,224 acres"
+        ],
+        [
+          "Catawba College",
+          "276 acres"
+        ],
+        [
+          "University of Central Arkansas",
+          "262"
+        ],
+        [
+          "Lewis University ",
+          "135 acres"
+        ],
+        [
+          "Towson University",
+          "328 acres"
+        ],
+        [
+          "Denison University",
+          "850"
+        ],
+        [
+          "George Mason University",
+          "806 acres"
+        ],
+        [
+          "College of Idaho",
+          "50 acres"
+        ],
+        [
+          "Fairleigh Dickinson University",
+          "266 acres"
+        ],
+        [
+          "Rhode Island College",
+          "180 acres"
+        ],
+        [
+          "Harvey Mudd College",
+          "33 acres"
+        ],
+        [
+          "Woodbury University",
+          "22 acres"
+        ],
+        [
+          "North Carolina Wesleyan College",
+          "200 acres"
+        ],
+        [
+          "Kennesaw State University",
+          "384 acres"
+        ],
+        [
+          "New College of Florida",
+          "114 acres"
+        ],
+        [
+          "Missouri Southern State University",
+          "365 acres"
+        ],
+        [
+          "Evergreen State University",
+          "1,000 acres"
+        ],
+        [
+          "Oglethorpe University",
+          "100 acres"
+        ],
+        [
+          "St. Mary's College of California",
+          "420 acres"
+        ],
+        [
+          "University of Central Arkansas",
+          "356 acres"
+        ],
+        [
+          "Trinity Christian College",
+          "140 acres"
+        ],
+        [
+          "Western New England University",
+          "215 acres"
+        ],
+        [
+          "Missouri Southern State University",
+          "380 acres"
+        ],
+        [
+          "University of Texas at Tyler",
+          "204 acres"
+        ],
+        [
+          "Johnson University",
+          "147 acres"
+        ],
+        [
+          "California State University, Stanislaus",
+          "228 acres"
+        ],
+        [
+          "Appalachian State University",
+          "410 acres"
+        ],
+        [
+          "Western Washington University",
+          "215 acres"
+        ],
+        [
+          "Elon University",
+          "650 acres"
+        ],
+        [
+          "St. Olaf College",
+          "300 acres"
+        ],
+        [
+          "Auburn University",
+          "1,841 acres"
+        ],
+        [
+          "University of Central Arkansas",
+          "356 acres"
+        ],
+        [
+          "Radford University",
+          "204 acres"
+        ],
+        [
+          "California Polytechnic State University, Pomona",
+          "1,438 acres"
+        ],
+        [
+          "James Madison University",
+          "721 acres"
+        ],
+        [
+          "Sonoma State University",
+          "269 acres"
+        ],
+        [
+          "Coastal Carolina University",
+          "631 acres"
+        ],
+        [
+          "Western Washington University",
+          "360 acres"
+        ],
+        [
+          "Miami University",
+          "2,000 acres"
+        ],
+        [
+          "University of Richmond",
+          "350 acres"
+        ],
+        [
+          "University of Northern Iowa",
+          "940 acres"
+        ],
+        [
+          "St. Olaf College",
+          "300 acres"
+        ],
+        [
+          "Colorado School of Mines",
+          "373 acres"
+        ],
+        [
+          "Clemson University",
+          "1,400 acres"
+        ],
+        [
+          "Elon University",
+          "650 acres"
+        ],
+        [
+          "Hollins University",
+          "475 acres"
+        ],
+        [
+          "Rose-Hulman Institute of Technology",
+          "200 acres"
+        ],
+        [
+          "Pacific Lutheran University",
+          "156 acres"
+        ],
+        [
+          "Samford University",
+          "247 acres"
+        ],
+        [
+          "Coastal Carolina University",
+          "630 acres"
+        ],
+        [
+          "Elon University",
+          "650 acres"
+        ],
+        [
+          "James Madison University",
+          "800 acres"
+        ],
+        [
+          "Marist College",
+          "180 acres"
+        ],
+        [
+          "Quinnipiac University",
+          "600 acres"
+        ],
+        [
+          "Valparaiso University",
+          "350 acres"
+        ],
+        [
+          "Xavier University",
+          "190 acres"
+        ],
+        [
+          "California State University, Fullerton",
+          "236 acres"
+        ],
+        [
+          "Clemson University",
+          "1,400 acres"
+        ],
+        [
+          "Samford University",
+          "247 acres"
+        ],
+        [
+          "Elon University",
+          "650 acres"
+        ],
+        [
+          "Auburn University",
+          "1,841 acres"
+        ],
+        [
+          "Hofstra University",
+          "244 acres"
+        ],
+        [
+          "Swarthmore College",
+          "425 acres"
+        ],
+        [
+          "Pomona College",
+          "140 acres"
+        ],
+        [
+          "Claremont McKenna College",
+          "69 acres"
+        ],
+        [
+          "Vassar College",
+          "1,000 acres"
+        ],
+        [
+          "Davidson College",
+          "665 acres"
+        ],
+        [
+          "Haverford College",
+          "216 acres"
+        ],
+        [
+          "Bryn Mawr College",
+          "135 acres"
+        ],
+        [
+          "Skidmore College",
+          "850 acres"
+        ],
+        [
+          "University of Northern Colorado",
+          "260 acres"
+        ],
+        [
+          "St. Olaf College",
+          "300 acres"
+        ],
+        [
+          "University of Richmond",
+          "350 acres"
+        ],
+        [
+          "Swarthmore College",
+          "425 acres"
+        ],
+        [
+          "Haverford College",
+          "216 acres"
+        ],
+        [
+          "Vassar College",
+          "1,000 acres"
+        ],
+        [
+          "Davidson College",
+          "665 acres"
+        ],
+        [
+          "Pomona College",
+          "140 acres"
+        ],
+        [
+          "Claremont McKenna College",
+          "69 acres"
+        ],
+        [
+          "Harvey Mudd College",
+          "36 acres"
+        ],
+        [
+          "Pitzer College",
+          "35 acres"
+        ],
+        [
+          "Coastal Carolina University",
+          "630 acres"
+        ],
+        [
+          "Denison University",
+          "950 acres"
+        ],
+        [
+          "Haverford College",
+          "216 acres"
+        ],
+        [
+          "Hendrix College",
+          "160 acres"
+        ],
+        [
+          "St. Olaf College",
+          "300 acres"
+        ],
+        [
+          "Wheaton College (IL)",
+          "80 acres"
+        ],
+        [
+          "Southwestern University",
+          "700 acres"
+        ],
+        [
+          "Appalachian State University",
+          "410 acres"
+        ],
+        [
+          "Denison University",
+          "850 acres"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q8",
+      "natural_language": "Find the university names and religious affiliations for universities founded before 1900 with a religious affiliation other than 'None'.",
+      "sql": "SELECT university_name, religious_affiliation FROM university WHERE CAST(year_founded AS REAL) < 1900 AND religious_affiliation != 'None' AND religious_affiliation != '' AND religious_affiliation != ' ' AND religious_affiliation != '(empty)'",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "religious_affiliation",
+          "year_founded"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name",
+        "religious_affiliation"
+      ],
+      "result_rows": [
+        [
+          "St. Mary's College of California",
+          "Catholic"
+        ],
+        [
+          "Dillard University",
+          "United Church of Christ"
+        ],
+        [
+          "Johnson University",
+          "Christian Churches"
+        ],
+        [
+          "Elon University",
+          "United Church of Christ"
+        ],
+        [
+          "Sewanee: The University of the South",
+          "Episcopal"
+        ],
+        [
+          "St. Olaf College",
+          "Evangelical Lutheran Church in America"
+        ],
+        [
+          "Xavier University",
+          "Roman Catholic"
+        ],
+        [
+          "Baylor University",
+          "Baptist"
+        ],
+        [
+          "University of Richmond",
+          "Baptist"
+        ],
+        [
+          "DePauw University",
+          "Methodist"
+        ],
+        [
+          "St. Olaf College",
+          "Lutheran"
+        ],
+        [
+          "Baylor University",
+          "Baptist"
+        ],
+        [
+          "Elon University",
+          "United Church of Christ"
+        ],
+        [
+          "Pacific Lutheran University",
+          "Lutheran"
+        ],
+        [
+          "University of Scranton",
+          "Roman Catholic"
+        ],
+        [
+          "Xavier University",
+          "Roman Catholic"
+        ],
+        [
+          "Gonzaga University",
+          "Roman Catholic"
+        ],
+        [
+          "Samford University",
+          "Baptist"
+        ],
+        [
+          "Baylor University",
+          "Baptist"
+        ],
+        [
+          "DePauw University",
+          "United Methodist"
+        ],
+        [
+          "Gonzaga University",
+          "Roman Catholic"
+        ],
+        [
+          "Illinois Wesleyan University",
+          "United Methodist"
+        ],
+        [
+          "Nebraska Wesleyan University",
+          "United Methodist"
+        ],
+        [
+          "Rhodes College",
+          "Presbyterian"
+        ],
+        [
+          "St. Olaf College",
+          "Evangelical Lutheran Church in America"
+        ],
+        [
+          "Trinity University",
+          "Presbyterian"
+        ],
+        [
+          "Valparaiso University",
+          "Lutheran"
+        ],
+        [
+          "Sewanee: The University of the South",
+          "Episcopal"
+        ],
+        [
+          "Hope College",
+          "Reformed Church in America"
+        ],
+        [
+          "Xavier University",
+          "Roman Catholic"
+        ],
+        [
+          "Trinity University",
+          "Presbyterian"
+        ],
+        [
+          "Butler University",
+          "Christian Church (Disciples of Christ)"
+        ],
+        [
+          "Marquette University",
+          "Roman Catholic"
+        ],
+        [
+          "Samford University",
+          "Baptist"
+        ],
+        [
+          "Creighton University",
+          "Roman Catholic"
+        ],
+        [
+          "Elon University",
+          "United Church of Christ"
+        ],
+        [
+          "Gonzaga University",
+          "Roman Catholic"
+        ],
+        [
+          "Saint Louis University",
+          "Roman Catholic"
+        ],
+        [
+          "University of Dayton",
+          "Roman Catholic"
+        ],
+        [
+          "University of Tulsa",
+          "Presbyterian"
+        ],
+        [
+          "Chapman University",
+          "Disciples of Christ"
+        ],
+        [
+          "Swarthmore College",
+          "Religious Society of Friends (Quakers)"
+        ],
+        [
+          "Davidson College",
+          "Presbyterian"
+        ],
+        [
+          "St. Olaf College",
+          "Evangelical Lutheran Church in America"
+        ],
+        [
+          "University of Richmond",
+          "Baptist"
+        ],
+        [
+          "Kenyon College",
+          "Episcopal Church"
+        ],
+        [
+          "Dickinson College",
+          "Methodist"
+        ],
+        [
+          "Swarthmore College",
+          "Religious Society of Friends (Quakers)"
+        ],
+        [
+          "Haverford College",
+          "Religious Society of Friends (Quakers)"
+        ],
+        [
+          "Davidson College",
+          "Presbyterian"
+        ],
+        [
+          "Haverford College",
+          "Quaker"
+        ],
+        [
+          "Kenyon College",
+          "Episcopal Church"
+        ],
+        [
+          "Sewanee: The University of the South",
+          "Episcopal Church"
+        ],
+        [
+          "Hendrix College",
+          "United Methodist"
+        ],
+        [
+          "St. Olaf College",
+          "Evangelical Lutheran Church"
+        ],
+        [
+          "Rhodes College",
+          "Presbyterian Church"
+        ],
+        [
+          "Wheaton College (IL)",
+          "Evangelical Christian"
+        ],
+        [
+          "DePauw University",
+          "United Methodist"
+        ],
+        [
+          "Centre College",
+          "Presbyterian Church"
+        ],
+        [
+          "Ohio Wesleyan University",
+          "United Methodist"
+        ],
+        [
+          "Southwestern University",
+          "United Methodist"
+        ],
+        [
+          "Hope College",
+          "Reformed Church in America"
+        ],
+        [
+          "Xavier University",
+          "Roman Catholic"
+        ],
+        [
+          "Sewanee: The University of the South",
+          "Episcopal"
+        ],
+        [
+          "Baylor University",
+          "Baptist"
+        ],
+        [
+          "University of Tulsa",
+          "Presbyterian"
+        ],
+        [
+          "St. Olaf College",
+          "Evangelical Lutheran Church in America"
+        ],
+        [
+          "Elon University",
+          "United Church of Christ"
+        ],
+        [
+          "Illinois Wesleyan University",
+          "Methodist"
+        ],
+        [
+          "Marquette University",
+          "Jesuit"
+        ],
+        [
+          "Trinity University",
+          "Presbyterian"
+        ],
+        [
+          "University of Puget Sound",
+          "Methodist"
+        ],
+        [
+          "Hiram College",
+          "Disciples of Christ"
+        ],
+        [
+          "Gonzaga University",
+          "Catholic"
+        ],
+        [
+          "Creighton University",
+          "Jesuit"
+        ],
+        [
+          "Xavier University",
+          "Catholic"
+        ],
+        [
+          "Samford University",
+          "Baptist"
+        ],
+        [
+          "Pacific Lutheran University",
+          "Lutheran"
+        ],
+        [
+          "St. Mary's College of California",
+          "Catholic"
+        ],
+        [
+          "St. Norbert College",
+          "Catholic"
+        ],
+        [
+          "University of Scranton",
+          "Catholic"
+        ],
+        [
+          "Valparaiso University",
+          "Lutheran"
+        ],
+        [
+          "Xavier University",
+          "Roman Catholic"
+        ],
+        [
+          "Baylor University",
+          "Baptist"
+        ],
+        [
+          "Elon University",
+          "United Church of Christ"
+        ],
+        [
+          "Creighton University",
+          "Roman Catholic"
+        ],
+        [
+          "University of Scranton",
+          "Roman Catholic"
+        ],
+        [
+          "Gonzaga University",
+          "Roman Catholic"
+        ],
+        [
+          "Samford University",
+          "Baptist"
+        ],
+        [
+          "Valparaiso University",
+          "Lutheran"
+        ],
+        [
+          "Loyola University Chicago",
+          "Roman Catholic"
+        ],
+        [
+          "Gonzaga University",
+          "Roman Catholic"
+        ],
+        [
+          "Baylor University",
+          "Baptist"
+        ],
+        [
+          "Marquette University",
+          "Roman Catholic"
+        ],
+        [
+          "Saint Louis University",
+          "Roman Catholic"
+        ],
+        [
+          "University of Dayton",
+          "Roman Catholic"
+        ],
+        [
+          "Villanova University",
+          "Roman Catholic"
+        ],
+        [
+          "Xavier University",
+          "Roman Catholic"
+        ],
+        [
+          "Creighton University",
+          "Roman Catholic"
+        ],
+        [
+          "Valparaiso University",
+          "Lutheran"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q9",
+      "natural_language": "List the universities with 'private' institutional control that have both in-state and out-of-state tuition fees greater than $20,000.",
+      "sql": "SELECT university_name FROM university WHERE institutional_control LIKE 'private' AND REPLACE(REPLACE(in_state_tuition_fees, '$', ''), ',', '') > 20000 AND REPLACE(REPLACE(out_of_state_tuition_fees, '$', ''), ',', '') > 20000",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "institutional_control",
+          "in_state_tuition_fees",
+          "out_of_state_tuition_fees"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "Knox College"
+        ],
+        [
+          "Barton College"
+        ],
+        [
+          "Elms College"
+        ],
+        [
+          "Union College"
+        ],
+        [
+          "St. Scholastica"
+        ],
+        [
+          "Macalester College"
+        ],
+        [
+          "Union University"
+        ],
+        [
+          "Morningside College"
+        ],
+        [
+          "Columbia College SC"
+        ],
+        [
+          "Monmouth University"
+        ],
+        [
+          "Luther College"
+        ],
+        [
+          "Brigham Young University--Idaho"
+        ],
+        [
+          "Valparaiso University"
+        ],
+        [
+          "Rollins College"
+        ],
+        [
+          "Concordia University Chicago"
+        ],
+        [
+          "Southeastern University"
+        ],
+        [
+          "Davis and Elkins College"
+        ],
+        [
+          "Concordia College--Moorhead"
+        ],
+        [
+          "Wake Forest University"
+        ],
+        [
+          "Hampshire College"
+        ],
+        [
+          "College of the Atlantic"
+        ],
+        [
+          "Tulane University"
+        ],
+        [
+          "Catawba College"
+        ],
+        [
+          "Oklahoma Baptist University"
+        ],
+        [
+          "New York University"
+        ],
+        [
+          "St. Louis University"
+        ],
+        [
+          "Hastings College"
+        ],
+        [
+          "Syracuse University"
+        ],
+        [
+          "Williams College"
+        ],
+        [
+          "Lewis University "
+        ],
+        [
+          "Santa Fe University of Art and Design"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "Briar Cliff University"
+        ],
+        [
+          "College of Idaho"
+        ],
+        [
+          "Jamestown College"
+        ],
+        [
+          "Freed-Hardeman University"
+        ],
+        [
+          "New England College"
+        ],
+        [
+          "Fairleigh Dickinson University"
+        ],
+        [
+          "High Point University"
+        ],
+        [
+          "Drake University"
+        ],
+        [
+          "Harvey Mudd College"
+        ],
+        [
+          "Rensselaer Polytechnic Institute"
+        ],
+        [
+          "Converse College"
+        ],
+        [
+          "Hamline University"
+        ],
+        [
+          "Georgetown University"
+        ],
+        [
+          "Lawrence University"
+        ],
+        [
+          "George Washington University"
+        ],
+        [
+          "Woodbury University"
+        ],
+        [
+          "Crown College"
+        ],
+        [
+          "Tabor College"
+        ],
+        [
+          "North Carolina Wesleyan College"
+        ],
+        [
+          "College of Mount St. Vincent"
+        ],
+        [
+          "Piedmont College"
+        ],
+        [
+          "Virginia Union University"
+        ],
+        [
+          "Chestnut Hill College"
+        ],
+        [
+          "Wesleyan College"
+        ],
+        [
+          "Touro College"
+        ],
+        [
+          "Barnard College"
+        ],
+        [
+          "Bethel University"
+        ],
+        [
+          "St. Joseph's College"
+        ],
+        [
+          "Appalachian Bible College"
+        ],
+        [
+          "Oglethorpe University"
+        ],
+        [
+          "St. Mary's College of California"
+        ],
+        [
+          "Trinity Christian College"
+        ],
+        [
+          "Western New England University"
+        ],
+        [
+          "Dillard University"
+        ],
+        [
+          "Berea College"
+        ],
+        [
+          "Carroll College (MT)"
+        ],
+        [
+          "Johnson University"
+        ],
+        [
+          "University of Tampa"
+        ],
+        [
+          "Holy Family University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Sewanee: The University of the South"
+        ],
+        [
+          "St. Olaf College"
+        ],
+        [
+          "Whitman College"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Baylor University"
+        ],
+        [
+          "University of Richmond"
+        ],
+        [
+          "DePauw University"
+        ],
+        [
+          "Dickinson College"
+        ],
+        [
+          "St. Olaf College"
+        ],
+        [
+          "Baylor University"
+        ],
+        [
+          "University of Tulsa"
+        ],
+        [
+          "Loyola Marymount University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Butler University"
+        ],
+        [
+          "Hollins University"
+        ],
+        [
+          "Rose-Hulman Institute of Technology"
+        ],
+        [
+          "Pacific Lutheran University"
+        ],
+        [
+          "University of Scranton"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Baylor University"
+        ],
+        [
+          "DePauw University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Hampden-Sydney College"
+        ],
+        [
+          "Illinois Wesleyan University"
+        ],
+        [
+          "Kalamazoo College"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q10",
+      "natural_language": "Find the names of universities located in college towns that contain the word 'City' and have a total undergraduate enrollment between 1000 and 2000.",
+      "sql": "SELECT university_name FROM university WHERE college_town LIKE '%City%' AND CAST(total_undergraduate_enrollment AS REAL) BETWEEN 1000 AND 2000",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "college_town",
+          "total_undergraduate_enrollment"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "What is the average out-of-state tuition fee for universities with a campus size greater than 200 acres and an 'urban' setting, grouped by their religious affiliation?",
+      "sql": "SELECT religious_affiliation, AVG(REPLACE(REPLACE(out_of_state_tuition_fees, '$', ''), ',', '')) FROM university WHERE REPLACE(SUBSTR(campus_size, 1, LENGTH(campus_size) - 6), ',', '') > 200 AND setting LIKE '%urban%' GROUP BY religious_affiliation",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "religious_affiliation",
+          "out_of_state_tuition_fees",
+          "campus_size",
+          "setting"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "religious_affiliation",
+        "avg_replace_replace_out_of_state_tuition_fees"
+      ],
+      "result_rows": [
+        [
+          "(empty)",
+          0.0
+        ],
+        [
+          "Baptist",
+          44625.0
+        ],
+        [
+          "Catholic",
+          45026.31578947369
+        ],
+        [
+          "Christian Church (Disciples of Christ)",
+          47500.0
+        ],
+        [
+          "Christian Churches",
+          18500.0
+        ],
+        [
+          "Christian Reformed Church",
+          32500.0
+        ],
+        [
+          "Church of God",
+          30200.0
+        ],
+        [
+          "Churches of God",
+          31666.666666666668
+        ],
+        [
+          "Disciples of Christ",
+          57000.0
+        ],
+        [
+          "Evangelical Christian",
+          44000.0
+        ],
+        [
+          "Evangelical Lutheran Church",
+          54000.0
+        ],
+        [
+          "Evangelical Lutheran Church in America",
+          53000.0
+        ],
+        [
+          "Interdenominational Christian",
+          48000.0
+        ],
+        [
+          "Jesuit",
+          47031.25
+        ],
+        [
+          "Lutheran",
+          45000.0
+        ],
+        [
+          "Methodist",
+          49400.0
+        ],
+        [
+          "None",
+          27032.610169491527
+        ],
+        [
+          "Presbyterian",
+          45950.0
+        ],
+        [
+          "Presbyterian Church",
+          53000.0
+        ],
+        [
+          "Quaker",
+          63500.0
+        ],
+        [
+          "Reformed Church in America",
+          42500.0
+        ],
+        [
+          "Religious Society of Friends (Quakers)",
+          61933.333333333336
+        ],
+        [
+          "Roman Catholic",
+          45658.53658536585
+        ],
+        [
+          "United Church of Christ",
+          37500.0
+        ],
+        [
+          "United Methodist",
+          48640.0
+        ]
+      ],
+      "result_count": 25,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "Find the universities that have a rank lower than the average rank of all universities with a 'public' institutional control, founded before 1900.",
+      "sql": "SELECT university_name FROM university WHERE CAST(rank AS REAL) < (SELECT AVG(CAST(rank AS REAL)) FROM university WHERE institutional_control LIKE 'public' AND CAST(year_founded AS REAL) < 1900)",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "rank",
+          "institutional_control",
+          "year_founded"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "College of William and Mary"
+        ],
+        [
+          "Knox College"
+        ],
+        [
+          "Montana Tech of the University of Montana"
+        ],
+        [
+          "Barton College"
+        ],
+        [
+          "Elms College"
+        ],
+        [
+          "Union College"
+        ],
+        [
+          "St. Scholastica"
+        ],
+        [
+          "Cornell College "
+        ],
+        [
+          "Macalester College"
+        ],
+        [
+          "Union University"
+        ],
+        [
+          "Morningside College"
+        ],
+        [
+          "Auburn University--Montgomery"
+        ],
+        [
+          "Columbia College SC"
+        ],
+        [
+          "Monmouth University"
+        ],
+        [
+          "Massachusetts Maritime Academy"
+        ],
+        [
+          "Luther College"
+        ],
+        [
+          "Brigham Young University--Idaho"
+        ],
+        [
+          "Valparaiso University"
+        ],
+        [
+          "Rollins College"
+        ],
+        [
+          "University of Science and Arts of Oklahoma"
+        ],
+        [
+          "Northwestern State University of Louisiana"
+        ],
+        [
+          "University of California--Davis"
+        ],
+        [
+          "Lander University"
+        ],
+        [
+          "Southeastern University"
+        ],
+        [
+          "Davis and Elkins College"
+        ],
+        [
+          "Wake Forest University"
+        ],
+        [
+          "University of South Alabama"
+        ],
+        [
+          "Tulane University"
+        ],
+        [
+          "Catawba College"
+        ],
+        [
+          "Oklahoma Baptist University"
+        ],
+        [
+          "California State University--Fresno"
+        ],
+        [
+          "New York University"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "St. Louis University"
+        ],
+        [
+          "Syracuse University"
+        ],
+        [
+          "Williams College"
+        ],
+        [
+          "Lewis University "
+        ],
+        [
+          "Towson University"
+        ],
+        [
+          "Santa Fe University of Art and Design"
+        ],
+        [
+          "University of North Carolina--Wilmington"
+        ],
+        [
+          "Georgia Institute of Technology"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "Briar Cliff University"
+        ],
+        [
+          "Jamestown College"
+        ],
+        [
+          "Freed-Hardeman University"
+        ],
+        [
+          "New England College"
+        ],
+        [
+          "Fairleigh Dickinson University"
+        ],
+        [
+          "High Point University"
+        ],
+        [
+          "Drake University"
+        ],
+        [
+          "Harvey Mudd College"
+        ],
+        [
+          "Rensselaer Polytechnic Institute"
+        ],
+        [
+          "Georgia Southwestern State University "
+        ],
+        [
+          "Coast Guard Academy "
+        ],
+        [
+          "Converse College"
+        ],
+        [
+          "Hamline University"
+        ],
+        [
+          "Georgetown University"
+        ],
+        [
+          "Lawrence University"
+        ],
+        [
+          "George Washington University"
+        ],
+        [
+          "Woodbury University"
+        ],
+        [
+          "Mount Vernon Nazarene University "
+        ],
+        [
+          "Virginia Tech"
+        ],
+        [
+          "United States Merchant Marine Academy "
+        ],
+        [
+          "Crown College"
+        ],
+        [
+          "Tabor College"
+        ],
+        [
+          "Pennsylvania College of Technology "
+        ],
+        [
+          "University of South Carolina--Upstate"
+        ],
+        [
+          "North Carolina Wesleyan College"
+        ],
+        [
+          "Kennesaw State University"
+        ],
+        [
+          "Piedmont College"
+        ],
+        [
+          "Virginia Union University"
+        ],
+        [
+          "Barnard College"
+        ],
+        [
+          "Bethel University"
+        ],
+        [
+          "St. Joseph's College"
+        ],
+        [
+          "Shepherd University"
+        ],
+        [
+          "Missouri Southern State University"
+        ],
+        [
+          "California State University--Fullerton"
+        ],
+        [
+          "California State University, Bakersfield"
+        ],
+        [
+          "St. Mary's College of California"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "Berea College"
+        ],
+        [
+          "Carroll College (MT)"
+        ],
+        [
+          "California State University, Stanislaus"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "University of Northern Iowa"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Sewanee: The University of the South"
+        ],
+        [
+          "St. Olaf College"
+        ],
+        [
+          "Whitman College"
+        ],
+        [
+          "Baylor University"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "California State University, Chico"
+        ],
+        [
+          "California Polytechnic State University, Pomona"
+        ],
+        [
+          "James Madison University"
+        ],
+        [
+          "University of Wisconsin-La Crosse"
+        ],
+        [
+          "Sonoma State University"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Miami University"
+        ],
+        [
+          "University of Richmond"
+        ],
+        [
+          "DePauw University"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q13",
+      "natural_language": "Which universities have an in-state tuition fee that is less than the out-of-state tuition fee and are located in a college town that starts with the letter 'B'?",
+      "sql": "SELECT university_name FROM university WHERE REPLACE(REPLACE(in_state_tuition_fees, '$', ''), ',', '') < REPLACE(REPLACE(out_of_state_tuition_fees, '$', ''), ',', '') AND substr(college_town, 1, 1) = 'B'",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "in_state_tuition_fees",
+          "out_of_state_tuition_fees",
+          "college_town"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "University of Vermont"
+        ],
+        [
+          "University of Vermont"
+        ],
+        [
+          "University of Vermont"
+        ],
+        [
+          "Louisiana State University"
+        ],
+        [
+          "University of Vermont"
+        ],
+        [
+          "University of Vermont"
+        ],
+        [
+          "University of Pittsburgh-Bradford"
+        ],
+        [
+          "University of Pittsburgh at Bradford"
+        ]
+      ],
+      "result_count": 8,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "List universities that have a religious affiliation, a rank better than 50, and were founded after 1850 but before 1950.",
+      "sql": "SELECT university_name FROM university WHERE religious_affiliation != 'None' AND religious_affiliation != '' AND religious_affiliation != ' ' AND religious_affiliation != '(empty)' AND CAST(rank AS REAL) < 50 AND CAST(year_founded AS REAL) > 1850 AND CAST(year_founded AS REAL) < 1950",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "religious_affiliation",
+          "rank",
+          "year_founded"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "St. Mary's College of California"
+        ],
+        [
+          "Loyola Marymount University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Pacific Lutheran University"
+        ],
+        [
+          "University of Scranton"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Loyola Marymount University"
+        ],
+        [
+          "Nebraska Wesleyan University"
+        ],
+        [
+          "Trinity University"
+        ],
+        [
+          "Valparaiso University"
+        ],
+        [
+          "Sewanee: The University of the South"
+        ],
+        [
+          "Butler University"
+        ],
+        [
+          "Loyola Marymount University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Swarthmore College"
+        ],
+        [
+          "Swarthmore College"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Trinity University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "Pacific Lutheran University"
+        ],
+        [
+          "St. Mary's College of California"
+        ],
+        [
+          "St. Norbert College"
+        ],
+        [
+          "University of Scranton"
+        ],
+        [
+          "Valparaiso University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "University of Scranton"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Providence College"
+        ],
+        [
+          "Valparaiso University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "Valparaiso University"
+        ],
+        [
+          "University of Evansville"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Creighton University"
+        ],
+        [
+          "Xavier University of Louisiana"
+        ],
+        [
+          "Gonzaga University"
+        ],
+        [
+          "Carroll College"
+        ]
+      ],
+      "result_count": 51,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "Find the maximum and minimum in-state tuition fees for each institutional control type, only including types where the average undergraduate enrollment is over 2000.",
+      "sql": "SELECT institutional_control, MAX(REPLACE(REPLACE(in_state_tuition_fees, '$', ''), ',', '')), MIN(REPLACE(REPLACE(in_state_tuition_fees, '$', ''), ',', '')) FROM university GROUP BY institutional_control HAVING AVG(CAST(total_undergraduate_enrollment AS REAL)) > 2000",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "institutional_control",
+          "in_state_tuition_fees",
+          "total_undergraduate_enrollment"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "institutional_control",
+        "max_replace_replace_in_state_tuition_fees",
+        "min_replace_replace_in_state_tuition_fees"
+      ],
+      "result_rows": [
+        [
+          "None",
+          "None",
+          "31050 "
+        ],
+        [
+          "private",
+          "None",
+          "0"
+        ],
+        [
+          "private institution",
+          "None",
+          "None"
+        ],
+        [
+          "public",
+          "9954",
+          "10000"
+        ],
+        [
+          "public ",
+          "5296 ",
+          " "
+        ]
+      ],
+      "result_count": 5,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find the average rank for universities that are in an urban setting with a semester-based academic calendar and group the results by their college category.",
+      "sql": "SELECT college_category, AVG(CAST(rank AS REAL)) FROM university WHERE setting LIKE '%urban%' AND academic_calendar LIKE '%semester%' GROUP BY college_category",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "college_category",
+          "rank",
+          "setting",
+          "academic_calendar"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "college_category",
+        "avg_cast_rank_as_real"
+      ],
+      "result_rows": [
+        [
+          " ",
+          18.0
+        ],
+        [
+          "Baccalaureate Colleges",
+          150.0
+        ],
+        [
+          "Liberal Arts Colleges",
+          140.0
+        ],
+        [
+          "National Liberal Arts Colleges",
+          36.666666666666664
+        ],
+        [
+          "National Universities",
+          109.97674418604652
+        ],
+        [
+          "None",
+          63.244897959183675
+        ],
+        [
+          "Regional Colleges (Midwest)",
+          89.5
+        ],
+        [
+          "Regional Colleges (North)",
+          112.0
+        ],
+        [
+          "Regional Colleges (South)",
+          65.0
+        ],
+        [
+          "Regional Colleges (West)",
+          88.4
+        ],
+        [
+          "Regional Universities",
+          43.5
+        ],
+        [
+          "Regional Universities (Midwest)",
+          52.06349206349206
+        ],
+        [
+          "Regional Universities (North)",
+          86.04545454545455
+        ],
+        [
+          "Regional Universities (South)",
+          62.048780487804876
+        ],
+        [
+          "Regional Universities (West)",
+          43.44186046511628
+        ]
+      ],
+      "result_count": 15,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "List the university names and total undergraduate enrollment for universities where the total undergraduate enrollment is greater than 2000 and the year founded is before 1900, order by the undergraduate enrollment in descending order.",
+      "sql": "SELECT university_name, total_undergraduate_enrollment FROM university WHERE CAST(total_undergraduate_enrollment AS REAL) > 2000 AND CAST(year_founded AS REAL) < 1900 ORDER BY CAST(total_undergraduate_enrollment AS REAL) DESC",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "total_undergraduate_enrollment",
+          "year_founded"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name",
+        "total_undergraduate_enrollment"
+      ],
+      "result_rows": [
+        [
+          "San Diego State University",
+          "34000.0"
+        ],
+        [
+          "University of Alabama",
+          "31000.0"
+        ],
+        [
+          "San Diego State University",
+          "30000.0"
+        ],
+        [
+          "Temple University",
+          "28000.0"
+        ],
+        [
+          "Louisiana State University",
+          "26000.0"
+        ],
+        [
+          "Washington State University",
+          "26000.0"
+        ],
+        [
+          "Auburn University",
+          "25000.0"
+        ],
+        [
+          "Northern Arizona University",
+          "25000.0"
+        ],
+        [
+          "Auburn University",
+          "25000.0"
+        ],
+        [
+          "Auburn University",
+          "25000.0"
+        ],
+        [
+          "Auburn University",
+          "24000.0"
+        ],
+        [
+          "Auburn University",
+          "24000.0"
+        ],
+        [
+          "Auburn University",
+          "24000.0"
+        ],
+        [
+          "Virginia Tech",
+          "23558.0"
+        ],
+        [
+          "Virginia Commonwealth University",
+          "23149.0"
+        ],
+        [
+          "Clemson University",
+          "22000.0"
+        ],
+        [
+          "New York University",
+          "21638.0"
+        ],
+        [
+          "University of Kansas",
+          "21066.0"
+        ],
+        [
+          "Clemson University",
+          "21000.0"
+        ],
+        [
+          "Clemson University",
+          "21000.0"
+        ],
+        [
+          "Clemson University",
+          "20000.0"
+        ],
+        [
+          "Clemson University",
+          "20000.0"
+        ],
+        [
+          "Appalachian State University",
+          "20000.0"
+        ],
+        [
+          "Clemson University",
+          "20000.0"
+        ],
+        [
+          "Clemson University",
+          "20000.0"
+        ],
+        [
+          "Appalachian State University",
+          "20000.0"
+        ],
+        [
+          "Clemson University",
+          "20000.0"
+        ],
+        [
+          "Appalachian State University",
+          "19000.0"
+        ],
+        [
+          "University of Delaware",
+          "19000.0"
+        ],
+        [
+          "Illinois State University",
+          "18500.0"
+        ],
+        [
+          "Illinois State University",
+          "18500.0"
+        ],
+        [
+          "Appalachian State University",
+          "18000.0"
+        ],
+        [
+          "Mississippi State University",
+          "18000.0"
+        ],
+        [
+          "Appalachian State University",
+          "18000.0"
+        ],
+        [
+          "Appalachian State University",
+          "18000.0"
+        ],
+        [
+          "Appalachian State University",
+          "18000.0"
+        ],
+        [
+          "Towson University",
+          "17148.0"
+        ],
+        [
+          "Miami University",
+          "17000.0"
+        ],
+        [
+          "Miami University",
+          "17000.0"
+        ],
+        [
+          "Miami University",
+          "17000.0"
+        ],
+        [
+          "University of Nevada, Reno",
+          "17000.0"
+        ],
+        [
+          "Appalachian State University",
+          "17000.0"
+        ],
+        [
+          "Miami University",
+          "17000.0"
+        ],
+        [
+          "Miami University",
+          "17000.0"
+        ],
+        [
+          "Miami University",
+          "17000.0"
+        ],
+        [
+          "Miami University",
+          "17000.0"
+        ],
+        [
+          "Miami University - Oxford",
+          "17000.0"
+        ],
+        [
+          "University of Nevada, Reno",
+          "17000.0"
+        ],
+        [
+          "California State University, Chico",
+          "16500.0"
+        ],
+        [
+          "California State University, Chico",
+          "16500.0"
+        ],
+        [
+          "California State University, Chico",
+          "16000.0"
+        ],
+        [
+          "California State University, Chico",
+          "16000.0"
+        ],
+        [
+          "California State University, Chico",
+          "15500.0"
+        ],
+        [
+          "California State University, Chico",
+          "15500.0"
+        ],
+        [
+          "Western Washington University",
+          "15000.0"
+        ],
+        [
+          "Western Washington University",
+          "15000.0"
+        ],
+        [
+          "Western Washington University",
+          "15000.0"
+        ],
+        [
+          "Western Washington University",
+          "15000.0"
+        ],
+        [
+          "Western Washington University",
+          "15000.0"
+        ],
+        [
+          "Drexel University",
+          "15000.0"
+        ],
+        [
+          "Drexel University",
+          "15000.0"
+        ],
+        [
+          "Drexel University",
+          "15000.0"
+        ],
+        [
+          "Western Washington University",
+          "15000.0"
+        ],
+        [
+          "Western Washington University",
+          "15000.0"
+        ],
+        [
+          "Drexel University",
+          "15000.0"
+        ],
+        [
+          "Baylor University",
+          "14000.0"
+        ],
+        [
+          "Baylor University",
+          "14000.0"
+        ],
+        [
+          "Baylor University",
+          "14000.0"
+        ],
+        [
+          "Baylor University",
+          "14000.0"
+        ],
+        [
+          "Baylor University",
+          "14000.0"
+        ],
+        [
+          "Baylor University",
+          "14000.0"
+        ],
+        [
+          "DePaul University",
+          "14000.0"
+        ],
+        [
+          "Baylor University",
+          "14000.0"
+        ],
+        [
+          "Syracuse University",
+          "13736.0"
+        ],
+        [
+          "Georgia Institute of Technology",
+          "13515.0"
+        ],
+        [
+          "University of New Hampshire",
+          "13000.0"
+        ],
+        [
+          "University of New Hampshire",
+          "13000.0"
+        ],
+        [
+          "Minnesota State University, Mankato",
+          "12500.0"
+        ],
+        [
+          "Minnesota State University, Mankato",
+          "12000.0"
+        ],
+        [
+          "Loyola University Chicago",
+          "11800.0"
+        ],
+        [
+          "North Dakota State University",
+          "11733.0"
+        ],
+        [
+          "South Dakota State University",
+          "11500.0"
+        ],
+        [
+          "University of Vermont",
+          "11000.0"
+        ],
+        [
+          "University of Vermont",
+          "11000.0"
+        ],
+        [
+          "Loyola University Chicago",
+          "11000.0"
+        ],
+        [
+          "University of Vermont",
+          "11000.0"
+        ],
+        [
+          "North Dakota State University",
+          "11000.0"
+        ],
+        [
+          "University of Vermont",
+          "11000.0"
+        ],
+        [
+          "Loyola University Chicago",
+          "11000.0"
+        ],
+        [
+          "University of Vermont",
+          "11000.0"
+        ],
+        [
+          "Montana State University",
+          "10840.0"
+        ],
+        [
+          "George Washington University",
+          "10558.0"
+        ],
+        [
+          "University of North Dakota",
+          "10500.0"
+        ],
+        [
+          "University of North Dakota",
+          "10500.0"
+        ],
+        [
+          "St. Cloud State University",
+          "10500.0"
+        ],
+        [
+          "Eastern Washington University",
+          "10500.0"
+        ],
+        [
+          "College of Charleston",
+          "10000.0"
+        ],
+        [
+          "University of North Dakota",
+          "10000.0"
+        ],
+        [
+          "College of Charleston",
+          "10000.0"
+        ],
+        [
+          "College of Charleston",
+          "10000.0"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q18",
+      "natural_language": "Which universities have a campus size greater than 150 acres, an out-of-state tuition greater than $20,000, and are located in a suburban setting?",
+      "sql": "SELECT university_name FROM university WHERE REPLACE(SUBSTR(campus_size, 1, LENGTH(campus_size) - 6), ',', '') > 150 AND REPLACE(REPLACE(out_of_state_tuition_fees, '$', ''), ',', '') > 20000 AND setting = 'suburban'",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "campus_size",
+          "out_of_state_tuition_fees",
+          "setting"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [
+        [
+          "College of William and Mary"
+        ],
+        [
+          "Elms College"
+        ],
+        [
+          "St. Scholastica"
+        ],
+        [
+          "Morningside College"
+        ],
+        [
+          "Auburn University--Montgomery"
+        ],
+        [
+          "Monmouth University"
+        ],
+        [
+          "Rollins College"
+        ],
+        [
+          "Concordia University Chicago"
+        ],
+        [
+          "Southeastern University"
+        ],
+        [
+          "Wake Forest University"
+        ],
+        [
+          "University of South Alabama"
+        ],
+        [
+          "Catawba College"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "Lewis University "
+        ],
+        [
+          "Towson University"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "George Mason University"
+        ],
+        [
+          "College of Idaho"
+        ],
+        [
+          "Fairleigh Dickinson University"
+        ],
+        [
+          "Rhode Island College"
+        ],
+        [
+          "Harvey Mudd College"
+        ],
+        [
+          "Woodbury University"
+        ],
+        [
+          "North Carolina Wesleyan College"
+        ],
+        [
+          "Kennesaw State University"
+        ],
+        [
+          "New College of Florida"
+        ],
+        [
+          "Missouri Southern State University"
+        ],
+        [
+          "Evergreen State University"
+        ],
+        [
+          "Oglethorpe University"
+        ],
+        [
+          "St. Mary's College of California"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "Trinity Christian College"
+        ],
+        [
+          "Western New England University"
+        ],
+        [
+          "Missouri Southern State University"
+        ],
+        [
+          "University of Texas at Tyler"
+        ],
+        [
+          "Johnson University"
+        ],
+        [
+          "California State University, Stanislaus"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "St. Olaf College"
+        ],
+        [
+          "Auburn University"
+        ],
+        [
+          "University of Central Arkansas"
+        ],
+        [
+          "Radford University"
+        ],
+        [
+          "California Polytechnic State University, Pomona"
+        ],
+        [
+          "James Madison University"
+        ],
+        [
+          "Sonoma State University"
+        ],
+        [
+          "Coastal Carolina University"
+        ],
+        [
+          "Western Washington University"
+        ],
+        [
+          "Miami University"
+        ],
+        [
+          "University of Richmond"
+        ],
+        [
+          "University of Northern Iowa"
+        ],
+        [
+          "St. Olaf College"
+        ],
+        [
+          "Colorado School of Mines"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Hollins University"
+        ],
+        [
+          "Rose-Hulman Institute of Technology"
+        ],
+        [
+          "Pacific Lutheran University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Coastal Carolina University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "James Madison University"
+        ],
+        [
+          "Marist College"
+        ],
+        [
+          "Quinnipiac University"
+        ],
+        [
+          "Valparaiso University"
+        ],
+        [
+          "Xavier University"
+        ],
+        [
+          "California State University, Fullerton"
+        ],
+        [
+          "Clemson University"
+        ],
+        [
+          "Samford University"
+        ],
+        [
+          "Elon University"
+        ],
+        [
+          "Auburn University"
+        ],
+        [
+          "Hofstra University"
+        ],
+        [
+          "Swarthmore College"
+        ],
+        [
+          "Pomona College"
+        ],
+        [
+          "Claremont McKenna College"
+        ],
+        [
+          "Vassar College"
+        ],
+        [
+          "Davidson College"
+        ],
+        [
+          "Haverford College"
+        ],
+        [
+          "Bryn Mawr College"
+        ],
+        [
+          "Skidmore College"
+        ],
+        [
+          "University of Northern Colorado"
+        ],
+        [
+          "St. Olaf College"
+        ],
+        [
+          "University of Richmond"
+        ],
+        [
+          "Swarthmore College"
+        ],
+        [
+          "Haverford College"
+        ],
+        [
+          "Vassar College"
+        ],
+        [
+          "Davidson College"
+        ],
+        [
+          "Pomona College"
+        ],
+        [
+          "Claremont McKenna College"
+        ],
+        [
+          "Harvey Mudd College"
+        ],
+        [
+          "Pitzer College"
+        ],
+        [
+          "Coastal Carolina University"
+        ],
+        [
+          "Denison University"
+        ],
+        [
+          "Haverford College"
+        ],
+        [
+          "Hendrix College"
+        ],
+        [
+          "St. Olaf College"
+        ],
+        [
+          "Wheaton College (IL)"
+        ],
+        [
+          "Southwestern University"
+        ],
+        [
+          "Appalachian State University"
+        ],
+        [
+          "Denison University"
+        ]
+      ],
+      "result_count": 100,
+      "has_more_rows": true
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find the number of universities in each setting with a rank better than 70 and in-state tuition less than $10,000.",
+      "sql": "SELECT setting, COUNT(*) FROM university WHERE CAST(rank AS REAL) < 70 AND REPLACE(REPLACE(in_state_tuition_fees, '$', ''), ',', '') < 10000 GROUP BY setting",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "setting",
+          "rank",
+          "in_state_tuition_fees"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "setting",
+        "count"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "What are the names of universities with a campus size less than 100 acres and were founded after 1950?",
+      "sql": "SELECT university_name FROM university WHERE REPLACE(SUBSTR(campus_size, 1, LENGTH(campus_size) - 6), ',', '') < 100 AND CAST(year_founded AS REAL) > 1950",
+      "golden_schema": {
+        "tables": [
+          "university"
+        ],
+        "columns": [
+          "university_name",
+          "campus_size",
+          "year_founded"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "swde_university/default_task",
+      "source": "quest_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "university_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    }
+  ]
+}

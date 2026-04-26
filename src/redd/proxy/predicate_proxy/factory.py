@@ -18,16 +18,18 @@ try:
 except ImportError:
     SKLEARN_AVAILABLE = False
 
-from redd.embedding import EmbeddingManager
 from redd.core.utils.sql_filter_parser import AttributePredicate, predicates_to_filter_dict
+from redd.embedding import EmbeddingManager
 from redd.proxy.proxy_runtime.executor import ConformalProxy, EmbeddingProxy
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
+
+from .heuristic_proxy import HeuristicPredicateProxy
 
 try:
     from .finetuned_proxy import (
         GLiClassProxy,
-        train_finetuned_proxy,
         _format_predicate_context,
+        train_finetuned_proxy,
     )
     FINETUNED_AVAILABLE = True
 except ImportError:
@@ -49,15 +51,14 @@ def _generate_filter_description(
     val = predicate.value
     fallback = f"Documents where {attr} {op} {val!r}."
     normalized_mode = str(mode or "").strip().lower()
-    llm_modes = {"gemini", "cgpt", "deepseek", "together", "siliconflow"}
+    llm_modes = {"gemini", "openai", "deepseek", "together", "siliconflow"}
     # In ground-truth / non-LLM modes, never require API keys for proxy description.
     if normalized_mode in {"ground_truth", "gt", "disabled", "none", ""}:
         return fallback
     if normalized_mode not in llm_modes:
         return fallback
     try:
-        from redd.llm import get_api_key, llm_completion
-        from openai import OpenAI
+        from redd.llm import CompletionRequest, LLMRuntime, get_api_key
         try:
             key = get_api_key({"mode": mode}, mode, api_key)
         except ValueError:
@@ -66,28 +67,24 @@ def _generate_filter_description(
                 f"(mode={mode}); using fallback template."
             )
             return fallback
-        if normalized_mode == "gemini":
-            client = OpenAI(api_key=key, base_url="https://generativelanguage.googleapis.com/v1beta/openai")
-        elif normalized_mode == "cgpt":
-            client = OpenAI(api_key=key)
-        elif normalized_mode == "deepseek":
-            client = OpenAI(api_key=key, base_url="https://api.deepseek.com")
-        elif normalized_mode == "together":
-            client = OpenAI(api_key=key, base_url="https://api.together.ai/v1")
-        elif normalized_mode == "siliconflow":
-            client = OpenAI(api_key=key, base_url="https://api.siliconflow.com/v1")
-        else:
-            return fallback
         msg = (
             f"Generate a short one-sentence description (under 20 words) of a filter "
             f"for database records: attribute '{attr}' with condition '{op} {val!r}'. "
             f"Describe what it means for a document/record to satisfy this filter. "
             f"Reply with only the description, no quotes."
         )
-        response = llm_completion(
-            mode, client, [{"role": "user", "content": msg}],
-            llm_model, response_format="text"
+        runtime = LLMRuntime.from_config(
+            mode,
+            llm_model,
+            config={"mode": mode, "llm_model": llm_model},
+            api_key=key,
         )
+        response = runtime.complete_text(
+            CompletionRequest(
+                messages=[{"role": "user", "content": msg}],
+                response_format="text",
+            )
+        ).text
         resp = (response or "").strip()
         return resp[:200] if resp else fallback
     except Exception as e:
@@ -315,7 +312,7 @@ class PredicateProxyFactory:
         documents: List[str],
         doc_ids: List[str],
         extractions: Dict[str, Dict[str, Any]],
-        model_name: str = "knowledgator/gliclass-instruct-large-v1.0",
+        model_name: str = "knowledgator/gliclass-small-v1.0",
         output_dir: Optional[Union[str, Path]] = None,
         epochs: int = 3,
         batch_size: int = 8,
@@ -396,4 +393,71 @@ class PredicateProxyFactory:
             except Exception as e:
                 logging.warning(f"[PredicateProxyFactory] Failed to train fine-tuned proxy for {attr}: {e}")
 
+        return proxies
+
+    def create_pretrained_proxies(
+        self,
+        predicates: List[AttributePredicate],
+        query_text: str,
+        model_name: str = "knowledgator/gliclass-small-v1.0",
+        threshold: Optional[float] = None,
+    ) -> List["GLiClassProxy"]:
+        """Create one pre-trained GLiClass proxy per predicate without runtime training."""
+        if str(model_name).strip().lower() in {"heuristic", "rule_based", "value_heuristic"}:
+            proxy_threshold = 0.51 if threshold is None else float(threshold)
+            proxies = [
+                HeuristicPredicateProxy(
+                    pred,
+                    name=f"heuristic_{pred.attribute}",
+                    threshold=proxy_threshold,
+                    pass_through_attributes=getattr(
+                        self.config,
+                        "heuristic_pass_through_attributes",
+                        None,
+                    ),
+                )
+                for pred in predicates
+            ]
+            for pred in predicates:
+                logging.info(
+                    "[PredicateProxyFactory] Created heuristic predicate proxy for %s",
+                    pred.attribute,
+                )
+            return proxies
+
+        if not FINETUNED_AVAILABLE:
+            logging.warning(
+                "[PredicateProxyFactory] Pretrained predicate proxies unavailable. "
+                "Install gliclass/transformers/torch or configure classifier_paths."
+            )
+            return []
+
+        proxies = []
+        for pred in predicates:
+            predicate_context = _format_predicate_context(pred, query_text)
+            try:
+                proxy, _ = train_finetuned_proxy(
+                    attribute=pred.attribute,
+                    predicate_context=predicate_context,
+                    documents=[],
+                    labels=[],
+                    model_name=model_name,
+                    epochs=0,
+                    target_recall=self.config.target_recall,
+                    seed=int(self.config.random_seed),
+                    use_icl=False,
+                )
+                if threshold is not None:
+                    proxy.threshold = float(threshold)
+                proxies.append(proxy)
+                logging.info(
+                    "[PredicateProxyFactory] Created pretrained predicate proxy for %s",
+                    pred.attribute,
+                )
+            except Exception as exc:
+                logging.warning(
+                    "[PredicateProxyFactory] Failed to create pretrained proxy for %s: %s",
+                    pred.attribute,
+                    exc,
+                )
         return proxies

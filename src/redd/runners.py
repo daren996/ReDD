@@ -1,97 +1,140 @@
-"""CLI orchestration helpers.
-
-These functions are retained for backwards compatibility with repository
-scripts. New external integrations should use `redd.SchemaGenerator`,
-`redd.DataPopulator`, and `redd.run_pipeline`.
-"""
+"""Strict v2 config orchestration helpers for the package CLI."""
 
 from __future__ import annotations
 
-from redd.api import DataPopulator, SchemaGenerator
-from redd.config import load_experiment_config
-from redd.runtime import resolve_dataset_targets, setup_runtime_logging
-from redd.core.data_population import create_data_populator
-from redd.core.schema_gen import create_schema_generator
+from redd.api import DataPopulator, SchemaGenerator, run_pipeline
+from redd.config import ExperimentRuntime, StageName, load_experiment_runtime
+from redd.runtime import setup_runtime_logging
 
 
-def _build_schema_generator(config: dict, api_key: str | None = None):
-    return create_schema_generator(config, api_key=api_key)
+def load_runtime(config_path: str, experiment: str) -> ExperimentRuntime:
+    runtime, _ = load_experiment_runtime(config_path, experiment)
+    return runtime
 
 
-def _build_datapopulator(config: dict, api_key: str | None = None):
-    return create_data_populator(config, api_key=api_key)
+def _dataset_ids(runtime: ExperimentRuntime) -> list[str]:
+    return runtime.dataset_ids()
 
 
-def run_preprocessing(config_path: str, exp: str, api_key: str | None = None) -> dict:
-    config, _ = load_experiment_config(config_path, exp, module="schemagen")
-    setup_runtime_logging(config, exp)
-    schema_generator = SchemaGenerator(
-        preprocessing_config=config,
+def _schema_generator(runtime: ExperimentRuntime, api_key: str | None = None) -> SchemaGenerator | None:
+    preprocessing_config = (
+        runtime.stage_runtime_dict("preprocessing")
+        if "preprocessing" in runtime.stages and runtime.stages["preprocessing"].enabled
+        else None
+    )
+    refinement_config = (
+        runtime.stage_runtime_dict("schema_refinement")
+        if "schema_refinement" in runtime.stages and runtime.stages["schema_refinement"].enabled
+        else None
+    )
+    if preprocessing_config is None and refinement_config is None:
+        return None
+    return SchemaGenerator(
+        preprocessing_config=preprocessing_config,
+        refinement_config=refinement_config,
         api_key=api_key,
         configure_logging=False,
     )
-    schema_generator.preprocessing(datasets=resolve_dataset_targets(config))
-    return config
 
 
-def run_schema_refinement(config_path: str, exp: str, api_key: str | None = None) -> dict:
-    config, _ = load_experiment_config(config_path, exp, module="schemagen")
-    setup_runtime_logging(config, exp)
-    schema_generator = SchemaGenerator(
-        refinement_config=config,
+def _data_populator(runtime: ExperimentRuntime, api_key: str | None = None) -> DataPopulator | None:
+    if "data_extraction" not in runtime.stages or not runtime.stages["data_extraction"].enabled:
+        return None
+    return DataPopulator(
+        runtime.stage_runtime_dict("data_extraction"),
         api_key=api_key,
         configure_logging=False,
     )
-    schema_generator.schema_refine(datasets=resolve_dataset_targets(config))
-    return config
 
 
-def run_schemagen(config_path: str, exp: str, api_key: str | None = None) -> dict:
-    config, _ = load_experiment_config(config_path, exp, module="schemagen")
-    setup_runtime_logging(config, exp)
-    schema_gen = _build_schema_generator(config, api_key=api_key)
-    schema_gen(resolve_dataset_targets(config))
-    return config
+def _setup_logging(runtime: ExperimentRuntime) -> None:
+    first_stage: StageName = runtime.stage_order[0]
+    log_name = f"{runtime.project.name}.{runtime.id}"
+    setup_runtime_logging(runtime.stage_runtime_dict(first_stage), log_name)
 
 
-def run_datapop(config_path: str, exp: str, api_key: str | None = None) -> dict:
-    config, _ = load_experiment_config(config_path, exp, module="datapop")
-    setup_runtime_logging(config, exp)
-    data_populator = DataPopulator(
-        config,
-        api_key=api_key,
-        configure_logging=False,
+def run_preprocessing(config_path: str, experiment: str, api_key: str | None = None) -> dict:
+    runtime = load_runtime(config_path, experiment)
+    _setup_logging(runtime)
+    schema_generator = _schema_generator(runtime, api_key=api_key)
+    if schema_generator is None or schema_generator.preprocessing_config is None:
+        raise ValueError(f"Experiment `{experiment}` does not enable preprocessing.")
+    result = schema_generator.preprocessing(datasets=_dataset_ids(runtime))
+    return {
+        "project": runtime.project.name,
+        "experiment": runtime.id,
+        "stage": "preprocessing",
+        "result": result,
+    }
+
+
+def run_schema_refinement(config_path: str, experiment: str, api_key: str | None = None) -> dict:
+    runtime = load_runtime(config_path, experiment)
+    _setup_logging(runtime)
+    schema_generator = _schema_generator(runtime, api_key=api_key)
+    if schema_generator is None or schema_generator.refinement_config is None:
+        raise ValueError(f"Experiment `{experiment}` does not enable schema_refinement.")
+    result = schema_generator.schema_refine(datasets=_dataset_ids(runtime))
+    return {
+        "project": runtime.project.name,
+        "experiment": runtime.id,
+        "stage": "schema_refinement",
+        "result": result,
+    }
+
+
+def run_extract(config_path: str, experiment: str, api_key: str | None = None) -> dict:
+    runtime = load_runtime(config_path, experiment)
+    _setup_logging(runtime)
+    data_populator = _data_populator(runtime, api_key=api_key)
+    if data_populator is None:
+        raise ValueError(f"Experiment `{experiment}` does not enable data_extraction.")
+    schema_generator = _schema_generator(runtime, api_key=api_key)
+    result = data_populator.data_extraction(
+        datasets=_dataset_ids(runtime),
+        schema_generator=schema_generator,
     )
-    data_populator.data_extraction(datasets=resolve_dataset_targets(config))
-    return config
+    return {
+        "project": runtime.project.name,
+        "experiment": runtime.id,
+        "stage": "data_extraction",
+        "result": result,
+    }
 
 
-def run_evaluation(config_path: str, exp: str, api_key: str | None = None) -> dict:
-    return run_datapop_evaluation(config_path, exp, api_key=api_key)
+def run_experiment(config_path: str, experiment: str, api_key: str | None = None) -> dict:
+    runtime = load_runtime(config_path, experiment)
+    _setup_logging(runtime)
+    schema_generator = _schema_generator(runtime, api_key=api_key)
+    data_populator = _data_populator(runtime, api_key=api_key)
+    result = run_pipeline(
+        schema_generator=schema_generator,
+        data_populator=data_populator,
+        stages=runtime.stage_order,
+        datasets=_dataset_ids(runtime),
+    )
+    return {"project": runtime.project.name, "experiment": runtime.id, "result": result}
 
 
-def run_datapop_evaluation(config_path: str, exp: str, api_key: str | None = None) -> dict:
-    from redd.exp.evaluation import EvalDataPop
-    from redd.llm import is_local_provider, normalize_provider_name
+def run_evaluation(config_path: str, experiment: str, api_key: str | None = None) -> dict:
+    del api_key
+    from redd.exp.evaluation import EvalDataExtraction
 
-    config, _ = load_experiment_config(config_path, exp, module="datapop")
-    setup_runtime_logging(config, exp)
+    runtime = load_runtime(config_path, experiment)
+    _setup_logging(runtime)
+    if "data_extraction" not in runtime.stages or not runtime.stages["data_extraction"].enabled:
+        raise ValueError(f"Experiment `{experiment}` does not enable data_extraction.")
 
-    eval_mode = normalize_provider_name(config["eval"]["mode"])
-    if "committee" not in config["eval"] and is_local_provider(eval_mode):
-        raise ValueError(f"Invalid eval mode `{eval_mode}`")
+    evaluator = EvalDataExtraction(runtime.stage_runtime_dict("data_extraction"))
+    evaluator(datasets := _dataset_ids(runtime))
+    return {
+        "project": runtime.project.name,
+        "experiment": runtime.id,
+        "stage": "evaluation",
+        "datasets": datasets,
+    }
 
-    evaluator = EvalDataPop(config, api_key=api_key)
-    evaluator(resolve_dataset_targets(config))
-    return config
 
-
-def run_ensemble_classifiers(config_path: str, exp: str) -> dict:
-    from redd.correction import ClassifierVal
-
-    config, _ = load_experiment_config(config_path, exp, module="correction")
-    setup_runtime_logging(config, exp)
-
-    validator = ClassifierVal(config)
-    validator(config["model_dn_fn_list"], config["test_dn_fn"], test_mode="ensemble")
-    return config
+def run_ensemble_classifiers(config_path: str, experiment: str) -> dict:
+    del config_path, experiment
+    raise NotImplementedError("Correction workflows are outside the strict v2 runtime path.")

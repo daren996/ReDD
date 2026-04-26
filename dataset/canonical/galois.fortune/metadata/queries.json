@@ -1,0 +1,347 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "galois.fortune",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List MarketCap_March28_M, row_id, Assets_M from fortune500_companies where MarketCap_March28_M <= 14507.3.",
+      "sql": "SELECT market_cap_march28_m, row_id, assets_m FROM fortune500_companies WHERE market_cap_march28_m <= 14507.3;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.market_cap_march28_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q2",
+      "question": "List RevenuePercentChange, row_id, Assets_M from fortune500_companies where RevenuePercentChange <= -2.4.",
+      "sql": "SELECT revenue_percent_change, row_id, assets_m FROM fortune500_companies WHERE revenue_percent_change <= -2.4;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.revenue_percent_change"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q3",
+      "question": "List ProfitsPercentChange, row_id, Assets_M from fortune500_companies where ProfitsPercentChange >= 34.7.",
+      "sql": "SELECT profits_percent_change, row_id, assets_m FROM fortune500_companies WHERE profits_percent_change >= 34.7;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.profits_percent_change"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q4",
+      "question": "List MarketCap_Updated_M, row_id, Assets_M from fortune500_companies where MarketCap_Updated_M <= 14249.",
+      "sql": "SELECT market_cap_updated_m, row_id, assets_m FROM fortune500_companies WHERE market_cap_updated_m <= 14249;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.market_cap_updated_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q5",
+      "question": "List Sector, row_id, Assets_M from fortune500_companies where Sector contains 'financials'.",
+      "sql": "SELECT sector, row_id, assets_m FROM fortune500_companies WHERE sector LIKE '%financials%';",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.sector",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.sector"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q6",
+      "question": "List Sector, row_id, Assets_M from fortune500_companies where Sector equals 'Financials'.",
+      "sql": "SELECT sector, row_id, assets_m FROM fortune500_companies WHERE sector = 'Financials';",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.sector",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.sector"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q7",
+      "question": "List ProfitsPercentChange, row_id, Assets_M from fortune500_companies where ProfitsPercentChange <= -25.7.",
+      "sql": "SELECT profits_percent_change, row_id, assets_m FROM fortune500_companies WHERE profits_percent_change <= -25.7;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.profits_percent_change"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q8",
+      "question": "List HeadquartersState, row_id, Assets_M from fortune500_companies where HeadquartersState contains 'new'.",
+      "sql": "SELECT headquarters_state, row_id, assets_m FROM fortune500_companies WHERE headquarters_state LIKE '%new%';",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.headquarters_state",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.headquarters_state"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q9",
+      "question": "Find MarketCap_March28_M, row_id, Assets_M from fortune500_companies where MarketCap_March28_M <= 14507.3 and MarketCap_March28_M <= 19735.9.",
+      "sql": "SELECT market_cap_march28_m, row_id, assets_m FROM fortune500_companies WHERE market_cap_march28_m <= 14507.3 AND market_cap_march28_m <= 19735.9;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.market_cap_march28_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q10",
+      "question": "Find RevenuePercentChange, row_id, Assets_M from fortune500_companies where RevenuePercentChange <= -2.4 and RevenuePercentChange <= -7.5.",
+      "sql": "SELECT revenue_percent_change, row_id, assets_m FROM fortune500_companies WHERE revenue_percent_change <= -2.4 AND revenue_percent_change <= -7.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.revenue_percent_change"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q11",
+      "question": "Find MarketCap_March28_M, MarketCap_Updated_M, row_id from fortune500_companies where MarketCap_March28_M <= 14507.3 and MarketCap_Updated_M <= 19637.",
+      "sql": "SELECT market_cap_march28_m, market_cap_updated_m, row_id FROM fortune500_companies WHERE market_cap_march28_m <= 14507.3 AND market_cap_updated_m <= 19637;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.market_cap_updated_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.market_cap_march28_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q12",
+      "question": "Find MarketCap_Updated_M, MarketCap_March28_M, row_id from fortune500_companies where MarketCap_Updated_M <= 14249 and MarketCap_March28_M <= 19735.9.",
+      "sql": "SELECT market_cap_updated_m, market_cap_march28_m, row_id FROM fortune500_companies WHERE market_cap_updated_m <= 14249 AND market_cap_march28_m <= 19735.9;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.market_cap_march28_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.market_cap_updated_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q13",
+      "question": "Find Assets_M, Profits_M, row_id from fortune500_companies where Assets_M >= 43076 and Profits_M >= 4124.5.",
+      "sql": "SELECT assets_m, profits_m, row_id FROM fortune500_companies WHERE assets_m >= 43076 AND profits_m >= 4124.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.profits_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.assets_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q14",
+      "question": "Find Assets_M, MarketCap_March28_M, row_id from fortune500_companies where Assets_M >= 43076 and MarketCap_March28_M >= 42762.2.",
+      "sql": "SELECT assets_m, market_cap_march28_m, row_id FROM fortune500_companies WHERE assets_m >= 43076 AND market_cap_march28_m >= 42762.2;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.market_cap_march28_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.assets_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q15",
+      "question": "Find Revenues_M, Assets_M, row_id from fortune500_companies where Revenues_M >= 42857 and Assets_M >= 43076.",
+      "sql": "SELECT revenues_m, assets_m, row_id FROM fortune500_companies WHERE revenues_m >= 42857 AND assets_m >= 43076;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.revenues_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q16",
+      "question": "Find Assets_M, Profits_M, row_id from fortune500_companies where Assets_M <= 22387.4 and Profits_M >= 4124.5.",
+      "sql": "SELECT assets_m, profits_m, row_id FROM fortune500_companies WHERE assets_m <= 22387.4 AND profits_m >= 4124.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.profits_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.assets_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q17",
+      "question": "Find Assets_M, Profits_M, row_id from fortune500_companies where Assets_M <= 15985.9, Assets_M <= 22387.4, and Profits_M >= 4124.5.",
+      "sql": "SELECT assets_m, profits_m, row_id FROM fortune500_companies WHERE assets_m <= 15985.9 AND assets_m <= 22387.4 AND profits_m >= 4124.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.profits_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.assets_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q18",
+      "question": "Find ProfitsPercentChange, Assets_M, row_id from fortune500_companies where ProfitsPercentChange <= -25.7, ProfitsPercentChange <= -44, and Assets_M >= 43076.",
+      "sql": "SELECT profits_percent_change, assets_m, row_id FROM fortune500_companies WHERE profits_percent_change <= -25.7 AND profits_percent_change <= -44 AND assets_m >= 43076;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.profits_percent_change"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q19",
+      "question": "Find MarketCap_March28_M, Revenues_M, Assets_M from fortune500_companies where MarketCap_March28_M <= 19735.9, Revenues_M <= 16352.4, and Assets_M <= 22387.4.",
+      "sql": "SELECT market_cap_march28_m, revenues_m, assets_m FROM fortune500_companies WHERE market_cap_march28_m <= 19735.9 AND revenues_m <= 16352.4 AND assets_m <= 22387.4;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.market_cap_march28_m"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q20",
+      "question": "Find ProfitsPercentChange, Profits_M, row_id from fortune500_companies where ProfitsPercentChange <= -25.7, Profits_M >= 625, and Profits_M >= 4124.5.",
+      "sql": "SELECT profits_percent_change, profits_m, row_id FROM fortune500_companies WHERE profits_percent_change <= -25.7 AND profits_m >= 625 AND profits_m >= 4124.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.profits_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.profits_percent_change"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

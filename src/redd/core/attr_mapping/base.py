@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from ..data_loader import create_data_loader, DataLoaderBase
+from ..data_loader import DataLoaderBase, create_data_loader
 
 
 class ChunkAttributeMapperBase(ABC):

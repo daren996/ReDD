@@ -14,7 +14,11 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from ..data_loader import create_data_loader, DataLoaderBase
+import pandas as pd
+import yaml
+
+from ..data_loader import DataLoaderBase, create_data_loader
+from ..data_loader.data_loader_hf_manifest import normalize_identifier
 
 
 class BaseChunker(ABC):
@@ -34,7 +38,7 @@ class BaseChunker(ABC):
     - data_main: Base data directory (e.g., "dataset/fda_sqlite/")
     - exp_dataset_task_list: List of task folder paths to process (e.g., ["no_chunk"])
     - out_main: Output directory (optional, defaults to data_main)
-    - data_loader_type: Type of data loader (e.g., "sqlite", "standard")
+    - data_loader_type: Type of data loader (e.g., "hf_manifest")
     """
     
     def __init__(self, config: Dict[str, Any], loader: Optional[DataLoaderBase] = None):
@@ -44,7 +48,7 @@ class BaseChunker(ABC):
         # Extract common config values
         self.data_main = config.get("data_main", "dataset/")
         self.out_main = config.get("out_main", self.data_main)
-        self.loader_type = config.get("data_loader_type")
+        self.loader_type = config.get("data_loader_type", "hf_manifest")
         
         # data_loader_type is required only if loader is not provided
         if self.loader is None and self.loader_type is None:
@@ -127,35 +131,243 @@ class BaseChunker(ABC):
         self.loader = create_data_loader(
             full_data_path,
             loader_type=self.loader_type,
+            loader_config=self.config.get("data_loader_config"),
         )
         
         logging.info(f"[{self.__class__.__name__}:_process_dataset] "
                     f"Created {self.loader.__class__.__name__} for {full_data_path}")
         
-        # Determine output path — write to a sibling task folder
+        # Determine output path and write a standard derived dataset.
         data_root = self.loader.data_root
-        output_db_name = self.config.get("output_db_name", f"{self.chunker_name}.db")
-        if not output_db_name.endswith(".db"):
-            output_db_name = f"{output_db_name}.db"
-        
-        # Strip .db suffix to get the output task folder name
-        output_task_name = output_db_name.removesuffix(".db")
-        output_task_dir = data_root.parent / output_task_name
+        output_task_name = self.config.get("output_dataset_name")
+        if not output_task_name:
+            output_db_name = self.config.get("output_db_name", self.chunker_name)
+            output_task_name = str(output_db_name).removesuffix(".db")
+        output_task_dir = self._resolve_output_dataset_dir(data_root, output_task_name)
+
+        self._run_chunking_to_manifest(output_task_dir, output_task_name)
+
+    def _resolve_output_dataset_dir(self, data_root: Path, output_task_name: str) -> Path:
+        configured_root = self.config.get("output_dataset_root")
+        output_root = Path(configured_root) if configured_root else None
+        if output_root is None and data_root.parent.name in {"canonical", "derived"}:
+            registry_root = data_root.parent.parent
+            if registry_root.name == "dataset":
+                output_root = registry_root / "derived"
+        if output_root is None:
+            output_root = data_root.parent
+
+        source_dataset_id = str(getattr(self.loader, "dataset_id", data_root.name))
+        output_dataset_id = self.config.get("output_dataset_id") or (
+            f"{source_dataset_id}.{normalize_identifier(output_task_name)}"
+        )
+        return (output_root / str(output_dataset_id)).resolve()
+
+    def _run_chunking_to_manifest(
+        self,
+        output_task_dir: Path,
+        output_task_name: str,
+        overwrite: bool = True,
+    ) -> Path:
+        """Run chunking and write a manifest/parquet derived dataset."""
         output_task_dir.mkdir(parents=True, exist_ok=True)
-        output_path = output_task_dir / "documents.db"
-        
-        # Copy schema.db and queries.json from source task folder
+        data_dir = output_task_dir / "data"
+        metadata_dir = output_task_dir / "metadata"
+        data_dir.mkdir(parents=True, exist_ok=True)
+        metadata_dir.mkdir(parents=True, exist_ok=True)
+
+        documents_path = data_dir / "documents.parquet"
+        ground_truth_path = data_dir / "ground_truth.parquet"
+        if not overwrite and (documents_path.exists() or ground_truth_path.exists()):
+            raise FileExistsError(
+                f"[{self.__class__.__name__}:_run_chunking_to_manifest] "
+                f"Output dataset already exists: {output_task_dir}"
+            )
+
+        schema_lookup = self._schema_lookup()
+        document_rows: List[Dict[str, Any]] = []
+        ground_truth_rows: List[Dict[str, Any]] = []
+        dataset_id = output_task_dir.name
+        source_dataset_id = str(getattr(self.loader, "dataset_id", self.loader.data_root.name))
+
+        total_docs = 0
+        total_chunks = 0
+        for doc_text, doc_id, metadata in self.loader.iter_docs():
+            total_docs += 1
+            chunks = self.chunk_document(doc_text, doc_id, metadata)
+            document_is_chunked = len(chunks) > 1
+            source_row_id = metadata.get("source_row_id")
+            for chunk_text, chunk_id, chunk_metadata in chunks:
+                total_chunks += 1
+                chunk_metadata = dict(chunk_metadata or {})
+                chunk_parent_id = chunk_metadata.get("parent_doc_id")
+                if chunk_parent_id is None and document_is_chunked:
+                    chunk_parent_id = doc_id
+                chunk_source_row_id = chunk_metadata.get("source_row_id", source_row_id)
+                document_rows.append(
+                    {
+                        "dataset_id": dataset_id,
+                        "doc_id": str(chunk_id),
+                        "doc_text": chunk_text,
+                        "source_id": metadata.get("source_file") or metadata.get("source_id"),
+                        "source_table": metadata.get("table_name") or metadata.get("source_table"),
+                        "source_row_id": chunk_source_row_id,
+                        "parent_doc_id": chunk_parent_id,
+                        "chunk_index": chunk_metadata.get("chunk_index"),
+                        "is_chunked": document_is_chunked,
+                        "split": metadata.get("split"),
+                    }
+                )
+                ground_truth_rows.extend(
+                    self._ground_truth_rows_for_chunk(
+                        dataset_id=dataset_id,
+                        chunk_id=str(chunk_id),
+                        source_doc_id=str(doc_id),
+                        source_row_id=chunk_source_row_id,
+                        schema_lookup=schema_lookup,
+                    )
+                )
+
+        pd.DataFrame(document_rows, columns=self._document_columns()).to_parquet(
+            documents_path,
+            index=False,
+        )
+        pd.DataFrame(ground_truth_rows, columns=self._ground_truth_columns()).to_parquet(
+            ground_truth_path,
+            index=False,
+        )
+        self._copy_contract_metadata(metadata_dir)
+        self._write_manifest(
+            output_task_dir=output_task_dir,
+            dataset_id=dataset_id,
+            source_dataset_id=source_dataset_id,
+            output_task_name=output_task_name,
+        )
+
+        logging.info(
+            f"[{self.__class__.__name__}:_run_chunking_to_manifest] "
+            f"Chunking complete: {total_docs} docs -> {total_chunks} chunks at {output_task_dir}"
+        )
+        return output_task_dir
+
+    @staticmethod
+    def _document_columns() -> List[str]:
+        return [
+            "dataset_id",
+            "doc_id",
+            "doc_text",
+            "source_id",
+            "source_table",
+            "source_row_id",
+            "parent_doc_id",
+            "chunk_index",
+            "is_chunked",
+            "split",
+        ]
+
+    @staticmethod
+    def _ground_truth_columns() -> List[str]:
+        return [
+            "dataset_id",
+            "doc_id",
+            "record_id",
+            "table_id",
+            "column_id",
+            "column_name",
+            "value",
+            "value_type",
+            "source_row_id",
+        ]
+
+    def _schema_lookup(self) -> Dict[str, Dict[str, str]]:
+        table_ids: Dict[str, str] = {}
+        column_ids: Dict[str, str] = {}
+        for table in self.loader.load_schema_general():
+            table_name = str(table.get("Schema Name") or "")
+            table_id = str(table.get("table_id") or normalize_identifier(table_name))
+            table_ids[table_name] = table_id
+            for attr in table.get("Attributes", []):
+                attr_name = str(attr.get("Attribute Name") or "")
+                column_ids[f"{table_name}.{attr_name}"] = str(
+                    attr.get("column_id") or f"{table_id}.{normalize_identifier(attr_name)}"
+                )
+        return {"table_ids": table_ids, "column_ids": column_ids}
+
+    def _ground_truth_rows_for_chunk(
+        self,
+        *,
+        dataset_id: str,
+        chunk_id: str,
+        source_doc_id: str,
+        source_row_id: Any,
+        schema_lookup: Dict[str, Dict[str, str]],
+    ) -> List[Dict[str, Any]]:
+        doc_info = self.loader.get_doc_info(source_doc_id)
+        if not doc_info:
+            return []
+        rows: List[Dict[str, Any]] = []
+        data_records = doc_info.get("data_records") or []
+        for record_index, record in enumerate(data_records):
+            table_name = str(record.get("table_name") or doc_info.get("table") or "")
+            table_id = schema_lookup["table_ids"].get(table_name, normalize_identifier(table_name))
+            values = record.get("data") or {}
+            if not isinstance(values, dict):
+                continue
+            record_id = str(source_row_id or f"{source_doc_id}:{record_index}")
+            for column_name, value in values.items():
+                column_name = str(column_name)
+                rows.append(
+                    {
+                        "dataset_id": dataset_id,
+                        "doc_id": chunk_id,
+                        "record_id": record_id,
+                        "table_id": table_id,
+                        "column_id": schema_lookup["column_ids"].get(
+                            f"{table_name}.{column_name}",
+                            f"{table_id}.{normalize_identifier(column_name)}",
+                        ),
+                        "column_name": column_name,
+                        "value": value,
+                        "value_type": type(value).__name__ if value is not None else "null",
+                        "source_row_id": source_row_id,
+                    }
+                )
+        return rows
+
+    def _copy_contract_metadata(self, metadata_dir: Path) -> None:
         import shutil
-        for fname in ("schema.db", "queries.json"):
-            src = data_root / fname
-            dst = output_task_dir / fname
-            if src.exists() and not dst.exists():
-                shutil.copy2(str(src), str(dst))
-                logging.info(f"[{self.__class__.__name__}:_process_dataset] "
-                            f"Copied {fname} to {output_task_dir}")
-        
-        # Run chunking
-        self._run_chunking(output_path)
+
+        schema_path = getattr(self.loader, "_schema_path", None)
+        queries_path = getattr(self.loader, "_queries_path", None)
+        if schema_path and Path(schema_path).exists():
+            shutil.copy2(str(schema_path), str(metadata_dir / "schema.json"))
+        if queries_path and Path(queries_path).exists():
+            shutil.copy2(str(queries_path), str(metadata_dir / "queries.json"))
+
+    def _write_manifest(
+        self,
+        *,
+        output_task_dir: Path,
+        dataset_id: str,
+        source_dataset_id: str,
+        output_task_name: str,
+    ) -> None:
+        manifest = {
+            "schema_version": "redd.manifest.v1",
+            "dataset_id": dataset_id,
+            "kind": "derived",
+            "source_dataset_id": source_dataset_id,
+            "description": f"Chunked dataset produced by {self.__class__.__name__}.",
+            "tags": ["chunked", normalize_identifier(output_task_name)],
+            "paths": {
+                "documents": "data/documents.parquet",
+                "ground_truth": "data/ground_truth.parquet",
+                "schema": "metadata/schema.json",
+                "queries": "metadata/queries.json",
+            },
+        }
+        with (output_task_dir / "manifest.yaml").open("w", encoding="utf-8") as file:
+            yaml.safe_dump(manifest, file, sort_keys=False, allow_unicode=True)
     
     def _run_chunking(
         self, 

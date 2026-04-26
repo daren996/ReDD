@@ -15,6 +15,7 @@ These modules define the supported import surface for callers using the installe
 - `src/redd/data_extraction.py`
 - `src/redd/loader.py`
 - `src/redd/pipeline.py`
+- `src/redd/web_demo.py`
 
 The legacy `schema_refinement` helper remains supported as a public API alias
 exported from `src/redd/__init__.py` and `src/redd/api.py`, but it is no longer
@@ -52,6 +53,7 @@ below:
 Current implementation-heavy internals still live under:
 
 - `src/redd/cli/`
+- `src/redd/stages/`
 - `src/redd/runtime.py`
 - `src/redd/config.py`
 - `src/redd/llm/`
@@ -63,11 +65,16 @@ Current implementation-heavy internals still live under:
 
 The rule of thumb is simple: `src/redd/core/**` is implementation detail unless a symbol is
 re-exported through a documented `src/redd/*.py` surface.
+`src/redd/stages/**` is also implementation detail: it keeps public API classes
+thin by owning dataset loops, loader binding, and strategy coordination.
 
 In particular:
 
 - `src/redd/core/data_population/` is the current runtime home for execution-side query
   optimization used by `data_extraction`
+- `src/redd/core/data_loader/registry.py` owns loader profiles and the internal loader
+  family registry; dataset-specific layout behavior should live in loader config/profile
+  data rather than public stage code
 - `src/redd/core/schema_gen/` and `src/redd/core/schema_tailor/` are the runtime homes for
   schema-focused preprocessing and refinement
 - `src/redd/optimizations/` is the runtime home for optional efficiency modules such
@@ -84,6 +91,7 @@ These areas are useful for research workflows but should not be treated as stabl
 - `src/redd/correction/`
 - `src/redd/exp/`
 - `src/redd/exp/experiments/`
+- proxy pretraining and classifier-training helpers
 - `dataset/`
 - `papers/`
 - `prompts/` source prompt templates used to produce packaged prompt resources

@@ -1,6 +1,7 @@
 You are a database expert.  
 Your task is to analyze an unstructured natural language document and determine which table (from a provided set of table schemas) it belongs to.
-Each document can only belong to one table schema.
+Each document can belong to at most one table schema.
+If the document does not contain information for any provided schema, set "Table Assignment" to null.
 
 ## One-Shot Example
 
@@ -33,6 +34,6 @@ Input provided in JSON format with the following components:
 - Document.
 - Schema.
 Output provided in JSON format with the following components:
-- Table Assignment: The name of the table in the provided schema. 
+- Table Assignment: The name of the table in the provided schema, or null if no provided schema matches the document.
 
 Below is the input for this iteration:

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from redd.config import DEFAULT_LOG_DIR, normalize_optional_experiment_config, resolve_repo_path
+from redd.config import DEFAULT_LOG_DIR, resolve_repo_path
 from redd.core.utils import logging_utils
 from redd.core.utils.constants import PATH_TEMPLATES
 
@@ -27,11 +27,19 @@ class DatasetRuntimeContext:
 class SchemaArtifactSource:
     out_root: Path
     param_str: str
+    dataset_roots: dict[str, Path] | None = None
 
     def general_schema_path(self, dataset: str) -> Path:
+        if self.dataset_roots and dataset in self.dataset_roots:
+            return self.dataset_roots[dataset] / PATH_TEMPLATES.schema_general(self.param_str)
         return self.out_root / dataset / PATH_TEMPLATES.schema_general(self.param_str)
 
     def query_schema_pattern(self, dataset: str) -> Path:
+        if self.dataset_roots and dataset in self.dataset_roots:
+            return self.dataset_roots[dataset] / PATH_TEMPLATES.SCHEMA_QUERY_TAILORED.format(
+                qid="{qid}",
+                param_str=self.param_str,
+            )
         return self.out_root / dataset / PATH_TEMPLATES.SCHEMA_QUERY_TAILORED.format(
             qid="{qid}",
             param_str=self.param_str,
@@ -43,7 +51,10 @@ def normalize_stage_config(
     *,
     module: str | None = None,
 ) -> dict[str, Any] | None:
-    return normalize_optional_experiment_config(config, module=module)
+    del module
+    if config is None:
+        return None
+    return deepcopy(dict(config))
 
 
 def resolve_log_dir(config: dict[str, Any]) -> Path:
@@ -51,11 +62,17 @@ def resolve_log_dir(config: dict[str, Any]) -> Path:
 
 
 def resolve_output_root(config: dict[str, Any]) -> Path:
-    return resolve_repo_path(config["out_main"])
+    if "out_main" in config:
+        return resolve_repo_path(config["out_main"])
+    return resolve_repo_path(config["runtime"]["output_dir"])
 
 
 def resolve_data_root(config: Mapping[str, Any]) -> Path:
-    return resolve_repo_path(config.get("data_main", config["out_main"]))
+    if "data_main" in config:
+        return resolve_repo_path(config["data_main"])
+    if "out_main" in config:
+        return resolve_repo_path(config["out_main"])
+    return resolve_repo_path(config["runtime"]["output_dir"])
 
 
 def should_place_module_under_task(config: Mapping[str, Any]) -> bool:
@@ -82,6 +99,8 @@ def resolve_stage_output_root(
 
 
 def resolve_dataset_targets(config: dict[str, Any], key: str = "exp_dn_fn_list") -> list[str]:
+    if "_runtime_contexts" in config:
+        return [str(context["dataset"]) for context in config["_runtime_contexts"]]
     values = config.get(key)
     if values is None:
         return []
@@ -99,7 +118,7 @@ def ensure_shared_output_root(*configs: Mapping[str, Any] | None) -> Path | None
         if config is not None
     }
     if len(roots) > 1:
-        raise ValueError("Expected all stage configs to share the same `out_main`.")
+        raise ValueError("Expected all stage configs to share the same output root.")
     return next(iter(roots), None)
 
 
@@ -110,13 +129,34 @@ def resolve_dataset_contexts(
     key: str = "exp_dn_fn_list",
     module_name: str | None = None,
 ) -> list[DatasetRuntimeContext]:
+    runtime_contexts = config.get("_runtime_contexts")
+    if isinstance(runtime_contexts, list):
+        requested = set(str(dataset) for dataset in datasets) if datasets is not None else None
+        contexts = []
+        for item in runtime_contexts:
+            if not isinstance(item, Mapping):
+                raise TypeError("Runtime dataset contexts must be mappings.")
+            dataset = str(item["dataset"])
+            if requested is not None and dataset not in requested:
+                continue
+            contexts.append(
+                DatasetRuntimeContext(
+                    dataset=dataset,
+                    data_root=resolve_repo_path(item["data_root"]),
+                    out_root=resolve_repo_path(item["out_root"]),
+                )
+            )
+        if not contexts:
+            raise ValueError("No datasets configured for this runtime selection.")
+        return contexts
+
     resolved_datasets = (
         [str(dataset) for dataset in datasets]
         if datasets is not None
         else resolve_dataset_targets(dict(config), key=key)
     )
     if not resolved_datasets:
-        raise ValueError("No datasets configured. Set `exp_dn_fn_list` or pass `datasets=` explicitly.")
+        raise ValueError("No datasets configured. Set datasets in the selected v2 experiment.")
 
     data_root = resolve_data_root(config)
     return [
@@ -182,6 +222,19 @@ def resolve_schema_artifact_source(
 
     if not param_str:
         return None
+
+    runtime_contexts = normalized.get("_runtime_contexts")
+    if isinstance(runtime_contexts, list):
+        dataset_roots = {
+            str(context["dataset"]): resolve_repo_path(context["out_root"])
+            for context in runtime_contexts
+            if isinstance(context, Mapping)
+        }
+        return SchemaArtifactSource(
+            out_root=Path(),
+            param_str=str(param_str),
+            dataset_roots=dataset_roots,
+        )
 
     return SchemaArtifactSource(
         out_root=resolve_output_root(normalized),

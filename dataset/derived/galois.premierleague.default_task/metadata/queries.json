@@ -1,0 +1,28 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "galois.premierleague.default_task",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "",
+      "sql": "",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.date",
+        "match_result.home_team",
+        "match_result.away_team",
+        "match_result.home_goals",
+        "match_result.away_goals",
+        "match_result.player_of_the_match",
+        "match_result.player_of_the_match_team"
+      ],
+      "output_columns": [
+        "match_result.date"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

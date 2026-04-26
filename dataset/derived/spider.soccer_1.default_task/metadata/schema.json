@@ -1,0 +1,609 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.soccer_1.default_task",
+  "tables": [
+    {
+      "table_id": "league",
+      "name": "league",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "league.country_name",
+          "name": "country_name",
+          "type": "string",
+          "description": "The name of the country where the league is based or primarily takes place.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "league.name",
+          "name": "name",
+          "type": "string",
+          "description": "The full official name of the league or competition.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "player",
+      "name": "player",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "player.birthday",
+          "name": "birthday",
+          "type": "string",
+          "description": "The date of birth of the player, typically in YYYY-MM-DD format.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player.height",
+          "name": "height",
+          "type": "string",
+          "description": "The height of the player, usually measured in centimeters.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player.player_name",
+          "name": "player_name",
+          "type": "string",
+          "description": "The full name of the player.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player.weight",
+          "name": "weight",
+          "type": "string",
+          "description": "The weight of the player, typically measured in kilograms.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "player_attributes",
+      "name": "player_attributes",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "player_attributes.acceleration",
+          "name": "acceleration",
+          "type": "string",
+          "description": "How quickly the player can reach top speed from a standing position.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.aggression",
+          "name": "aggression",
+          "type": "string",
+          "description": "The player’s assertiveness and intensity in contests for the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.agility",
+          "name": "agility",
+          "type": "string",
+          "description": "The player’s quickness and ease of movement, especially while changing direction.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.attacking_work_rate",
+          "name": "attacking_work_rate",
+          "type": "string",
+          "description": "The player's tendency to contribute to offensive play, described as 'low', 'medium', or 'high'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.balance",
+          "name": "balance",
+          "type": "string",
+          "description": "The player’s ability to remain steady while dribbling or under pressure.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.ball_control",
+          "name": "ball_control",
+          "type": "string",
+          "description": "The player's skill in receiving and maintaining control of the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.crossing",
+          "name": "crossing",
+          "type": "string",
+          "description": "The player’s ability to deliver accurate crosses from wide areas.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.curve",
+          "name": "curve",
+          "type": "string",
+          "description": "The ability to bend or curve the ball, typically useful for free kicks and crosses.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.date",
+          "name": "date",
+          "type": "string",
+          "description": "The date when the player's attributes were recorded or updated.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.defensive_work_rate",
+          "name": "defensive_work_rate",
+          "type": "string",
+          "description": "The player's tendency to contribute to defensive actions, described as 'low', 'medium', or 'high'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.dribbling",
+          "name": "dribbling",
+          "type": "string",
+          "description": "The player’s skill in moving past opponents while controlling the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.finishing",
+          "name": "finishing",
+          "type": "string",
+          "description": "The player’s ability to score goals from shooting situations.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.free_kick_accuracy",
+          "name": "free_kick_accuracy",
+          "type": "string",
+          "description": "The player's precision when taking direct free kicks.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_diving",
+          "name": "gk_diving",
+          "type": "string",
+          "description": "The goalkeeper's ability to make diving saves.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_handling",
+          "name": "gk_handling",
+          "type": "string",
+          "description": "The goalkeeper’s skill in catching or controlling the ball after a save.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_kicking",
+          "name": "gk_kicking",
+          "type": "string",
+          "description": "The goalkeeper's ability to accurately and powerfully kick the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_positioning",
+          "name": "gk_positioning",
+          "type": "string",
+          "description": "The goalkeeper’s sense of positioning to effectively guard the goal.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.gk_reflexes",
+          "name": "gk_reflexes",
+          "type": "string",
+          "description": "The goalkeeper’s speed of reaction to shots and deflections.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.heading_accuracy",
+          "name": "heading_accuracy",
+          "type": "string",
+          "description": "The player’s accuracy and skill in heading the ball.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.interceptions",
+          "name": "interceptions",
+          "type": "string",
+          "description": "The player’s skill in anticipating and intercepting passes.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.jumping",
+          "name": "jumping",
+          "type": "string",
+          "description": "The vertical leap capability of the player.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.long_passing",
+          "name": "long_passing",
+          "type": "string",
+          "description": "The player's ability to accurately pass the ball over longer distances.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.long_shots",
+          "name": "long_shots",
+          "type": "string",
+          "description": "The accuracy and effectiveness of shots taken from distance.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.marking",
+          "name": "marking",
+          "type": "string",
+          "description": "The defensive player's ability to track and limit opposing attackers.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.overall_rating",
+          "name": "overall_rating",
+          "type": "string",
+          "description": "The overall performance rating of the player, usually on a fixed scale (e.g., 0–100).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.penalties",
+          "name": "penalties",
+          "type": "string",
+          "description": "The player’s ability and accuracy in taking penalty kicks.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.player_name",
+          "name": "player_name",
+          "type": "string",
+          "description": "The full name of the player to whom these attributes belong.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.positioning",
+          "name": "positioning",
+          "type": "string",
+          "description": "The offensive player's sense of positioning to receive passes or score goals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.potential",
+          "name": "potential",
+          "type": "string",
+          "description": "The predicted peak performance rating the player can achieve in the future.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.preferred_foot",
+          "name": "preferred_foot",
+          "type": "string",
+          "description": "The foot the player prefers to use — typically 'left' or 'right'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.reactions",
+          "name": "reactions",
+          "type": "string",
+          "description": "The player’s speed and quality of responses to game situations.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.short_passing",
+          "name": "short_passing",
+          "type": "string",
+          "description": "The accuracy and effectiveness of the player's short-distance passes.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.shot_power",
+          "name": "shot_power",
+          "type": "string",
+          "description": "The power behind the player’s shots.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.sliding_tackle",
+          "name": "sliding_tackle",
+          "type": "string",
+          "description": "The effectiveness of the player’s sliding challenges.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.sprint_speed",
+          "name": "sprint_speed",
+          "type": "string",
+          "description": "The top running speed the player can achieve.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.stamina",
+          "name": "stamina",
+          "type": "string",
+          "description": "The player’s ability to sustain high performance over the course of a match.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.standing_tackle",
+          "name": "standing_tackle",
+          "type": "string",
+          "description": "The player’s ability to dispossess opponents while standing.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.strength",
+          "name": "strength",
+          "type": "string",
+          "description": "The player’s physical power and ability to hold off opponents.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.vision",
+          "name": "vision",
+          "type": "string",
+          "description": "The player’s ability to spot opportunities and make smart passes.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "player_attributes.volleys",
+          "name": "volleys",
+          "type": "string",
+          "description": "The technique and accuracy of the player's volleyed shots.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "team",
+      "name": "team",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "team.team_long_name",
+          "name": "team_long_name",
+          "type": "string",
+          "description": "The full official name of the team.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team.team_short_name",
+          "name": "team_short_name",
+          "type": "string",
+          "description": "An abbreviated or commonly used short name for the team.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "team_attributes",
+      "name": "team_attributes",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "team_attributes.build_up_play_passing",
+          "name": "build_up_play_passing",
+          "type": "string",
+          "description": "A numeric value indicating the directness or safety of passing in build-up play.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_passing_class",
+          "name": "build_up_play_passing_class",
+          "type": "string",
+          "description": "The categorical label (e.g., 'Short', 'Mixed', 'Long') describing the build-up passing strategy.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_positioning_class",
+          "name": "build_up_play_positioning_class",
+          "type": "string",
+          "description": "The team's general positioning strategy during build-up play (e.g., 'Organized' or 'Free Form').",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_speed",
+          "name": "build_up_play_speed",
+          "type": "string",
+          "description": "A numeric value representing how quickly the team transitions from defense to attack.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.build_up_play_speed_class",
+          "name": "build_up_play_speed_class",
+          "type": "string",
+          "description": "The categorical label (e.g., 'Slow', 'Balanced', 'Fast') representing the build-up speed.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_crossing",
+          "name": "chance_creation_crossing",
+          "type": "string",
+          "description": "A numeric value indicating the frequency and accuracy of crosses during offensive plays.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_crossing_class",
+          "name": "chance_creation_crossing_class",
+          "type": "string",
+          "description": "The categorical description of the team’s crossing strategy (e.g., 'Rarely', 'Often').",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_passing",
+          "name": "chance_creation_passing",
+          "type": "string",
+          "description": "A numeric value indicating how much focus is placed on passing during chance creation.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_passing_class",
+          "name": "chance_creation_passing_class",
+          "type": "string",
+          "description": "The categorical label (e.g., 'Safe', 'Normal', 'Risky') describing the passing style in attacking play.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_positioning_class",
+          "name": "chance_creation_positioning_class",
+          "type": "string",
+          "description": "The team’s attacking positioning style, such as 'Organized' or 'Free Form'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_shooting",
+          "name": "chance_creation_shooting",
+          "type": "string",
+          "description": "A numeric value indicating the team’s tendency to shoot or take chances.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.chance_creation_shooting_class",
+          "name": "chance_creation_shooting_class",
+          "type": "string",
+          "description": "The categorical description of the team’s shooting behavior (e.g., 'Conservative', 'Aggressive').",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.date",
+          "name": "date",
+          "type": "string",
+          "description": "The date when the team's attributes were recorded or updated.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_aggression",
+          "name": "defence_aggression",
+          "type": "string",
+          "description": "A numeric value representing how aggressively the team defends.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_aggression_class",
+          "name": "defence_aggression_class",
+          "type": "string",
+          "description": "The categorical description of the team's defensive aggression (e.g., 'Contain', 'Press').",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_defender_line_class",
+          "name": "defence_defender_line_class",
+          "type": "string",
+          "description": "The type of defensive line used by the team, such as 'Cover' or 'Offside Trap'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_pressure",
+          "name": "defence_pressure",
+          "type": "string",
+          "description": "A numeric value showing how high or intense the team presses defensively.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_pressure_class",
+          "name": "defence_pressure_class",
+          "type": "string",
+          "description": "The categorical label (e.g., 'Low', 'Medium', 'High') describing the level of defensive pressure.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_team_width",
+          "name": "defence_team_width",
+          "type": "string",
+          "description": "A numeric value indicating how wide the team sets up when defending.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.defence_team_width_class",
+          "name": "defence_team_width_class",
+          "type": "string",
+          "description": "The categorical label (e.g., 'Narrow', 'Balanced', 'Wide') describing the defensive width.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "team_attributes.team_long_name",
+          "name": "team_long_name",
+          "type": "string",
+          "description": "The full official name of the team to which these attributes belong.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

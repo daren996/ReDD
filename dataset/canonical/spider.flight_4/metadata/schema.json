@@ -1,0 +1,221 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.flight_4",
+  "tables": [
+    {
+      "table_id": "airlines",
+      "name": "airlines",
+      "description": "Airline companies with identification codes and operational status. Contains 247 airlines worldwide.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "airlines.active",
+          "name": "active",
+          "type": "string",
+          "description": "Whether the airline is currently active. Type: TEXT. Values: 'Y' (active) or 'N' (inactive/defunct).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.callsign",
+          "name": "callsign",
+          "type": "string",
+          "description": "Radio callsign used by the airline for air traffic control communications. Type: TEXT. Examples: 'HELIPISTAS', 'MERCHANT', 'EASTWEST'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.country",
+          "name": "country",
+          "type": "string",
+          "description": "Country where the airline is registered or headquartered. Type: TEXT. Examples: 'Spain', 'Nigeria', 'Australia', 'Georgia', 'Mexico'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.iata",
+          "name": "iata",
+          "type": "string",
+          "description": "Two-letter IATA airline designator code. Type: TEXT. May be empty for some airlines. Examples: 'AA', 'UA'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.icao",
+          "name": "icao",
+          "type": "string",
+          "description": "Three-letter ICAO airline designator code. Type: TEXT. Examples: 'HLP', 'MXX', 'EWA', 'GGZ', 'SZT'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.name",
+          "name": "name",
+          "type": "string",
+          "description": "Full official name of the airline. Type: TEXT. Examples: 'Helipistas', 'Merchant Express Aviation', 'East-West Airlines'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "airports",
+      "name": "airports",
+      "description": "Airport locations worldwide with geographic coordinates and identification codes. Contains 261 airports.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "airports.city",
+          "name": "city",
+          "type": "string",
+          "description": "City where the airport is located. Type: TEXT. Examples: 'Mbuji-mayi', 'Eberswalde', 'Nha Trang'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.country",
+          "name": "country",
+          "type": "string",
+          "description": "Country where the airport is located. Type: TEXT. Examples: 'Congo (Kinshasa)', 'Germany', 'Ireland', 'Iceland', 'Vietnam'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.elevation",
+          "name": "elevation",
+          "type": "string",
+          "description": "Airport elevation above sea level in feet. Type: TEXT (numeric string). Examples: '2221', '121', '24', '16', '40'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.iata",
+          "name": "iata",
+          "type": "string",
+          "description": "Three-letter IATA airport code. Type: TEXT. May be 'NULL' for some airports. Examples: 'MJM', 'IOR', 'VPN', 'CXR'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.icao",
+          "name": "icao",
+          "type": "string",
+          "description": "Four-letter ICAO airport code. Type: TEXT. Examples: 'FZWA', 'EDAV', 'EIIM', 'BIVO', 'VVCR'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.name",
+          "name": "name",
+          "type": "string",
+          "description": "Full official name of the airport. Type: TEXT. Examples: 'Mbuji Mayi Airport', 'Inishmore Aerodrome', 'Cam Ranh Airport'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.x",
+          "name": "x",
+          "type": "string",
+          "description": "Longitude coordinate of the airport in decimal degrees. Type: TEXT. Positive=East, Negative=West. Examples: '23.569', '-9.654', '109.219'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.y",
+          "name": "y",
+          "type": "string",
+          "description": "Latitude coordinate of the airport in decimal degrees. Type: TEXT. Positive=North, Negative=South. Examples: '-6.121', '52.827', '65.721'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "routes",
+      "name": "routes",
+      "description": "Flight routes connecting airports operated by airlines, with source and destination details. Contains 2493 routes.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "routes.airline",
+          "name": "airline",
+          "type": "string",
+          "description": "IATA or ICAO code of the airline operating this route. Type: TEXT. Examples: 'S' (US Airways), 'K' (KLM), 'GS', 'ZB'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.airline_name",
+          "name": "airline_name",
+          "type": "string",
+          "description": "Full name of the airline operating this route. Type: TEXT. Examples: 'US Airways', 'KLM Royal Dutch Airlines', 'Air Foyle'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.codeshare",
+          "name": "codeshare",
+          "type": "string",
+          "description": "Whether the route is a codeshare arrangement. Type: TEXT. Values: 'None' (not codeshare) or codeshare indicator.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.dst_ap",
+          "name": "dst_ap",
+          "type": "string",
+          "description": "IATA code of the destination airport. Type: TEXT. Examples: 'PH' (Philadelphia), 'DMM', 'SYX'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.dst_ap_country",
+          "name": "dst_ap_country",
+          "type": "string",
+          "description": "Country of the destination airport. Type: TEXT. Examples: 'United States', 'Saudi Arabia', 'China', 'Spain'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.dst_ap_name",
+          "name": "dst_ap_name",
+          "type": "string",
+          "description": "Full name of the destination airport. Type: TEXT. Examples: 'Philadelphia International Airport', 'King Fahd International Airport'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.src_ap",
+          "name": "src_ap",
+          "type": "string",
+          "description": "IATA code of the source (origin) airport. Type: TEXT. Examples: 'AMS' (Amsterdam), 'TS', 'BHX', 'GDX'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.src_ap_country",
+          "name": "src_ap_country",
+          "type": "string",
+          "description": "Country of the source airport. Type: TEXT. Examples: 'Netherlands', 'China', 'United Kingdom', 'Russia'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "routes.src_ap_name",
+          "name": "src_ap_name",
+          "type": "string",
+          "description": "Full name of the source (origin) airport. Type: TEXT. Examples: 'Amsterdam Airport Schiphol', 'Birmingham International Airport'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

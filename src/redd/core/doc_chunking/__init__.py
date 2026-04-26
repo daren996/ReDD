@@ -8,7 +8,7 @@ for now rather than a stable public facade.
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from .base_chunker import BaseChunker
 from .fixed_size_chunker import FixedSizeChunker, FixedSizeTokenChunker
@@ -64,7 +64,7 @@ def create_chunker(
         >>> config = {
         ...     "data_main": "dataset/fda_sqlite/",
         ...     "exp_dataset_task_list": ["no_chunk"],
-        ...     "data_loader_type": "sqlite",
+        ...     "data_loader_type": "hf_manifest",
         ...     "chunker_type": "fixed_size",
         ...     "chunk_size": 4000,
         ...     "overlap": 200,

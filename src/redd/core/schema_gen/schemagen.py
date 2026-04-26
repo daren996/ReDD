@@ -1,17 +1,18 @@
-from copy import deepcopy
 import json
 import logging
 import os
+from copy import deepcopy
 from pathlib import Path
 
+from redd.embedding import DocumentClustering
 from redd.exceptions import ArtifactNotFoundError, ProcessingAbortedError, UnsupportedInputError
 
 from ..data_loader import create_data_loader
-from redd.embedding import DocumentClustering
 from ..utils import constants, output_utils
 from ..utils.constants import PATH_TEMPLATES
 from ..utils.progress import tqdm
 from ..utils.prompt_utils import create_prompt
+from ..utils.structured_outputs import SchemaGenDocumentOutput
 from .opt import AdaptiveSamplingMixin
 
 
@@ -22,7 +23,7 @@ class SchemaGen(AdaptiveSamplingMixin):
         self.config = config
         self.mode = config["mode"]
 
-        self.loader_type = str(config.get("data_loader_type", "spider")).lower()
+        self.loader_type = str(config.get("data_loader_type", "hf_manifest")).lower()
         self.loader_config = deepcopy(dict(config.get("data_loader_config") or {}))
 
         self.init_adaptive_sampling(config)
@@ -251,13 +252,13 @@ class SchemaGen(AdaptiveSamplingMixin):
     def process_single_document(self, input_json, retry_count, doc_index):
         """Process a single document and handle errors."""
         attr_msg = "New Input:\n" + json.dumps(input_json)
-        result_str = self.apply_prompt(attr_msg)
         try:
-            return json.loads(result_str)
-        except json.JSONDecodeError:
+            result = self.prompt.complete_model(attr_msg, SchemaGenDocumentOutput)
+            return result.model_dump(exclude_none=True)
+        except Exception as error:
             logging.warning(
-                f"[{self.__class__.__name__}:process_single_document] JSON LOAD ERROR, "
-                f"retry_count {retry_count}, doc_index {doc_index}, {repr(result_str)}"
+                f"[{self.__class__.__name__}:process_single_document] structured output error, "
+                f"retry_count {retry_count}, doc_index {doc_index}, {error}"
             )
             return None
 

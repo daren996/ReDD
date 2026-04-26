@@ -1,0 +1,63 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "spider.bike_1",
+  "queries": [
+    {
+      "query_id": "Q2",
+      "question": "Show the station names and available bikes for stations with more than 5 available bikes at '2015-06-02 14:00:00'.",
+      "sql": "SELECT station_name, bikes_available FROM status WHERE bikes_available > '5' AND time LIKE '2015-06-02 14:%';",
+      "required_tables": [
+        "status"
+      ],
+      "required_columns": [
+        "status.station_name",
+        "status.bikes_available",
+        "status.time"
+      ],
+      "output_columns": [
+        "status.station_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q8",
+      "question": "Find the names of stations that had at least 10 bikes available at any point in time and are located in 'San Jose'.",
+      "sql": "SELECT DISTINCT s.name FROM station s JOIN status st ON s.name = st.station_name WHERE st.bikes_available >= '10' AND s.city = 'San Jose';",
+      "required_tables": [
+        "station",
+        "status"
+      ],
+      "required_columns": [
+        "station.name",
+        "station.city",
+        "status.station_name",
+        "status.bikes_available"
+      ],
+      "output_columns": [
+        "station.name"
+      ],
+      "tags": [],
+      "difficulty": null
+    },
+    {
+      "query_id": "Q11",
+      "question": "Find the stations where the number of bikes available is greater than 5 and the number of docks available is less than 10. List station name and time.",
+      "sql": "SELECT station_name, time FROM status WHERE bikes_available > '5' AND docks_available < '10';",
+      "required_tables": [
+        "status"
+      ],
+      "required_columns": [
+        "status.station_name",
+        "status.bikes_available",
+        "status.docks_available",
+        "status.time"
+      ],
+      "output_columns": [
+        "status.station_name"
+      ],
+      "tags": [],
+      "difficulty": null
+    }
+  ]
+}

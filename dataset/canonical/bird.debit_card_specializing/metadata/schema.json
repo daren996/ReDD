@@ -1,0 +1,225 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "bird.debit_card_specializing",
+  "tables": [
+    {
+      "table_id": "customers",
+      "name": "customers",
+      "description": "Customer records with currency and business segment classification. Contains 353 customers.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "customers.currency",
+          "name": "currency",
+          "type": "string",
+          "description": "Currency used by the customer for transactions. Type: TEXT. Values: 'CZK' (Czech Koruna) or 'EUR' (Euro).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "customers.customer_id",
+          "name": "customer_id",
+          "type": "string",
+          "description": "Unique customer identifier. Type: TEXT (numeric string). Examples: '1889', '1319', '2560'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "customers.segment",
+          "name": "segment",
+          "type": "string",
+          "description": "Business segment classification of the customer. Type: TEXT. Values: 'SME' (Small/Medium Enterprise), 'KAM' (Key Account Management), 'LAM' (Large Account Management).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "gasstations",
+      "name": "gasstations",
+      "description": "Gas station locations with chain affiliation and market segment. Contains 342 stations.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "gasstations.chain_id",
+          "name": "chain_id",
+          "type": "string",
+          "description": "Identifier for the gas station chain. Type: TEXT (numeric string). Examples: '24', '1', '2', '8', '13'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "gasstations.country",
+          "name": "country",
+          "type": "string",
+          "description": "Country where the gas station is located. Type: TEXT. Values: 'CZE' (Czech Republic) and possibly others.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "gasstations.gas_station_id",
+          "name": "gas_station_id",
+          "type": "string",
+          "description": "Unique gas station identifier. Type: TEXT (numeric string). Examples: '457', '214', '541'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "gasstations.segment",
+          "name": "segment",
+          "type": "string",
+          "description": "Market segment/positioning of the gas station. Type: TEXT. Values: 'Discount', 'Premium', 'Noname', 'Value for money'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "products",
+      "name": "products",
+      "description": "Product catalog for items available at gas stations. Contains 342 products.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "products.description",
+          "name": "description",
+          "type": "string",
+          "description": "Description of the product or service. Type: TEXT. Examples: 'UTA-Box (blocking)', 'Intervention', 'Toll DEU(dirrect Acceptance)', 'Provoz.nápl.' (operational fluids), 'TIS PL toll'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "products.product_id",
+          "name": "product_id",
+          "type": "string",
+          "description": "Unique product identifier. Type: TEXT (numeric string). Examples: '290', '307', '232', '23', '281'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "transactions_1k",
+      "name": "transactions_1k",
+      "description": "Transaction records for debit card purchases at gas stations. Contains 341 transactions.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "transactions_1k.amount",
+          "name": "amount",
+          "type": "string",
+          "description": "Quantity of the product purchased. Type: TEXT (numeric string). Examples: '19', '3', '25', '6'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.card_id",
+          "name": "card_id",
+          "type": "string",
+          "description": "Debit card identifier used for the transaction. Type: TEXT (numeric string). Examples: '693615', '666939'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.customer_id",
+          "name": "customer_id",
+          "type": "string",
+          "description": "Customer who made the transaction. References customers.CustomerID. Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.date",
+          "name": "date",
+          "type": "string",
+          "description": "Date of the transaction. Type: TEXT (YYYY-MM-DD format). Examples: '2012-08-24'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.gas_station_id",
+          "name": "gas_station_id",
+          "type": "string",
+          "description": "Gas station where the transaction occurred. References gasstations.GasStationID. Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.price",
+          "name": "price",
+          "type": "string",
+          "description": "Total price of the transaction in the customer's currency. Type: TEXT (decimal string). Examples: '454.54', '59.31', '566.49', '5.44'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.product_id",
+          "name": "product_id",
+          "type": "string",
+          "description": "Product purchased. References products.ProductID. Type: TEXT (numeric string). Examples: '2', '317'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.time",
+          "name": "time",
+          "type": "string",
+          "description": "Time of the transaction. Type: TEXT (HH:MM:SS format). Examples: '18:27:00', '16:56:00', '09:18:00'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "transactions_1k.transaction_id",
+          "name": "transaction_id",
+          "type": "string",
+          "description": "Unique transaction identifier. Type: TEXT (numeric string). Examples: '458', '230', '20', '98', '400'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "yearmonth",
+      "name": "yearmonth",
+      "description": "Monthly aggregated consumption data per customer. Contains 357 records.",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "yearmonth.consumption",
+          "name": "consumption",
+          "type": "string",
+          "description": "Total consumption amount for the month. Type: TEXT (decimal string). Can be negative (credits/refunds). Examples: '72140.84', '301.37', '-1014.55', '43.44'.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "yearmonth.customer_id",
+          "name": "customer_id",
+          "type": "string",
+          "description": "Customer identifier. References customers.CustomerID. Type: TEXT (numeric string).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "yearmonth.date",
+          "name": "date",
+          "type": "string",
+          "description": "Year-month period in YYYYMM format. Type: TEXT. Examples: '201307' (July 2013), '201308' (Aug 2013), '201208' (Aug 2012).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

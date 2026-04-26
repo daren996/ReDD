@@ -3,7 +3,11 @@ scipy
 scikit-learn
 tqdm
 pandas
+pyarrow
 PyYAML
-openai==1.39.0
-transformers==4.46.3
+litellm
+pydantic>=2
+tenacity
+transformers>=4.57.0,<5
 accelerate>=0.26.0
+gliclass>=0.1.16

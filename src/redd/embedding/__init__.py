@@ -7,8 +7,8 @@ from .clustering import (
     Clusterer,
     ClustererGPT,
     ClustererKMeans,
-    DocVectorizer,
     DocumentClustering,
+    DocVectorizer,
     Vectorizer,
     llm_embeddings,
 )

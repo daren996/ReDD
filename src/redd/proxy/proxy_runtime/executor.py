@@ -38,17 +38,13 @@ from __future__ import annotations
 
 import logging
 import time
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import (
-    Any, Callable, Dict, List, Optional, Protocol, Tuple, Union,
-    TypeVar, Generic
-)
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Protocol, Sequence, Tuple, Union
 
 import numpy as np
 
-from .ordering import ProxyLike, reording
+from .ordering import reording
 
 # Try importing torch for GPU-accelerated inference
 try:
@@ -401,8 +397,6 @@ class ConformalProxy:
         Returns:
             (scores, passed_mask) where passed_mask[i] = True if scores[i] >= threshold
         """
-        start_time = time.perf_counter()
-        
         scores = self.predict(embeddings)
         passed_mask = scores >= self.threshold
         
@@ -410,8 +404,6 @@ class ConformalProxy:
         batch_size = len(scores)
         self._total_seen += batch_size
         self._total_passed += passed_mask.sum()
-        
-        latency_ms = (time.perf_counter() - start_time) * 1000
         
         return scores, passed_mask
     
@@ -559,11 +551,11 @@ class ProxyExecutor:
     
     def __init__(
         self,
-        proxies: List[Union[ConformalProxy, EmbeddingProxy]],
+        proxies: Sequence[Union[ConformalProxy, EmbeddingProxy]],
         llm_oracle: Optional[LLMOracleProtocol] = None,
         config: Optional[ProxyRuntimeConfig] = None
     ):
-        self.proxies = proxies
+        self.proxies = list(proxies)
         self.llm_oracle = llm_oracle
         self.config = config or ProxyRuntimeConfig()
         
@@ -580,7 +572,7 @@ class ProxyExecutor:
     
     def optimize_execution_plan(
         self,
-        proxies: Optional[List[Union[ConformalProxy, EmbeddingProxy]]] = None,
+        proxies: Optional[Sequence[Union[ConformalProxy, EmbeddingProxy]]] = None,
     ) -> List[Union[ConformalProxy, EmbeddingProxy]]:
         """
         Build or update the execution plan using centralized **reording** logic.
@@ -640,7 +632,6 @@ class ProxyExecutor:
         
         # Track which documents are still active (not yet rejected)
         active_mask = np.ones(len(batch), dtype=bool)
-        active_indices = np.arange(len(batch))
         
         # Track proxy scores for potential hard negatives
         all_proxy_scores: Dict[int, Dict[str, float]] = {i: {} for i in range(len(batch))}

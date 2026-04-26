@@ -1,10 +1,10 @@
 """Configuration and result types for the proxy runtime."""
 
+import json
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-import json
-import logging
 
 from redd.core.utils.sql_filter_parser import AttributePredicate
 
@@ -17,12 +17,12 @@ class ProxyPipelineConfig:
     Configuration for the proxy runtime pipeline.
     
     Attributes:
-        dataset_path: Path to dataset directory (e.g., "spider_sqlite/college_2")
+        dataset_path: Path to dataset directory (e.g., "canonical/spider.college_2")
         query_id: Query ID to process (e.g., "Q1")
         task_db_name: Optional specific task database name
         
         # LLM Configuration
-        llm_mode: LLM provider mode ("gemini", "deepseek", "cgpt", etc.)
+        llm_mode: LLM provider mode ("gemini", "deepseek", "openai", etc.)
         llm_model: LLM model name
         api_key: Optional API key (defaults to environment variable)
         
@@ -68,12 +68,14 @@ class ProxyPipelineConfig:
     use_classifier_proxies: bool = False
     use_learned_proxies: bool = True
     use_finetuned_learned_proxies: bool = True  # Default: pretrained LM classifier (DeBERTa); else LogisticRegression on embeddings
+    predicate_proxy_mode: str = "pretrained"  # auto | train | pretrained
+    allow_embedding_fallback: bool = False
     training_data_count: int = 100
     # Kept for backward compatibility; prefix-only split policy no longer uses these minima.
     min_training_data: int = 0
     min_calibration_data: int = 0
     classifier_paths: Dict[str, str] = field(default_factory=dict)
-    proxy_threshold: float = 0.5
+    proxy_threshold: float = 0.51
     target_recall: float = 0.95
     random_seed: int = 42
     
@@ -98,13 +100,17 @@ class ProxyPipelineConfig:
     allow_train_test_overlap: bool = False
 
     # Model for learned proxies (GLiClass). Can be HuggingFace model name or path to pretrained model.
-    finetuned_model: str = "knowledgator/gliclass-instruct-large-v1.0"
+    finetuned_model: str = "knowledgator/gliclass-small-v1.0"
     finetuned_epochs: int = 3
     finetuned_learning_rate: float = 2e-5
 
     # GLiClass in-context learning (few-shot examples, no fine-tuning)
     use_gliclass_icl: bool = False
     gliclass_icl_examples_per_class: int = 3
+
+    # Conservative heuristic proxy escape hatch. Attributes listed here always
+    # pass through the heuristic proxy and defer to the extractor.
+    heuristic_pass_through_attributes: Optional[List[str]] = None
 
 
 @dataclass

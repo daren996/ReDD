@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from importlib import import_module
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
+
+from .core.schema_tailor import QueryDocumentFilter, SchemaTailor
 
 if TYPE_CHECKING:
     from .api import SchemaGenerator
@@ -93,16 +94,3 @@ __all__ = [
     "schema_refine",
     "schema_refinement",
 ]
-
-_LAZY_EXPORTS = {
-    "QueryDocumentFilter": ".core.schema_tailor",
-    "SchemaTailor": ".core.schema_tailor",
-}
-
-
-def __getattr__(name: str):
-    module_name = _LAZY_EXPORTS.get(name)
-    if module_name is None:
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    module = import_module(module_name, __name__)
-    return getattr(module, name)

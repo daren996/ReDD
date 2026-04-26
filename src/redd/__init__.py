@@ -38,6 +38,7 @@ _LAZY_EXPORTS = {
     "TextToSQLRequest": ".text_to_sql",
     "create_doc_filter": ".doc_filtering",
     "create_join_resolver": ".join_resolution",
+    "run_web_demo": ".web_demo",
 }
 
 
@@ -83,18 +84,16 @@ def schema_refinement(*args, **kwargs):
     return _schema_refinement(*args, **kwargs)
 
 
-def run_schemagen(*args, **kwargs):
-    """Legacy wrapper retained for backwards compatibility."""
-    from .runners import run_schemagen as _run_schemagen
+def run_experiment(*args, **kwargs):
+    from .runners import run_experiment as _run_experiment
 
-    return _run_schemagen(*args, **kwargs)
+    return _run_experiment(*args, **kwargs)
 
 
-def run_datapop_evaluation(*args, **kwargs):
-    """Legacy wrapper retained for backwards compatibility."""
-    from .runners import run_datapop_evaluation as _run_datapop_evaluation
+def run_extract(*args, **kwargs):
+    from .runners import run_extract as _run_extract
 
-    return _run_datapop_evaluation(*args, **kwargs)
+    return _run_extract(*args, **kwargs)
 
 
 def run_evaluation(*args, **kwargs):
@@ -102,13 +101,6 @@ def run_evaluation(*args, **kwargs):
     from .runners import run_evaluation as _run_evaluation
 
     return _run_evaluation(*args, **kwargs)
-
-
-def run_datapop(*args, **kwargs):
-    """Legacy wrapper retained for backwards compatibility."""
-    from .runners import run_datapop as _run_datapop
-
-    return _run_datapop(*args, **kwargs)
 
 
 def run_ensemble_classifiers(*args, **kwargs):
@@ -162,10 +154,10 @@ __all__ = [
     "schema_refine",
     "schema_refinement",
     "create_data_loader",
-    "run_datapop",
-    "run_datapop_evaluation",
     "run_evaluation",
     "run_ensemble_classifiers",
+    "run_experiment",
+    "run_extract",
     "run_pipeline",
-    "run_schemagen",
+    "run_web_demo",
 ]

@@ -5,8 +5,8 @@ import argparse
 
 def build_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=add_help)
-    parser.add_argument("--config", type=str, default="configs/siliconflow_qwen30B.yaml")
-    parser.add_argument("--exp", type=str, default="wine_reddv0")
+    parser.add_argument("--config", type=str, default="configs/examples/ground_truth_demo.yaml")
+    parser.add_argument("--experiment", type=str, required=True)
     parser.add_argument("--api-key", type=str, default=None)
     return parser
 
@@ -14,7 +14,7 @@ def build_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
 def run(args: argparse.Namespace) -> int:
     from redd.runners import run_schema_refinement
 
-    run_schema_refinement(args.config, args.exp, api_key=args.api_key)
+    run_schema_refinement(args.config, args.experiment, api_key=args.api_key)
     return 0
 
 
