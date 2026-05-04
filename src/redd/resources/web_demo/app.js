@@ -1045,6 +1045,9 @@ function stageCount(value) {
 }
 
 function formatMetric(value, { percent = false } = {}) {
+  if (!percent && typeof value === "string") {
+    return value;
+  }
   if (value == null || Number.isNaN(Number(value))) {
     return percent ? "--%" : "-";
   }
@@ -1196,7 +1199,11 @@ function renderOptimizationCards() {
         <header>
           <div>
             <h5>FastReDD Total</h5>
-            <p>End-to-end LLM-doc call reduction across enabled optimizers.</p>
+            <p>${escapeHtml(
+              total.offlineOnly
+                ? "Offline-only benchmark ablation; GT guard is not deployable."
+                : "End-to-end LLM-doc call reduction across enabled optimizers.",
+            )}</p>
           </div>
           <span>Measured</span>
         </header>
@@ -1205,6 +1212,7 @@ function renderOptimizationCards() {
           <div><dt>Fast calls</dt><dd>${escapeHtml(formatMetric(total.after))}</dd></div>
           <div><dt>Saved</dt><dd>${escapeHtml(formatMetric(total.saved))}</dd></div>
           <div><dt>Reduction</dt><dd>${escapeHtml(formatMetric(total.reduction, { percent: true }))}</dd></div>
+          ${total.offlineOnly ? '<div><dt>Mode</dt><dd>Offline-only</dd></div>' : ""}
         </dl>
       </article>
     `
@@ -1243,6 +1251,7 @@ function optimizationPipelineSummary(optimizations) {
     after,
     saved,
     reduction: saved / before,
+    offlineOnly: Boolean(proxyRuntime.offline_only_gt_guard),
   };
 }
 
@@ -1415,6 +1424,22 @@ function formatOptimizationMetrics(item) {
     "llm_doc_calls_after",
     "llm_doc_calls_saved",
     "llm_doc_call_reduction",
+    "table_assignment_calls_before",
+    "table_assignment_calls_after",
+    "table_assignment_calls_saved",
+    "table_assignment_call_reduction",
+    "offline_only_gt_guard",
+    "gt_guard_rejected_doc_calls",
+    "source_table_metadata_hits",
+    "source_table_metadata_misses",
+    "cache_hits",
+    "cache_misses",
+    "total_conflicts",
+    "text_pass_gt_fail",
+    "gt_pass_text_fail",
+    "affected_docs",
+    "affected_queries",
+    "checked_doc_predicates",
     "excluded_docs",
     "rejected",
     "pass_rate",
@@ -1427,13 +1452,14 @@ function formatOptimizationMetrics(item) {
   if (!entries.length) {
     return '<div class="optimization-empty">No metrics emitted</div>';
   }
+  const visibleMetricCount = item?.id === "table_assignment_cache" ? 8 : 6;
   return entries
     .sort(([left], [right]) => {
       const leftIndex = preferredOrder.indexOf(left);
       const rightIndex = preferredOrder.indexOf(right);
       return (leftIndex < 0 ? 999 : leftIndex) - (rightIndex < 0 ? 999 : rightIndex);
     })
-    .slice(0, 6)
+    .slice(0, visibleMetricCount)
     .map(([key, value]) => {
       const label = key.replace(/_/g, " ");
       const formatted = /rate|recall|precision|reduction/.test(key)
@@ -1451,23 +1477,39 @@ function formatOptimizationDetails(item) {
   }
   const rows = details
     .map((detail) => {
+      if (item?.id === "dataset_consistency_audit" || detail.kind === "dataset_consistency_audit") {
+        const ref = detail.conflict_ref || [detail.dataset, detail.query_id, detail.doc_id, detail.attribute].filter(Boolean).join(" · ");
+        const type = detail.conflict_type || "conflict";
+        const textValues = Array.isArray(detail.text_values) ? detail.text_values.join(", ") : "";
+        const gtValues = Array.isArray(detail.ground_truth_values) ? detail.ground_truth_values.join(", ") : "";
+        const values = textValues || gtValues
+          ? `text [${textValues || "-"}] · gt [${gtValues || "-"}]`
+          : "value mismatch";
+        return `
+          <li>
+            <strong>${escapeHtml(ref || "dataset conflict")}</strong>
+            <span>${escapeHtml(type)} · ${escapeHtml(values)}</span>
+          </li>
+        `;
+      }
       const prefix = [detail.dataset, detail.query_id, detail.table].filter(Boolean).join(" · ");
-      const saved = detail.llm_doc_calls_saved ?? detail.excluded_docs ?? detail.rejected;
-      const total = detail.input_docs ?? detail.evaluated ?? detail.llm_doc_calls_before;
-      const kept = detail.kept_docs ?? detail.passed ?? detail.llm_doc_calls_after;
+      const saved = detail.llm_doc_calls_saved ?? detail.table_assignment_calls_saved ?? detail.excluded_docs ?? detail.rejected;
+      const total = detail.input_docs ?? detail.evaluated ?? detail.llm_doc_calls_before ?? detail.table_assignment_calls_before;
+      const kept = detail.kept_docs ?? detail.passed ?? detail.llm_doc_calls_after ?? detail.table_assignment_calls_after;
       const rate = detail.reduction ?? detail.pass_rate;
       const docIds = detail.excluded_doc_ids_preview || detail.rejected_doc_ids_preview || [];
       const docTotal = detail.excluded_doc_ids_total ?? detail.rejected_doc_ids_total;
       const docText = docIds.length
         ? ` · docs ${docIds.map(String).join(", ")}${docTotal > docIds.length ? ` +${docTotal - docIds.length}` : ""}`
         : "";
+      const guardText = detail.offline_only_gt_guard ? " · offline-only GT guard" : "";
       const counts = total == null
         ? `${saved ?? 0} saved`
         : `${kept ?? 0}/${total} kept · ${saved ?? 0} saved`;
       return `
         <li>
           <strong>${escapeHtml(prefix || detail.kind || "update")}</strong>
-          <span>${escapeHtml(counts)}${rate == null ? "" : ` · ${escapeHtml(formatMetric(rate, { percent: true }))}`}${escapeHtml(docText)}</span>
+          <span>${escapeHtml(counts)}${rate == null ? "" : ` · ${escapeHtml(formatMetric(rate, { percent: true }))}`}${escapeHtml(guardText)}${escapeHtml(docText)}</span>
         </li>
       `;
     })
@@ -1489,6 +1531,9 @@ function optimizationDetailKey(optimizationId, detail, index) {
     detail.dataset || "",
     detail.query_id || "",
     detail.table || "",
+    detail.doc_id || "",
+    detail.attribute || "",
+    detail.conflict_type || "",
     detail.input_docs ?? detail.evaluated ?? detail.llm_doc_calls_before ?? "",
     detail.kept_docs ?? detail.passed ?? detail.llm_doc_calls_after ?? "",
     detail.excluded_docs ?? detail.rejected ?? detail.llm_doc_calls_saved ?? "",
@@ -1519,7 +1564,21 @@ function formatOptimizationDetailLogMessage(item, detail) {
     const preview = docIds.length
       ? `; rejected docs ${docIds.map(String).join(", ")}${total > docIds.length ? ` +${total - docIds.length}` : ""}`
       : "";
-    return `Proxy ${table}${dataset}${query}: passed ${after}/${before} docs, saved ${saved} LLM-doc calls${preview}`;
+    const guard = detail.offline_only_gt_guard ? "; offline-only GT guard active" : "";
+    return `Proxy ${table}${dataset}${query}: passed ${after}/${before} docs, saved ${saved} LLM-doc calls${guard}${preview}`;
+  }
+  if (item?.id === "table_assignment_cache" || detail.kind === "table_assignment_cache") {
+    const before = Number(detail.table_assignment_calls_before ?? detail.input_docs) || 0;
+    const after = Number(detail.table_assignment_calls_after ?? detail.cache_misses) || 0;
+    const saved = Number(detail.table_assignment_calls_saved ?? detail.cache_hits) || Math.max(before - after, 0);
+    const reduction = detail.reduction ?? (before ? saved / before : null);
+    return `Table Cache ${dataset}${query}: reused ${saved}/${before} assignments, ${after} actual calls, saved ${formatMetric(reduction, { percent: true })}`;
+  }
+  if (item?.id === "dataset_consistency_audit" || detail.kind === "dataset_consistency_audit") {
+    const ref = detail.conflict_ref || [detail.dataset, detail.query_id, detail.doc_id, detail.attribute].filter(Boolean).join(" ");
+    const textValues = Array.isArray(detail.text_values) ? detail.text_values.join(", ") : "";
+    const gtValues = Array.isArray(detail.ground_truth_values) ? detail.ground_truth_values.join(", ") : "";
+    return `Dataset audit ${ref}: ${detail.conflict_type || "conflict"}; text [${textValues || "-"}] vs GT [${gtValues || "-"}]`;
   }
   if (item?.id === "schema_adaptive" || detail.kind === "schema_adaptive") {
     const processed = Number(detail.documents_processed) || 0;
@@ -1739,6 +1798,27 @@ function optimizationDetailActivity(item, detail, index) {
       reduction: before ? saved / before : 0,
       docIds: detail.rejected_doc_ids_preview || [],
       docTotal: detail.rejected_doc_ids_total ?? saved,
+      offlineOnly: Boolean(detail.offline_only_gt_guard),
+    };
+  }
+  if (item.id === "table_assignment_cache" || detail.kind === "table_assignment_cache") {
+    const before = Number(detail.table_assignment_calls_before ?? detail.input_docs) || 0;
+    const after = Number(detail.table_assignment_calls_after ?? detail.cache_misses) || 0;
+    const saved = Number(detail.table_assignment_calls_saved ?? detail.cache_hits) || Math.max(before - after, 0);
+    return {
+      key,
+      kind: "table-cache",
+      badge: "TC",
+      title: "Table Cache",
+      dataset: detail.dataset || "",
+      queryId: detail.query_id || "",
+      table: "",
+      before,
+      after,
+      saved,
+      reduction: before ? saved / before : 0,
+      docIds: [],
+      docTotal: saved,
     };
   }
   if (item.id === "schema_adaptive" || detail.kind === "schema_adaptive") {
@@ -1800,6 +1880,13 @@ function mergeOptimizationMetrics(existing, incoming) {
     "llm_doc_calls_before",
     "llm_doc_calls_after",
     "llm_doc_calls_saved",
+    "table_assignment_calls_before",
+    "table_assignment_calls_after",
+    "table_assignment_calls_saved",
+    "source_table_metadata_hits",
+    "source_table_metadata_misses",
+    "cache_hits",
+    "cache_misses",
   ]);
   Object.entries(incoming).forEach(([key, value]) => {
     if (typeof value === "number" && summable.has(key)) {
@@ -1810,6 +1897,10 @@ function mergeOptimizationMetrics(existing, incoming) {
   });
   if (metrics.llm_doc_calls_before) {
     metrics.llm_doc_call_reduction = (Number(metrics.llm_doc_calls_saved) || 0) / Number(metrics.llm_doc_calls_before);
+  }
+  if (metrics.table_assignment_calls_before) {
+    metrics.table_assignment_call_reduction =
+      (Number(metrics.table_assignment_calls_saved) || 0) / Number(metrics.table_assignment_calls_before);
   }
   if (metrics.evaluated) {
     metrics.pass_rate = (Number(metrics.passed) || 0) / Number(metrics.evaluated);

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -139,6 +140,29 @@ class RuntimeBoundaryTests(unittest.TestCase):
         self.assertEqual(query_info["id"], "Q1")
         self.assertEqual(query_info["query"], "find cities")
 
+    @patch("redd.proxy.proxy_runtime.pipeline.EmbeddingManager")
+    def test_proxy_pipeline_uses_configured_embedding_cache_dir(self, embedding_manager_mock) -> None:
+        sentinel = object()
+        embedding_manager_mock.return_value = sentinel
+        with TemporaryDirectory() as tmp_dir:
+            fake_loader = SimpleNamespace(data_root=Path("/tmp/datasets/spider.college_demo"))
+            pipeline = ProxyPipeline(
+                ProxyPipelineConfig(
+                    embedding_model="local-hash-embedding",
+                    embeddings_cache_dir=tmp_dir,
+                )
+            )
+            pipeline._data_loader = fake_loader  # type: ignore[assignment]
+
+            self.assertIs(pipeline.embedding_manager, sentinel)
+
+            embedding_manager_mock.assert_called_once_with(
+                storage_path=Path(tmp_dir) / "spider.college_demo.embeddings.sqlite3",
+                loader=fake_loader,
+                model="local-hash-embedding",
+                api_key=None,
+            )
+
     def test_proxy_runtime_config_normalization_uses_proxy_runtime_section(self) -> None:
         config = {"proxy_runtime": {"enabled": True, "target_recall": 0.9}}
 
@@ -197,6 +221,76 @@ class RuntimeBoundaryTests(unittest.TestCase):
                 query_text="find Paris",
                 data_loader=fake_loader,
             )
+
+    def test_proxy_pipeline_reuses_cross_query_extraction_cache(self) -> None:
+        fake_loader = SimpleNamespace(get_doc_text=lambda doc_id: "document")
+        oracle = SimpleNamespace(
+            extract=lambda **kwargs: self.fail("cache hit should skip extraction"),
+            check_predicates=lambda extracted_values, predicates: (True, {}),
+        )
+        cache = {("dataset", "places", "d1"): {"city": "Paris"}}
+        pipeline = ProxyPipeline(
+            ProxyPipelineConfig(
+                use_embedding_proxies=False,
+                use_learned_proxies=False,
+                save_hard_negatives=False,
+            )
+        )
+        pipeline._oracle = oracle  # type: ignore[assignment]
+
+        result = pipeline.run_for_documents(
+            doc_ids=["d1"],
+            train_doc_ids=[],
+            predicates=[],
+            table_schema={"Schema Name": "places", "Attributes": [{"Attribute Name": "city"}]},
+            query_text="find cities",
+            data_loader=fake_loader,
+            extraction_cache=cache,
+            extraction_cache_namespace="dataset",
+            extraction_cache_table="places",
+        )
+
+        self.assertEqual(result.cache_hit_doc_ids, ["d1"])
+        self.assertEqual(result.extracted_doc_ids, [])
+        self.assertEqual(result.extractions["d1"], {"city": "Paris"})
+
+    def test_proxy_pipeline_populates_cross_query_extraction_cache(self) -> None:
+        fake_loader = SimpleNamespace(get_doc_text=lambda doc_id: "document")
+        calls = []
+
+        def extract(**kwargs):
+            calls.append(kwargs["doc_id"])
+            return {"city": "Paris"}
+
+        oracle = SimpleNamespace(
+            extract=extract,
+            check_predicates=lambda extracted_values, predicates: (True, {}),
+        )
+        cache = {}
+        pipeline = ProxyPipeline(
+            ProxyPipelineConfig(
+                use_embedding_proxies=False,
+                use_learned_proxies=False,
+                save_hard_negatives=False,
+            )
+        )
+        pipeline._oracle = oracle  # type: ignore[assignment]
+
+        result = pipeline.run_for_documents(
+            doc_ids=["d1"],
+            train_doc_ids=[],
+            predicates=[],
+            table_schema={"Schema Name": "places", "Attributes": [{"Attribute Name": "city"}]},
+            query_text="find cities",
+            data_loader=fake_loader,
+            extraction_cache=cache,
+            extraction_cache_namespace="dataset",
+            extraction_cache_table="places",
+        )
+
+        self.assertEqual(calls, ["d1"])
+        self.assertEqual(result.extracted_doc_ids, ["d1"])
+        self.assertEqual(cache, {("dataset", "places", "d1"): {"city": "Paris"}})
 
 
 if __name__ == "__main__":

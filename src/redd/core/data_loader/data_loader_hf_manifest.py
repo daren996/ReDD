@@ -102,7 +102,9 @@ class DataLoaderHFManifest(DataLoaderBase):
             self._filemap.get("schema_general") or paths.get("schema", "metadata/schema.json")
         )
         self._schema_query_pattern = self._filemap.get("schema_query")
-        self._queries_path = self._resolve_path(paths.get("queries", "metadata/queries.json"))
+        self._queries_path = self._resolve_path(
+            self._filemap.get("queries") or paths.get("queries", "metadata/queries.json")
+        )
 
         self._documents_df = pd.read_parquet(self._documents_path)
         self._ground_truth_df = (
@@ -300,7 +302,11 @@ class DataLoaderHFManifest(DataLoaderBase):
     ) -> List[Dict[str, Any]]:
         records = raw.get("queries") if isinstance(raw, dict) else []
         if isinstance(records, list):
-            normalized = [record for record in records if isinstance(record, dict)]
+            normalized = [
+                DataLoaderHFManifest._normalize_query_record(record)
+                for record in records
+                if isinstance(record, dict)
+            ]
             if normalized:
                 return normalized
             return build_default_query_records(schema_contract or {}, dataset_id=dataset_id)
@@ -310,11 +316,23 @@ class DataLoaderHFManifest(DataLoaderBase):
                 if isinstance(record, dict):
                     item = dict(record)
                     item.setdefault("query_id", query_id)
-                    normalized.append(item)
+                    normalized.append(DataLoaderHFManifest._normalize_query_record(item))
             if normalized:
                 return normalized
             return build_default_query_records(schema_contract or {}, dataset_id=dataset_id)
         return build_default_query_records(schema_contract or {}, dataset_id=dataset_id)
+
+    @staticmethod
+    def _normalize_query_record(record: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize supported query-set formats into the runtime query contract."""
+        normalized = dict(record)
+        normalized.setdefault("query_id", normalized.get("id"))
+        normalized.setdefault("question", normalized.get("natural_language"))
+        golden_schema = normalized.get("golden_schema")
+        if isinstance(golden_schema, dict):
+            normalized.setdefault("required_tables", golden_schema.get("tables") or [])
+            normalized.setdefault("required_columns", golden_schema.get("columns") or [])
+        return normalized
 
     def _schema_to_legacy(self, raw_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
         tables = raw_schema.get("tables") if isinstance(raw_schema, dict) else []

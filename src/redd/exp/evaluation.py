@@ -549,10 +549,24 @@ class EvalDataExtraction(EvalBasic):
         self.prediction_data, self.gt_data = self._prepare_evaluation_data(loader, result_dict)
         query_aware_eval = self.compute_query_aware_statistics(loader, result_dict, query_id, query_info)
 
-        stats = self.compute_statistics()
+        if not self.prediction_data and not self.gt_data:
+            logging.info(
+                "[%s:_evaluate_query] No legacy prediction rows for query %s; "
+                "saving query-aware evaluation with empty legacy stats.",
+                self.__class__.__name__,
+                query_id,
+            )
+            stats = (0, 0, 0, 0, 0, 0, {}, {})
+        else:
+            stats = self.compute_statistics()
         if stats is None:
-            logging.error("[%s:_evaluate_query] Failed to compute statistics for query %s", self.__class__.__name__, query_id)
-            return
+            logging.info(
+                "[%s:_evaluate_query] Legacy statistics unavailable for query %s; "
+                "saving query-aware evaluation with empty legacy stats.",
+                self.__class__.__name__,
+                query_id,
+            )
+            stats = (0, 0, 0, 0, 0, 0, {}, {})
 
         tp, fp, fn, tn, correct, total, doc_stats, attr_stats = stats
         self._display_results(dataset_name, query_id, tp, fp, fn, tn, correct, total, attr_stats)

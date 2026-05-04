@@ -228,9 +228,18 @@ class DataExtractionAlphaAllocator:
 
         emb_model = str(cfg.get("embedding_model", "text-embedding-3-small"))
         emb_api_key = str(cfg.get("embedding_api_key") or self.api_key or "")
-        manager_key = (emb_model, emb_api_key)
+        embeddings_cache_dir = cfg.get("embeddings_cache_dir")
+        manager_key = (emb_model, emb_api_key, str(embeddings_cache_dir or ""))
         if manager_key not in self._embedding_managers:
+            storage_path = None
+            if embeddings_cache_dir:
+                cache_path = Path(embeddings_cache_dir).expanduser()
+                if cache_path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
+                    storage_path = cache_path
+                else:
+                    storage_path = cache_path / f"{self.loader.data_root.name}.embeddings.sqlite3"
             self._embedding_managers[manager_key] = EmbeddingManager(
+                storage_path=storage_path,
                 loader=self.loader,
                 model=emb_model,
                 api_key=(emb_api_key or None),

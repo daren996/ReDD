@@ -209,6 +209,22 @@ class DataExtraction(DataPopulator):
             self.doc_filter_config = dict(self.doc_filter_strategy.config)
             self.doc_filter_enabled = self.doc_filter_strategy.enabled
             self.doc_filter_only = self.doc_filter_strategy.only
+            table_cache_config = config.get("table_assignment_cache", {})
+            self.table_assignment_cache_general_schema = bool(
+                isinstance(table_cache_config, dict)
+                and table_cache_config.get("general_schema", False)
+            )
+            self.table_assignment_source_table_metadata = bool(
+                isinstance(table_cache_config, dict)
+                and table_cache_config.get("source_table_metadata", False)
+            )
+            self.table_assignment_cache_enabled = bool(
+                config.get("enable_table_assignment_cache", False)
+                or (
+                    isinstance(table_cache_config, dict)
+                    and table_cache_config.get("enabled", False)
+                )
+            )
 
             logging.info(
                 f"[{self.__class__.__name__}:__init__] Initialized with mode: {self.mode}, "
@@ -267,6 +283,10 @@ class DataExtraction(DataPopulator):
             all_doc_ids,
             self.training_data_count,
         )
+        self._proxy_extraction_cache: Dict[tuple[str, str, str], Dict[str, Any]] = {}
+        self._table_assignment_cache: Dict[str, str] = {}
+        self._table_assignment_null_cache: set[tuple[tuple[str, ...], str]] = set()
+        self._table_assignment_cache_events: List[Dict[str, Any]] = []
         self._train_doc_ids_set = set(self.train_doc_ids)
         self._test_doc_ids_set = set(self.test_doc_ids)
         logging.info(
@@ -610,6 +630,14 @@ class DataExtraction(DataPopulator):
         Output format: {doc_id: {"res": table_name, "data": {}}, ...}
         """
         all_tables = [s[SCHEMA_NAME_KEY] for s in schema_query] if schema_query else [s[SCHEMA_NAME_KEY] for s in self.schema_general]
+        cache_enabled = bool(getattr(self, "table_assignment_cache_enabled", False))
+        cache_general_schema = bool(getattr(self, "table_assignment_cache_general_schema", False))
+        cache_schema = self.schema_general if cache_general_schema else schema_query
+        cache_tables = (
+            [s[SCHEMA_NAME_KEY] for s in cache_schema]
+            if cache_schema
+            else all_tables
+        )
         excluded_doc_ids = excluded_doc_ids or set()
         target_doc_ids = list(self.loader.doc_ids) if target_doc_ids is None else target_doc_ids
         use_gt = bool(self.config.get("use_gt_table_assignment", False) or self.disable_llm)
@@ -627,6 +655,7 @@ class DataExtraction(DataPopulator):
             )
 
         total_docs = len(target_doc_ids)
+        schema_signature = tuple(sorted(str(table) for table in all_tables))
         # Count docs that already have table assignment
         already_processed = sum(
             1 for doc_id in target_doc_ids
@@ -648,6 +677,10 @@ class DataExtraction(DataPopulator):
             gt_to_task_table = {gt: ts for ts, gt in table_map.items()}
 
         excluded_count = 0
+        cache_hit_count = 0
+        cache_miss_count = 0
+        source_table_metadata_hit_count = 0
+        source_table_metadata_miss_count = 0
         unknown_schema_null_count = 0
         max_retries_null_count = 0
         for doc_id in target_doc_ids:
@@ -667,10 +700,53 @@ class DataExtraction(DataPopulator):
                 progress_bar.update(1)
                 continue
 
-            if use_gt:
+            cached_table = (
+                self._table_assignment_cache.get(doc_id)
+                if cache_enabled
+                else None
+            )
+            null_cache_key = (schema_signature, doc_id)
+            if cache_enabled and cached_table and cached_table in all_tables:
+                res_data[doc_id] = {RESULT_TABLE_KEY: cached_table, RESULT_DATA_KEY: {}}
+                self.save_results(res_path, res_data)
+                cache_hit_count += 1
+                progress_bar.update(1)
+                continue
+            if cache_enabled and cached_table:
+                res_data[doc_id] = {RESULT_TABLE_KEY: NULL_VALUE, RESULT_DATA_KEY: {}}
+                self.save_results(res_path, res_data)
+                cache_hit_count += 1
+                progress_bar.update(1)
+                continue
+            if cache_enabled and null_cache_key in self._table_assignment_null_cache:
+                res_data[doc_id] = {RESULT_TABLE_KEY: NULL_VALUE, RESULT_DATA_KEY: {}}
+                self.save_results(res_path, res_data)
+                cache_hit_count += 1
+                progress_bar.update(1)
+                continue
+
+            table_assigned = None
+            metadata_found = False
+            metadata_lookup_enabled = bool(
+                getattr(self, "table_assignment_source_table_metadata", False)
+            )
+            if metadata_lookup_enabled:
+                metadata_found, table_assigned = self._get_source_table_metadata_assignment(
+                    doc_id=doc_id,
+                    cache_tables=cache_tables,
+                )
+
+            if metadata_found:
+                source_table_metadata_hit_count += 1
+            else:
+                source_table_metadata_miss_count += int(metadata_lookup_enabled)
+                cache_miss_count += int(cache_enabled)
+            if metadata_found:
+                pass
+            elif use_gt:
                 table_assigned = self._get_gt_table_assignment(
                     doc_id=doc_id,
-                    all_tables=all_tables,
+                    all_tables=cache_tables,
                     gt_to_task_table=gt_to_task_table,
                 )
             else:
@@ -681,8 +757,8 @@ class DataExtraction(DataPopulator):
                 table_assigned, table_failed, skip_reason = self._assign_table_single_doc(
                     doc_id=doc_id,
                     doc_text=doc_text,
-                    all_tables=all_tables,
-                    prompt_schema=schema_query,
+                    all_tables=cache_tables,
+                    prompt_schema=cache_schema,
                     max_retries=max_table_retries,
                     **kwargs,
                 )
@@ -694,13 +770,34 @@ class DataExtraction(DataPopulator):
                     table_assigned = NULL_VALUE
 
             table_assigned = NULL_VALUE if is_none_value(table_assigned) else table_assigned
+            if cache_enabled:
+                if table_assigned in cache_tables:
+                    self._table_assignment_cache[doc_id] = str(table_assigned)
+                else:
+                    self._table_assignment_null_cache.add(null_cache_key)
+            if table_assigned not in all_tables:
+                table_assigned = NULL_VALUE
             # Initialize entry with table assignment and empty data
             res_data[doc_id] = {RESULT_TABLE_KEY: table_assigned, RESULT_DATA_KEY: {}}
             self.save_results(res_path, res_data)
             progress_bar.update(1)
 
         progress_bar.close()
+        if not res_path.exists():
+            self.save_results(res_path, res_data)
         stats_parts = [f"excluded: {excluded_count}"]
+        if cache_enabled:
+            stats_parts.append(f"cache_hits: {cache_hit_count}")
+            stats_parts.append(f"cache_misses: {cache_miss_count}")
+            self._record_table_assignment_cache_event(
+                query_id=query_id or "",
+                input_docs=total_docs,
+                cache_hits=cache_hit_count,
+                cache_misses=cache_miss_count,
+                excluded=excluded_count,
+                source_table_metadata_hits=source_table_metadata_hit_count,
+                source_table_metadata_misses=source_table_metadata_miss_count,
+            )
         if unknown_schema_null_count > 0:
             stats_parts.append(f"unknown_schema_null: {unknown_schema_null_count}")
         if max_retries_null_count > 0:
@@ -709,6 +806,73 @@ class DataExtraction(DataPopulator):
             f"[{self.__class__.__name__}:_process_table_assignment] Done table assignment -> {res_path} "
             f"({', '.join(stats_parts)})"
         )
+
+    def _record_table_assignment_cache_event(
+        self,
+        *,
+        query_id: str,
+        input_docs: int,
+        cache_hits: int,
+        cache_misses: int,
+        excluded: int,
+        source_table_metadata_hits: int = 0,
+        source_table_metadata_misses: int = 0,
+    ) -> None:
+        if not self.table_assignment_cache_enabled:
+            return
+        event = {
+            "dataset": self.data_path.name,
+            "query_id": query_id,
+            "input_docs": input_docs,
+            "cache_hits": cache_hits,
+            "cache_misses": cache_misses,
+            "excluded": excluded,
+            "source_table_metadata_hits": source_table_metadata_hits,
+            "source_table_metadata_misses": source_table_metadata_misses,
+        }
+        self._table_assignment_cache_events.append(event)
+        out_path = self.out_root / "table_assignment_cache.json"
+        payload = {
+            "enabled": True,
+            "events": self._table_assignment_cache_events,
+            "totals": {
+                "input_docs": sum(item["input_docs"] for item in self._table_assignment_cache_events),
+                "cache_hits": sum(item["cache_hits"] for item in self._table_assignment_cache_events),
+                "cache_misses": sum(item["cache_misses"] for item in self._table_assignment_cache_events),
+                "excluded": sum(item["excluded"] for item in self._table_assignment_cache_events),
+                "source_table_metadata_hits": sum(
+                    item.get("source_table_metadata_hits", 0)
+                    for item in self._table_assignment_cache_events
+                ),
+                "source_table_metadata_misses": sum(
+                    item.get("source_table_metadata_misses", 0)
+                    for item in self._table_assignment_cache_events
+                ),
+            },
+        }
+        self.save_results(str(out_path), payload)
+
+    def _get_source_table_metadata_assignment(
+        self,
+        *,
+        doc_id: str,
+        cache_tables: List[str],
+    ) -> tuple[bool, Optional[str]]:
+        if not hasattr(self.loader, "get_doc"):
+            return False, None
+        try:
+            _doc_text, _resolved_doc_id, metadata = self.loader.get_doc(doc_id)
+        except Exception:
+            return False, None
+        if not isinstance(metadata, dict):
+            return False, None
+        source_table = metadata.get("table_name") or metadata.get("source_table")
+        if is_none_value(source_table):
+            return False, None
+        table = str(source_table).strip()
+        if not table:
+            return False, None
+        return True, table if table in cache_tables else NULL_VALUE
 
     def _process_proxy_runtime_per_table(
         self,
@@ -742,6 +906,7 @@ class DataExtraction(DataPopulator):
             loader=self.loader,
             api_key=self.api_key,
             train_doc_ids=self.train_doc_ids,
+            extraction_cache=self._proxy_extraction_cache,
         )
         orchestrator.process_proxy_runtime_per_table(
             qid=qid,

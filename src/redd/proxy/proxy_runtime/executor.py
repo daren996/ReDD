@@ -657,7 +657,16 @@ class ProxyExecutor:
             if getattr(proxy, "uses_documents", False):
                 active_documents = [batch.documents[i] for i in active_idx]
                 active_doc_ids = [batch.doc_ids[i] for i in active_idx]
-                scores, passed = proxy.evaluate_documents(active_documents, doc_ids=active_doc_ids)
+                active_metadata = (
+                    [batch.metadata[i] for i in active_idx]
+                    if batch.metadata is not None
+                    else None
+                )
+                scores, passed = proxy.evaluate_documents(
+                    active_documents,
+                    doc_ids=active_doc_ids,
+                    metadata=active_metadata,
+                )
             else:
                 scores, passed = proxy.evaluate(active_embeddings)
             

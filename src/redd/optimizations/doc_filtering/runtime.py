@@ -196,7 +196,16 @@ def run_query_doc_filter(
             "text-embedding-3-small",
         )
         emb_api_key = doc_filter_config.get("embedding_api_key") or api_key
+        embeddings_cache_dir = doc_filter_config.get("embeddings_cache_dir")
+        storage_path = None
+        if embeddings_cache_dir:
+            cache_path = Path(embeddings_cache_dir).expanduser()
+            if cache_path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
+                storage_path = cache_path
+            else:
+                storage_path = cache_path / f"{loader.data_root.name}.embeddings.sqlite3"
         emb_manager = EmbeddingManager(
+            storage_path=storage_path,
             loader=loader,
             model=emb_model,
             api_key=emb_api_key,

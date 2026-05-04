@@ -45,6 +45,8 @@ class GoldenOracle:
             data = rec.get("data", {})
             if isinstance(data, dict):
                 merged.update(data)
+        if "row_id" not in merged and doc_info.get("source_row_id") is not None:
+            merged["row_id"] = doc_info.get("source_row_id")
 
         result = {}
         for attr in attributes:

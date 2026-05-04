@@ -9,6 +9,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+import pandas as pd
 import pytest
 
 pytest.importorskip("fastapi")
@@ -81,6 +82,12 @@ class WebDemoTests(unittest.TestCase):
         self.assertIn('id="evaluation-cards"', html)
         self.assertIn("function renderEvaluationCards", app_js)
         self.assertIn('event.type === "evaluation_update"', app_js)
+        self.assertIn("Offline-only benchmark ablation", app_js)
+        self.assertIn("offline_only_gt_guard", app_js)
+        self.assertIn("dataset_consistency_audit", app_js)
+        self.assertIn("conflict_ref", app_js)
+        self.assertIn("text_values", app_js)
+        self.assertIn("ground_truth_values", app_js)
 
     def test_config_inspect_returns_experiment_datasets_and_stages(self) -> None:
         client = TestClient(create_web_demo_app())
@@ -474,6 +481,33 @@ class WebDemoTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
+            (out_root / "table_assignment_cache.json").write_text(
+                json.dumps(
+                    {
+                        "enabled": True,
+                        "events": [
+                            {
+                                "dataset": "demo",
+                                "query_id": "q1",
+                                "input_docs": 3,
+                                "cache_hits": 2,
+                                "cache_misses": 1,
+                                "source_table_metadata_misses": 1,
+                                "excluded": 0,
+                            },
+                            {
+                                "dataset": "demo",
+                                "query_id": "q2",
+                                "input_docs": 3,
+                                "cache_hits": 1,
+                                "cache_misses": 2,
+                                "excluded": 0,
+                            },
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
             (out_root / "res_tabular_data_q1_demo_proxy_decisions.json").write_text(
                 json.dumps(
                     {
@@ -528,6 +562,32 @@ class WebDemoTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
+            (out_root / "dataset_consistency_audit.json").write_text(
+                json.dumps(
+                    {
+                        "total_conflicts": 1,
+                        "conflicts_by_type": {"text_pass_gt_fail": 1},
+                        "datasets": [
+                            {
+                                "dataset": "demo",
+                                "checked_doc_predicates": 3,
+                                "conflicts": [
+                                    {
+                                        "dataset": "demo",
+                                        "query_id": "q1",
+                                        "doc_id": "d3",
+                                        "attribute": "score",
+                                        "conflict_type": "text_pass_gt_fail",
+                                        "text_values": [513],
+                                        "ground_truth_values": [448],
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
             payload = {
                 "datasets": ["demo"],
                 "query_ids": ["q1"],
@@ -552,6 +612,11 @@ class WebDemoTests(unittest.TestCase):
         self.assertEqual(metrics["doc_filter"]["details"][0]["query_id"], "q1")
         self.assertEqual(metrics["doc_filter"]["details"][0]["excluded_doc_ids_preview"], ["d3"])
         self.assertEqual(metrics["schema_adaptive"]["metrics"]["documents_saved"], 1)
+        self.assertEqual(metrics["table_assignment_cache"]["metrics"]["table_assignment_calls_before"], 3)
+        self.assertEqual(metrics["table_assignment_cache"]["metrics"]["table_assignment_calls_after"], 1)
+        self.assertEqual(metrics["table_assignment_cache"]["metrics"]["table_assignment_calls_saved"], 2)
+        self.assertEqual(metrics["table_assignment_cache"]["metrics"]["source_table_metadata_misses"], 1)
+        self.assertEqual(metrics["table_assignment_cache"]["details"][0]["query_id"], "q1")
         self.assertEqual(metrics["proxy_runtime"]["metrics"]["evaluated"], 5)
         self.assertEqual(metrics["proxy_runtime"]["metrics"]["llm_doc_calls_before"], 3)
         self.assertEqual(metrics["proxy_runtime"]["metrics"]["llm_doc_calls_after"], 1)
@@ -559,6 +624,18 @@ class WebDemoTests(unittest.TestCase):
         self.assertEqual(metrics["proxy_runtime"]["details"][0]["query_id"], "q1")
         self.assertEqual(metrics["proxy_runtime"]["details"][0]["rejected_doc_ids_total"], 2)
         self.assertEqual(metrics["join_proxy"]["metrics"]["join_proxies"], 1)
+        self.assertEqual(metrics["dataset_consistency_audit"]["status"], "measured")
+        self.assertEqual(metrics["dataset_consistency_audit"]["metrics"]["total_conflicts"], 1)
+        self.assertEqual(metrics["dataset_consistency_audit"]["metrics"]["text_pass_gt_fail"], 1)
+        self.assertEqual(metrics["dataset_consistency_audit"]["metrics"]["affected_docs"], 1)
+        self.assertEqual(
+            metrics["dataset_consistency_audit"]["details"][0]["conflict_type"],
+            "text_pass_gt_fail",
+        )
+        self.assertEqual(
+            metrics["dataset_consistency_audit"]["details"][0]["conflict_ref"],
+            "demo::q1::d3::score",
+        )
         self.assertEqual(metrics["extraction"]["metrics"]["records"], 1)
         self.assertEqual(evaluation["status"], "measured")
         self.assertEqual(evaluation["summary"]["queries"], 1)
@@ -575,8 +652,133 @@ class WebDemoTests(unittest.TestCase):
         metric_ids = {item["id"] for item in metrics}
         self.assertNotIn("doc_filter", metric_ids)
         self.assertNotIn("schema_adaptive", metric_ids)
+        self.assertNotIn("table_assignment_cache", metric_ids)
         self.assertNotIn("proxy_runtime", metric_ids)
         self.assertIn("extraction", metric_ids)
+
+    def test_collect_optimization_metrics_generates_dataset_audit(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dataset_root = root / "dataset"
+            output_dir = root / "outputs"
+            out_root = output_dir / "demo" / "data_extraction" / "artifact"
+            (dataset_root / "data").mkdir(parents=True)
+            (dataset_root / "metadata").mkdir()
+            out_root.mkdir(parents=True)
+
+            pd.DataFrame(
+                [
+                    {
+                        "dataset_id": "demo",
+                        "doc_id": "d1",
+                        "doc_text": "The school reached an average of 513 in math.",
+                    }
+                ]
+            ).to_parquet(dataset_root / "data" / "documents.parquet", index=False)
+            pd.DataFrame(
+                [
+                    {
+                        "dataset_id": "demo",
+                        "doc_id": "d1",
+                        "record_id": "1",
+                        "table_id": "scores",
+                        "column_id": "scores.avg_scr_math",
+                        "column_name": "avg_scr_math",
+                        "value": "448",
+                        "value_type": "string",
+                        "source_row_id": "1",
+                    }
+                ]
+            ).to_parquet(dataset_root / "data" / "ground_truth.parquet", index=False)
+            (dataset_root / "metadata" / "queries.json").write_text(
+                """
+                {
+                  "schema_version": "redd.queries.v1",
+                  "dataset_id": "demo",
+                  "queries": [
+                    {
+                      "query_id": "q1",
+                      "sql": "SELECT avg_scr_math FROM scores WHERE avg_scr_math >= 473;"
+                    }
+                  ]
+                }
+                """,
+                encoding="utf-8",
+            )
+            payload = {
+                "datasets": ["demo"],
+                "query_ids": ["q1"],
+                "dataset_roots": {
+                    "demo": {"root": str(dataset_root), "query_ids": ["q1"]}
+                },
+                "result": {
+                    "data_extraction": [
+                        {
+                            "dataset": "demo",
+                            "out_root": str(out_root),
+                        }
+                    ]
+                },
+            }
+
+            metrics = {item["id"]: item for item in collect_web_optimization_metrics(payload)}
+            audit = metrics["dataset_consistency_audit"]
+
+            self.assertEqual(audit["status"], "measured")
+            self.assertEqual(audit["metrics"]["total_conflicts"], 1)
+            self.assertEqual(audit["metrics"]["text_pass_gt_fail"], 1)
+            self.assertEqual(audit["details"][0]["doc_id"], "d1")
+            self.assertTrue((output_dir / "dataset_consistency_audit.json").exists())
+            self.assertTrue((output_dir / "dataset_consistency_audit_conflicts.jsonl").exists())
+            self.assertTrue((output_dir / "dataset_consistency_audit_conflicts.csv").exists())
+
+    def test_collect_optimization_metrics_marks_gt_guard_offline_only(self) -> None:
+        with TemporaryDirectory() as tmp:
+            out_root = Path(tmp)
+            (out_root / "res_tabular_data_q1_demo_proxy_decisions.json").write_text(
+                json.dumps(
+                    {
+                        "students": {
+                            "proxy_stats": {
+                                "gt_text_consistency_students": {
+                                    "evaluated": 3,
+                                    "passed": 2,
+                                    "rejected": 1,
+                                }
+                            },
+                            "all_doc_ids": ["d1", "d2", "d3"],
+                            "passed_doc_ids": ["d1", "d2"],
+                            "extracted_doc_ids": ["d1", "d2"],
+                            "proxy_rejected_doc_ids": {
+                                "gt_text_consistency_students": ["d3"],
+                            },
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            payload = {
+                "datasets": ["demo"],
+                "query_ids": ["q1"],
+                "result": {
+                    "data_extraction": [
+                        {
+                            "dataset": "demo",
+                            "out_root": str(out_root),
+                        }
+                    ]
+                },
+            }
+
+            metrics = {item["id"]: item for item in collect_web_optimization_metrics(payload)}
+
+        proxy = metrics["proxy_runtime"]
+        self.assertIn("Offline GT Guard", proxy["title"])
+        self.assertIn("Offline-only", proxy["message"])
+        self.assertEqual(proxy["metrics"]["offline_only_gt_guard"], "enabled")
+        self.assertEqual(proxy["metrics"]["gt_guard_rejected_doc_calls"], 1)
+        self.assertTrue(proxy["details"][0]["offline_only_gt_guard"])
+        self.assertEqual(proxy["details"][0]["gt_guard_rejected_doc_calls"], 1)
 
     def test_progress_event_sink_emits_structured_updates(self) -> None:
         events: list[dict[str, object]] = []

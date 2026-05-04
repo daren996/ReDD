@@ -8,7 +8,7 @@ runtime:
   output_dir: outputs/doc_filter_predicate_proxy_eval
   log_dir: logs
   output_layout: dataset_stage
-  artifact_id: doc-filter-predicate-proxy-heuristic-v1
+  artifact_id: proxy-bijoin-short-cache-tablecache-heuristic-v7
   console_log_level: WARNING
 
 models:
@@ -45,29 +45,39 @@ stages:
     schema_source: ground_truth
     oracle: ground_truth
     document_filtering:
-      enabled: true
+      enabled: false
       filter_type: schema_relevance
       enable_calibrate: false
       threshold: 0.585
       embedding_model: local-hash-embedding
+    table_assignment_cache:
+      enabled: true
+      general_schema: true
+      source_table_metadata: true
     proxy_runtime:
       enabled: true
       predicate_proxy_mode: pretrained
       use_embedding_proxies: false
       use_learned_proxies: true
       use_finetuned_learned_proxies: true
-      use_join_resolution: false
+      use_join_resolution: true
+      bidirectional_join_resolution: true
+      join_order_strategy: selective_first
+      join_empty_short_circuit: true
+      cross_query_extraction_cache: true
+      cache_extract_full_table: true
+      embeddings_cache_dir: outputs/doc_filter_predicate_proxy_eval/_embedding_cache
       finetuned_model: heuristic
       finetuned_epochs: 0
-      proxy_threshold: 0.51
-      heuristic_pass_through_attributes: [num_tst_takr]
+      proxy_threshold: 0.505
+      heuristic_pass_through_attributes: []
       allow_embedding_fallback: false
       save_hard_negatives: false
       verbose: true
     alpha_allocation:
       enabled: false
     options:
-      force_rerun: false
+      force_rerun: true
 
 experiments:
   demo:

@@ -151,7 +151,15 @@ class ProxyPipeline:
     def embedding_manager(self) -> EmbeddingManager:
         """Get or create embedding manager."""
         if self._embedding_manager is None:
+            storage_path = None
+            if self.config.embeddings_cache_dir:
+                cache_path = Path(self.config.embeddings_cache_dir).expanduser()
+                if cache_path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
+                    storage_path = cache_path
+                else:
+                    storage_path = cache_path / f"{self.data_loader.data_root.name}.embeddings.sqlite3"
             self._embedding_manager = EmbeddingManager(
+                storage_path=storage_path,
                 loader=self.data_loader,
                 model=self.config.embedding_model,
                 api_key=self.config.embedding_api_key,
@@ -411,6 +419,9 @@ class ProxyPipeline:
         query_text: Optional[str] = None,
         data_loader: Optional[DataLoaderBase] = None,
         extra_proxies: Optional[List] = None,
+        extraction_cache: Optional[Dict[Tuple[str, str, str], Dict[str, Any]]] = None,
+        extraction_cache_namespace: str = "",
+        extraction_cache_table: str = "",
     ) -> PipelineResults:
         """
         Run the proxy runtime for a subset of documents with table-specific predicates.
@@ -453,6 +464,9 @@ class ProxyPipeline:
                 if attr_name:
                     attributes.append(attr_name)
         attributes = list(dict.fromkeys(attributes))  # dedupe preserving order
+        for predicate in predicates:
+            if predicate.attribute and predicate.attribute not in attributes:
+                attributes.append(predicate.attribute)
         
         if not attributes:
             # Fallback: use predicate attributes
@@ -528,9 +542,16 @@ class ProxyPipeline:
             logging.info("[ProxyPipeline] Skipping embedding API for test docs")
         results.embedding_time_seconds = time.time() - emb_start
         
+        batch_metadata = [self._load_doc_metadata(loader, doc_id) for doc_id in doc_ids]
+
         # Create or train predicate proxies.
         proxies = []
-        batch = DocumentBatch(doc_ids=doc_ids, documents=doc_texts, embeddings=embeddings)
+        batch = DocumentBatch(
+            doc_ids=doc_ids,
+            documents=doc_texts,
+            embeddings=embeddings,
+            metadata=batch_metadata,
+        )
 
         if predicates:
             should_train_predicate_proxies = (
@@ -634,6 +655,18 @@ class ProxyPipeline:
                         "[ProxyPipeline] No training labels extracted; learned proxies not trained."
                     )
 
+            if not proxies and should_train_predicate_proxies:
+                logging.warning(
+                    "[ProxyPipeline] No learned predicate proxies were trained; "
+                    "falling back to conservative heuristic proxies."
+                )
+                proxies = self.proxy_factory.create_pretrained_proxies(
+                    predicates=predicates,
+                    query_text=results.query_text,
+                    model_name="heuristic",
+                    threshold=getattr(self.config, "proxy_threshold", None),
+                )
+
             if not proxies and should_load_pretrained_proxies:
                 model_name = getattr(
                     self.config,
@@ -719,6 +752,14 @@ class ProxyPipeline:
                     )
                 else:
                     passed_doc_ids = list(batch.doc_ids)
+                    fallback_stats = results.execution_stats
+                    if fallback_stats is not None:
+                        fallback_stats.rejected_by_proxies = 0
+                        fallback_stats.passed_to_oracle = len(batch.doc_ids)
+                        fallback_stats.proxy_stats = {}
+                        fallback_stats.proxy_rejected_doc_ids = {}
+                        fallback_stats.passed_doc_ids = list(batch.doc_ids)
+                        fallback_stats.all_doc_ids = list(batch.doc_ids)
                     logging.warning(
                         "[ProxyPipeline] No conservative fallback proxies available; passing all docs."
                     )
@@ -752,8 +793,32 @@ class ProxyPipeline:
         
         for doc_id in passed_doc_ids:
             doc_text, doc_emb = batch_lookup.get(doc_id, ("", None))
+            cache_key = (
+                str(extraction_cache_namespace),
+                str(extraction_cache_table),
+                str(doc_id),
+            )
+            cached = extraction_cache.get(cache_key) if extraction_cache is not None else None
             try:
-                extracted = self.oracle.extract(document=doc_text, schema=schema_dict, attributes=attributes, doc_id=doc_id)
+                if (
+                    isinstance(cached, dict)
+                    and all(attr in cached for attr in attributes)
+                ):
+                    extracted = {attr: cached.get(attr) for attr in attributes}
+                    results.cache_hit_doc_ids.append(doc_id)
+                    results.documents_reused_from_cache += 1
+                else:
+                    results.extracted_doc_ids.append(doc_id)
+                    extracted = self.oracle.extract(
+                        document=doc_text,
+                        schema=schema_dict,
+                        attributes=attributes,
+                        doc_id=doc_id,
+                    )
+                    if extraction_cache is not None:
+                        existing = dict(cached) if isinstance(cached, dict) else {}
+                        existing.update(extracted)
+                        extraction_cache[cache_key] = existing
                 all_passed, per_attr = self.oracle.check_predicates(extracted_values=extracted, predicates=predicate_fns)
                 if all_passed:
                     results.extractions[doc_id] = extracted
@@ -784,6 +849,13 @@ class ProxyPipeline:
             return doc_text
         tup = loader.get_doc(doc_id) if hasattr(loader, "get_doc") else None
         return tup[0] if tup else ""
+
+    def _load_doc_metadata(self, loader: DataLoaderBase, doc_id: str) -> Dict[str, Any]:
+        """Best-effort document metadata loader for metadata-safe proxies."""
+        tup = loader.get_doc(doc_id) if hasattr(loader, "get_doc") else None
+        if isinstance(tup, tuple) and len(tup) >= 3 and isinstance(tup[2], dict):
+            return dict(tup[2])
+        return {}
 
     def _split_training_doc_ids(self, train_doc_ids: List[str]) -> Tuple[List[str], List[str]]:
         """

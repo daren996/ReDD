@@ -306,7 +306,7 @@ class SQLFilterParser:
         Returns:
             AttributePredicate or None if parsing fails
         """
-        condition = condition.strip()
+        condition = self._strip_outer_parentheses(condition.strip())
         
         # Try each operator pattern
         for op_str, op_enum in self.OPERATORS:
@@ -391,13 +391,52 @@ class SQLFilterParser:
         Returns:
             (table_alias, column_name) tuple
         """
-        column_str = column_str.strip()
+        column_str = self._normalize_column_expr(column_str.strip())
         
         if '.' in column_str:
             parts = column_str.split('.', 1)
-            return parts[0].strip(), parts[1].strip()
+            return self._strip_identifier_quotes(parts[0].strip()), self._strip_identifier_quotes(parts[1].strip())
         
-        return None, column_str
+        return None, self._strip_identifier_quotes(column_str)
+
+    def _strip_outer_parentheses(self, value: str) -> str:
+        """Remove balanced parentheses wrapping a whole condition/expression."""
+        text = value.strip()
+        while text.startswith("(") and text.endswith(")") and self._has_wrapping_parentheses(text):
+            text = text[1:-1].strip()
+        return text
+
+    @staticmethod
+    def _has_wrapping_parentheses(value: str) -> bool:
+        depth = 0
+        for index, char in enumerate(value):
+            if char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+                if depth == 0 and index != len(value) - 1:
+                    return False
+            if depth < 0:
+                return False
+        return depth == 0
+
+    def _normalize_column_expr(self, column_str: str) -> str:
+        """Reduce simple SQL expression wrappers to the underlying column name."""
+        text = self._strip_outer_parentheses(column_str.strip())
+        cast_match = re.match(r"(?is)^CAST\s*\((.+?)\s+AS\s+[^)]+\)$", text)
+        if cast_match:
+            return self._normalize_column_expr(cast_match.group(1))
+        func_match = re.match(r"(?is)^(?:LOWER|UPPER|TRIM)\s*\((.+)\)$", text)
+        if func_match:
+            return self._normalize_column_expr(func_match.group(1))
+        return self._strip_identifier_quotes(text)
+
+    @staticmethod
+    def _strip_identifier_quotes(value: str) -> str:
+        text = value.strip()
+        if len(text) >= 2 and text[0] == text[-1] and text[0] in {'"', "'", "`"}:
+            return text[1:-1]
+        return text
     
     def _parse_value(self, value_str: str) -> Any:
         """

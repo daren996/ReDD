@@ -23,7 +23,7 @@ from redd.embedding import EmbeddingManager
 from redd.proxy.proxy_runtime.executor import ConformalProxy, EmbeddingProxy
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
 
-from .heuristic_proxy import HeuristicPredicateProxy
+from .heuristic_proxy import HeuristicPredicateProxy, _predicate_value
 
 try:
     from .finetuned_proxy import (
@@ -90,6 +90,27 @@ def _generate_filter_description(
     except Exception as e:
         logging.warning(f"[PredicateProxyFactory] LLM filter description failed: {e}. Using fallback.")
         return fallback
+
+
+def _predicate_guard_key(predicate: AttributePredicate) -> str:
+    value = _predicate_value(predicate.value)
+    if isinstance(value, float) and value.is_integer():
+        value_text = str(int(value))
+    else:
+        value_text = str(value).strip().lower()
+    return (
+        f"{str(predicate.attribute or '').lower()}::"
+        f"{str(predicate.operator or '').strip().lower()}::{value_text}"
+    )
+
+
+def _doc_ids_for_predicate_guard(
+    guard_map: Dict[str, List[str]] | None,
+    predicate: AttributePredicate,
+) -> List[str]:
+    if not guard_map:
+        return []
+    return list(guard_map.get(_predicate_guard_key(predicate), []))
 
 
 class PredicateProxyFactory:
@@ -414,6 +435,32 @@ class PredicateProxyFactory:
                         self.config,
                         "heuristic_pass_through_attributes",
                         None,
+                    ),
+                    pass_through_doc_ids=(
+                        getattr(
+                            self.config,
+                            "heuristic_pass_through_doc_ids_by_attribute",
+                            {},
+                        )
+                        or {}
+                    ).get(str(pred.attribute or "").lower(), []),
+                    force_reject_doc_ids=(
+                        (
+                            getattr(
+                                self.config,
+                                "heuristic_force_reject_doc_ids_by_attribute",
+                                {},
+                            )
+                            or {}
+                        ).get(str(pred.attribute or "").lower(), [])
+                        + _doc_ids_for_predicate_guard(
+                            getattr(
+                                self.config,
+                                "heuristic_force_reject_doc_ids_by_predicate",
+                                None,
+                            ),
+                            pred,
+                        )
                     ),
                 )
                 for pred in predicates

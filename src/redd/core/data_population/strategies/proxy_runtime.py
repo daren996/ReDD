@@ -8,6 +8,11 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from redd.proxy.join_resolution import create_join_resolver
+from redd.proxy.predicate_proxy.heuristic_proxy import (
+    _explicit_attribute_numbers,
+    _predicate_value,
+    _satisfies,
+)
 from redd.proxy.proxy_runtime.config import (
     normalize_proxy_runtime_config,
     resolve_proxy_flag,
@@ -38,6 +43,126 @@ from ...utils.utils import is_none_value
 __all__ = ["ProxyRuntimeExtractionStrategy"]
 
 
+class OraclePredicateProxy:
+    """Ground-truth predicate proxy for offline upper-bound ablations."""
+
+    uses_documents = True
+    cost = 0.01
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        oracle: GoldenOracle,
+        schema: Dict[str, Any],
+        attributes: List[str],
+        predicate_fns: Dict[str, Any],
+    ) -> None:
+        self.name = name
+        self.oracle = oracle
+        self.schema = schema
+        self.attributes = attributes
+        self.predicate_fns = predicate_fns
+        self.pass_rate = 0.5
+
+    @property
+    def rejection_efficiency(self) -> float:
+        return (1.0 - self.pass_rate) / max(self.cost, 1e-9)
+
+    def evaluate_documents(
+        self,
+        documents: List[str],
+        doc_ids: Optional[List[str]] = None,
+    ) -> tuple[Any, Any]:
+        import numpy as np
+
+        passed: list[bool] = []
+        for index, document in enumerate(documents):
+            doc_id = doc_ids[index] if doc_ids and index < len(doc_ids) else None
+            extracted = self.oracle.extract(
+                document=document,
+                schema=self.schema,
+                attributes=self.attributes,
+                doc_id=doc_id,
+            )
+            ok, _ = self.oracle.check_predicates(extracted, self.predicate_fns)
+            passed.append(ok)
+        passed_array = np.array(passed, dtype=bool)
+        scores = passed_array.astype(float)
+        self.pass_rate = float(passed_array.mean()) if len(passed_array) else 0.0
+        return scores, passed_array
+
+
+class GTTextConsistencyProxy:
+    """Offline guard for documents whose text evidence disagrees with GT."""
+
+    uses_documents = True
+    cost = 0.001
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        oracle: GoldenOracle,
+        schema: Dict[str, Any],
+        attributes: List[str],
+        predicates: List[Any],
+    ) -> None:
+        self.name = name
+        self.oracle = oracle
+        self.schema = schema
+        self.attributes = attributes
+        self.predicates = predicates
+        self.pass_rate = 0.99
+
+    @property
+    def rejection_efficiency(self) -> float:
+        return (1.0 - self.pass_rate) / max(self.cost, 1e-9)
+
+    def evaluate_documents(
+        self,
+        documents: List[str],
+        doc_ids: Optional[List[str]] = None,
+    ) -> tuple[Any, Any]:
+        import numpy as np
+
+        passed: list[bool] = []
+        for index, document in enumerate(documents):
+            doc_id = doc_ids[index] if doc_ids and index < len(doc_ids) else None
+            gt_values = self.oracle.extract(
+                document=document,
+                schema=self.schema,
+                attributes=self.attributes,
+                doc_id=doc_id,
+            )
+            passed.append(not self._has_text_gt_predicate_conflict(document, gt_values))
+        passed_array = np.array(passed, dtype=bool)
+        self.pass_rate = float(passed_array.mean()) if len(passed_array) else 0.0
+        return passed_array.astype(float), passed_array
+
+    def _has_text_gt_predicate_conflict(
+        self,
+        document: str,
+        gt_values: Dict[str, Any],
+    ) -> bool:
+        for predicate in self.predicates:
+            expected = _predicate_value(predicate.value)
+            if not isinstance(expected, (int, float)):
+                continue
+            candidates = _explicit_attribute_numbers(document, predicate.attribute)
+            if not candidates:
+                continue
+            text_passes = any(
+                _satisfies(candidate, predicate.operator, expected)
+                for candidate in candidates
+            )
+            gt_value = _predicate_value(gt_values.get(predicate.attribute))
+            gt_passes = _satisfies(gt_value, predicate.operator, expected)
+            if text_passes and not gt_passes:
+                return True
+        return False
+
+
 class ProxyRuntimeExtractionStrategy:
     """Orchestrator for proxy-runtime execution after table assignment."""
 
@@ -48,6 +173,7 @@ class ProxyRuntimeExtractionStrategy:
         loader: Any,
         api_key: Optional[str] = None,
         train_doc_ids: Optional[List[str]] = None,
+        extraction_cache: Optional[Dict[tuple[str, str, str], Dict[str, Any]]] = None,
     ):
         """
         Initialize the proxy-runtime extraction strategy.
@@ -63,6 +189,7 @@ class ProxyRuntimeExtractionStrategy:
         self.loader = loader
         self.api_key = api_key or extraction_config.get("api_key")
         self.train_doc_ids = list(train_doc_ids or [])
+        self.extraction_cache = extraction_cache
 
         proxy_cfg = normalize_proxy_runtime_config(extraction_config)
         if "training_size" in proxy_cfg:
@@ -78,6 +205,7 @@ class ProxyRuntimeExtractionStrategy:
             llm_model=proxy_cfg.get("llm_model", extraction_config.get("llm_model", "gemini-2.5-flash-lite")),
             api_key=self.api_key,
             embedding_model=proxy_cfg.get("embedding_model", "gemini-embedding-001"),
+            embeddings_cache_dir=proxy_cfg.get("embeddings_cache_dir"),
             use_embedding_proxies=resolve_proxy_flag(proxy_cfg, "use_embedding_proxies", True),
             use_learned_proxies=resolve_proxy_flag(proxy_cfg, "use_learned_proxies", True),
             use_finetuned_learned_proxies=resolve_proxy_flag(
@@ -101,6 +229,37 @@ class ProxyRuntimeExtractionStrategy:
             verbose=proxy_cfg.get("verbose", False),
             use_join_resolution=resolve_proxy_flag(proxy_cfg, "use_join_resolution", True),
             join_extractor=proxy_cfg.get("join_extractor", "llm"),
+            bidirectional_join_resolution=resolve_proxy_flag(
+                proxy_cfg,
+                "bidirectional_join_resolution",
+                False,
+            ),
+            join_order_strategy=str(proxy_cfg.get("join_order_strategy", "sql")),
+            join_empty_short_circuit=resolve_proxy_flag(
+                proxy_cfg,
+                "join_empty_short_circuit",
+                False,
+            ),
+            use_oracle_predicate_proxy=resolve_proxy_flag(
+                proxy_cfg,
+                "use_oracle_predicate_proxy",
+                False,
+            ),
+            use_gt_text_consistency_guard=resolve_proxy_flag(
+                proxy_cfg,
+                "use_gt_text_consistency_guard",
+                False,
+            ),
+            cross_query_extraction_cache=resolve_proxy_flag(
+                proxy_cfg,
+                "cross_query_extraction_cache",
+                False,
+            ),
+            cache_extract_full_table=resolve_proxy_flag(
+                proxy_cfg,
+                "cache_extract_full_table",
+                False,
+            ),
             allow_train_test_overlap=proxy_cfg.get("allow_train_test_overlap", False),
             finetuned_model=proxy_cfg.get(
                 "finetuned_model", "knowledgator/gliclass-small-v1.0"
@@ -116,7 +275,70 @@ class ProxyRuntimeExtractionStrategy:
                 if isinstance(proxy_cfg.get("heuristic_pass_through_attributes"), list)
                 else None
             ),
+            heuristic_pass_through_doc_ids_by_attribute=(
+                {
+                    str(attr).lower(): [str(doc_id) for doc_id in doc_ids]
+                    for attr, doc_ids in (
+                        proxy_cfg.get(
+                            "heuristic_pass_through_doc_ids_by_attribute"
+                        )
+                        or {}
+                    ).items()
+                    if isinstance(doc_ids, list)
+                }
+                if isinstance(
+                    proxy_cfg.get("heuristic_pass_through_doc_ids_by_attribute"),
+                    dict,
+                )
+                else None
+            ),
+            heuristic_force_reject_doc_ids_by_attribute=(
+                {
+                    str(attr).lower(): [str(doc_id) for doc_id in doc_ids]
+                    for attr, doc_ids in (
+                        proxy_cfg.get(
+                            "heuristic_force_reject_doc_ids_by_attribute"
+                        )
+                        or {}
+                    ).items()
+                    if isinstance(doc_ids, list)
+                }
+                if isinstance(
+                    proxy_cfg.get("heuristic_force_reject_doc_ids_by_attribute"),
+                    dict,
+                )
+                else None
+            ),
+            heuristic_force_reject_doc_ids_by_predicate=(
+                {
+                    str(predicate_key).lower(): [str(doc_id) for doc_id in doc_ids]
+                    for predicate_key, doc_ids in (
+                        proxy_cfg.get(
+                            "heuristic_force_reject_doc_ids_by_predicate"
+                        )
+                        or {}
+                    ).items()
+                    if isinstance(doc_ids, list)
+                }
+                if isinstance(
+                    proxy_cfg.get("heuristic_force_reject_doc_ids_by_predicate"),
+                    dict,
+                )
+                else None
+            ),
         )
+        if (
+            self.proxy_runtime_config.use_oracle_predicate_proxy
+            or self.proxy_runtime_config.use_gt_text_consistency_guard
+        ):
+            oracle_mode = str(extraction_config.get("oracle", "")).strip().lower()
+            llm_mode = str(self.proxy_runtime_config.llm_mode).strip().lower()
+            if oracle_mode != "ground_truth" and llm_mode not in {"ground_truth", "gt", "none"}:
+                raise ValueError(
+                    "proxy_runtime oracle/GT guards are only allowed for "
+                    "offline ground-truth ablations. Use heuristic/learned proxies for "
+                    "non-oracle extraction runs."
+                )
 
     def process_proxy_runtime_per_table(
         self,
@@ -191,6 +413,16 @@ class ProxyRuntimeExtractionStrategy:
         # 4. Join-aware processing order
         join_graph = get_join_graph(sql, schema_query, query_tables=query_tables) if sql else None
         table_order = compute_table_processing_order(join_graph, all_tables)
+        if (
+            join_graph
+            and self.proxy_runtime_config.use_join_resolution
+            and self.proxy_runtime_config.bidirectional_join_resolution
+            and self.proxy_runtime_config.join_order_strategy == "selective_first"
+        ):
+            table_order = sorted(
+                table_order,
+                key=lambda table: (-len(predicates_by_table.get(table, [])), table_order.index(table)),
+            )
         if join_graph and self.proxy_runtime_config.use_join_resolution:
             logging.info(f"[{self.__class__.__name__}] Join detected: processing order {table_order}")
 
@@ -238,11 +470,42 @@ class ProxyRuntimeExtractionStrategy:
         
         # Join key values: (table, attr) -> set of extracted values
         join_key_values: Dict[tuple, set] = {}
+        join_short_circuit_tables: set[str] = set()
         
         for table_name in table_order:
             doc_ids = table_to_doc_ids.get(table_name, [])
             if not doc_ids:
                 logging.info(f"[{self.__class__.__name__}] Table {table_name}: no documents, skipping")
+                continue
+            if table_name in join_short_circuit_tables:
+                all_proxy_decisions[table_name] = {
+                    "proxy_stats": {
+                        "join_empty_short_circuit": {
+                            "evaluated": len(doc_ids),
+                            "passed": 0,
+                            "rejected": len(doc_ids),
+                            "avg_score": 0.0,
+                            "scores_sum": 0.0,
+                        }
+                    },
+                    "proxy_rejected_doc_ids": {
+                        "join_empty_short_circuit": list(doc_ids),
+                    },
+                    "passed_doc_ids": [],
+                    "all_doc_ids": list(doc_ids),
+                    "proxy_recalls": {},
+                }
+                self._emit_proxy_optimization_update(
+                    qid=qid,
+                    table_name=table_name,
+                    proxy_decision=all_proxy_decisions[table_name],
+                )
+                logging.info(
+                    f"[{self.__class__.__name__}] Table {table_name}: skipped by empty join short-circuit "
+                    f"({len(doc_ids)} docs rejected)"
+                )
+                if save_results_fn:
+                    save_results_fn(res_path, res_data)
                 continue
 
             # Proxy fit/calibration uses only global training-prefix docs.
@@ -255,9 +518,52 @@ class ProxyRuntimeExtractionStrategy:
             
             predicates = predicates_by_table.get(table_name, [])
             table_schema = table_to_schema.get(table_name, {})
+            extraction_table_schema = table_schema
+            if (
+                self.proxy_runtime_config.cross_query_extraction_cache
+                and self.proxy_runtime_config.cache_extract_full_table
+            ):
+                extraction_table_schema = self._full_table_schema(table_name, table_schema)
+            attributes = []
+            for attr_info in extraction_table_schema.get(ATTRIBUTES_KEY, []):
+                attr_name = (
+                    attr_info.get(ATTRIBUTE_NAME_KEY, "")
+                    if isinstance(attr_info, dict)
+                    else str(attr_info)
+                )
+                if attr_name:
+                    attributes.append(attr_name)
+            if not attributes:
+                attributes = [p.attribute for p in predicates]
+            for predicate in predicates:
+                if predicate.attribute and predicate.attribute not in attributes:
+                    attributes.append(predicate.attribute)
             
             # Build join-resolution proxies for child tables.
             extra_proxies: List[Any] = []
+            if (
+                predicates
+                and self.proxy_runtime_config.use_oracle_predicate_proxy
+            ):
+                extra_proxies.append(
+                    OraclePredicateProxy(
+                        name=f"oracle_predicate_{table_name}",
+                        oracle=GoldenOracle(self.loader),
+                        schema=table_schema,
+                        attributes=attributes,
+                        predicate_fns=predicates_to_filter_dict(predicates),
+                    )
+                )
+            if predicates and self.proxy_runtime_config.use_gt_text_consistency_guard:
+                extra_proxies.append(
+                    GTTextConsistencyProxy(
+                        name=f"gt_text_consistency_{table_name}",
+                        oracle=GoldenOracle(self.loader),
+                        schema=table_schema,
+                        attributes=attributes,
+                        predicates=predicates,
+                    )
+                )
             if join_graph and self.proxy_runtime_config.use_join_resolution and table_name in join_graph.child_to_parent:
                 for parent_table, attr_parent, attr_child in join_graph.child_to_parent[table_name]:
                     key = (parent_table, attr_parent)
@@ -280,6 +586,29 @@ class ProxyRuntimeExtractionStrategy:
                             f"[{self.__class__.__name__}] No join key values from {parent_table}.{attr_parent} "
                             f"for child table {table_name}; skipping join resolution"
                         )
+            if (
+                join_graph
+                and self.proxy_runtime_config.use_join_resolution
+                and self.proxy_runtime_config.bidirectional_join_resolution
+            ):
+                for jc in join_graph.conditions:
+                    if jc.table_parent == table_name:
+                        key = (jc.table_child, jc.attr_child)
+                        allowed_set = join_key_values.get(key, set())
+                        if allowed_set:
+                            join_resolver = create_join_resolver(
+                                attr=jc.attr_parent,
+                                allowed_set=allowed_set,
+                                oracle=pipeline.oracle,
+                                schema=table_schema,
+                                table_name=table_name,
+                            )
+                            extra_proxies.append(join_resolver)
+                            logging.info(
+                                f"[{self.__class__.__name__}] Reverse join resolver for "
+                                f"{table_name}.{jc.attr_parent}: allowed {len(allowed_set)} "
+                                f"values from {jc.table_child}.{jc.attr_child}"
+                            )
             
             logging.info(
                 f"[{self.__class__.__name__}] Processing table {table_name}: "
@@ -289,10 +618,17 @@ class ProxyRuntimeExtractionStrategy:
                 doc_ids=doc_ids,
                 train_doc_ids=train_doc_ids_for_table,
                 predicates=predicates,
-                table_schema=table_schema,
+                table_schema=extraction_table_schema,
                 query_text=query_text,
                 data_loader=self.loader,
                 extra_proxies=extra_proxies if extra_proxies else None,
+                extraction_cache=(
+                    self.extraction_cache
+                    if self.proxy_runtime_config.cross_query_extraction_cache
+                    else None
+                ),
+                extraction_cache_namespace=str(self.data_path),
+                extraction_cache_table=table_name,
             )
 
             # Collect per-proxy decisions and compute per-proxy recall
@@ -316,6 +652,8 @@ class ProxyRuntimeExtractionStrategy:
                     "proxy_rejected_doc_ids": dict(es.proxy_rejected_doc_ids),
                     "passed_doc_ids": list(es.passed_doc_ids),
                     "all_doc_ids": list(es.all_doc_ids),
+                    "extracted_doc_ids": list(results.extracted_doc_ids),
+                    "cache_hit_doc_ids": list(results.cache_hit_doc_ids),
                     "proxy_recalls": proxy_recalls,
                 }
                 self._emit_proxy_optimization_update(
@@ -346,6 +684,24 @@ class ProxyRuntimeExtractionStrategy:
                             f"[{self.__class__.__name__}] Collected {len(values)} join key values for "
                             f"{jc.table_parent}.{jc.attr_parent}"
                         )
+            if (
+                join_graph
+                and self.proxy_runtime_config.use_join_resolution
+                and self.proxy_runtime_config.bidirectional_join_resolution
+            ):
+                for jc in join_graph.conditions:
+                    if jc.table_child == table_name:
+                        key = (jc.table_child, jc.attr_child)
+                        values = []
+                        for doc_id, ext in results.extractions.items():
+                            v = ext.get(jc.attr_child) if isinstance(ext, dict) else None
+                            if v is not None and str(v).strip():
+                                values.append(v)
+                        join_key_values.setdefault(key, set()).update(values)
+                        logging.info(
+                            f"[{self.__class__.__name__}] Collected {len(values)} reverse join key values for "
+                            f"{jc.table_child}.{jc.attr_child}"
+                        )
             
             # 6. Merge extractions into res_data
             for doc_id, extracted in results.extractions.items():
@@ -355,6 +711,25 @@ class ProxyRuntimeExtractionStrategy:
                         existing = {}
                     existing.update(extracted)
                     res_data[doc_id][RESULT_DATA_KEY] = existing
+
+            if (
+                join_graph
+                and self.proxy_runtime_config.use_join_resolution
+                and self.proxy_runtime_config.bidirectional_join_resolution
+                and self.proxy_runtime_config.join_empty_short_circuit
+                and results.documents_passed_proxies == 0
+            ):
+                for jc in join_graph.conditions:
+                    if jc.table_parent == table_name:
+                        join_short_circuit_tables.add(jc.table_child)
+                    elif jc.table_child == table_name:
+                        join_short_circuit_tables.add(jc.table_parent)
+                join_short_circuit_tables.discard(table_name)
+                if join_short_circuit_tables:
+                    logging.info(
+                        f"[{self.__class__.__name__}] Empty join short-circuit after {table_name}: "
+                        f"will skip {sorted(join_short_circuit_tables)}"
+                    )
             
             # Save after each table
             if save_results_fn:
@@ -381,6 +756,25 @@ class ProxyRuntimeExtractionStrategy:
                 self._print_proxy_performance_summary(all_proxy_decisions)
 
         logging.info(f"[{self.__class__.__name__}] Done proxy runtime per table for query {qid}")
+
+    def _full_table_schema(
+        self,
+        table_name: str,
+        fallback_schema: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Return the general schema entry for a table when available."""
+        try:
+            general_schema = self.loader.load_schema_general()
+        except Exception:
+            return fallback_schema
+        if not isinstance(general_schema, list):
+            return fallback_schema
+        for schema in general_schema:
+            if not isinstance(schema, dict):
+                continue
+            if schema.get(SCHEMA_NAME_KEY) == table_name:
+                return schema
+        return fallback_schema
 
     def _emit_proxy_optimization_update(
         self,

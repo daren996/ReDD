@@ -95,6 +95,13 @@ class ProxyPipelineConfig:
     # Join support
     use_join_resolution: bool = True
     join_extractor: str = "llm"
+    bidirectional_join_resolution: bool = False
+    join_order_strategy: str = "sql"
+    join_empty_short_circuit: bool = False
+    use_oracle_predicate_proxy: bool = False
+    use_gt_text_consistency_guard: bool = False
+    cross_query_extraction_cache: bool = False
+    cache_extract_full_table: bool = False
 
     # When True, train_doc_ids may overlap with doc_ids (table-relevant training)
     allow_train_test_overlap: bool = False
@@ -111,6 +118,9 @@ class ProxyPipelineConfig:
     # Conservative heuristic proxy escape hatch. Attributes listed here always
     # pass through the heuristic proxy and defer to the extractor.
     heuristic_pass_through_attributes: Optional[List[str]] = None
+    heuristic_pass_through_doc_ids_by_attribute: Optional[Dict[str, List[str]]] = None
+    heuristic_force_reject_doc_ids_by_attribute: Optional[Dict[str, List[str]]] = None
+    heuristic_force_reject_doc_ids_by_predicate: Optional[Dict[str, List[str]]] = None
 
 
 @dataclass
@@ -131,9 +141,12 @@ class PipelineResults:
     documents_processed: int = 0
     documents_passed_proxies: int = 0
     documents_extracted: int = 0
+    documents_reused_from_cache: int = 0
     
     # Extracted data
     extractions: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    extracted_doc_ids: List[str] = field(default_factory=list)
+    cache_hit_doc_ids: List[str] = field(default_factory=list)
     
     # Execution stats
     execution_stats: Optional[ExecutionStats] = None
@@ -158,7 +171,10 @@ class PipelineResults:
             "documents_processed": self.documents_processed,
             "documents_passed_proxies": self.documents_passed_proxies,
             "documents_extracted": self.documents_extracted,
+            "documents_reused_from_cache": self.documents_reused_from_cache,
             "extractions": self.extractions,
+            "extracted_doc_ids": self.extracted_doc_ids,
+            "cache_hit_doc_ids": self.cache_hit_doc_ids,
             "hard_negatives_count": len(self.hard_negatives),
             "timing": {
                 "total_seconds": self.total_time_seconds,

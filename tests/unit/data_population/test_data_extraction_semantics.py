@@ -237,3 +237,239 @@ def test_table_assignment_uses_query_schema_and_accepts_null() -> None:
     assert prompt.last_payload["Schema"] == [
         {SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []}
     ]
+
+
+def test_table_assignment_general_schema_cache_reuses_out_of_query_tables(tmp_path: Path) -> None:
+    class CountingPrompt:
+        def __init__(self) -> None:
+            self.calls: List[Dict[str, Any]] = []
+
+        def complete_model(self, payload: str, *_args: Any, **_kwargs: Any) -> Any:
+            parsed = json.loads(payload)
+            self.calls.append(parsed)
+            document = parsed["Document"]
+            table = "instructor" if "Instructor" in document else "course"
+            return type("Result", (), {"table_assignment": table})()
+
+    class TextLoader:
+        doc_ids = ["course-doc", "instructor-doc"]
+
+        def get_doc_text(self, doc_id: str) -> str:
+            return {
+                "course-doc": "Course catalog entry",
+                "instructor-doc": "Instructor profile",
+            }[doc_id]
+
+    prompt = CountingPrompt()
+    extractor = DataExtraction.__new__(DataExtraction)
+    extractor.config = {}
+    extractor.disable_llm = False
+    extractor.loader = TextLoader()
+    extractor.prompt_table = prompt
+    extractor.retry_params = {}
+    extractor.schema_general = [
+        {SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []},
+        {SCHEMA_NAME_KEY: "instructor", ATTRIBUTES_KEY: []},
+    ]
+    extractor.pause_controller = None
+    extractor.table_assignment_cache_enabled = True
+    extractor.table_assignment_cache_general_schema = True
+    extractor._table_assignment_cache = {}
+    extractor._table_assignment_null_cache = set()
+    extractor._table_assignment_cache_events = []
+    extractor.data_path = Path("dataset")
+    extractor.out_root = tmp_path
+
+    course_results: Dict[str, Any] = {}
+    extractor._process_table_assignment(
+        schema_query=[{SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []}],
+        res_data=course_results,
+        res_path=tmp_path / "course.json",
+        pgbar_name="course",
+        target_doc_ids=["course-doc", "instructor-doc"],
+        query_id="q-course",
+    )
+
+    assert len(prompt.calls) == 2
+    assert course_results["course-doc"][RESULT_TABLE_KEY] == "course"
+    assert course_results["instructor-doc"][RESULT_TABLE_KEY] == NULL_VALUE
+    assert extractor._table_assignment_cache == {
+        "course-doc": "course",
+        "instructor-doc": "instructor",
+    }
+
+    instructor_results: Dict[str, Any] = {}
+    extractor._process_table_assignment(
+        schema_query=[{SCHEMA_NAME_KEY: "instructor", ATTRIBUTES_KEY: []}],
+        res_data=instructor_results,
+        res_path=tmp_path / "instructor.json",
+        pgbar_name="instructor",
+        target_doc_ids=["course-doc", "instructor-doc"],
+        query_id="q-instructor",
+    )
+
+    assert len(prompt.calls) == 2
+    assert instructor_results["course-doc"][RESULT_TABLE_KEY] == NULL_VALUE
+    assert instructor_results["instructor-doc"][RESULT_TABLE_KEY] == "instructor"
+
+    cache_payload = json.loads((tmp_path / "table_assignment_cache.json").read_text())
+    assert cache_payload["totals"] == {
+        "input_docs": 4,
+        "cache_hits": 2,
+        "cache_misses": 2,
+        "source_table_metadata_hits": 0,
+        "source_table_metadata_misses": 0,
+        "excluded": 0,
+    }
+
+
+def test_table_assignment_uses_source_table_metadata_shortcut(tmp_path: Path) -> None:
+    class FailingPrompt:
+        def complete_model(self, *_args: Any, **_kwargs: Any) -> Any:
+            raise AssertionError("source_table metadata should avoid prompt calls")
+
+    class MetadataLoader:
+        doc_ids = ["course-doc", "instructor-doc"]
+
+        def get_doc(self, doc_id: str) -> tuple[str, str, Dict[str, Any]]:
+            table = "course" if doc_id == "course-doc" else "instructor"
+            return "Document", doc_id, {"table_name": table}
+
+    extractor = DataExtraction.__new__(DataExtraction)
+    extractor.config = {}
+    extractor.disable_llm = False
+    extractor.loader = MetadataLoader()
+    extractor.prompt_table = FailingPrompt()
+    extractor.retry_params = {}
+    extractor.schema_general = [
+        {SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []},
+        {SCHEMA_NAME_KEY: "instructor", ATTRIBUTES_KEY: []},
+    ]
+    extractor.pause_controller = None
+    extractor.table_assignment_cache_enabled = True
+    extractor.table_assignment_cache_general_schema = True
+    extractor.table_assignment_source_table_metadata = True
+    extractor._table_assignment_cache = {}
+    extractor._table_assignment_null_cache = set()
+    extractor._table_assignment_cache_events = []
+    extractor.data_path = Path("dataset")
+    extractor.out_root = tmp_path
+
+    results: Dict[str, Any] = {}
+    extractor._process_table_assignment(
+        schema_query=[{SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []}],
+        res_data=results,
+        res_path=tmp_path / "course.json",
+        pgbar_name="course",
+        target_doc_ids=["course-doc", "instructor-doc"],
+        query_id="q-course",
+    )
+
+    assert results["course-doc"][RESULT_TABLE_KEY] == "course"
+    assert results["instructor-doc"][RESULT_TABLE_KEY] == NULL_VALUE
+    cache_payload = json.loads((tmp_path / "table_assignment_cache.json").read_text())
+    assert cache_payload["totals"] == {
+        "input_docs": 2,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "source_table_metadata_hits": 2,
+        "source_table_metadata_misses": 0,
+        "excluded": 0,
+    }
+
+
+def test_table_assignment_records_source_table_metadata_misses(tmp_path: Path) -> None:
+    class CountingPrompt:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def complete_model(self, payload: str, *_args: Any, **_kwargs: Any) -> Any:
+            self.calls += 1
+            parsed = json.loads(payload)
+            table = "course" if "course" in parsed["Document"].lower() else "instructor"
+            return type("Result", (), {"table_assignment": table})()
+
+    class PartialMetadataLoader:
+        doc_ids = ["course-doc", "instructor-doc"]
+
+        def get_doc(self, doc_id: str) -> tuple[str, str, Dict[str, Any]]:
+            if doc_id == "course-doc":
+                return "Course catalog entry", doc_id, {"table_name": "course"}
+            return "Instructor profile", doc_id, {}
+
+        def get_doc_text(self, doc_id: str) -> str:
+            return self.get_doc(doc_id)[0]
+
+    prompt = CountingPrompt()
+    extractor = DataExtraction.__new__(DataExtraction)
+    extractor.config = {}
+    extractor.disable_llm = False
+    extractor.loader = PartialMetadataLoader()
+    extractor.prompt_table = prompt
+    extractor.retry_params = {}
+    extractor.schema_general = [
+        {SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []},
+        {SCHEMA_NAME_KEY: "instructor", ATTRIBUTES_KEY: []},
+    ]
+    extractor.pause_controller = None
+    extractor.table_assignment_cache_enabled = True
+    extractor.table_assignment_cache_general_schema = True
+    extractor.table_assignment_source_table_metadata = True
+    extractor._table_assignment_cache = {}
+    extractor._table_assignment_null_cache = set()
+    extractor._table_assignment_cache_events = []
+    extractor.data_path = Path("dataset")
+    extractor.out_root = tmp_path
+
+    results: Dict[str, Any] = {}
+    extractor._process_table_assignment(
+        schema_query=[{SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []}],
+        res_data=results,
+        res_path=tmp_path / "course.json",
+        pgbar_name="course",
+        target_doc_ids=["course-doc", "instructor-doc"],
+        query_id="q-course",
+    )
+
+    assert prompt.calls == 1
+    assert results["course-doc"][RESULT_TABLE_KEY] == "course"
+    assert results["instructor-doc"][RESULT_TABLE_KEY] == NULL_VALUE
+    cache_payload = json.loads((tmp_path / "table_assignment_cache.json").read_text())
+    assert cache_payload["totals"] == {
+        "input_docs": 2,
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "source_table_metadata_hits": 1,
+        "source_table_metadata_misses": 1,
+        "excluded": 0,
+    }
+
+
+def test_table_assignment_writes_empty_result_when_all_docs_excluded(tmp_path: Path) -> None:
+    class TextLoader:
+        doc_ids = ["doc-1"]
+
+        def get_doc_text(self, doc_id: str) -> str:
+            raise AssertionError(f"excluded doc should not be loaded: {doc_id}")
+
+    extractor = DataExtraction.__new__(DataExtraction)
+    extractor.config = {}
+    extractor.disable_llm = False
+    extractor.loader = TextLoader()
+    extractor.retry_params = {}
+    extractor.schema_general = [{SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []}]
+    extractor.pause_controller = None
+
+    res_path = tmp_path / "res.json"
+    res_data: Dict[str, Any] = {}
+    extractor._process_table_assignment(
+        schema_query=[{SCHEMA_NAME_KEY: "course", ATTRIBUTES_KEY: []}],
+        res_data=res_data,
+        res_path=res_path,
+        pgbar_name="unit",
+        excluded_doc_ids={"doc-1"},
+        target_doc_ids=["doc-1"],
+    )
+
+    assert res_path.exists()
+    assert json.loads(res_path.read_text()) == {}

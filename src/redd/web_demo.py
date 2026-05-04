@@ -40,6 +40,10 @@ from .config import (
 )
 from .core.data_loader.data_loader_hf_manifest import build_default_query_records
 from .core.utils.progress import progress_event_sink
+from .diagnostics.dataset_consistency import (
+    build_dataset_consistency_audit,
+    write_dataset_consistency_audit,
+)
 from .model_catalog import get_model_catalog
 
 DEFAULT_WEB_DEMO_CONFIG = "configs/demo/demo_datasets.yaml"
@@ -239,6 +243,7 @@ def run_web_demo(
                     {
                         "experiment": runtime.id,
                         "datasets": requested_datasets,
+                        "dataset_roots": _dataset_audit_inputs(runtime),
                         "query_ids": requested_query_ids,
                         "stages": requested_stages,
                         "result": result,
@@ -254,6 +259,7 @@ def run_web_demo(
     return {
         "experiment": runtime.id,
         "datasets": requested_datasets,
+        "dataset_roots": _dataset_audit_inputs(runtime),
         "query_ids": requested_query_ids,
         "stages": requested_stages,
         "result": result,
@@ -283,6 +289,16 @@ def _stage_result_summary(value: Any) -> dict[str, Any]:
     return {
         "items": len(value) if isinstance(value, (list, dict)) else None,
         "kind": "list" if isinstance(value, list) else type(value).__name__,
+    }
+
+
+def _dataset_audit_inputs(runtime: ExperimentRuntime) -> dict[str, dict[str, Any]]:
+    return {
+        dataset_id: {
+            "root": str(dataset.root),
+            "query_ids": list(dataset.query_ids or []),
+        }
+        for dataset_id, dataset in runtime.datasets.items()
     }
 
 
@@ -1543,8 +1559,10 @@ def collect_web_optimization_metrics(run_payload: dict[str, Any]) -> list[dict[s
     metrics = [
         _collect_doc_filter_metric(out_roots, query_ids_by_root),
         _collect_schema_adaptive_metric(out_roots, query_ids_by_root),
+        _collect_table_assignment_cache_metric(out_roots, query_ids_by_root),
         _collect_proxy_metric(out_roots, query_ids_by_root),
         _collect_join_proxy_metric(out_roots, query_ids_by_root),
+        _collect_dataset_consistency_audit_metric(out_roots, run_payload),
         _collect_extraction_metric(run_payload, out_roots, query_ids_by_root),
     ]
     return [
@@ -1788,6 +1806,101 @@ def _collect_schema_adaptive_metric(
     }
 
 
+def _collect_table_assignment_cache_metric(
+    out_roots: Sequence[Path],
+    query_ids_by_root: Mapping[Path, set[str]] | None = None,
+) -> dict[str, Any]:
+    files = _unique_existing_files(root / "table_assignment_cache.json" for root in out_roots)
+    totals = {
+        "input_docs": 0,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "source_table_metadata_hits": 0,
+        "source_table_metadata_misses": 0,
+        "excluded": 0,
+        "table_assignment_calls_before": 0,
+    }
+    details: list[dict[str, Any]] = []
+    for path in files:
+        content = _safe_read_result_json(path)
+        events = content.get("events") if isinstance(content, dict) else []
+        if not isinstance(events, list):
+            continue
+        root = path.parent
+        for event in events:
+            if not isinstance(event, dict):
+                continue
+            query_id = str(event.get("query_id") or "")
+            if not _artifact_query_allowed(root, query_id, query_ids_by_root):
+                continue
+            input_docs = _metric_int(event.get("input_docs")) or 0
+            cache_hits = _metric_int(event.get("cache_hits")) or 0
+            cache_misses = _metric_int(event.get("cache_misses")) or 0
+            source_table_metadata_hits = (
+                _metric_int(event.get("source_table_metadata_hits")) or 0
+            )
+            source_table_metadata_misses = (
+                _metric_int(event.get("source_table_metadata_misses")) or 0
+            )
+            excluded = _metric_int(event.get("excluded")) or 0
+            totals["input_docs"] += input_docs
+            totals["cache_hits"] += cache_hits
+            totals["cache_misses"] += cache_misses
+            totals["source_table_metadata_hits"] += source_table_metadata_hits
+            totals["source_table_metadata_misses"] += source_table_metadata_misses
+            totals["excluded"] += excluded
+            calls_before = max(input_docs - excluded, 0)
+            calls_saved = cache_hits + source_table_metadata_hits
+            totals["table_assignment_calls_before"] += calls_before
+            details.append(
+                {
+                    "kind": "table_assignment_cache",
+                    "dataset": event.get("dataset") or _dataset_id_from_out_root(root),
+                    "query_id": query_id,
+                    "input_docs": input_docs,
+                    "cache_hits": cache_hits,
+                    "cache_misses": cache_misses,
+                    "source_table_metadata_hits": source_table_metadata_hits,
+                    "source_table_metadata_misses": source_table_metadata_misses,
+                    "excluded": excluded,
+                    "table_assignment_calls_before": calls_before,
+                    "table_assignment_calls_after": cache_misses,
+                    "table_assignment_calls_saved": calls_saved,
+                    "reduction": calls_saved / calls_before if calls_before else None,
+                }
+            )
+
+    if not details:
+        return {
+            "id": "table_assignment_cache",
+            "title": "Table Assignment Cache",
+            "status": "not_enabled",
+            "message": "No table-assignment cache artifact was emitted for this run.",
+            "metrics": {},
+        }
+
+    calls_before = totals["table_assignment_calls_before"]
+    calls_after = totals["cache_misses"]
+    calls_saved = totals["cache_hits"] + totals["source_table_metadata_hits"]
+    return {
+        "id": "table_assignment_cache",
+        "title": "Table Assignment Cache",
+        "status": "measured",
+        "message": "Reused table assignments across queries before extraction.",
+        "metrics": {
+            "table_assignment_calls_before": calls_before,
+            "table_assignment_calls_after": calls_after,
+            "table_assignment_calls_saved": calls_saved,
+            "table_assignment_call_reduction": (
+                calls_saved / calls_before if calls_before else None
+            ),
+            **totals,
+            "artifact_count": len(files),
+        },
+        "details": details[-50:],
+    }
+
+
 def _collect_proxy_metric(
     out_roots: Sequence[Path],
     query_ids_by_root: Mapping[Path, set[str]] | None = None,
@@ -1809,6 +1922,7 @@ def _collect_proxy_metric(
         "rejected": 0,
         "llm_doc_calls_before": 0,
         "llm_doc_calls_after": 0,
+        "gt_guard_rejected_doc_calls": 0,
     }
     recalls: list[float] = []
     precisions: list[float] = []
@@ -1824,13 +1938,18 @@ def _collect_proxy_metric(
                 continue
             totals["tables"] += 1
             proxy_stats = table_decision.get("proxy_stats")
+            table_gt_guard_rejected = 0
             if isinstance(proxy_stats, dict):
-                for stat in proxy_stats.values():
+                for proxy_name, stat in proxy_stats.items():
                     if not isinstance(stat, dict):
                         continue
                     totals["evaluated"] += _metric_int(stat.get("evaluated")) or 0
                     totals["passed"] += _metric_int(stat.get("passed")) or 0
-                    totals["rejected"] += _metric_int(stat.get("rejected")) or 0
+                    rejected = _metric_int(stat.get("rejected")) or 0
+                    totals["rejected"] += rejected
+                    if _is_gt_text_consistency_proxy(proxy_name):
+                        table_gt_guard_rejected += rejected
+                        totals["gt_guard_rejected_doc_calls"] += rejected
             llm_before, llm_after = _proxy_llm_doc_call_counts(table_decision)
             totals["llm_doc_calls_before"] += llm_before
             totals["llm_doc_calls_after"] += llm_after
@@ -1856,6 +1975,8 @@ def _collect_proxy_metric(
                     "llm_doc_calls_after": llm_after,
                     "llm_doc_calls_saved": max(llm_before - llm_after, 0),
                     "pass_rate": llm_after / llm_before if llm_before else None,
+                    "offline_only_gt_guard": table_gt_guard_rejected > 0,
+                    "gt_guard_rejected_doc_calls": table_gt_guard_rejected,
                     "rejected_doc_ids_preview": rejected_preview,
                     "rejected_doc_ids_total": len(_proxy_rejected_doc_ids(table_decision)),
                 }
@@ -1886,28 +2007,216 @@ def _collect_proxy_metric(
         totals["llm_doc_calls_before"] - totals["llm_doc_calls_after"],
         0,
     )
+    gt_guard_rejected = totals["gt_guard_rejected_doc_calls"]
+    proxy_metrics = {
+        "llm_doc_calls_before": totals["llm_doc_calls_before"],
+        "llm_doc_calls_after": totals["llm_doc_calls_after"],
+        "llm_doc_calls_saved": llm_doc_calls_saved,
+        "llm_doc_call_reduction": (
+            llm_doc_calls_saved / totals["llm_doc_calls_before"]
+            if totals["llm_doc_calls_before"]
+            else None
+        ),
+        **totals,
+        "offline_only_gt_guard": "enabled"
+        if gt_guard_rejected
+        else None,
+        "pass_rate": pass_rate,
+        "avg_recall": _average(recalls) if recalls else None,
+        "avg_precision": _average(precisions) if precisions else None,
+        "artifact_count": len(files),
+    }
+    if not gt_guard_rejected:
+        proxy_metrics.pop("gt_guard_rejected_doc_calls", None)
     return {
         "id": "proxy_runtime",
-        "title": "Proxy Runtime",
+        "title": (
+            "Proxy Runtime (Offline GT Guard)"
+            if gt_guard_rejected
+            else "Proxy Runtime"
+        ),
         "status": "measured",
-        "message": "Used lightweight proxy decisions to reduce oracle-bound extraction work.",
-        "metrics": {
-            "llm_doc_calls_before": totals["llm_doc_calls_before"],
-            "llm_doc_calls_after": totals["llm_doc_calls_after"],
-            "llm_doc_calls_saved": llm_doc_calls_saved,
-            "llm_doc_call_reduction": (
-                llm_doc_calls_saved / totals["llm_doc_calls_before"]
-                if totals["llm_doc_calls_before"]
-                else None
-            ),
-            **totals,
-            "pass_rate": pass_rate,
-            "avg_recall": _average(recalls) if recalls else None,
-            "avg_precision": _average(precisions) if precisions else None,
-            "artifact_count": len(files),
-        },
+        "message": (
+            "Offline-only GT/text consistency guard is active; this result is for benchmark ablation, not deployment."
+            if gt_guard_rejected
+            else "Used lightweight proxy decisions to reduce oracle-bound extraction work."
+        ),
+        "metrics": proxy_metrics,
         "details": details[-50:],
     }
+
+
+def _collect_dataset_consistency_audit_metric(
+    out_roots: Sequence[Path],
+    run_payload: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    files = _unique_existing_files(
+        candidate
+        for root in out_roots
+        for candidate in _dataset_consistency_audit_candidates(root)
+    )
+    if not files:
+        audit_inputs = _dataset_consistency_inputs_from_payload(run_payload or {})
+        if audit_inputs:
+            try:
+                audit = build_dataset_consistency_audit(audit_inputs)
+                output_dir = _common_output_dir(out_roots)
+                if output_dir is not None:
+                    write_dataset_consistency_audit(output_dir, audit)
+                return _dataset_consistency_audit_metric_from_reports(
+                    [audit],
+                    report_count=1,
+                )
+            except Exception as exc:
+                return {
+                    "id": "dataset_consistency_audit",
+                    "title": "Dataset Consistency Audit",
+                    "status": "no_metrics",
+                    "message": f"Dataset consistency audit could not be generated: {exc}",
+                    "metrics": {},
+                }
+    if not files:
+        return {
+            "id": "dataset_consistency_audit",
+            "title": "Dataset Consistency Audit",
+            "status": "not_enabled",
+            "message": "No dataset consistency audit was emitted for this run.",
+            "metrics": {},
+        }
+
+    reports = [_safe_read_result_json(path) for path in files]
+    return _dataset_consistency_audit_metric_from_reports(
+        reports,
+        report_count=len(files),
+    )
+
+
+def _dataset_consistency_audit_metric_from_reports(
+    reports: Sequence[dict[str, Any]],
+    *,
+    report_count: int,
+) -> dict[str, Any]:
+    conflicts: list[dict[str, Any]] = []
+    checked_doc_predicates = 0
+    datasets_seen: set[str] = set()
+    for content in reports:
+        for dataset in content.get("datasets") or []:
+            if not isinstance(dataset, dict):
+                continue
+            dataset_id = str(dataset.get("dataset") or "")
+            if dataset_id:
+                datasets_seen.add(dataset_id)
+            checked_doc_predicates += _metric_int(dataset.get("checked_doc_predicates")) or 0
+            for conflict in dataset.get("conflicts") or []:
+                if isinstance(conflict, dict):
+                    conflicts.append(conflict)
+
+    by_type: dict[str, int] = {}
+    affected_docs: set[tuple[str, str]] = set()
+    affected_queries: set[tuple[str, str]] = set()
+    for conflict in conflicts:
+        conflict_type = str(conflict.get("conflict_type") or "unknown")
+        by_type[conflict_type] = by_type.get(conflict_type, 0) + 1
+        dataset = str(conflict.get("dataset") or "")
+        doc_id = str(conflict.get("doc_id") or "")
+        query_id = str(conflict.get("query_id") or "")
+        if doc_id:
+            affected_docs.add((dataset, doc_id))
+        if query_id:
+            affected_queries.add((dataset, query_id))
+
+    details = [
+        {
+            "kind": "dataset_consistency_audit",
+            "dataset": conflict.get("dataset"),
+            "query_id": conflict.get("query_id"),
+            "doc_id": conflict.get("doc_id"),
+            "attribute": conflict.get("attribute"),
+            "conflict_type": conflict.get("conflict_type"),
+            "text_values": conflict.get("text_values") or [],
+            "ground_truth_values": conflict.get("ground_truth_values") or [],
+            "conflict_ref": "::".join(
+                str(part or "")
+                for part in (
+                    conflict.get("dataset"),
+                    conflict.get("query_id"),
+                    conflict.get("doc_id"),
+                    conflict.get("attribute"),
+                )
+            ),
+        }
+        for conflict in sorted(
+            conflicts,
+            key=lambda item: (
+                str(item.get("dataset") or ""),
+                str(item.get("query_id") or ""),
+                str(item.get("doc_id") or ""),
+                str(item.get("attribute") or ""),
+            ),
+        )[:20]
+    ]
+    return {
+        "id": "dataset_consistency_audit",
+        "title": "Dataset Consistency Audit",
+        "status": "measured",
+        "message": "Reported explicit text evidence that disagrees with GT predicate outcomes.",
+        "metrics": {
+            "total_conflicts": len(conflicts),
+            "text_pass_gt_fail": by_type.get("text_pass_gt_fail", 0),
+            "gt_pass_text_fail": by_type.get("gt_pass_text_fail", 0),
+            "affected_docs": len(affected_docs),
+            "affected_queries": len(affected_queries),
+            "checked_doc_predicates": checked_doc_predicates,
+            "datasets": len(datasets_seen),
+            "audit_reports": report_count,
+        },
+        "details": details,
+    }
+
+
+def _dataset_consistency_inputs_from_payload(
+    run_payload: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    raw = run_payload.get("dataset_roots")
+    if not isinstance(raw, dict):
+        return {}
+    inputs: dict[str, dict[str, Any]] = {}
+    for dataset_id, value in raw.items():
+        if isinstance(value, dict):
+            root = value.get("root")
+            query_ids = value.get("query_ids")
+        else:
+            root = value
+            query_ids = None
+        if not root:
+            continue
+        root_path = Path(str(root))
+        if not root_path.is_absolute():
+            root_path = resolve_repo_path(root_path)
+        inputs[str(dataset_id)] = {
+            "root": str(root_path),
+            "query_ids": [str(query_id) for query_id in query_ids or []],
+        }
+    return inputs
+
+
+def _common_output_dir(out_roots: Sequence[Path]) -> Path | None:
+    if not out_roots:
+        return None
+    root = out_roots[0]
+    return root.parents[2] if len(root.parents) > 2 else root.parent
+
+
+def _dataset_consistency_audit_candidates(out_root: Path) -> list[Path]:
+    candidates = [out_root / "dataset_consistency_audit.json"]
+    try:
+        candidates.extend(
+            ancestor / "dataset_consistency_audit.json"
+            for ancestor in out_root.parents[:4]
+        )
+    except IndexError:
+        pass
+    return candidates
 
 
 def _proxy_llm_doc_call_counts(table_decision: dict[str, Any]) -> tuple[int, int]:
@@ -1919,8 +2228,10 @@ def _proxy_llm_doc_call_counts(table_decision: dict[str, Any]) -> tuple[int, int
     """
     all_doc_ids = table_decision.get("all_doc_ids")
     passed_doc_ids = table_decision.get("passed_doc_ids")
+    extracted_doc_ids = table_decision.get("extracted_doc_ids")
     if isinstance(all_doc_ids, list) and isinstance(passed_doc_ids, list):
-        return len(set(map(str, all_doc_ids))), len(set(map(str, passed_doc_ids)))
+        after_ids = extracted_doc_ids if isinstance(extracted_doc_ids, list) else passed_doc_ids
+        return len(set(map(str, all_doc_ids))), len(set(map(str, after_ids)))
 
     proxy_stats = table_decision.get("proxy_stats")
     if not isinstance(proxy_stats, dict):
@@ -1956,6 +2267,10 @@ def _proxy_rejected_doc_ids(table_decision: dict[str, Any]) -> list[str]:
             if isinstance(ids, list):
                 rejected.update(str(doc_id) for doc_id in ids)
     return sorted(rejected)
+
+
+def _is_gt_text_consistency_proxy(proxy_name: Any) -> bool:
+    return str(proxy_name or "").startswith("gt_text_consistency_")
 
 
 def _query_id_from_filter_name(name: str) -> str | None:

@@ -132,6 +132,7 @@ class StageConfig(StrictModel):
     retrieval: StrategyConfig | None = None
     adaptive_sampling: StrategyConfig | None = None
     document_filtering: StrategyConfig | None = None
+    table_assignment_cache: StrategyConfig | None = None
     proxy_runtime: StrategyConfig | None = None
     alpha_allocation: StrategyConfig | None = None
     schema_tailoring: StrategyConfig | None = None
@@ -402,6 +403,8 @@ def _data_extraction_stage_runtime(
         }
         config["document_filtering"] = doc_filter
         config["doc_filter"] = doc_filter
+    if stage_config.table_assignment_cache:
+        config["table_assignment_cache"] = stage_config.table_assignment_cache.as_internal_dict()
     if stage_config.proxy_runtime:
         config["proxy_runtime"] = {
             "predicate_proxy_mode": DEFAULT_PROXY_RUNTIME_MODE,
