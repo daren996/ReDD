@@ -50,6 +50,23 @@ def _run_schema_prompt(prompt, prompt_input_json, *, context: str, max_retries: 
     raise PromptExecutionError(f"[{context}] prompt error: retry count exceeded {max_retries}")
 
 
+def _schema_prompt_disabled(config) -> bool:
+    return bool(config.get("disable_llm") or config.get("use_ground_truth")) or str(
+        config.get("mode", "")
+    ).strip().lower() in {"ground_truth", "gt", "none"}
+
+
+def _schema_dict_to_list(schema_general):
+    return [
+        {
+            "Schema Name": str(schema_name),
+            "Description": "",
+            "Attributes": attrs if isinstance(attrs, list) else [],
+        }
+        for schema_name, attrs in schema_general.items()
+    ]
+
+
 def create_general_schema(config, res_dict, doc_dict, out_dn, param_str, qid=None, query=None):
     """
     Generate general schema based on the results of schema generation 
@@ -91,6 +108,9 @@ def create_general_schema(config, res_dict, doc_dict, out_dn, param_str, qid=Non
     # use prompt `general_schema_revise_xxx.txt` to revise the schema
     schema_path = out_dir / PATH_TEMPLATES.schema_general(param_str, qid)
     if schema_path.exists():
+        return
+    if _schema_prompt_disabled(config):
+        save_results(schema_path, _schema_dict_to_list(schema_general))
         return
     schema_revise_prompt = create_prompt(
         config.get("mode", "openai"),
@@ -140,6 +160,9 @@ def create_tailored_schema(config, res_dict, doc_dict, out_dn, param_str, qid, q
     # use prompt `schema_tailor_xxx.txt` to tailor the schema
     tailored_schema_path = out_dir / PATH_TEMPLATES.schema_query_tailored(qid, param_str)
     if tailored_schema_path.exists():
+        return
+    if _schema_prompt_disabled(config):
+        save_results(tailored_schema_path, res_schema)
         return
     schema_tailor_prompt = create_prompt(
         config.get("mode", "openai"),

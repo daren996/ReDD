@@ -16,8 +16,8 @@
 Run the local validation suite before opening a pull request:
 
 ```bash
-python -m unittest discover -s tests -v
-ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_population/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/core/llm/providers.py tests
+pytest -q
+ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_population/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/llm/providers.py tests
 mypy
 python -m build
 ```
@@ -31,7 +31,7 @@ python -m build
 
 ## Migration Policy
 
-- Treat `ReDD_Dev` as the feature incubator for future migrations.
-- Only migrate modules that have a documented config surface, an on/off switch or fallback path, and tests.
+- Treat `src/redd/exp/`, `src/redd/correction/`, and external research branches as incubators for future migrations.
+- Only promote modules that have a documented config surface, an on/off switch or fallback path, and tests.
 - For every migrated area, update `docs/MODULE_CLASSIFICATION.md` so the public/internal/experiment-only split stays explicit.
 - Prefer adding regression tests around package entry points before moving more experimental code into public runtime paths.

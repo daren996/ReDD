@@ -26,13 +26,11 @@ These adapter-style public modules are also stable package surfaces for the firs
 - `src/redd/adaptive_sampling.py`
 - `src/redd/doc_filtering.py`
 - `src/redd/embedding/`
-- `src/redd/schema_global.py`
 - `src/redd/join_resolution.py`
 - `src/redd/parameter_optimization.py`
 - `src/redd/predicate_proxy.py`
 - `src/redd/proxy_runtime.py`
 - `src/redd/retrieval.py`
-- `src/redd/schema_refine.py`
 - `src/redd/text_to_sql.py`
 
 Execution-side optimization surfaces such as doc filtering, predicate proxies, join resolution,
@@ -98,6 +96,6 @@ These areas are useful for research workflows but should not be treated as stabl
 
 ## Incubator Boundary
 
-- `ReDD_Dev` remains the upstream incubator for new features.
-- New migrations should land here only after they have package-friendly configuration,
+- `src/redd/exp/`, `src/redd/correction/`, and external research branches remain incubators for new features.
+- New migrations should land in stable runtime paths only after they have package-friendly configuration,
   adapters around external dependencies, and regression coverage in `tests/`.

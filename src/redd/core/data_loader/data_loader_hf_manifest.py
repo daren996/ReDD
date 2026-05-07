@@ -112,14 +112,18 @@ class DataLoaderHFManifest(DataLoaderBase):
             if self._ground_truth_path.exists()
             else pd.DataFrame()
         )
-        self._schema_contract = self._read_json(self._schema_path, encoding)
+        self._schema_contract = (
+            self._read_json_any(self._schema_path, encoding)
+            if self._schema_path.exists()
+            else {}
+        )
         self._queries_contract = self._read_json(self._queries_path, encoding)
 
         self._doc_ids = [str(value) for value in self._documents_df["doc_id"].tolist()]
         self._documents_by_id = {
             str(row["doc_id"]): row for _, row in self._documents_df.iterrows()
         }
-        self._schema_general = self._schema_to_legacy(self._schema_contract)
+        self._schema_general = self._schema_to_legacy_or_passthrough(self._schema_contract)
         self._query_records = self._normalize_query_records(
             self._queries_contract,
             schema_contract=self._schema_contract,
@@ -147,6 +151,13 @@ class DataLoaderHFManifest(DataLoaderBase):
         row = self._documents_by_id.get(str(doc_id))
         if row is None:
             return ("", str(doc_id), {})
+        schema_tables = sorted(
+            {
+                str(table_name)
+                for table_name, _values in self._gt_by_doc.get(str(doc_id), [])
+                if str(table_name).strip()
+            }
+        )
         metadata = {
             "source_file": self._clean_scalar(row.get("source_id")),
             "table_name": self._clean_scalar(row.get("source_table")),
@@ -155,6 +166,8 @@ class DataLoaderHFManifest(DataLoaderBase):
             "is_chunked": bool(row.get("is_chunked")) if "is_chunked" in row else False,
             "source_row_id": self._clean_scalar(row.get("source_row_id")),
             "split": self._clean_scalar(row.get("split")),
+            "schema_table": schema_tables[0] if len(schema_tables) == 1 else None,
+            "schema_tables": schema_tables,
         }
         return (str(row.get("doc_text") or ""), str(doc_id), metadata)
 

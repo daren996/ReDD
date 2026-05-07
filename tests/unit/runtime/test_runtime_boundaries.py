@@ -6,9 +6,25 @@ from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import numpy as np
+
 from redd.config import resolve_repo_path
-from redd.core.utils.data_split import resolve_training_data_count
+from redd.core.utils.data_split import (
+    resolve_training_data_count,
+    resolve_training_data_split,
+    resolve_training_data_split_seed,
+    split_doc_ids,
+)
 from redd.core.utils.sql_filter_parser import AttributePredicate
+from redd.optimizations.alpha_allocation.data_extraction_adapter import (
+    DataExtractionAlphaAllocator,
+)
+from redd.optimizations.alpha_allocation.types import (
+    STAGE_DOC_FILTERING,
+    STAGE_PREDICATE_PROXY,
+    AlphaAllocationConfig,
+)
+from redd.proxy.predicate_proxy.heuristic_proxy import HeuristicPredicateProxy
 from redd.proxy.proxy_runtime.config import (
     is_proxy_runtime_enabled,
     normalize_proxy_runtime_config,
@@ -95,6 +111,24 @@ class RuntimeBoundaryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Deprecated split keys detected"):
             resolve_training_data_count({"proxy_runtime": {"training_size": 32}})
 
+    def test_hash_training_split_is_deterministic_and_disjoint(self) -> None:
+        doc_ids = [f"doc-{index}" for index in range(12)]
+
+        train_a, test_a = split_doc_ids(doc_ids, 4, strategy="hash", seed=7)
+        train_b, test_b = split_doc_ids(doc_ids, 4, strategy="hash", seed=7)
+
+        self.assertEqual(train_a, train_b)
+        self.assertEqual(test_a, test_b)
+        self.assertEqual(len(train_a), 4)
+        self.assertEqual(set(train_a).intersection(test_a), set())
+        self.assertEqual(test_a, [doc_id for doc_id in doc_ids if doc_id not in set(train_a)])
+
+    def test_resolve_training_split_uses_project_seed(self) -> None:
+        config = {"training_data_split": "hashed", "project": {"seed": 123}}
+
+        self.assertEqual(resolve_training_data_split(config), "hash")
+        self.assertEqual(resolve_training_data_split_seed(config), 123)
+
     def test_proxy_pipeline_prefers_proxy_naming_without_legacy_aliases(self) -> None:
         pipeline = ProxyPipeline(ProxyPipelineConfig())
         sentinel = object()
@@ -102,7 +136,195 @@ class RuntimeBoundaryTests(unittest.TestCase):
 
         self.assertIs(pipeline.proxy_factory, sentinel)
         self.assertEqual(pipeline._proxy_attribute_name("learned_city"), "city")
-        self.assertEqual(pipeline._compute_per_proxy_target_recall(2), 0.975)
+        self.assertEqual(pipeline._compute_per_proxy_target_recall(2), 0.95)
+
+    def test_proxy_threshold_for_target_recall_allows_zero_when_needed(self) -> None:
+        threshold = ProxyPipeline._threshold_for_target_recall(
+            np.array([0.0, 0.5, 1.0]),
+            target_recall=0.99,
+        )
+
+        self.assertEqual(threshold, 0.0)
+
+    def test_proxy_recalibration_fails_open_without_positive_samples(self) -> None:
+        class DummyProxy:
+            name = "heuristic_score"
+            uses_documents = True
+            threshold = 0.5
+
+            def evaluate_documents(self, documents, doc_ids=None):
+                return np.array([0.0 for _ in documents]), {}
+
+        proxy = DummyProxy()
+        pipeline = ProxyPipeline(ProxyPipelineConfig(target_recall=0.95))
+
+        pipeline._recalibrate_learned_proxies(
+            proxies=[proxy],
+            predicate_fns={"score": lambda value: float(value) > 10},
+            calibration_doc_ids=["d1", "d2"],
+            calibration_docs=["a", "b"],
+            calibration_extractions={"d1": {"score": 1}, "d2": {"score": 2}},
+            calibration_embeddings=None,
+        )
+
+        self.assertEqual(proxy.threshold, 0.0)
+
+    def test_high_target_recall_keeps_heuristic_unknown_evidence_passing(self) -> None:
+        proxy = HeuristicPredicateProxy(
+            AttributePredicate("city", "=", "Paris"),
+            threshold=0.5,
+            pass_through_attributes=[],
+        )
+        pipeline = ProxyPipeline(ProxyPipelineConfig(target_recall=0.99))
+
+        pipeline._recalibrate_learned_proxies(
+            proxies=[proxy],
+            predicate_fns={"city": lambda value: str(value) == "Paris"},
+            calibration_doc_ids=["d1"],
+            calibration_docs=["Paris"],
+            calibration_extractions={"d1": {"city": "Paris"}},
+            calibration_embeddings=None,
+        )
+
+        self.assertEqual(proxy.threshold, 0.5)
+
+    def test_alpha_allocation_carries_unused_budget_to_predicate_proxy(self) -> None:
+        allocator = DataExtractionAlphaAllocator.__new__(DataExtractionAlphaAllocator)
+        allocator.alloc_config = SimpleNamespace(
+            alpha_grid=[0.0, 0.01, 0.05, 0.1, 0.2],
+        )
+
+        filled = allocator._use_remaining_budget_for_predicate_proxy(
+            alpha_map={"doc_filtering": 0.0, "predicate_proxy": 0.0},
+            budget_total=-np.log(0.95),
+        )
+
+        self.assertEqual(filled["doc_filtering"], 0.0)
+        self.assertEqual(filled["predicate_proxy"], 0.05)
+
+    def test_alpha_allocation_config_parses_answer_recall_calibration_flags(self) -> None:
+        config = AlphaAllocationConfig.from_raw(
+            {
+                "enabled": True,
+                "target_recall": 0.9,
+                "alpha_grid": [0.2, 0.1],
+                "answer_recall_calibration": True,
+                "answer_recall_calibration_allow_over_budget": True,
+                "answer_recall_calibration_global": True,
+            }
+        )
+
+        self.assertTrue(config.answer_recall_calibration)
+        self.assertTrue(config.answer_recall_calibration_allow_over_budget)
+        self.assertTrue(config.answer_recall_calibration_global)
+        self.assertEqual(config.alpha_grid, [0.0, 0.1, 0.2])
+
+    def test_answer_recall_calibration_prefers_over_target_predicate_alpha(self) -> None:
+        allocator = DataExtractionAlphaAllocator.__new__(DataExtractionAlphaAllocator)
+        allocator.alloc_config = SimpleNamespace(
+            alpha_grid=[0.0, 0.1, 0.2, 0.3],
+            target_recall=0.9,
+            answer_recall_calibration_allow_over_budget=True,
+        )
+        recalls_by_alpha = {0.1: 0.99, 0.2: 0.92, 0.3: 0.89}
+
+        def estimate_answer_recall(**kwargs):
+            alpha = round(float(kwargs["alpha_predicate"]), 1)
+            return {
+                "executable": True,
+                "recall": recalls_by_alpha[alpha],
+                "covered": int(recalls_by_alpha[alpha] * 100),
+                "total": 100,
+            }
+
+        allocator._estimate_answer_recall_for_alphas = estimate_answer_recall
+
+        chosen, calibration = allocator._calibrate_predicate_alpha_for_answer_recall(
+            query_context={"query_info": {"sql": "select 1"}},
+            alpha_map={STAGE_DOC_FILTERING: 0.0, STAGE_PREDICATE_PROXY: 0.1},
+            budget_total=DataExtractionAlphaAllocator._alpha_budget(0.1),
+        )
+
+        self.assertEqual(chosen[STAGE_PREDICATE_PROXY], 0.2)
+        self.assertEqual(calibration["selected_answer_recall"], 0.92)
+        self.assertEqual(len(calibration["observations"]), 3)
+
+    def test_answer_recall_calibration_prefers_cheaper_alpha_on_recall_tie(self) -> None:
+        allocator = DataExtractionAlphaAllocator.__new__(DataExtractionAlphaAllocator)
+        allocator.alloc_config = SimpleNamespace(
+            alpha_grid=[0.0, 0.1, 0.2, 0.3],
+            target_recall=0.9,
+            answer_recall_calibration_allow_over_budget=True,
+        )
+
+        def estimate_answer_recall(**kwargs):
+            return {
+                "executable": True,
+                "recall": 1.0,
+                "covered": 10,
+                "total": 10,
+            }
+
+        allocator._estimate_answer_recall_for_alphas = estimate_answer_recall
+
+        chosen, calibration = allocator._calibrate_predicate_alpha_for_answer_recall(
+            query_context={"query_info": {"sql": "select 1"}},
+            alpha_map={STAGE_DOC_FILTERING: 0.0, STAGE_PREDICATE_PROXY: 0.1},
+            budget_total=DataExtractionAlphaAllocator._alpha_budget(0.1),
+        )
+
+        self.assertEqual(chosen[STAGE_PREDICATE_PROXY], 0.3)
+        self.assertEqual(calibration["selected_answer_recall"], 1.0)
+
+    def test_global_answer_recall_calibration_prefers_over_target_weighted_recall(self) -> None:
+        allocator = DataExtractionAlphaAllocator.__new__(DataExtractionAlphaAllocator)
+        allocator.alloc_config = SimpleNamespace(target_recall=0.9)
+
+        selections = allocator._select_global_answer_recall_observations(
+            {
+                "Q1": {
+                    "observations": [
+                        {"alpha_predicate_proxy": 0.1, "covered": 100, "total": 100, "recall": 1.0},
+                        {"alpha_predicate_proxy": 0.9, "covered": 80, "total": 100, "recall": 0.8},
+                    ]
+                },
+                "Q2": {
+                    "observations": [
+                        {"alpha_predicate_proxy": 0.1, "covered": 10, "total": 10, "recall": 1.0},
+                        {"alpha_predicate_proxy": 0.9, "covered": 9, "total": 10, "recall": 0.9},
+                    ]
+                },
+            }
+        )
+
+        self.assertEqual(selections["Q1"]["alpha_predicate_proxy"], 0.1)
+        self.assertEqual(selections["Q2"]["alpha_predicate_proxy"], 0.9)
+        self.assertEqual(selections["__global_training_answer_covered__"], 109)
+        self.assertEqual(selections["__global_training_answer_total__"], 110)
+
+    def test_global_answer_recall_calibration_can_drop_below_per_query_closest(self) -> None:
+        allocator = DataExtractionAlphaAllocator.__new__(DataExtractionAlphaAllocator)
+        allocator.alloc_config = SimpleNamespace(target_recall=0.9)
+
+        selections = allocator._select_global_answer_recall_observations(
+            {
+                "fixed": {
+                    "observations": [
+                        {"alpha_predicate_proxy": 0.9, "covered": 100, "total": 100, "recall": 1.0},
+                    ]
+                },
+                "tunable": {
+                    "observations": [
+                        {"alpha_predicate_proxy": 0.1, "covered": 100, "total": 100, "recall": 1.0},
+                        {"alpha_predicate_proxy": 0.9, "covered": 80, "total": 100, "recall": 0.8},
+                    ]
+                },
+            }
+        )
+
+        self.assertEqual(selections["tunable"]["alpha_predicate_proxy"], 0.9)
+        self.assertEqual(selections["__global_training_answer_covered__"], 180)
+        self.assertEqual(selections["__global_training_answer_total__"], 200)
 
     @patch("redd.proxy.proxy_runtime.pipeline.create_data_loader")
     def test_proxy_pipeline_uses_stable_loader_factory_signature(self, create_loader_mock) -> None:
@@ -291,6 +513,33 @@ class RuntimeBoundaryTests(unittest.TestCase):
         self.assertEqual(calls, ["d1"])
         self.assertEqual(result.extracted_doc_ids, ["d1"])
         self.assertEqual(cache, {("dataset", "places", "d1"): {"city": "Paris"}})
+
+    def test_proxy_pipeline_keeps_extraction_when_posthoc_predicate_fails(self) -> None:
+        fake_loader = SimpleNamespace(get_doc_text=lambda doc_id: "document")
+        oracle = SimpleNamespace(
+            extract=lambda **kwargs: {"city": "Paris"},
+            check_predicates=lambda extracted_values, predicates: (False, {"city": False}),
+        )
+        pipeline = ProxyPipeline(
+            ProxyPipelineConfig(
+                use_embedding_proxies=False,
+                use_learned_proxies=False,
+                save_hard_negatives=False,
+            )
+        )
+        pipeline._oracle = oracle  # type: ignore[assignment]
+
+        result = pipeline.run_for_documents(
+            doc_ids=["d1"],
+            train_doc_ids=[],
+            predicates=[AttributePredicate("city", "=", "Berlin")],
+            table_schema={"Schema Name": "places", "Attributes": [{"Attribute Name": "city"}]},
+            query_text="find cities",
+            data_loader=fake_loader,
+        )
+
+        self.assertEqual(result.extractions["d1"], {"city": "Paris"})
+        self.assertEqual(result.documents_extracted, 1)
 
 
 if __name__ == "__main__":

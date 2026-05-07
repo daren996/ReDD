@@ -120,7 +120,8 @@ api_keys.json
 logs/
 outputs/
 fig/
+tmp/
 
-# # Local dataset indexes / generated databases
-# dataset/**/*.sqlite3
-# dataset/**/*.db
+# Local dataset indexes / generated databases
+dataset/**/*.sqlite3
+dataset/**/*.db

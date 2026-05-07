@@ -96,6 +96,8 @@ class ModelsConfig(StrictModel):
 
 class DatasetSplitConfig(StrictModel):
     train_count: int | None = None
+    strategy: Literal["prefix", "hash"] = "prefix"
+    seed: int | None = None
 
 
 class DatasetConfig(StrictModel):
@@ -247,6 +249,7 @@ class ExperimentRuntime(StrictModel):
                     "data_root": str(dataset.root),
                     "out_root": str(self.stage_output_root(dataset_id, stage)),
                     "query_ids": dataset.query_ids,
+                    "loader_options": deepcopy(dataset.loader_options),
                 }
                 for dataset_id, dataset in self.datasets.items()
             ],
@@ -256,6 +259,11 @@ class ExperimentRuntime(StrictModel):
         }
         if first_dataset.split.train_count is not None:
             config["training_data_count"] = first_dataset.split.train_count
+        config["training_data_split"] = first_dataset.split.strategy
+        if first_dataset.split.seed is not None:
+            config["training_data_split_seed"] = first_dataset.split.seed
+        else:
+            config["training_data_split_seed"] = self.project.seed
 
         if llm is not None and llm.provider != "none":
             config.update(

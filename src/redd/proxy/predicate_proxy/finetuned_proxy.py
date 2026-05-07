@@ -49,6 +49,20 @@ except ImportError:
 DEFAULT_MODEL = "knowledgator/gliclass-small-v1.0"
 
 
+def _threshold_for_target_recall(
+    positive_scores: np.ndarray,
+    target_recall: float,
+) -> float:
+    scores = np.sort(np.asarray(positive_scores, dtype=np.float32))
+    if len(scores) == 0:
+        return 0.01
+    target = min(max(float(target_recall), 0.0), 1.0)
+    alpha = 1.0 - target
+    missed_allowed = int(np.floor(alpha * len(scores)))
+    missed_allowed = min(max(missed_allowed, 0), len(scores) - 1)
+    return max(float(scores[missed_allowed]), 0.0)
+
+
 def _is_gliclass_model(model_name: str) -> bool:
     """Return True if model_name indicates GLiClass or a pretrained model path."""
     if "gliclass" in model_name.lower():
@@ -502,9 +516,7 @@ def _train_gliclass_proxy(
     all_scores_arr = np.array(all_scores, dtype=np.float32)
     pos_scores = all_scores_arr[np.array(labels) == 1]
     if len(pos_scores) > 0:
-        quantile = 1.0 - target_recall
-        threshold = float(np.quantile(pos_scores, quantile))
-        threshold = max(threshold, 0.01)
+        threshold = _threshold_for_target_recall(pos_scores, target_recall)
         logging.info(
             f"[GLiClassProxy] Calibrated threshold: {threshold:.4f} (target recall {target_recall})"
         )

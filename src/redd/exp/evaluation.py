@@ -28,7 +28,12 @@ from redd.core.utils.constants import (
     RESULT_TABLE_KEY,
     SCHEMA_NAME_KEY,
 )
-from redd.core.utils.data_split import resolve_training_data_count, split_doc_ids
+from redd.core.utils.data_split import (
+    resolve_training_data_count,
+    resolve_training_data_split,
+    resolve_training_data_split_seed,
+    split_doc_ids,
+)
 from redd.core.utils.utils import is_null
 
 __all__ = [
@@ -420,6 +425,7 @@ class EvalDataExtraction(EvalBasic):
                     context["data_root"],
                     context["out_root"],
                     query_ids=context.get("query_ids"),
+                    loader_config=context.get("loader_options"),
                 )
             return
 
@@ -457,6 +463,7 @@ class EvalDataExtraction(EvalBasic):
         data_root: str | Path,
         out_root: str | Path,
         query_ids: Optional[List[str]] = None,
+        loader_config: Optional[Dict[str, Any]] = None,
     ) -> None:
         self.data_root = Path(data_root)
         self.out_root = Path(out_root)
@@ -471,7 +478,7 @@ class EvalDataExtraction(EvalBasic):
         loader = create_data_loader(
             self.data_root,
             loader_type=self.loader_type,
-            loader_config=deepcopy(self.loader_config),
+            loader_config=deepcopy(loader_config if loader_config is not None else self.loader_config),
         )
         logging.info(
             "[%s:_evaluate_dataset] Created %s for %s",
@@ -634,6 +641,8 @@ class EvalDataExtraction(EvalBasic):
         _, eval_doc_ids = split_doc_ids(
             loader.doc_ids,
             resolve_training_data_count(self.config),
+            strategy=resolve_training_data_split(self.config),
+            seed=resolve_training_data_split_seed(self.config),
         )
         answer_doc_ids_by_table = self._answer_doc_ids_by_table(
             loader=loader,
@@ -761,13 +770,15 @@ class EvalDataExtraction(EvalBasic):
         cell_recall_value = cell_covered / cell_total if cell_total else 1.0
         table_recall_value = table_covered / table_total if table_total else 1.0
         answer_recall_value = answer_recall.get("recall")
+        answer_recall_ok = bool(answer_recall.get("executable", False)) and answer_recall_value == 1.0
+        if answer_recall.get("reason") == "query_has_no_sql":
+            answer_recall_ok = True
 
         summary = {
             "can_answer_query": bool(
                 cell_covered == cell_total
                 and table_covered == table_total
-                and answer_recall.get("executable", False)
-                and answer_recall_value == 1.0
+                and answer_recall_ok
             ),
             "query_required_tables": sorted(required_tables),
             "query_required_attrs": {
@@ -1173,7 +1184,18 @@ class EvalDataExtraction(EvalBasic):
     ) -> Dict[str, Any]:
         sql = str(query_info.get("sql") or "").strip()
         if not sql:
-            return {"executable": False, "reason": "query_has_no_sql", "recall": None}
+            return {
+                "executable": False,
+                "reason": "query_has_no_sql",
+                "covered": 0,
+                "total": 0,
+                "recall": 1.0,
+                "precision": 1.0,
+                "gt_rows": [],
+                "pred_rows": [],
+                "missing_rows": [],
+                "extra_rows": [],
+            }
 
         try:
             gt_rows = self._execute_query_over_records(

@@ -93,6 +93,8 @@ class ConfigV2Tests(unittest.TestCase):
         self.assertEqual(stage_config["res_param_str"], "run-v1")
         self.assertEqual(stage_config["exp_dn_fn_list"], ["wine"])
         self.assertEqual(stage_config["training_data_count"], 16)
+        self.assertEqual(stage_config["training_data_split"], "prefix")
+        self.assertEqual(stage_config["training_data_split_seed"], 42)
         self.assertEqual(stage_config["prompt"]["prompt_path"], "schemagen_5_0.txt")
         self.assertEqual(
             stage_config["_runtime_contexts"][0]["out_root"],

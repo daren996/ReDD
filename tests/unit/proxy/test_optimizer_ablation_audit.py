@@ -363,6 +363,133 @@ def test_run_journal_records_terminal_current_dataset_cycle(tmp_path: Path) -> N
     assert any("Compact sweep comparison" in item for item in journal["solved_this_cycle"])
 
 
+def test_schema_refinement_cost_counts_adaptive_saved_documents(tmp_path: Path) -> None:
+    module = _load_optimizer_ablation_module()
+    artifact_id = "current-002-schema-adaptive-only"
+    stats_dir = tmp_path / "demo" / "schema_refinement" / artifact_id
+    stats_dir.mkdir(parents=True)
+    (stats_dir / "Q1_adaptive_stats.json").write_text(
+        json.dumps(
+            {
+                "total_documents": 10,
+                "documents_processed": 3,
+                "documents_saved": 7,
+                "documents_filtered": 0,
+                "stopped_early": True,
+            }
+        ),
+        encoding="utf-8",
+    )
+    (stats_dir / "Q2_adaptive_stats.json").write_text(
+        json.dumps(
+            {
+                "documents_processed": 4,
+                "documents_saved": 6,
+                "stopped_early": True,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    cost = module._summarize_schema_refinement_cost(tmp_path, artifact_id)
+
+    assert cost == {
+        "stats_files": 2,
+        "documents_total": 20,
+        "documents_processed": 7,
+        "documents_saved": 13,
+        "documents_filtered": 0,
+        "stopped_early": 2,
+        "saved_rate": 0.65,
+    }
+
+
+def test_cross_stage_cost_includes_schema_refinement_calls() -> None:
+    module = _load_optimizer_ablation_module()
+
+    cost_summary = module._apply_cross_stage_costs(
+        {"llm_docs": 130},
+        {
+            "documents_total": 200,
+            "documents_processed": 5,
+            "documents_saved": 195,
+            "saved_rate": 0.975,
+        },
+        extraction_baseline_llm_docs=100,
+    )
+
+    assert cost_summary["extraction_llm_docs"] == 130
+    assert cost_summary["schema_refinement_llm_docs"] == 5
+    assert cost_summary["schema_refinement_full_llm_docs"] == 200
+    assert cost_summary["schema_refinement_saved"] == 195
+    assert cost_summary["cost_baseline_llm_docs"] == 300
+    assert cost_summary["llm_docs"] == 135
+    assert cost_summary["saved"] == 165
+    assert cost_summary["saved_rate"] == 0.55
+
+
+def test_human_readable_sweep_report_writes_entry_points(tmp_path: Path) -> None:
+    module = _load_optimizer_ablation_module()
+    ranked = [
+        {
+            "artifact_id": "current-001-baseline",
+            "mode": "baseline",
+            "llm_docs": 100,
+            "extraction_llm_docs": 100,
+            "schema_refinement_llm_docs": 0,
+            "schema_refinement_saved": 0,
+            "saved": 0,
+            "saved_rate": 0.0,
+            "answer_recall": 1.0,
+            "cell_recall": 1.0,
+            "bad": [],
+            "proxy": {"evaluated_doc_calls": 0},
+            "doc_filter": {"excluded": 0},
+        },
+        {
+            "artifact_id": "current-002-schema-adaptive-only",
+            "mode": "schema-adaptive-only",
+            "schema_refinement_adaptive_enabled": True,
+            "llm_docs": 45,
+            "extraction_llm_docs": 40,
+            "schema_refinement_llm_docs": 5,
+            "schema_refinement_saved": 195,
+            "saved": 155,
+            "saved_rate": 0.775,
+            "answer_recall": 0.9,
+            "cell_recall": 0.95,
+            "bad": ["demo:q1 A=0/1 C=0/1 T=0/1"],
+            "proxy": {"evaluated_doc_calls": 0},
+            "doc_filter": {"excluded": 0},
+        },
+    ]
+
+    paths = module._write_human_readable_sweep_report(
+        tmp_path,
+        ranked,
+        {
+            "dataset_preset": "unit",
+            "datasets": ["demo"],
+            "expected_query_count": 1,
+        },
+    )
+
+    readme = (tmp_path / "README.md").read_text(encoding="utf-8")
+    leaderboard = (tmp_path / "reports" / "leaderboard.md").read_text(
+        encoding="utf-8"
+    )
+    failures = (tmp_path / "reports" / "failures.md").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "reports" / "manifest.json").read_text())
+
+    assert "Start here" in readme
+    assert "Leaderboard Snapshot" in readme
+    assert "schema docs saved" in readme
+    assert "`schema-adaptive-only`" in leaderboard
+    assert "Failure Triage" in failures
+    assert manifest["variant_count"] == 2
+    assert Path(paths["leaderboard_csv"]).exists()
+
+
 def test_source_metadata_ablation_summary_compares_nometa_variant() -> None:
     module = _load_optimizer_ablation_module()
     common = {

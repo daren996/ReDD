@@ -6,7 +6,7 @@ This script tests the core components without requiring full schema generation.
 
 import sys
 
-from redd.core.schema_gen.opt import AdaptiveSampler, SchemaEntropyCalculator
+from redd.optimizations.adaptive_sampling import AdaptiveSampler, SchemaEntropyCalculator
 
 
 def test_entropy_calculator():

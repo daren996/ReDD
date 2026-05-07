@@ -58,9 +58,15 @@ def run_data_extraction(
         module_name="data_extraction",
     ):
         out_root.mkdir(parents=True, exist_ok=True)
+        runtime_context = _runtime_context_for_dataset(config, dataset)
+        base_loader_config = (
+            runtime_context.get("loader_options")
+            if runtime_context is not None and runtime_context.get("loader_options") is not None
+            else config.get("data_loader_config")
+        )
         loader_config = build_loader_config(
             schema_source=schema_source,
-            base_loader_config=config.get("data_loader_config"),
+            base_loader_config=base_loader_config,
             dataset=dataset,
             general_schema_source=general_schema_source,
             query_schema_source=query_schema_source,
@@ -125,6 +131,21 @@ def _runtime_query_ids_for_dataset(
     config: Mapping[str, Any],
     dataset: str,
 ) -> list[str] | None:
+    item = _runtime_context_for_dataset(config, dataset)
+    if item is None:
+        return None
+    query_ids = item.get("query_ids")
+    if query_ids is None:
+        return None
+    if isinstance(query_ids, str):
+        return [query_ids]
+    return [str(query_id) for query_id in query_ids]
+
+
+def _runtime_context_for_dataset(
+    config: Mapping[str, Any],
+    dataset: str,
+) -> Mapping[str, Any] | None:
     runtime_contexts = config.get("_runtime_contexts")
     if not isinstance(runtime_contexts, list):
         return None
@@ -133,12 +154,7 @@ def _runtime_query_ids_for_dataset(
             continue
         if str(item.get("dataset")) != dataset:
             continue
-        query_ids = item.get("query_ids")
-        if query_ids is None:
-            return None
-        if isinstance(query_ids, str):
-            return [query_ids]
-        return [str(query_id) for query_id in query_ids]
+        return item
     return None
 
 

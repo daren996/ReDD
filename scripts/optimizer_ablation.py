@@ -6,6 +6,7 @@ import copy
 import csv
 import json
 import os
+import shutil
 import time
 from pathlib import Path
 from typing import Any
@@ -17,7 +18,7 @@ from redd.diagnostics.dataset_consistency import (
     build_dataset_consistency_audit,
     write_dataset_consistency_audit,
 )
-from redd.runners import run_evaluation, run_extract
+from redd.runners import run_evaluation, run_extract, run_preprocessing, run_schema_refinement
 
 CURRENT_DATASETS: dict[str, dict[str, Any]] = {
     "bird.schools_demo": {
@@ -57,9 +58,68 @@ HELDOUT_DATASETS: dict[str, dict[str, Any]] = {
         "split": {"train_count": 0},
     },
 }
+
+
+def _query_ids_from_query_file(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    queries = payload.get("queries") if isinstance(payload, dict) else payload
+    if not isinstance(queries, list):
+        return []
+    query_ids: list[str] = []
+    for index, query in enumerate(queries, start=1):
+        if not isinstance(query, dict):
+            continue
+        query_id = query.get("query_id") or query.get("id") or f"Q{index}"
+        query_ids.append(str(query_id))
+    return query_ids
+
+
+def _registry_datasets() -> dict[str, dict[str, Any]]:
+    """Load all datasets registered under dataset/manifest.yaml."""
+    registry_path = Path("dataset/manifest.yaml")
+    if not registry_path.exists():
+        return {}
+    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}
+    datasets: dict[str, dict[str, Any]] = {}
+    for dataset_id, entry in (registry.get("datasets") or {}).items():
+        if not isinstance(entry, dict):
+            continue
+        manifest_rel = entry.get("path")
+        if not manifest_rel:
+            continue
+        manifest_path = (registry_path.parent / str(manifest_rel)).resolve()
+        root = manifest_path.parent
+        query_ids = _query_ids_from_query_file(root / "metadata" / "queries.json")
+        loader_options: dict[str, Any] = {"manifest": "manifest.yaml"}
+        if not query_ids and (root / "metadata" / "query_sets" / "generated_queries.json").exists():
+            loader_options["filemap"] = {
+                "queries": "metadata/query_sets/generated_queries.json"
+            }
+            query_ids = _query_ids_from_query_file(
+                root / "metadata" / "query_sets" / "generated_queries.json"
+            )
+        dataset_config: dict[str, Any] = {
+            "loader": "hf_manifest",
+            "root": str(root.relative_to(Path.cwd()) if root.is_relative_to(Path.cwd()) else root),
+            "loader_options": loader_options,
+            "split": {"train_count": 0},
+        }
+        if query_ids:
+            dataset_config["query_ids"] = query_ids
+        datasets[str(dataset_id)] = dataset_config
+    return datasets
+
+
+ALL_DATASETS = _registry_datasets()
 DATASET_PRESETS: dict[str, dict[str, dict[str, Any]]] = {
     "current": CURRENT_DATASETS,
     "heldout": HELDOUT_DATASETS,
+    "all": ALL_DATASETS,
 }
 DATASETS = CURRENT_DATASETS
 EXPECTED_QUERY_COUNT = sum(len(dataset["query_ids"]) for dataset in DATASETS.values())
@@ -133,7 +193,7 @@ def _base_config(
                 "enabled": True,
                 "schema_source": "ground_truth",
                 "oracle": "ground_truth",
-                "options": {"force_rerun": True},
+                "options": {"force_rerun": True, "result_save_interval": 5000},
             }
         },
         "experiments": {
@@ -174,9 +234,55 @@ def _make_variant_config(
     heuristic_pass_through_doc_ids_by_attribute: dict[str, list[str]] | None = None,
     heuristic_force_reject_doc_ids_by_attribute: dict[str, list[str]] | None = None,
     heuristic_force_reject_doc_ids_by_predicate: dict[str, list[str]] | None = None,
+    doc_filter_use_source_table_metadata: bool = False,
+    doc_filter_source_table_metadata_only: bool = False,
+    alpha_allocation_enabled: bool = False,
+    alpha_allocation_target_recall: float | None = None,
+    alpha_allocation_grid: list[float] | None = None,
+    alpha_allocation_answer_recall_calibration: bool = False,
+    alpha_allocation_answer_recall_calibration_allow_over_budget: bool = False,
+    alpha_allocation_answer_recall_calibration_global: bool = False,
+    schema_refinement_adaptive_enabled: bool = False,
 ) -> dict[str, Any]:
     config = _base_config(output_dir, artifact_id, datasets)
     stage = config["stages"]["data_extraction"]
+    if schema_refinement_adaptive_enabled:
+        config["stages"]["preprocessing"] = {
+            "enabled": True,
+            "embedding": {"enabled": False},
+            "output_fields": {
+                "res": "Table Assignment",
+                "log": "Updated Record of Schema",
+                "reason": "Reasoning",
+            },
+            "options": {"force_rerun": True, "result_save_interval": 5000},
+        }
+        config["stages"]["schema_refinement"] = {
+            "enabled": True,
+            "source_stage": "preprocessing",
+            "embedding": {"enabled": False},
+            "output_fields": {
+                "res": "Table Assignment",
+                "log": "Updated Record of Schema",
+                "reason": "Reasoning",
+            },
+            "adaptive_sampling": {
+                "enabled": True,
+                "algorithm": "entropy",
+                "entropy_threshold": 0.05,
+                "streak_limit": 3,
+                "min_docs": 3,
+                "probabilistic_stop": False,
+                "use_embedding_selection": False,
+            },
+            "options": {"force_rerun": True, "result_save_interval": 5000},
+        }
+        stage["schema_source"] = "schema_refinement"
+        config["experiments"]["demo"]["stages"] = [
+            "preprocessing",
+            "schema_refinement",
+            "data_extraction",
+        ]
     if table_assignment_cache:
         stage["table_assignment_cache"] = {
             "enabled": True,
@@ -193,6 +299,12 @@ def _make_variant_config(
             "embeddings_cache_dir": str(Path(output_dir) / "_embedding_cache"),
             "threshold": float(doc_threshold if doc_threshold is not None else 0.58),
         }
+        if doc_filter_use_source_table_metadata:
+            stage["document_filtering"]["use_source_table_metadata"] = True
+            stage["document_filtering"]["source_table_metadata_only"] = bool(
+                doc_filter_source_table_metadata_only
+            )
+            stage["document_filtering"]["source_table_keep_unknown"] = True
     if use_proxy:
         stage["proxy_runtime"] = {
             "enabled": True,
@@ -229,6 +341,27 @@ def _make_variant_config(
             "verbose": False,
         }
         stage["alpha_allocation"] = {"enabled": False}
+        if alpha_allocation_enabled:
+            stage["alpha_allocation"] = {
+                "enabled": True,
+                "target_recall": float(
+                    alpha_allocation_target_recall
+                    if alpha_allocation_target_recall is not None
+                    else target_recall
+                ),
+            }
+            if alpha_allocation_grid:
+                stage["alpha_allocation"]["alpha_grid"] = [
+                    float(value) for value in alpha_allocation_grid
+                ]
+            if alpha_allocation_answer_recall_calibration:
+                stage["alpha_allocation"]["answer_recall_calibration"] = True
+                stage["alpha_allocation"][
+                    "answer_recall_calibration_allow_over_budget"
+                ] = bool(alpha_allocation_answer_recall_calibration_allow_over_budget)
+                stage["alpha_allocation"]["answer_recall_calibration_global"] = bool(
+                    alpha_allocation_answer_recall_calibration_global
+                )
     return config
 
 
@@ -237,6 +370,22 @@ def _write_config(config: dict[str, Any], config_dir: Path, artifact_id: str) ->
     path = config_dir / f"{artifact_id}.yaml"
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     return path
+
+
+def _prepare_schema_refinement_inputs(
+    output_dir: Path,
+    artifact_id: str,
+    datasets: dict[str, dict[str, Any]],
+) -> None:
+    filename = f"res_{artifact_id}.json"
+    for dataset_id in datasets:
+        src = output_dir / dataset_id / "preprocessing" / artifact_id / filename
+        dst_dir = output_dir / dataset_id / "schema_refinement" / artifact_id
+        dst = dst_dir / filename
+        if not src.exists():
+            raise FileNotFoundError(f"Missing preprocessing artifact: {src}")
+        dst_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
 
 
 def _is_assigned_table(value: Any) -> bool:
@@ -518,7 +667,12 @@ def _summarize_artifact(
             t_cov, t_tot = int(table.get("covered") or 0), int(table.get("total") or 0)
             c_cov, c_tot = int(cell.get("covered") or 0), int(cell.get("total") or 0)
             a_cov, a_tot = int(answer.get("covered") or 0), int(answer.get("total") or 0)
-            ok = bool(summary.get("can_answer_query"))
+            empty_answer_ok = (
+                a_tot == 0
+                and (c_tot == 0 or c_cov == c_tot)
+                and (t_tot == 0 or t_cov == t_tot)
+            )
+            ok = bool(summary.get("can_answer_query")) or empty_answer_ok
             query_count += 1
             can_answer += int(ok)
             table_covered += t_cov
@@ -594,6 +748,75 @@ def _summarize_artifact(
             and can_answer == expected_query_count
             and not bad
         ),
+    }
+
+
+def _summarize_schema_refinement_cost(
+    output_dir: Path,
+    artifact_id: str,
+) -> dict[str, Any]:
+    """Summarize schema-refinement LLM-doc calls from adaptive stats files."""
+    stats_paths = list(
+        output_dir.glob(f"*/schema_refinement/{artifact_id}/*_adaptive_stats.json")
+    )
+    documents_total = 0
+    documents_processed = 0
+    documents_saved = 0
+    documents_filtered = 0
+    stopped_early = 0
+    for stats_path in stats_paths:
+        try:
+            data = json.loads(stats_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        processed = int(data.get("documents_processed") or 0)
+        saved = int(data.get("documents_saved") or 0)
+        total = int(data.get("total_documents") or 0)
+        if not total:
+            total = processed + saved
+        documents_total += total
+        documents_processed += processed
+        documents_saved += saved
+        documents_filtered += int(data.get("documents_filtered") or 0)
+        stopped_early += int(bool(data.get("stopped_early")))
+    return {
+        "stats_files": len(stats_paths),
+        "documents_total": documents_total,
+        "documents_processed": documents_processed,
+        "documents_saved": documents_saved,
+        "documents_filtered": documents_filtered,
+        "stopped_early": stopped_early,
+        "saved_rate": _safe_div(documents_saved, documents_total)
+        if documents_total
+        else 0.0,
+    }
+
+
+def _apply_cross_stage_costs(
+    summary: dict[str, Any],
+    schema_refinement_cost: dict[str, Any],
+    extraction_baseline_llm_docs: int,
+) -> dict[str, Any]:
+    extraction_llm_docs = int(summary.get("llm_docs") or 0)
+    schema_processed_docs = int(
+        schema_refinement_cost.get("documents_processed") or 0
+    )
+    schema_total_docs = int(schema_refinement_cost.get("documents_total") or 0)
+    total_llm_docs = extraction_llm_docs + schema_processed_docs
+    cost_baseline = int(extraction_baseline_llm_docs) + schema_total_docs
+    saved = max(cost_baseline - total_llm_docs, 0)
+    return {
+        "extraction_llm_docs": extraction_llm_docs,
+        "schema_refinement_cost": schema_refinement_cost,
+        "schema_refinement_llm_docs": schema_processed_docs,
+        "schema_refinement_full_llm_docs": schema_total_docs,
+        "schema_refinement_saved": int(
+            schema_refinement_cost.get("documents_saved") or 0
+        ),
+        "cost_baseline_llm_docs": cost_baseline,
+        "llm_docs": total_llm_docs,
+        "saved": saved,
+        "saved_rate": _safe_div(saved, cost_baseline),
     }
 
 
@@ -837,6 +1060,379 @@ def _write_compact_comparison_report(
     }
 
 
+def _fmt_int(value: Any) -> str:
+    try:
+        return f"{int(value):,}"
+    except Exception:
+        return ""
+
+
+def _fmt_rate(value: Any) -> str:
+    if value is None:
+        return ""
+    try:
+        return f"{float(value):.3f}"
+    except Exception:
+        return ""
+
+
+def _fmt_pct(value: Any) -> str:
+    if value is None:
+        return ""
+    try:
+        return f"{float(value) * 100:.1f}%"
+    except Exception:
+        return ""
+
+
+def _ablation_category(record: dict[str, Any]) -> str:
+    artifact_id = str(record.get("artifact_id") or "")
+    proxy = record.get("proxy") or {}
+    doc_filter = record.get("doc_filter") or {}
+    has_proxy = int(proxy.get("evaluated_doc_calls") or 0) > 0
+    has_doc_filter = int(doc_filter.get("excluded") or 0) > 0
+    if artifact_id.endswith("-baseline") or record.get("mode") == "baseline":
+        return "baseline"
+    if record.get("schema_refinement_adaptive_enabled"):
+        return "schema adaptive only"
+    if record.get("alpha_allocation_enabled"):
+        return "alpha allocation"
+    if has_proxy and has_doc_filter:
+        return "combo"
+    if has_proxy and record.get("use_join_resolution"):
+        return "proxy + join"
+    if has_proxy:
+        return "proxy no join"
+    if has_doc_filter:
+        return "doc filtering only"
+    return str(record.get("mode") or "variant")
+
+
+def _record_short_name(record: dict[str, Any]) -> str:
+    artifact_id = str(record.get("artifact_id") or "")
+    parts = artifact_id.split("-", 2)
+    return parts[2] if len(parts) == 3 else artifact_id
+
+
+def _leaderboard_rows(ranked: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for rank, record in enumerate(ranked, start=1):
+        rows.append(
+            {
+                "rank": rank,
+                "category": _ablation_category(record),
+                "artifact_id": record.get("artifact_id", ""),
+                "short_name": _record_short_name(record),
+                "answer_recall": record.get("answer_recall"),
+                "cell_recall": record.get("cell_recall"),
+                "saved_rate": record.get("saved_rate"),
+                "saved": int(record.get("saved") or 0),
+                "llm_docs": int(record.get("llm_docs") or 0),
+                "extraction_llm_docs": int(record.get("extraction_llm_docs") or 0),
+                "schema_refinement_llm_docs": int(
+                    record.get("schema_refinement_llm_docs") or 0
+                ),
+                "schema_refinement_saved": int(
+                    record.get("schema_refinement_saved") or 0
+                ),
+                "bad_queries": len(record.get("bad") or []),
+                "target_recall": record.get("alpha_allocation_target_recall"),
+                "full_recall": bool(record.get("full_recall", False)),
+            }
+        )
+    return rows
+
+
+def _write_leaderboard_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    fieldnames = [
+        "rank",
+        "category",
+        "artifact_id",
+        "short_name",
+        "answer_recall",
+        "cell_recall",
+        "saved_rate",
+        "saved",
+        "llm_docs",
+        "extraction_llm_docs",
+        "schema_refinement_llm_docs",
+        "schema_refinement_saved",
+        "bad_queries",
+        "target_recall",
+        "full_recall",
+    ]
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({key: row.get(key, "") for key in fieldnames})
+
+
+def _write_leaderboard_md(path: Path, rows: list[dict[str, Any]]) -> None:
+    lines = [
+        "# Ablation Leaderboard",
+        "",
+        "| Rank | Category | Variant | Answer | Cell | Saved | LLM docs | Extract | Schema | Schema saved | Bad | Target |",
+        "|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for row in rows:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(row["rank"]),
+                    str(row["category"]),
+                    f"`{row['short_name']}`",
+                    _fmt_rate(row["answer_recall"]),
+                    _fmt_rate(row["cell_recall"]),
+                    _fmt_pct(row["saved_rate"]),
+                    _fmt_int(row["llm_docs"]),
+                    _fmt_int(row["extraction_llm_docs"]),
+                    _fmt_int(row["schema_refinement_llm_docs"]),
+                    _fmt_int(row["schema_refinement_saved"]),
+                    _fmt_int(row["bad_queries"]),
+                    _fmt_rate(row["target_recall"]),
+                ]
+            )
+            + " |"
+        )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_failures_md(path: Path, ranked: list[dict[str, Any]]) -> None:
+    lines = [
+        "# Failure Triage",
+        "",
+        "Each section lists the first failing query summaries from the variant record. Full detail remains in `current_sweep_results.json`.",
+    ]
+    for record in ranked:
+        bad = record.get("bad") or []
+        if not bad:
+            continue
+        lines.extend(
+            [
+                "",
+                f"## {_record_short_name(record)}",
+                "",
+                f"- Category: {_ablation_category(record)}",
+                f"- Answer recall: {_fmt_rate(record.get('answer_recall'))}",
+                f"- Bad queries: {len(bad)}",
+                "",
+            ]
+        )
+        for item in bad[:20]:
+            lines.append(f"- `{item}`")
+        if len(bad) > 20:
+            lines.append(f"- ... {len(bad) - 20} more")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_artifact_index_md(
+    path: Path,
+    output_dir: Path,
+    ranked: list[dict[str, Any]],
+) -> None:
+    lines = [
+        "# Artifact Index",
+        "",
+        "| Variant | Config | Raw record | Dataset/stage artifacts |",
+        "|---|---|---|---|",
+    ]
+    raw_results = output_dir / "current_sweep_results.json"
+    for record in ranked:
+        artifact_id = str(record.get("artifact_id") or "")
+        config_path = output_dir / "_configs" / f"{artifact_id}.yaml"
+        stage_paths = [f"`*/data_extraction/{artifact_id}/`"]
+        if record.get("schema_refinement_adaptive_enabled"):
+            stage_paths.insert(0, f"`*/schema_refinement/{artifact_id}/`")
+            stage_paths.insert(0, f"`*/preprocessing/{artifact_id}/`")
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    f"`{_record_short_name(record)}`",
+                    f"`{config_path.relative_to(output_dir)}`",
+                    f"`{raw_results.relative_to(output_dir)}`",
+                    "<br>".join(stage_paths),
+                ]
+            )
+            + " |"
+        )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_readme_md(
+    path: Path,
+    *,
+    output_dir: Path,
+    rows: list[dict[str, Any]],
+    ranked: list[dict[str, Any]],
+    run_summary: dict[str, Any],
+    report_paths: dict[str, str],
+) -> None:
+    high_recall = [
+        record
+        for record in ranked
+        if float(record.get("answer_recall") or 0.0) >= 0.99
+    ]
+    best_high_recall = min(
+        high_recall,
+        key=lambda record: int(record.get("llm_docs") or 0),
+        default=None,
+    )
+    schema_records = [
+        record for record in ranked if record.get("schema_refinement_adaptive_enabled")
+    ]
+    alpha_records = [
+        record for record in ranked if record.get("alpha_allocation_enabled")
+    ]
+    lines = [
+        "# Sweep Report",
+        "",
+        "Start here. This directory keeps raw artifacts, but the files below are the intended human-readable entry points.",
+        "",
+        "## Run Context",
+        "",
+        f"- Dataset preset: `{run_summary.get('dataset_preset')}`",
+        f"- Datasets: `{len(run_summary.get('datasets') or [])}`",
+        f"- Expected queries: `{run_summary.get('expected_query_count')}`",
+        f"- Variants: `{len(rows)}`",
+        f"- Output dir: `{output_dir}`",
+        "",
+        "## Recommended Reads",
+        "",
+        f"- Leaderboard: `{Path(report_paths['leaderboard_md']).relative_to(output_dir)}`",
+        f"- Machine-readable leaderboard: `{Path(report_paths['leaderboard_csv']).relative_to(output_dir)}`",
+        f"- Failure triage: `{Path(report_paths['failures_md']).relative_to(output_dir)}`",
+        f"- Artifact map: `{Path(report_paths['artifact_index_md']).relative_to(output_dir)}`",
+        "- Raw full results: `current_sweep_results.json`",
+        "",
+        "## Key Results",
+        "",
+    ]
+    if best_high_recall:
+        lines.append(
+            "- Best >=0.99 answer recall cost point: "
+            f"`{_record_short_name(best_high_recall)}` at "
+            f"{_fmt_int(best_high_recall.get('llm_docs'))} docs, "
+            f"{_fmt_pct(best_high_recall.get('saved_rate'))} saved, "
+            f"answer {_fmt_rate(best_high_recall.get('answer_recall'))}."
+        )
+    for record in schema_records:
+        lines.append(
+            "- Schema adaptive: "
+            f"{_fmt_int(record.get('schema_refinement_saved'))} schema docs saved; "
+            f"end-to-end saved {_fmt_int(record.get('saved'))} "
+            f"({_fmt_pct(record.get('saved_rate'))}) after extraction cost."
+        )
+    if alpha_records:
+        alpha_text = ", ".join(
+            f"target {_fmt_rate(r.get('alpha_allocation_target_recall'))}"
+            f" -> answer {_fmt_rate(r.get('answer_recall'))}"
+            for r in sorted(
+                alpha_records,
+                key=lambda r: float(r.get("alpha_allocation_target_recall") or 0.0),
+            )
+        )
+        lines.append(f"- Alpha allocation calibration: {alpha_text}.")
+    doc_only = next((row for row in rows if row["category"] == "doc filtering only"), None)
+    if doc_only:
+        lines.append(
+            "- Doc filtering only is not currently safe on this sweep: "
+            f"answer {_fmt_rate(doc_only['answer_recall'])}, "
+            f"saved {_fmt_pct(doc_only['saved_rate'])}."
+        )
+    lines.extend(
+        [
+            "",
+            "## Leaderboard Snapshot",
+            "",
+            "| Rank | Category | Variant | Answer | Saved | LLM docs | Bad |",
+            "|---:|---|---|---:|---:|---:|---:|",
+        ]
+    )
+    for row in rows:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(row["rank"]),
+                    str(row["category"]),
+                    f"`{row['short_name']}`",
+                    _fmt_rate(row["answer_recall"]),
+                    _fmt_pct(row["saved_rate"]),
+                    _fmt_int(row["llm_docs"]),
+                    _fmt_int(row["bad_queries"]),
+                ]
+            )
+            + " |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Directory Layout",
+            "",
+            "- `reports/`: human-readable summaries and analysis tables.",
+            "- `_configs/`: exact YAML config used for each variant.",
+            "- `current_sweep_*.json`: raw machine-readable sweep state.",
+            "- `<dataset>/<stage>/<artifact_id>/`: raw per-dataset stage outputs.",
+            "- `_embedding_cache/`: generated embedding cache for reproducible reruns.",
+        ]
+    )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_human_readable_sweep_report(
+    output_dir: Path,
+    ranked: list[dict[str, Any]],
+    run_summary: dict[str, Any],
+) -> dict[str, str]:
+    reports_dir = output_dir / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    rows = _leaderboard_rows(ranked)
+    leaderboard_md = reports_dir / "leaderboard.md"
+    leaderboard_csv = reports_dir / "leaderboard.csv"
+    failures_md = reports_dir / "failures.md"
+    artifact_index_md = reports_dir / "artifact_index.md"
+    manifest_json = reports_dir / "manifest.json"
+    readme_md = output_dir / "README.md"
+
+    _write_leaderboard_md(leaderboard_md, rows)
+    _write_leaderboard_csv(leaderboard_csv, rows)
+    _write_failures_md(failures_md, ranked)
+    _write_artifact_index_md(artifact_index_md, output_dir, ranked)
+    report_paths = {
+        "readme": str(readme_md),
+        "leaderboard_md": str(leaderboard_md),
+        "leaderboard_csv": str(leaderboard_csv),
+        "failures_md": str(failures_md),
+        "artifact_index_md": str(artifact_index_md),
+        "manifest_json": str(manifest_json),
+    }
+    manifest_json.write_text(
+        json.dumps(
+            {
+                "reports": report_paths,
+                "raw_results": str(output_dir / "current_sweep_results.json"),
+                "raw_ranked": str(output_dir / "current_sweep_ranked.json"),
+                "dataset_count": len(run_summary.get("datasets") or []),
+                "variant_count": len(rows),
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    _write_readme_md(
+        readme_md,
+        output_dir=output_dir,
+        rows=rows,
+        ranked=ranked,
+        run_summary=run_summary,
+        report_paths=report_paths,
+    )
+    return report_paths
+
+
 def _build_run_journal(
     *,
     results: list[dict[str, Any]],
@@ -915,6 +1511,12 @@ def _build_run_journal(
         solved.append(
             "Compact sweep comparison report now captures baseline, oracle, deployable, "
             "and metadata ablation rows for held-out-run comparison."
+        )
+    readable_paths = run_summary.get("readable_report_paths") or {}
+    if readable_paths:
+        solved.append(
+            "Human-readable sweep report now exposes README, leaderboard, "
+            "failure triage, and artifact index entry points."
         )
 
     oracle_gap: int | None = None
@@ -999,6 +1601,7 @@ def _build_run_journal(
         "best_table_assignment_cache": _record_label(best_table_cache),
         "source_table_metadata_ablation": metadata_ablation,
         "comparison_report_paths": comparison_paths,
+        "readable_report_paths": readable_paths,
         "dataset_consistency_audit_path": str(output_dir / "dataset_consistency_audit.json"),
         "dataset_consistency_conflicts": (
             dataset_audit.get("conflicts_by_type", {}) if dataset_audit else {}
@@ -1031,6 +1634,10 @@ def _write_run_journal(output_dir: Path, journal: dict[str, Any]) -> None:
         (
             "- Compact comparison report: "
             f"`{json.dumps(journal['comparison_report_paths'], sort_keys=True)}`"
+        ),
+        (
+            "- Human-readable reports: "
+            f"`{json.dumps(journal.get('readable_report_paths', {}), sort_keys=True)}`"
         ),
         f"- Dataset consistency audit: `{journal['dataset_consistency_audit_path']}`",
         (
@@ -1076,6 +1683,28 @@ def _variants() -> list[dict[str, Any]]:
         }
     ]
 
+    variants.append(
+        {
+            "name": "schema-adaptive-only",
+            "use_doc_filter": False,
+            "use_proxy": False,
+            "doc_threshold": None,
+            "proxy_threshold": None,
+            "mode": "schema-adaptive-only",
+            "pass_through": [],
+            "use_join_resolution": False,
+            "bidirectional_join_resolution": False,
+            "join_order_strategy": "sql",
+            "join_empty_short_circuit": False,
+            "use_oracle_predicate_proxy": False,
+            "cross_query_extraction_cache": False,
+            "cache_extract_full_table": False,
+            "table_assignment_cache": False,
+            "table_assignment_cache_general_schema": False,
+            "schema_refinement_adaptive_enabled": True,
+        }
+    )
+
     for threshold in [0.18, 0.22, 0.26, 0.3, 0.34, 0.38, 0.42, 0.46, 0.5]:
         variants.append(
             {
@@ -1093,6 +1722,48 @@ def _variants() -> list[dict[str, Any]]:
                 "use_oracle_predicate_proxy": False,
             }
         )
+
+    variants.extend(
+        [
+            {
+                "name": "doc-meta-source-table",
+                "use_doc_filter": True,
+                "doc_filter_use_source_table_metadata": True,
+                "doc_filter_source_table_metadata_only": True,
+                "use_proxy": False,
+                "doc_threshold": None,
+                "proxy_threshold": None,
+                "mode": "doc-meta-source-table",
+                "pass_through": [],
+                "use_join_resolution": False,
+                "bidirectional_join_resolution": False,
+                "join_order_strategy": "sql",
+                "join_empty_short_circuit": False,
+                "use_oracle_predicate_proxy": False,
+            },
+            {
+                "name": "proxy-cache-tablecache-docmeta-pt0p505-strict",
+                "use_doc_filter": True,
+                "doc_filter_use_source_table_metadata": True,
+                "doc_filter_source_table_metadata_only": True,
+                "use_proxy": True,
+                "doc_threshold": None,
+                "proxy_threshold": 0.505,
+                "mode": "strict+docmeta+bijoin+short+cache+tablecache",
+                "pass_through": [],
+                "use_join_resolution": True,
+                "bidirectional_join_resolution": True,
+                "join_order_strategy": "selective_first",
+                "join_empty_short_circuit": True,
+                "use_oracle_predicate_proxy": False,
+                "cross_query_extraction_cache": True,
+                "cache_extract_full_table": True,
+                "table_assignment_cache": True,
+                "table_assignment_cache_general_schema": True,
+                "table_assignment_cache_source_table_metadata": True,
+            },
+        ]
+    )
 
     for proxy_threshold in [0.49, 0.495, 0.5, 0.505, 0.51, 0.515]:
         for mode, attrs in PASS_THROUGH_MODES.items():
@@ -1532,6 +2203,83 @@ def _variants() -> list[dict[str, Any]]:
             }
         )
 
+    alpha_grid_wide = [
+        0.0,
+        0.005,
+        0.01,
+        0.02,
+        0.03,
+        0.05,
+        0.08,
+        0.1,
+        0.15,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        0.95,
+        0.97,
+        0.99,
+    ]
+    for target_recall in [0.9, 0.95, 0.99]:
+        if target_recall <= 0.9:
+            alpha_grid = list(alpha_grid_wide)
+        elif target_recall <= 0.95:
+            alpha_grid = [value for value in alpha_grid_wide if value <= 0.5]
+        else:
+            alpha_grid = [value for value in alpha_grid_wide if value <= 0.2]
+        base_alpha_variant = {
+            "use_doc_filter": True,
+            "doc_filter_use_source_table_metadata": True,
+            "doc_filter_source_table_metadata_only": True,
+            "use_proxy": True,
+            "doc_threshold": None,
+            "proxy_threshold": 0.5,
+            "pass_through": [],
+            "use_oracle_predicate_proxy": False,
+            "cross_query_extraction_cache": True,
+            "cache_extract_full_table": True,
+            "table_assignment_cache": True,
+            "table_assignment_cache_general_schema": True,
+            "table_assignment_cache_source_table_metadata": True,
+            "predicate_proxy_mode": "pretrained",
+            "use_finetuned_learned_proxies": True,
+            "finetuned_model": "heuristic",
+            "target_recall": target_recall,
+            "alpha_allocation_enabled": True,
+            "alpha_allocation_target_recall": target_recall,
+            "alpha_allocation_grid": alpha_grid,
+            "alpha_allocation_answer_recall_calibration": True,
+            "alpha_allocation_answer_recall_calibration_allow_over_budget": True,
+            "alpha_allocation_answer_recall_calibration_global": target_recall <= 0.9,
+        }
+        variants.append(
+            {
+                **base_alpha_variant,
+                "name": f"alpha-docmeta-proxy-tr{_slug_float(target_recall)}",
+                "mode": f"alpha-docmeta-proxy-tr{target_recall}",
+                "use_join_resolution": True,
+                "bidirectional_join_resolution": True,
+                "join_order_strategy": "selective_first",
+                "join_empty_short_circuit": True,
+            }
+        )
+        variants.append(
+            {
+                **base_alpha_variant,
+                "name": f"alpha-docmeta-proxy-nojoin-tr{_slug_float(target_recall)}",
+                "mode": f"alpha-docmeta-proxy-nojoin-tr{target_recall}",
+                "use_join_resolution": False,
+                "bidirectional_join_resolution": False,
+                "join_order_strategy": "sql",
+                "join_empty_short_circuit": False,
+            }
+        )
+
     for proxy_threshold in [0.505]:
         variants.append(
             {
@@ -1632,6 +2380,15 @@ def main() -> int:
     parser.add_argument("--max-runs", type=int, default=0, help="0 means run all variants")
     parser.add_argument("--only", default="", help="substring filter for variant names")
     parser.add_argument(
+        "--only-name",
+        action="append",
+        default=[],
+        help=(
+            "Exact variant name to run. May be repeated or comma-separated; baseline "
+            "is included unless --skip-baseline-with-only is set."
+        ),
+    )
+    parser.add_argument(
         "--dataset-preset",
         choices=sorted(DATASET_PRESETS),
         default="current",
@@ -1648,6 +2405,18 @@ def main() -> int:
         default=None,
         help="Override dataset split.train_count for all selected datasets.",
     )
+    parser.add_argument(
+        "--training-split",
+        choices=["prefix", "hash"],
+        default="prefix",
+        help="Training document split strategy for all selected datasets.",
+    )
+    parser.add_argument(
+        "--training-split-seed",
+        type=int,
+        default=42,
+        help="Seed used when --training-split=hash.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -1658,10 +2427,40 @@ def main() -> int:
         for dataset in datasets.values():
             split = dataset.setdefault("split", {})
             split["train_count"] = int(args.train_count)
+    for dataset in datasets.values():
+        split = dataset.setdefault("split", {})
+        split["strategy"] = str(args.training_split)
+        split["seed"] = int(args.training_split_seed)
     expected_query_count = _expected_query_count(datasets)
 
     variants = _variants()
-    if args.only:
+    only_names = {
+        name.strip()
+        for entry in args.only_name
+        for name in str(entry).split(",")
+        if name.strip()
+    }
+    if only_names:
+        known_names = {variant["name"] for variant in variants}
+        unknown_names = sorted(only_names - known_names)
+        if unknown_names:
+            raise SystemExit(
+                "Unknown --only-name variant(s): "
+                + ", ".join(unknown_names)
+                + "\nKnown variants include: "
+                + ", ".join(sorted(known_names)[:20])
+                + (" ..." if len(known_names) > 20 else "")
+            )
+        variants = [
+            variant
+            for variant in variants
+            if variant["name"] in only_names
+            or (
+                not args.skip_baseline_with_only
+                and variant.get("name") == "baseline"
+            )
+        ]
+    elif args.only:
         variants = [
             variant
             for variant in variants
@@ -1789,19 +2588,61 @@ def main() -> int:
             heuristic_force_reject_doc_ids_by_predicate=variant.get(
                 "heuristic_force_reject_doc_ids_by_predicate"
             ),
+            doc_filter_use_source_table_metadata=bool(
+                variant.get("doc_filter_use_source_table_metadata", False)
+            ),
+            doc_filter_source_table_metadata_only=bool(
+                variant.get("doc_filter_source_table_metadata_only", False)
+            ),
+            alpha_allocation_enabled=bool(
+                variant.get("alpha_allocation_enabled", False)
+            ),
+            alpha_allocation_target_recall=variant.get(
+                "alpha_allocation_target_recall"
+            ),
+            alpha_allocation_grid=variant.get("alpha_allocation_grid"),
+            alpha_allocation_answer_recall_calibration=bool(
+                variant.get("alpha_allocation_answer_recall_calibration", False)
+            ),
+            alpha_allocation_answer_recall_calibration_allow_over_budget=bool(
+                variant.get(
+                    "alpha_allocation_answer_recall_calibration_allow_over_budget",
+                    False,
+                )
+            ),
+            alpha_allocation_answer_recall_calibration_global=bool(
+                variant.get(
+                    "alpha_allocation_answer_recall_calibration_global",
+                    False,
+                )
+            ),
+            schema_refinement_adaptive_enabled=bool(
+                variant.get("schema_refinement_adaptive_enabled", False)
+            ),
         )
         config_path = _write_config(config, config_dir, artifact_id)
         print(f"[{index}/{len(variants)}] running {artifact_id}", flush=True)
         t0 = time.time()
         with open(os.devnull, "w", encoding="utf-8") as devnull:
             with contextlib.redirect_stdout(devnull):
+                if variant.get("schema_refinement_adaptive_enabled"):
+                    run_preprocessing(str(config_path), "demo")
+                    _prepare_schema_refinement_inputs(output_dir, artifact_id, datasets)
+                    run_schema_refinement(str(config_path), "demo")
                 run_extract(str(config_path), "demo")
                 run_evaluation(str(config_path), "demo")
         summary = _summarize_artifact(output_dir, artifact_id, expected_query_count)
+        schema_refinement_cost = _summarize_schema_refinement_cost(
+            output_dir,
+            artifact_id,
+        )
         if variant["name"] == "baseline":
             baseline_llm_docs = int(summary["llm_docs"])
-        baseline = baseline_llm_docs or DEFAULT_BASELINE_LLM_DOCS
-        saved = max(baseline - int(summary["llm_docs"]), 0)
+        cost_summary = _apply_cross_stage_costs(
+            summary,
+            schema_refinement_cost,
+            baseline_llm_docs or DEFAULT_BASELINE_LLM_DOCS,
+        )
         record = {
             "artifact_id": artifact_id,
             "elapsed_sec": round(time.time() - t0, 3),
@@ -1835,6 +2676,12 @@ def main() -> int:
             "use_audit_conflict_reject_guard": bool(
                 variant.get("use_audit_conflict_reject_guard", False)
             ),
+            "doc_filter_use_source_table_metadata": bool(
+                variant.get("doc_filter_use_source_table_metadata", False)
+            ),
+            "doc_filter_source_table_metadata_only": bool(
+                variant.get("doc_filter_source_table_metadata_only", False)
+            ),
             "audit_reject_attributes": variant.get("audit_reject_attributes", []),
             "audit_reject_doc_ids_by_attribute": variant.get(
                 "heuristic_force_reject_doc_ids_by_attribute", {}
@@ -1857,9 +2704,35 @@ def main() -> int:
             "table_assignment_cache_source_table_metadata": bool(
                 variant.get("table_assignment_cache_source_table_metadata", False)
             ),
+            "alpha_allocation_enabled": bool(
+                variant.get("alpha_allocation_enabled", False)
+            ),
+            "alpha_allocation_target_recall": variant.get(
+                "alpha_allocation_target_recall"
+            ),
+            "alpha_allocation_grid": variant.get("alpha_allocation_grid", []),
+            "alpha_allocation_answer_recall_calibration": bool(
+                variant.get("alpha_allocation_answer_recall_calibration", False)
+            ),
+            "alpha_allocation_answer_recall_calibration_allow_over_budget": bool(
+                variant.get(
+                    "alpha_allocation_answer_recall_calibration_allow_over_budget",
+                    False,
+                )
+            ),
+            "alpha_allocation_answer_recall_calibration_global": bool(
+                variant.get(
+                    "alpha_allocation_answer_recall_calibration_global",
+                    False,
+                )
+            ),
+            "schema_refinement_adaptive_enabled": bool(
+                variant.get("schema_refinement_adaptive_enabled", False)
+            ),
+            "training_data_split": str(args.training_split),
+            "training_data_split_seed": int(args.training_split_seed),
             **summary,
-            "saved": saved,
-            "saved_rate": _safe_div(saved, baseline),
+            **cost_summary,
         }
         results.append(record)
         results_path = output_dir / "current_sweep_results.json"
@@ -1952,6 +2825,11 @@ def main() -> int:
     run_summary["comparison_report_paths"] = _write_compact_comparison_report(
         output_dir,
         comparison_rows,
+    )
+    run_summary["readable_report_paths"] = _write_human_readable_sweep_report(
+        output_dir,
+        ranked,
+        run_summary,
     )
     (output_dir / "current_sweep_summary.json").write_text(
         json.dumps(run_summary, indent=2), encoding="utf-8"

@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If ReDD is useful in your research, please cite the arXiv paper."
+title: "Relational Deep Dive: Error-Aware Queries Over Unstructured Data"
+authors:
+  - family-names: Chao
+    given-names: Daren
+  - family-names: Chen
+    given-names: Kaiwen
+  - family-names: Guan
+    given-names: Naiqing
+  - family-names: Koudas
+    given-names: Nick
+year: 2025
+doi: 10.48550/arXiv.2511.02711
+url: "https://arxiv.org/abs/2511.02711"
+repository-code: "https://github.com/daren996/ReDD"
+license: MIT

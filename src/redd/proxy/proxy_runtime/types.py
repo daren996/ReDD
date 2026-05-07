@@ -71,6 +71,8 @@ class ProxyPipelineConfig:
     predicate_proxy_mode: str = "pretrained"  # auto | train | pretrained
     allow_embedding_fallback: bool = False
     training_data_count: int = 100
+    training_data_split: str = "prefix"
+    training_data_split_seed: int = 42
     # Kept for backward compatibility; prefix-only split policy no longer uses these minima.
     min_training_data: int = 0
     min_calibration_data: int = 0

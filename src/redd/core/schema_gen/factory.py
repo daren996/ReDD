@@ -10,7 +10,7 @@ def create_schema_generator(config: Mapping[str, Any], api_key: str | None = Non
     """Create the canonical schema-generation orchestrator."""
 
     normalized_mode = normalize_provider_name(config["mode"])
-    if is_local_provider(normalized_mode):
+    if is_local_provider(normalized_mode) and normalized_mode != "ground_truth":
         raise ValueError("Local schema generation is not implemented in this repository yet.")
 
     resolved_config = dict(config)

@@ -118,3 +118,31 @@ def test_query_aware_recall_uses_answer_row_provenance_for_cell_denominator() ->
     assert stats["summary"]["redundant_cells"] == 3
     assert stats["answer_recall"]["recall"] == 1.0
     assert stats["summary"]["can_answer_query"] is True
+
+
+def test_query_aware_metadata_only_query_treats_nil_as_null() -> None:
+    loader = QueryAwareLoader()
+    evaluator = EvalDataExtraction({"res_param_str": "unit", "training_data_count": 0})
+    query_info = {
+        "query": "",
+        "sql": "",
+        "tables": ["course"],
+        "attributes": ["course.title", "course.credits", "course.dept_name"],
+    }
+    result = {
+        "course-1": {
+            "res": "course",
+            "data": {"title": "Databases", "credits": "4", "dept_name": "None"},
+        },
+        "missing-1": {"res": "course", "data": {"title": "Compilers", "credits": "4"}},
+    }
+    loader._gt["course-1"]["data"]["dept_name"] = "nil"
+    loader._gt["course-1"]["data_records"][0]["data"]["dept_name"] = "nil"
+
+    stats = evaluator.compute_query_aware_statistics(loader, result, "q1", query_info).to_dict()
+
+    assert stats["cell_recall"]["covered"] == 4
+    assert stats["cell_recall"]["total"] == 4
+    assert stats["cell_recall"]["null_gt_skipped"] == 2
+    assert stats["answer_recall"]["reason"] == "query_has_no_sql"
+    assert stats["summary"]["can_answer_query"] is True

@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Mapping, TypeVar, cast
 
@@ -266,6 +268,47 @@ def _response_model(response: Any) -> str | None:
     return None
 
 
+def _usage_as_dict(usage: Any | None) -> dict[str, Any] | None:
+    if usage is None:
+        return None
+    if isinstance(usage, Mapping):
+        return dict(usage)
+    if hasattr(usage, "model_dump"):
+        return usage.model_dump()
+    if hasattr(usage, "dict"):
+        return usage.dict()
+    data = {
+        key: getattr(usage, key)
+        for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+        if hasattr(usage, key)
+    }
+    return data or {"repr": repr(usage)}
+
+
+def _append_usage_log(
+    *,
+    config: LLMConfig,
+    litellm_model: str,
+    response_model: str | None,
+    usage: Any | None,
+) -> None:
+    log_path = os.getenv("REDD_LLM_USAGE_LOG")
+    if not log_path:
+        return
+    payload = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "provider": config.mode,
+        "configured_model": config.model,
+        "request_model": litellm_model,
+        "response_model": response_model,
+        "usage": _usage_as_dict(usage),
+    }
+    path = Path(log_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as file:
+        file.write(json.dumps(payload, sort_keys=True) + "\n")
+
+
 class LLMRuntime:
     """Shared LLM execution facade for text and typed completions."""
 
@@ -346,11 +389,19 @@ class LLMRuntime:
             return completion(**self._completion_kwargs(request))
 
         response = _call()
+        usage = _response_usage(response)
+        response_model = _response_model(response)
+        _append_usage_log(
+            config=self.config,
+            litellm_model=self.litellm_model,
+            response_model=response_model,
+            usage=usage,
+        )
         return CompletionResult(
             text=_message_content(response),
             raw_response=response,
-            usage=_response_usage(response),
-            model=_response_model(response),
+            usage=usage,
+            model=response_model,
         )
 
     def complete_model(self, request: CompletionRequest, response_model: type[ModelT]) -> ModelT:
@@ -457,3 +508,4 @@ register_provider(
 )
 register_provider("gemini", api_key_env="GEMINI_API_KEY", litellm_provider="gemini")
 register_provider("local", is_local=True)
+register_provider("ground_truth", aliases=("gt", "none"), is_local=True)

@@ -6,6 +6,7 @@ from pathlib import Path
 
 from redd.embedding import DocumentClustering
 from redd.exceptions import ArtifactNotFoundError, ProcessingAbortedError, UnsupportedInputError
+from redd.optimizations.adaptive_sampling import AdaptiveSamplingMixin
 
 from ..data_loader import create_data_loader
 from ..utils import constants, output_utils
@@ -13,7 +14,6 @@ from ..utils.constants import PATH_TEMPLATES
 from ..utils.progress import tqdm
 from ..utils.prompt_utils import create_prompt
 from ..utils.structured_outputs import SchemaGenDocumentOutput
-from .opt import AdaptiveSamplingMixin
 
 
 class SchemaGen(AdaptiveSamplingMixin):
@@ -34,13 +34,16 @@ class SchemaGen(AdaptiveSamplingMixin):
         prompt_config = config["prompt"]
         self.param_str = config["res_param_str"]
         self.general_param_str = config.get("general_param_str")
-        self.prompt = create_prompt(
-            self.mode,
-            prompt_config["prompt_path"],
-            llm_model=config["llm_model"],
-            api_key=api_key,
-            config=config,
-        )
+        self.disable_llm = bool(config.get("disable_llm") or config.get("use_ground_truth"))
+        self.prompt = None
+        if not self.disable_llm:
+            self.prompt = create_prompt(
+                self.mode,
+                prompt_config["prompt_path"],
+                llm_model=config["llm_model"],
+                api_key=api_key,
+                config=config,
+            )
 
     def __call__(self, dn_fn_list=None):
         """
@@ -184,9 +187,21 @@ class SchemaGen(AdaptiveSamplingMixin):
         )
         return doc_dict
 
-    def process_documents(self, doc_dict, query, res_dict, log_init, general_schema, res_path, pgbar_name):
+    def process_documents(
+        self,
+        doc_dict,
+        query,
+        res_dict,
+        log_init,
+        general_schema,
+        res_path,
+        pgbar_name,
+        original_indices=None,
+    ):
         """Process individual documents in the dataset."""
         num_doc = len(doc_dict)
+        doc_ids = list(doc_dict)
+        result_save_interval = max(int(self.config.get("result_save_interval", 1)), 1)
         i, cnt, progress_bar = 0, 0, tqdm(total=num_doc, desc=f"Processing {pgbar_name}")
 
         logging.info(f"[{self.__class__.__name__}:process_documents] Start processing query: {query}")
@@ -195,14 +210,20 @@ class SchemaGen(AdaptiveSamplingMixin):
             f"[{self.__class__.__name__}:process_documents] Processed documents: {len(res_dict)} / {len(doc_dict)}"
         )
         while i < num_doc:
-            if str(i) in res_dict:
+            doc_id = str(doc_ids[i])
+            result_key = str(original_indices[i]) if original_indices else doc_id
+            if result_key in res_dict:
                 i, cnt = i + 1, 0
                 progress_bar.update(1)
                 continue
 
-            log = log_init if i == 0 else res_dict[str(i - 1)]["log"]
-            input_json = self.prepare_input_json(doc_dict, i, query, log, general_schema)
-            out_dict = self.process_single_document(input_json, cnt, i)
+            if i == 0:
+                log = log_init
+            else:
+                prev_key = str(original_indices[i - 1]) if original_indices else str(doc_ids[i - 1])
+                log = res_dict[prev_key]["log"]
+            input_json = self.prepare_input_json(doc_dict, doc_id, query, log, general_schema)
+            out_dict = self.process_single_document(input_json, cnt, doc_id)
             result_data = self.extract_result_data(out_dict)
 
             if not result_data or len(result_data["log"]) < len(log):
@@ -221,8 +242,14 @@ class SchemaGen(AdaptiveSamplingMixin):
                     )
                 continue
 
-            res_dict[str(i)] = result_data
-            self.save_results(res_path, res_dict)
+            res_dict[result_key] = result_data
+            should_save = (
+                result_save_interval == 1
+                or (i + 1) % result_save_interval == 0
+                or i + 1 == num_doc
+            )
+            if should_save:
+                self.save_results(res_path, res_dict)
 
             i, cnt = i + 1, 0
             progress_bar.update(1)
@@ -251,6 +278,10 @@ class SchemaGen(AdaptiveSamplingMixin):
 
     def process_single_document(self, input_json, retry_count, doc_index):
         """Process a single document and handle errors."""
+        if self.disable_llm or self.mode == "ground_truth":
+            return self._process_single_document_ground_truth(doc_index)
+        if self.prompt is None:
+            raise ProcessingAbortedError("Schema generation prompt is not initialized.")
         attr_msg = "New Input:\n" + json.dumps(input_json)
         try:
             result = self.prompt.complete_model(attr_msg, SchemaGenDocumentOutput)
@@ -262,6 +293,53 @@ class SchemaGen(AdaptiveSamplingMixin):
             )
             return None
 
+    def _process_single_document_ground_truth(self, doc_index):
+        previous_log = deepcopy(getattr(self, "_last_prepare_log", []) or [])
+        schema_by_name = {
+            str(schema.get("Schema Name")): deepcopy(schema)
+            for schema in previous_log
+            if isinstance(schema, dict) and schema.get("Schema Name")
+        }
+        table_assignment = None
+        doc_info = None
+        if getattr(self, "loader", None) is not None and hasattr(self.loader, "get_doc_info"):
+            doc_info = self.loader.get_doc_info(str(doc_index))
+        for record in (doc_info or {}).get("data_records") or []:
+            table_name = str(record.get("table_name") or "").strip()
+            if not table_name:
+                continue
+            if table_assignment is None:
+                table_assignment = table_name
+            schema = schema_by_name.setdefault(
+                table_name,
+                {
+                    "Schema Name": table_name,
+                    "Description": "",
+                    "Attributes": [],
+                },
+            )
+            attrs = schema.setdefault("Attributes", [])
+            existing = {
+                str(attr.get("Attribute Name") if isinstance(attr, dict) else attr)
+                for attr in attrs
+            }
+            for attr_name in (record.get("data") or {}):
+                attr_name_str = str(attr_name)
+                if attr_name_str in existing:
+                    continue
+                attrs.append(
+                    {
+                        "Attribute Name": attr_name_str,
+                        "Description": f"Ground-truth column {attr_name_str}.",
+                    }
+                )
+                existing.add(attr_name_str)
+        return {
+            "Table Assignment": table_assignment,
+            "Updated Record of Schema": list(schema_by_name.values()),
+            "Reasoning": "ground_truth_schema_generation",
+        }
+
     def apply_prompt(self, attr_msg):
         return self.prompt(msg=attr_msg).strip()
 
@@ -269,6 +347,7 @@ class SchemaGen(AdaptiveSamplingMixin):
         """Prepare the input JSON for a single document."""
         input_info = {
             "doc": doc_dict[str(doc_index)][0],
+            "document": doc_dict[str(doc_index)][0],
             "query": query,
             "log": log,
             "general_schema": general_schema,
@@ -282,6 +361,7 @@ class SchemaGen(AdaptiveSamplingMixin):
                     f"{self.__class__.__name__} does not support input info key `{info_key}`"
                 )
             input_json[json_field] = input_info[info_key]
+        self._last_prepare_log = deepcopy(log)
         return input_json
 
     def extract_result_data(self, out_dict):

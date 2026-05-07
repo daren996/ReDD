@@ -45,12 +45,12 @@ The algorithm employs two stopping criteria:
    - Computes entropy between successive schema states
    - Tracks entropy history and statistics
 
-2. **AdaptiveSampler** (`adaptive_sampler.py`)
+2. **AdaptiveSampler** (`entropy/sampler.py`)
    - Implements the main adaptive sampling algorithm
    - Monitors stability streaks and stopping criteria
    - Provides statistical guarantees on coverage
 
-3. **AdaptiveSamplingMixin** (`adaptive_mixin.py`)
+3. **AdaptiveSamplingMixin** (`mixin.py`)
    - Mixin class for easy integration into existing schema generators
    - Provides drop-in replacement for `process_documents` method
    - Handles statistics tracking and reporting
@@ -93,43 +93,9 @@ Embedding selection now uses SQLite-backed cache through `redd.embedding.Embeddi
 
 - **`probabilistic_stop`** (default: true): Enable or disable the probabilistic stopping criterion.
 
-### Example: Enable Adaptive Sampling
-
-```yaml
-# In configs/schemagen_deepseek.yaml
-album_5d0_adaptive:
-  <<: *ds4d0
-  data_main: "dataset/spider_update/"
-  out_main: "outputs/schema_gen/spider_deepseek_adaptive/"
-  exp_dn_fn_list: ["store_1/albums"]
-  data_loader_type: "hf_manifest"
-  res_param_str: "mdlds_prm5d0_adaptive"
-  
-  # Enable adaptive sampling
-  adaptive_sampling:
-    enabled: true
-    theta: 0.05
-    m: 3
-    n_min: 5
-    delta: 0.1
-    epsilon: 0.05
-    probabilistic_stop: true
-  
-  prompt:
-    prompt_path: "prompts/schemagen_5_0.txt"
-    prompt_version: "5d0"
-```
-
-Then run:
-
-```bash
-python scripts/main_preprocessing.py --config configs/schemagen_deepseek.yaml --exp album_5d0_adaptive
-```
-
 ### Integration into Custom Schema Generators
 
 The adaptive sampling is already integrated into the unified schema generator:
-- `SchemaGenUnified` (supporting DeepSeek, Gemini, GPT, Together, SiliconFlow)
 - `SchemaGen` (canonical orchestrator)
 
 No code changes are needed - just enable it in the configuration!
@@ -137,8 +103,8 @@ No code changes are needed - just enable it in the configuration!
 If you're creating a new schema generator, simply inherit from `AdaptiveSamplingMixin`:
 
 ```python
-from core.schema_gen import SchemaGenerator
-from core.adaptive_sampling import AdaptiveSamplingMixin
+from redd.core.schema_gen.schemagen import SchemaGen
+from redd.optimizations.adaptive_sampling import AdaptiveSamplingMixin
 
 class MySchemaGen(AdaptiveSamplingMixin, SchemaGen):
     def __init__(self, config):

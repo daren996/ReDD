@@ -10,7 +10,12 @@ from typing import TYPE_CHECKING, Any, Mapping, Sequence
 from redd.core.data_population.strategies.doc_filtering import DocFilteringStrategy
 from redd.core.schema_gen import create_schema_generator
 from redd.core.utils.constants import PATH_TEMPLATES
-from redd.core.utils.data_split import resolve_training_data_count, split_doc_ids
+from redd.core.utils.data_split import (
+    resolve_training_data_count,
+    resolve_training_data_split,
+    resolve_training_data_split_seed,
+    split_doc_ids,
+)
 from redd.loader import create_data_loader
 from redd.runtime import resolve_dataset_roots
 
@@ -281,7 +286,13 @@ def _filter_schema_refinement_docs(
 
     all_doc_ids = list(doc_dict.keys())
     training_data_count = resolve_training_data_count(dict(config))
-    train_doc_ids, test_doc_ids = split_doc_ids(all_doc_ids, training_data_count)
+    config_dict = dict(config)
+    train_doc_ids, test_doc_ids = split_doc_ids(
+        all_doc_ids,
+        training_data_count,
+        strategy=resolve_training_data_split(config_dict),
+        seed=resolve_training_data_split_seed(config_dict),
+    )
     excluded_doc_ids = strategy.excluded_doc_ids_for_query(
         query_id=qid,
         schema_query=schema_query or [],

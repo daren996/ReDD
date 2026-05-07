@@ -21,27 +21,6 @@ from .ddgt.sampler import DDGTSampler
 from .entropy.document_selector import DocumentSelector
 from .entropy.sampler import AdaptiveSampler
 
-# #region agent log
-DEBUG_LOG_PATH = r"c:\Users\chenk\Desktop\ReDD_Dev\.cursor\debug.log"
-def _debug_log(session_id, run_id, hypothesis_id, location, message, data):
-    try:
-        import json as _json
-        import time as _time
-        log_entry = {
-            "sessionId": session_id,
-            "runId": run_id,
-            "hypothesisId": hypothesis_id,
-            "location": location,
-            "message": message,
-            "data": data,
-            "timestamp": int(_time.time() * 1000)
-        }
-        with open(DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
-            f.write(_json.dumps(log_entry) + "\n")
-    except Exception:
-        pass
-# #endregion
-
 
 class AdaptiveSamplingMixin:
     """
@@ -171,7 +150,9 @@ class AdaptiveSamplingMixin:
         general_schema, 
         res_path, 
         pgbar_name,
-        original_indices=None
+        original_indices=None,
+        total_documents_override=None,
+        filtered_documents=None,
     ):
         """
         Process documents with adaptive sampling (replacement for process_documents).
@@ -212,7 +193,8 @@ class AdaptiveSamplingMixin:
         else:
             return self._process_documents_entropy(
                 doc_dict, query, res_dict, log_init, general_schema,
-                res_path, pgbar_name, original_indices
+                res_path, pgbar_name, original_indices, total_documents_override,
+                filtered_documents
             )
     
     def _process_documents_entropy(
@@ -224,7 +206,9 @@ class AdaptiveSamplingMixin:
         general_schema, 
         res_path, 
         pgbar_name,
-        original_indices=None
+        original_indices=None,
+        total_documents_override=None,
+        filtered_documents=None,
     ):
         """
         Process documents with entropy-based adaptive sampling (original method).
@@ -393,10 +377,21 @@ class AdaptiveSamplingMixin:
         
         # Save adaptive sampling statistics
         stats = self.adaptive_sampler.get_statistics()
-        stats["total_documents"] = num_doc
+        total_documents_for_stats = int(total_documents_override or num_doc)
+        filtered_documents_for_stats = int(filtered_documents or num_doc)
+        stats["total_documents"] = total_documents_for_stats
+        stats["filtered_documents"] = filtered_documents_for_stats
+        stats["documents_filtered"] = max(
+            total_documents_for_stats - filtered_documents_for_stats,
+            0,
+        )
         stats["stopped_early"] = stopped_early
         stats["documents_processed"] = docs_processed_count
-        stats["documents_saved"] = num_doc - (docs_processed_count + len([k for k in res_dict if k in doc_dict])) if stopped_early else 0
+        stats["documents_saved"] = (
+            max(filtered_documents_for_stats - docs_processed_count, 0)
+            if stopped_early
+            else 0
+        )
         
         self._save_adaptive_stats(res_path, stats)
         
@@ -563,28 +558,9 @@ class AdaptiveSamplingMixin:
                 # Handle processing errors with retry
                 if not result_data or (result_data and len(result_data.get("log", [])) < len(current_log)):
                     cnt += 1
-                    # #region agent log
-                    schema_decrease = result_data and len(result_data.get("log", [])) < len(current_log) if result_data else False
-                    _debug_log("debug-session", "run1", "A", "mixin.py:513", "Processing error detected", {
-                        "doc_id": doc_id_str,
-                        "original_idx": original_idx,
-                        "retry_count": cnt,
-                        "has_result": result_data is not None,
-                        "schema_decrease": schema_decrease,
-                        "current_log_len": len(current_log),
-                        "result_log_len": len(result_data.get("log", [])) if result_data else 0
-                    })
-                    # #endregion
                     
                     if cnt > 10:
                         if not result_data:
-                            # #region agent log
-                            _debug_log("debug-session", "run1", "B", "mixin.py:516", "Max retries reached - no result", {
-                                "doc_id": doc_id_str,
-                                "original_idx": original_idx,
-                                "retry_count": cnt
-                            })
-                            # #endregion
                             logging.error(
                                 f"[{self.__class__.__name__}:_process_documents_ddgt] "
                                 f"Failed to process document {doc_id_str} (original: {original_idx}) after {cnt} retries!"
@@ -608,15 +584,6 @@ class AdaptiveSamplingMixin:
                             # Save original result_data before modifying
                             original_result_log = result_data.get("log", [])
                             original_result_log_len = len(original_result_log)
-                            # #region agent log
-                            _debug_log("debug-session", "run1", "C", "mixin.py:522", "Max retries reached - schema decrease", {
-                                "doc_id": doc_id_str,
-                                "original_idx": original_idx,
-                                "retry_count": cnt,
-                                "current_log_len": len(current_log),
-                                "result_log_len": original_result_log_len
-                            })
-                            # #endregion
                             # Error correction: Use previous schema instead of failing
                             logging.warning(
                                 f"[{self.__class__.__name__}:_process_documents_ddgt] "
@@ -633,14 +600,6 @@ class AdaptiveSamplingMixin:
                                 "retry_count": cnt
                             }
                             # Continue processing with corrected schema
-                            # #region agent log
-                            _debug_log("debug-session", "run1", "C", "mixin.py:522", "Error correction applied", {
-                                "doc_id": doc_id_str,
-                                "original_idx": original_idx,
-                                "corrected_schema_len": len(current_log),
-                                "original_schema_len": original_result_log_len
-                            })
-                            # #endregion
                             # Reset retry count and fall through to save and continue (don't raise error)
                             cnt = 0
                             # Fall through to process the corrected result_data below

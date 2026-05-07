@@ -20,6 +20,9 @@ class AlphaAllocationConfig:
     enabled: bool = False
     target_recall: float = 0.95
     alpha_grid: List[float] = field(default_factory=lambda: list(DEFAULT_ALPHA_GRID))
+    answer_recall_calibration: bool = False
+    answer_recall_calibration_allow_over_budget: bool = False
+    answer_recall_calibration_global: bool = False
 
     @classmethod
     def from_raw(cls, raw: Any) -> "AlphaAllocationConfig":
@@ -51,10 +54,21 @@ class AlphaAllocationConfig:
         if grid[0] != 0.0:
             grid.insert(0, 0.0)
 
+        answer_recall_calibration = bool(raw.get("answer_recall_calibration", False))
+        answer_recall_calibration_allow_over_budget = bool(
+            raw.get("answer_recall_calibration_allow_over_budget", False)
+        )
+        answer_recall_calibration_global = bool(
+            raw.get("answer_recall_calibration_global", False)
+        )
+
         return cls(
             enabled=enabled,
             target_recall=target_recall,
             alpha_grid=grid,
+            answer_recall_calibration=answer_recall_calibration,
+            answer_recall_calibration_allow_over_budget=answer_recall_calibration_allow_over_budget,
+            answer_recall_calibration_global=answer_recall_calibration_global,
         )
 
 
@@ -101,6 +115,7 @@ class AlphaAllocationResult:
     budget_used: float
     budget_total: float
     trace: List[AllocationTraceStep] = field(default_factory=list)
+    answer_recall_calibration: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         """Serialize result to plain dict."""
@@ -115,4 +130,5 @@ class AlphaAllocationResult:
             "budget_used": self.budget_used,
             "budget_total": self.budget_total,
             "trace": [step.to_dict() for step in self.trace],
+            "answer_recall_calibration": dict(self.answer_recall_calibration),
         }

@@ -333,8 +333,8 @@ python -m pip install -e ".[dev]"
 Run validation:
 
 ```bash
-pytest tests
-ruff check src tests
+pytest -q
+ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_population/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/llm/providers.py tests
 mypy
 python -m build
 ```
@@ -357,8 +357,8 @@ Test layout:
 - [Module classification](docs/MODULE_CLASSIFICATION.md)
 - [Research workflows](docs/RESEARCH_WORKFLOWS.md)
 - [Config v2 release notes](docs/RELEASE_NOTES_CONFIG_V2.md)
-- [Open source readiness](docs/OPEN_SOURCE_READINESS.md)
 - [Contributing guide](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
 
 ## Contributing
 
@@ -391,6 +391,9 @@ provided only at runtime.
 If you discover a security issue, please avoid publishing sensitive details in a
 public issue. Open a minimal issue requesting maintainer contact, or contact the
 maintainers through the repository owner profile.
+
+See [SECURITY.md](SECURITY.md) for the supported reporting process and provider
+data-handling expectations.
 
 ## Citation
 

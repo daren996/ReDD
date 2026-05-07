@@ -42,6 +42,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 
 from redd.core.data_loader import DataLoaderBase, create_data_loader
+from redd.core.utils.data_split import split_doc_ids
 from redd.core.utils.sql_filter_parser import (
     AttributePredicate,
     SQLFilterParser,
@@ -49,6 +50,7 @@ from redd.core.utils.sql_filter_parser import (
 )
 from redd.embedding import EmbeddingManager
 from redd.proxy.predicate_proxy.factory import PredicateProxyFactory
+from redd.proxy.predicate_proxy.heuristic_proxy import UNKNOWN_EVIDENCE_SCORE
 from redd.proxy.proxy_runtime.oracle import DataExtractionOracle, GoldenOracle
 from redd.proxy.proxy_runtime.types import PipelineResults, ProxyPipelineConfig
 
@@ -358,19 +360,24 @@ class ProxyPipeline:
         # 3. Get attributes to extract
         attributes = self._get_extraction_attributes(query_info, predicates, schema)
         logging.info(f"[ProxyPipeline] Will extract attributes: {attributes}")
-        # 4. Apply global split: first N docs are training, remaining docs are test.
+        # 4. Apply global train/test split.
         all_doc_ids = list(self.data_loader.doc_ids)
         results.total_documents = len(all_doc_ids)
         train_size = max(int(getattr(self.config, "training_data_count", 100)), 0)
-        train_doc_ids = all_doc_ids[:train_size]
-        test_doc_ids = all_doc_ids[train_size:]
+        train_doc_ids, test_doc_ids = split_doc_ids(
+            all_doc_ids,
+            train_size,
+            strategy=getattr(self.config, "training_data_split", "prefix"),
+            seed=int(getattr(self.config, "training_data_split_seed", 42)),
+        )
 
         if self.config.max_documents:
             test_doc_ids = test_doc_ids[:self.config.max_documents]
 
         logging.info(
             f"[ProxyPipeline] Global split for run(): training={len(train_doc_ids)}, "
-            f"test={len(test_doc_ids)}, training_data_count={train_size}"
+            f"test={len(test_doc_ids)}, training_data_count={train_size}, "
+            f"training_data_split={getattr(self.config, 'training_data_split', 'prefix')}"
         )
 
         subset_results = self.run_for_documents(
@@ -679,6 +686,28 @@ class ProxyPipeline:
                     model_name=model_name,
                     threshold=getattr(self.config, "proxy_threshold", None),
                 )
+                if proxies and calibration_doc_ids:
+                    calibration_context = self._build_calibration_context(
+                        loader=loader,
+                        doc_ids=calibration_doc_ids,
+                        schema_list=schema_list,
+                        attributes=attributes,
+                    )
+                    if calibration_context is not None:
+                        calibration_docs, calibration_extractions = calibration_context
+                        calibration_embeddings = None
+                        if any(not getattr(g, "uses_documents", False) for g in proxies):
+                            calibration_embeddings = self.compute_embeddings(
+                                calibration_docs, doc_ids=calibration_doc_ids
+                            )
+                        self._recalibrate_learned_proxies(
+                            proxies=proxies,
+                            predicate_fns=predicate_fns,
+                            calibration_doc_ids=calibration_doc_ids,
+                            calibration_docs=calibration_docs,
+                            calibration_extractions=calibration_extractions,
+                            calibration_embeddings=calibration_embeddings,
+                        )
 
             # Fallback to non-learned embedding proxies only when explicitly allowed
             # or when learned predicate proxies are disabled.
@@ -819,11 +848,10 @@ class ProxyPipeline:
                         existing = dict(cached) if isinstance(cached, dict) else {}
                         existing.update(extracted)
                         extraction_cache[cache_key] = existing
+                results.extractions[doc_id] = extracted
+                results.documents_extracted += 1
                 all_passed, per_attr = self.oracle.check_predicates(extracted_values=extracted, predicates=predicate_fns)
-                if all_passed:
-                    results.extractions[doc_id] = extracted
-                    results.documents_extracted += 1
-                elif self.config.save_hard_negatives:
+                if not all_passed and self.config.save_hard_negatives:
                     failed_attrs = [k for k, v in per_attr.items() if not v]
                     for attr in failed_attrs:
                         results.hard_negatives.append(HardNegative(
@@ -857,14 +885,44 @@ class ProxyPipeline:
             return dict(tup[2])
         return {}
 
+    def _build_calibration_context(
+        self,
+        *,
+        loader: DataLoaderBase,
+        doc_ids: List[str],
+        schema_list: List[Dict[str, Any]],
+        attributes: List[str],
+    ) -> Optional[Tuple[List[str], Dict[str, Dict[str, Any]]]]:
+        if not doc_ids:
+            return None
+        docs = [self._load_doc_text(loader, doc_id) for doc_id in doc_ids]
+        schema_dict = self._prepare_schema_dict(schema_list, attributes)
+        extractions: Dict[str, Dict[str, Any]] = {}
+        for doc_id, doc_text in zip(doc_ids, docs):
+            try:
+                extractions[doc_id] = self.oracle.extract(
+                    document=doc_text,
+                    schema=schema_dict,
+                    attributes=attributes,
+                    doc_id=doc_id,
+                )
+            except Exception as exc:
+                logging.warning(
+                    "[ProxyPipeline] Calibration extraction failed for %s: %s",
+                    doc_id,
+                    exc,
+                )
+        if not extractions:
+            return None
+        return docs, extractions
+
     def _split_training_doc_ids(self, train_doc_ids: List[str]) -> Tuple[List[str], List[str]]:
         """
         Split training docs into fit/calibration subsets.
 
         Web/main data-extraction policy: all proxy fit/calibration data must come from
-        the global training prefix (first ``training_data_count`` documents).
-        To fully use this prefix without extra minimum constraints, use the
-        same training pool for both fit and calibration.
+        the global training split. To fully use this split without extra minimum
+        constraints, use the same training pool for both fit and calibration.
         """
         ids = list(train_doc_ids)
         if not ids:
@@ -874,30 +932,26 @@ class ProxyPipeline:
     def _proxy_attribute_name(self, proxy_name: str) -> str:
         """Extract attribute name from proxy identifier."""
         name = str(proxy_name or "")
-        for prefix in ("learned_", "finetuned_", "gliclass_", "llm_"):
+        for prefix in ("learned_", "finetuned_", "gliclass_", "heuristic_", "llm_"):
             if name.startswith(prefix):
                 return name[len(prefix):]
         return name
 
     def _compute_per_proxy_target_recall(self, proxy_count: int) -> float:
         """
-        Convert global target recall to per-proxy target recall.
+        Return the predicate-stage target recall used for each proxy.
 
-        Uses Bonferroni-style alpha allocation:
-          alpha_global = 1 - target_recall
-          alpha_i = alpha_global / proxy_count
-          target_i = 1 - alpha_i
+        Upstream alpha allocation already assigns the global recall budget
+        between document filtering and predicate proxying. Applying another
+        per-predicate Bonferroni split here makes the runtime materially more
+        conservative than the configured stage target and hides lower target
+        recall settings in end-to-end experiments.
         """
-        count = max(int(proxy_count), 1)
         try:
-            target_global = float(self.config.target_recall)
+            target = float(self.config.target_recall)
         except (TypeError, ValueError):
-            target_global = 0.95
-        target_global = min(max(target_global, 0.0), 0.999)
-        alpha_global = 1.0 - target_global
-        alpha_i = alpha_global / count
-        target_i = 1.0 - alpha_i
-        return min(max(target_i, 0.0), 0.999)
+            target = 0.95
+        return min(max(target, 0.0), 0.999)
 
     def _recalibrate_learned_proxies(
         self,
@@ -921,16 +975,12 @@ class ProxyPipeline:
             return
 
         per_proxy_target = self._compute_per_proxy_target_recall(len(predicate_proxies))
-        global_target = 1.0 - (1.0 - per_proxy_target) * max(len(predicate_proxies), 1)
-        global_target = min(max(global_target, 0.0), 0.999)
-        quantile = 1.0 - per_proxy_target
-        quantile = min(max(quantile, 0.0), 1.0)
         logging.info(
             "[ProxyPipeline] Re-calibrating %d predicate proxies on %d held-out docs "
-            "(global_target=%.4f, per_proxy_target=%.4f)",
+            "(stage_target=%.4f, per_proxy_target=%.4f)",
             len(predicate_proxies),
             len(calibration_doc_ids),
-            global_target,
+            float(self.config.target_recall),
             per_proxy_target,
         )
 
@@ -969,20 +1019,49 @@ class ProxyPipeline:
             scores_arr = np.array(scores, dtype=np.float32)
             pos_scores = scores_arr[y_calib_arr == 1]
             if len(pos_scores) <= 0:
+                old_threshold = float(getattr(proxy, "threshold", 0.5))
+                proxy.threshold = 0.0
                 logging.info(
                     f"[ProxyPipeline] Proxy {proxy.name}: no positive calibration samples; "
-                    "keeping existing threshold."
+                    f"threshold recalibrated {old_threshold:.4f} -> 0.0000 "
+                    "to preserve target recall."
                 )
                 continue
 
             old_threshold = float(getattr(proxy, "threshold", 0.5))
-            new_threshold = max(float(np.quantile(pos_scores, quantile)), 0.01)
+            new_threshold = self._threshold_for_target_recall(
+                pos_scores,
+                per_proxy_target,
+            )
+            if (
+                self._is_heuristic_proxy(proxy)
+                and float(self.config.target_recall) >= 0.95
+            ):
+                new_threshold = min(new_threshold, UNKNOWN_EVIDENCE_SCORE)
             proxy.threshold = new_threshold
             logging.info(
                 f"[ProxyPipeline] Proxy {proxy.name}: threshold recalibrated "
                 f"{old_threshold:.4f} -> {new_threshold:.4f} "
-                f"(positives={len(pos_scores)}, quantile={quantile:.4f})"
+                f"(positives={len(pos_scores)}, target_recall={per_proxy_target:.4f})"
             )
+
+    @staticmethod
+    def _threshold_for_target_recall(
+        positive_scores: np.ndarray,
+        target_recall: float,
+    ) -> float:
+        scores = np.sort(np.asarray(positive_scores, dtype=np.float32))
+        if len(scores) == 0:
+            return 0.01
+        target = min(max(float(target_recall), 0.0), 1.0)
+        alpha = 1.0 - target
+        missed_allowed = int(np.floor(alpha * len(scores)))
+        missed_allowed = min(max(missed_allowed, 0), len(scores) - 1)
+        return max(float(scores[missed_allowed]), 0.0)
+
+    @staticmethod
+    def _is_heuristic_proxy(proxy: Any) -> bool:
+        return proxy.__class__.__name__ == "HeuristicPredicateProxy"
 
     def _get_extraction_attributes(
         self,

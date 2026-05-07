@@ -87,9 +87,9 @@ def is_null(value: Any) -> bool:
     Returns:
         True if value is considered null, False otherwise
     """
-    null_words = {"", "null", "none", "nan", "undisclosed", "unspecified", 
-                  "unknown", "n/a", "na", "n.a.", "na.", "n/a.", "not available", 
-                  "not applicable"}
+    null_words = {"", "null", "none", "nan", "nil", "undefined", "empty",
+                  "undisclosed", "unspecified", "unknown", "n/a", "na",
+                  "n.a.", "na.", "n/a.", "not available", "not applicable"}
     
     if value is None:
         return True

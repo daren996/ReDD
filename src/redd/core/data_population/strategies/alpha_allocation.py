@@ -29,6 +29,11 @@ class AlphaAllocationStrategy:
     ) -> None:
         raw_config = config.get("alpha_allocation", {})
         self.enabled = bool(isinstance(raw_config, dict) and raw_config.get("enabled", False))
+        self.global_answer_recall_calibration = bool(
+            isinstance(raw_config, dict)
+            and raw_config.get("answer_recall_calibration", False)
+            and raw_config.get("answer_recall_calibration_global", False)
+        )
         self._allocator: Optional[DataExtractionAlphaAllocator] = None
 
         if not self.enabled:
@@ -65,3 +70,12 @@ class AlphaAllocationStrategy:
             query_id=query_id,
             schema_query=schema_query,
         )
+
+    def allocate_for_queries(
+        self,
+        *,
+        query_schemas: Dict[str, List[Dict[str, Any]]],
+    ) -> Dict[str, AlphaAllocationResult]:
+        if self._allocator is None or not self.global_answer_recall_calibration:
+            return {}
+        return self._allocator.allocate_for_queries(query_schemas)

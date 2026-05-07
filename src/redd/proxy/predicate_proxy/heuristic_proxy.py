@@ -480,7 +480,7 @@ class HeuristicPredicateProxy:
         metadata: dict[str, Any] | None = None,
     ) -> float:
         if doc_id and doc_id in self._force_reject_doc_ids:
-            return 0.0
+            return -1.0
         if doc_id and doc_id in self._pass_through_doc_ids:
             return 1.0
         return self._score_document(document, metadata=metadata)

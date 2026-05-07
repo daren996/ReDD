@@ -141,6 +141,15 @@ class SchemaRelevanceFilter(DocFilterBase):
         )
         self.threshold = self.config.get("threshold", default_thresh)
         self.enable_query_augmentation = self.config.get("enable_query_augmentation", False)
+        self.use_source_table_metadata = bool(
+            self.config.get("use_source_table_metadata", False)
+        )
+        self.source_table_metadata_only = bool(
+            self.config.get("source_table_metadata_only", False)
+        )
+        self.source_table_keep_unknown = bool(
+            self.config.get("source_table_keep_unknown", True)
+        )
         
         # Store instance-level dependencies (can be overridden in filter())
         self._enable_calibrate = enable_calibrate  # TODO: load from config
@@ -200,10 +209,13 @@ class SchemaRelevanceFilter(DocFilterBase):
         query_text: Optional[str] = kwargs.get("query_text")
         threshold_override: Optional[float] = kwargs.get("threshold_override")
         
-        # Validate required arguments
-        if data_loader is None or embedding_manager is None:
+        # Validate required arguments. Metadata-only filtering does not need embeddings.
+        if data_loader is None or (
+            embedding_manager is None and not self.source_table_metadata_only
+        ):
             logging.error(
-                f"[{self._name}:filter] data_loader and embedding_manager are required."
+                f"[{self._name}:filter] data_loader and embedding_manager are required "
+                f"unless source_table_metadata_only=True."
             )
             return FilterResult(
                 excluded_doc_ids=set(),
@@ -213,6 +225,39 @@ class SchemaRelevanceFilter(DocFilterBase):
                     "error": "Missing required arguments: data_loader and embedding_manager"
                 }
             )
+
+        metadata_excluded_doc_ids: Set[str] = set()
+        source_table_metadata: Dict[str, Any] = {}
+        if self.use_source_table_metadata:
+            metadata_excluded_doc_ids, source_table_metadata = (
+                self._excluded_doc_ids_by_source_table(
+                    query_id=query_id,
+                    doc_ids=doc_ids,
+                    data_loader=data_loader,
+                    schema_context=kwargs.get("schema_context"),
+                )
+            )
+            if self.source_table_metadata_only:
+                kept_count = len(doc_ids) - len(metadata_excluded_doc_ids)
+                return FilterResult(
+                    excluded_doc_ids=metadata_excluded_doc_ids,
+                    metadata={
+                        "filter_name": self._name,
+                        "query_id": query_id,
+                        "threshold": None,
+                        "is_calibrated": False,
+                        "target_recall": self.target_recall,
+                        "num_docs_input": len(doc_ids),
+                        "num_docs_excluded": len(metadata_excluded_doc_ids),
+                        "num_docs_kept": kept_count,
+                        "metadata_only": True,
+                        **source_table_metadata,
+                        "guarantee": (
+                            "Source-table metadata filter; unknown source tables "
+                            "are kept unless source_table_keep_unknown=false."
+                        ),
+                    },
+                )
         
         # Get query text if not provided
         if query_text is None:
@@ -235,6 +280,10 @@ class SchemaRelevanceFilter(DocFilterBase):
                 }
             )
         
+        doc_ids_to_score = [
+            doc_id for doc_id in doc_ids if doc_id not in metadata_excluded_doc_ids
+        ]
+
         # Step 1: Augment query (hook for future)
         augmented_query = self.augment_query(
             query_text,
@@ -245,7 +294,7 @@ class SchemaRelevanceFilter(DocFilterBase):
         query_emb = embedding_manager.get_query_embedding(query_id, augmented_query)
         
         # Step 3: Get document embeddings (for all docs, including training ones)
-        all_doc_ids_needed = set(doc_ids)
+        all_doc_ids_needed = set(doc_ids_to_score)
         if enable_calibrate and train_doc_ids:
             all_doc_ids_needed.update(train_doc_ids)
         
@@ -334,15 +383,15 @@ class SchemaRelevanceFilter(DocFilterBase):
             threshold = threshold_override if threshold_override is not None else self.threshold
         
         # Filter documents
-        excluded_doc_ids: Set[str] = set()
-        for doc_id in doc_ids:
+        excluded_doc_ids: Set[str] = set(metadata_excluded_doc_ids)
+        for doc_id in doc_ids_to_score:
             if doc_id not in similarities:
                 continue
             if similarities[doc_id] < threshold:
                 excluded_doc_ids.add(doc_id)
         
         # Compute statistics (only for input doc_ids)
-        sim_values = [similarities[doc_id] for doc_id in doc_ids if doc_id in similarities]
+        sim_values = [similarities[doc_id] for doc_id in doc_ids_to_score if doc_id in similarities]
         stats = {
             "min_similarity": min(sim_values) if sim_values else 0.0,
             "max_similarity": max(sim_values) if sim_values else 0.0,
@@ -368,6 +417,7 @@ class SchemaRelevanceFilter(DocFilterBase):
                 "num_docs_input": len(doc_ids),
                 "num_docs_excluded": len(excluded_doc_ids),
                 "num_docs_kept": len(doc_ids) - len(excluded_doc_ids),
+                **source_table_metadata,
                 "similarities": {k: v for k, v in similarities.items() if k in doc_ids},
                 **stats,
                 "guarantee": (
@@ -381,6 +431,121 @@ class SchemaRelevanceFilter(DocFilterBase):
     # =========================================================================
     # Utility Methods
     # =========================================================================
+
+    def _excluded_doc_ids_by_source_table(
+        self,
+        *,
+        query_id: str,
+        doc_ids: List[str],
+        data_loader: "DataLoaderHFManifest",
+        schema_context: Any,
+    ) -> tuple[Set[str], Dict[str, Any]]:
+        allowed_tables = self._source_table_allowed_names(
+            query_id=query_id,
+            data_loader=data_loader,
+            schema_context=schema_context,
+        )
+        if not allowed_tables:
+            return set(), {
+                "source_table_metadata_enabled": True,
+                "source_table_metadata_error": "No allowed source tables resolved",
+                "source_table_metadata_excluded": 0,
+            }
+
+        excluded_doc_ids: Set[str] = set()
+        known_count = 0
+        unknown_count = 0
+        for doc_id in doc_ids:
+            table_names = self._doc_source_tables(data_loader, doc_id, allowed_tables)
+            if not table_names:
+                unknown_count += 1
+                if not self.source_table_keep_unknown:
+                    excluded_doc_ids.add(doc_id)
+                continue
+            known_count += 1
+            if table_names.isdisjoint(allowed_tables):
+                excluded_doc_ids.add(doc_id)
+
+        return excluded_doc_ids, {
+            "source_table_metadata_enabled": True,
+            "source_table_metadata_only": self.source_table_metadata_only,
+            "source_table_keep_unknown": self.source_table_keep_unknown,
+            "source_table_allowed": sorted(allowed_tables),
+            "source_table_known_docs": known_count,
+            "source_table_unknown_docs": unknown_count,
+            "source_table_metadata_excluded": len(excluded_doc_ids),
+        }
+
+    def _source_table_allowed_names(
+        self,
+        *,
+        query_id: str,
+        data_loader: "DataLoaderHFManifest",
+        schema_context: Any,
+    ) -> Set[str]:
+        schema_items = schema_context if isinstance(schema_context, list) else None
+        if not schema_items:
+            schema_items = data_loader.load_schema_query(query_id)
+        if not schema_items:
+            schema_items = data_loader.load_schema_general()
+
+        table_names = {
+            str(schema.get("Schema Name") or "").strip()
+            for schema in schema_items
+            if isinstance(schema, dict)
+        }
+        table_names = {name for name in table_names if name}
+
+        allowed = {name.lower() for name in table_names}
+        try:
+            name_map = data_loader.load_name_map(query_id=query_id)
+        except Exception:
+            name_map = {}
+        table_map = name_map.get("table", {}) if isinstance(name_map, dict) else {}
+        if isinstance(table_map, dict):
+            for task_table, source_table in table_map.items():
+                task_name = str(task_table or "").strip()
+                source_name = str(source_table or "").strip()
+                if task_name in table_names and source_name:
+                    allowed.add(source_name.lower())
+        return allowed
+
+    @staticmethod
+    def _doc_source_tables(
+        data_loader: "DataLoaderHFManifest",
+        doc_id: str,
+        allowed_tables: Set[str],
+    ) -> Set[str]:
+        if not hasattr(data_loader, "get_doc"):
+            return set()
+        try:
+            _doc_text, _resolved_doc_id, metadata = data_loader.get_doc(doc_id)
+        except Exception:
+            return set()
+        if not isinstance(metadata, dict):
+            return set()
+
+        schema_tables = metadata.get("schema_tables")
+        if isinstance(schema_tables, list):
+            normalized = {
+                str(table_name or "").strip().lower()
+                for table_name in schema_tables
+                if str(table_name or "").strip()
+            }
+            if normalized:
+                return normalized
+
+        for key in ("schema_table", "table_id"):
+            table_name = str(metadata.get(key) or "").strip().lower()
+            if table_name:
+                return {table_name}
+
+        table_name = str(
+            metadata.get("table_name") or metadata.get("source_table") or ""
+        ).strip().lower()
+        if table_name and table_name in allowed_tables:
+            return {table_name}
+        return set()
 
     @staticmethod
     def cosine_similarity(emb1: List[float], emb2: List[float]) -> float:

@@ -36,6 +36,20 @@ except ImportError:
     FINETUNED_AVAILABLE = False
 
 
+def _threshold_for_target_recall(
+    positive_scores: np.ndarray,
+    target_recall: float,
+) -> float:
+    scores = np.sort(np.asarray(positive_scores, dtype=np.float32))
+    if len(scores) == 0:
+        return 0.01
+    target = min(max(float(target_recall), 0.0), 1.0)
+    alpha = 1.0 - target
+    missed_allowed = int(np.floor(alpha * len(scores)))
+    missed_allowed = min(max(missed_allowed, 0), len(scores) - 1)
+    return max(float(scores[missed_allowed]), 0.0)
+
+
 def _generate_filter_description(
     predicate: AttributePredicate,
     mode: str = "gemini",
@@ -314,9 +328,11 @@ class PredicateProxyFactory:
                 pos_scores = scores[y == 1]
                 if len(pos_scores) > 0:
                     target_recall = self.config.target_recall
-                    quantile = 1.0 - target_recall
-                    threshold = np.quantile(pos_scores, quantile)
-                    proxy.threshold = max(float(threshold), 0.01)
+                    threshold = _threshold_for_target_recall(
+                        pos_scores,
+                        target_recall,
+                    )
+                    proxy.threshold = threshold
                     logging.info(f"  Calibrated threshold: {proxy.threshold:.4f} (target recall {target_recall})")
                 
                 proxies.append(proxy)

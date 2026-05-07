@@ -226,5 +226,5 @@ def test_proxy_can_force_reject_configured_doc_ids() -> None:
         doc_ids=["d1", "d2"],
     )
 
-    assert scores.tolist() == [0.0, 1.0]
+    assert scores.tolist() == [-1.0, 1.0]
     assert passed.tolist() == [False, True]

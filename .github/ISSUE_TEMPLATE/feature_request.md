@@ -20,5 +20,5 @@ Explain whether this should be:
 
 ## Migration Notes
 
-If this is coming from `ReDD_Dev`, describe the expected config surface, fallback path,
-and validation plan.
+If this is coming from experimental code or an external research branch, describe the
+expected config surface, fallback path, and validation plan.

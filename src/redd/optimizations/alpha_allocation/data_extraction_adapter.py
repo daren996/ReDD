@@ -5,12 +5,14 @@ Data-extraction adapter for query-level alpha allocation.
 from __future__ import annotations
 
 import logging
+import math
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from redd.core.utils.constants import SCHEMA_NAME_KEY
+from redd.core.utils.constants import RESULT_DATA_KEY, RESULT_TABLE_KEY, SCHEMA_NAME_KEY
 from redd.core.utils.sql_filter_parser import group_predicates_by_table
 from redd.embedding import EmbeddingManager
+from redd.exp.evaluation import EvalDataExtraction
 from redd.optimizations.doc_filtering import create_doc_filter
 from redd.optimizations.doc_filtering.runtime import normalize_doc_filter_config
 from redd.proxy.proxy_runtime.config import (
@@ -79,8 +81,145 @@ class DataExtractionAlphaAllocator:
             )
             return None
 
-        stages = [STAGE_DOC_FILTERING, STAGE_PREDICATE_PROXY]
         query_context = self._build_query_context(query_id=query_id, schema_query=schema_query)
+        alpha_map, cost_value, budget_used, budget_total, trace = self._allocate_base_alpha_map(
+            query_context=query_context,
+        )
+
+        answer_calibration: Dict[str, Any] = {}
+        if self.alloc_config.answer_recall_calibration:
+            alpha_map, answer_calibration = self._calibrate_predicate_alpha_for_answer_recall(
+                query_context=query_context,
+                alpha_map=alpha_map,
+                budget_total=budget_total,
+            )
+            cost_value = self._evaluate_cost(
+                query_context=query_context,
+                alpha_doc=alpha_map.get(STAGE_DOC_FILTERING, 0.0),
+                alpha_predicate=alpha_map.get(STAGE_PREDICATE_PROXY, 0.0),
+            )
+
+        result = self._build_result(
+            query_context=query_context,
+            alpha_map=alpha_map,
+            cost_value=cost_value,
+            budget_total=budget_total,
+            trace=trace,
+            answer_calibration=answer_calibration,
+        )
+        logging.info(
+            "[DataExtractionAlphaAllocator:allocate_for_query] Query %s -> "
+            "alpha_doc=%.4f alpha_predicate=%.4f cost=%.4f",
+            query_id,
+            result.alpha_doc_filtering,
+            result.alpha_predicate_proxy,
+            result.estimated_cost,
+        )
+        return result
+
+    def allocate_for_queries(
+        self,
+        query_schemas: Dict[str, List[Dict[str, Any]]],
+    ) -> Dict[str, AlphaAllocationResult]:
+        """
+        Allocate alpha for a group of queries with dataset-level answer recall calibration.
+
+        The final experiment recall is reported as a weighted answer recall over all
+        answers, while per-query calibration optimizes each query independently. This
+        group mode chooses one candidate alpha per query so the training split's
+        aggregate answer recall is closest to the configured target.
+        """
+        if not self.alloc_config.enabled or not self.train_doc_ids:
+            return {}
+        if not (
+            self.alloc_config.answer_recall_calibration
+            and self.alloc_config.answer_recall_calibration_global
+        ):
+            return {}
+
+        plans: Dict[str, Dict[str, Any]] = {}
+        for query_id, schema_query in query_schemas.items():
+            query_context = self._build_query_context(
+                query_id=query_id,
+                schema_query=schema_query,
+            )
+            alpha_map, cost_value, budget_used, budget_total, trace = (
+                self._allocate_base_alpha_map(query_context=query_context)
+            )
+            del budget_used
+            observations = self._answer_recall_candidate_observations(
+                query_context=query_context,
+                alpha_map=alpha_map,
+                budget_total=budget_total,
+            )
+            plans[query_id] = {
+                "query_context": query_context,
+                "alpha_map": alpha_map,
+                "cost_value": cost_value,
+                "budget_total": budget_total,
+                "trace": trace,
+                "observations": observations,
+            }
+
+        selections = self._select_global_answer_recall_observations(plans)
+        results: Dict[str, AlphaAllocationResult] = {}
+        for query_id, plan in plans.items():
+            selected_observation = selections.get(query_id)
+            alpha_map = dict(plan["alpha_map"])
+            answer_calibration: Dict[str, Any]
+            if selected_observation is None:
+                answer_calibration = {
+                    "enabled": True,
+                    "scope": "global",
+                    "skipped": "answer_recall_not_executable",
+                    "observations": plan["observations"],
+                }
+            else:
+                chosen_alpha = float(selected_observation["alpha_predicate_proxy"])
+                alpha_map[STAGE_PREDICATE_PROXY] = chosen_alpha
+                answer_calibration = {
+                    "enabled": True,
+                    "scope": "global",
+                    "target_recall": float(self.alloc_config.target_recall),
+                    "selected_alpha_predicate_proxy": chosen_alpha,
+                    "selected_target_recall_predicate_proxy": self._clip_target_recall(
+                        1.0 - chosen_alpha
+                    ),
+                    "selected_answer_recall": float(selected_observation["recall"]),
+                    "selected_answer_covered": int(selected_observation["covered"]),
+                    "selected_answer_total": int(selected_observation["total"]),
+                    "global_training_answer_recall": selections.get(
+                        "__global_training_answer_recall__"
+                    ),
+                    "global_training_answer_covered": selections.get(
+                        "__global_training_answer_covered__"
+                    ),
+                    "global_training_answer_total": selections.get(
+                        "__global_training_answer_total__"
+                    ),
+                    "observations": plan["observations"],
+                }
+            cost_value = self._evaluate_cost(
+                query_context=plan["query_context"],
+                alpha_doc=alpha_map.get(STAGE_DOC_FILTERING, 0.0),
+                alpha_predicate=alpha_map.get(STAGE_PREDICATE_PROXY, 0.0),
+            )
+            results[query_id] = self._build_result(
+                query_context=plan["query_context"],
+                alpha_map=alpha_map,
+                cost_value=cost_value,
+                budget_total=float(plan["budget_total"]),
+                trace=plan["trace"],
+                answer_calibration=answer_calibration,
+            )
+        return results
+
+    def _allocate_base_alpha_map(
+        self,
+        *,
+        query_context: Dict[str, Any],
+    ) -> Tuple[Dict[str, float], float, float, float, List[Any]]:
+        stages = [STAGE_DOC_FILTERING, STAGE_PREDICATE_PROXY]
 
         def evaluate(alphas: Dict[str, float]) -> float:
             return self._evaluate_cost(
@@ -96,32 +235,263 @@ class DataExtractionAlphaAllocator:
             cost_fn=evaluate,
         )
         alpha_map, cost_value, budget_used, budget_total, trace = allocator.allocate()
+        alpha_map = self._use_remaining_budget_for_predicate_proxy(
+            alpha_map=alpha_map,
+            budget_total=budget_total,
+        )
+        budget_used = self._budget_used(alpha_map)
+        cost_value = evaluate(alpha_map)
+        return alpha_map, cost_value, budget_used, budget_total, trace
 
+    def _build_result(
+        self,
+        *,
+        query_context: Dict[str, Any],
+        alpha_map: Dict[str, float],
+        cost_value: float,
+        budget_total: float,
+        trace: List[Any],
+        answer_calibration: Dict[str, Any],
+    ) -> AlphaAllocationResult:
+        del query_context
         alpha_doc = float(alpha_map.get(STAGE_DOC_FILTERING, 0.0))
         alpha_predicate = float(alpha_map.get(STAGE_PREDICATE_PROXY, 0.0))
-        target_recall_doc = self._clip_target_recall(1.0 - alpha_doc)
-        target_recall_predicate = self._clip_target_recall(1.0 - alpha_predicate)
-        result = AlphaAllocationResult(
+        return AlphaAllocationResult(
             enabled=True,
             alpha_doc_filtering=alpha_doc,
             alpha_predicate_proxy=alpha_predicate,
-            target_recall_doc_filtering=target_recall_doc,
-            target_recall_predicate_proxy=target_recall_predicate,
+            target_recall_doc_filtering=self._clip_target_recall(1.0 - alpha_doc),
+            target_recall_predicate_proxy=self._clip_target_recall(1.0 - alpha_predicate),
             estimated_cost=float(cost_value),
             target_recall_global=self.alloc_config.target_recall,
-            budget_used=float(budget_used),
+            budget_used=float(self._budget_used(alpha_map)),
             budget_total=float(budget_total),
             trace=trace,
+            answer_recall_calibration=answer_calibration,
         )
-        logging.info(
-            "[DataExtractionAlphaAllocator:allocate_for_query] Query %s -> "
-            "alpha_doc=%.4f alpha_predicate=%.4f cost=%.4f",
-            query_id,
-            result.alpha_doc_filtering,
-            result.alpha_predicate_proxy,
-            result.estimated_cost,
+
+    @staticmethod
+    def _alpha_budget(alpha: float) -> float:
+        """Budget transform b(alpha) = -log(1 - alpha)."""
+        alpha = min(max(float(alpha), 0.0), 1.0 - 1e-12)
+        return -math.log(1.0 - alpha)
+
+    def _budget_used(self, alphas: Dict[str, float]) -> float:
+        return self._alpha_budget(alphas.get(STAGE_DOC_FILTERING, 0.0)) + self._alpha_budget(
+            alphas.get(STAGE_PREDICATE_PROXY, 0.0)
         )
-        return result
+
+    def _use_remaining_budget_for_predicate_proxy(
+        self,
+        *,
+        alpha_map: Dict[str, float],
+        budget_total: float,
+    ) -> Dict[str, float]:
+        """
+        Carry otherwise-unused global recall budget into predicate calibration.
+
+        The greedy allocator only takes steps that reduce estimated training cost.
+        With target-insensitive doc filters or conservative proxy estimates, it can
+        leave all alphas at zero, which makes the configured global target invisible
+        to the downstream runtime. Filling remaining budget on the predicate stage
+        preserves the joint budget constraint while keeping target recall tunable.
+        """
+        filled = dict(alpha_map)
+        current_predicate = float(filled.get(STAGE_PREDICATE_PROXY, 0.0))
+        best_predicate = current_predicate
+        for candidate in self.alloc_config.alpha_grid:
+            candidate = float(candidate)
+            if candidate <= current_predicate + 1e-12:
+                continue
+            trial = dict(filled)
+            trial[STAGE_PREDICATE_PROXY] = candidate
+            if self._budget_used(trial) <= budget_total + 1e-12:
+                best_predicate = candidate
+        filled[STAGE_PREDICATE_PROXY] = best_predicate
+        return filled
+
+    def _calibrate_predicate_alpha_for_answer_recall(
+        self,
+        *,
+        query_context: Dict[str, Any],
+        alpha_map: Dict[str, float],
+        budget_total: float,
+    ) -> Tuple[Dict[str, float], Dict[str, Any]]:
+        """
+        Empirically map the predicate alpha to training SQL-answer recall.
+
+        Predicate-positive calibration can still keep final SQL-answer recall
+        much higher than the requested target because many rejected rows do not
+        participate in the answer. This optional pass probes the configured
+        alpha grid on training docs and picks the predicate alpha whose estimated
+        SQL-answer recall is closest to the global target.
+        """
+        if not str((query_context.get("query_info") or {}).get("sql") or "").strip():
+            return dict(alpha_map), {"enabled": True, "skipped": "query_has_no_sql"}
+
+        alpha_doc = float(alpha_map.get(STAGE_DOC_FILTERING, 0.0))
+        target = float(self.alloc_config.target_recall)
+        observations = self._answer_recall_candidate_observations(
+            query_context=query_context,
+            alpha_map=alpha_map,
+            budget_total=budget_total,
+        )
+        if not observations:
+            return dict(alpha_map), {
+                "enabled": True,
+                "skipped": "answer_recall_not_executable",
+                "observations": observations,
+            }
+        best: Dict[str, Any] | None = None
+        del alpha_doc
+        for observation in observations:
+            candidate = float(observation["alpha_predicate_proxy"])
+            recall = float(observation["recall"])
+            distance = abs(recall - target)
+            over_target = recall >= target
+            if best is None:
+                best = {"observation": observation, "distance": distance, "over_target": over_target}
+                continue
+            best_obs = best["observation"]
+            if over_target and not bool(best["over_target"]):
+                best = {"observation": observation, "distance": distance, "over_target": over_target}
+            elif over_target == bool(best["over_target"]) and distance < best["distance"] - 1e-12:
+                best = {"observation": observation, "distance": distance, "over_target": over_target}
+            elif over_target == bool(best["over_target"]) and abs(distance - best["distance"]) <= 1e-12:
+                # Equal answer recall should spend the tie on lower extraction cost.
+                if candidate > float(best_obs["alpha_predicate_proxy"]):
+                    best = {"observation": observation, "distance": distance, "over_target": over_target}
+
+        if not observations or best is None:
+            return dict(alpha_map), {
+                "enabled": True,
+                "skipped": "answer_recall_not_executable",
+                "observations": observations,
+            }
+
+        chosen = dict(alpha_map)
+        chosen_alpha = float(best["observation"]["alpha_predicate_proxy"])
+        chosen[STAGE_PREDICATE_PROXY] = chosen_alpha
+        return chosen, {
+            "enabled": True,
+            "target_recall": target,
+            "selected_alpha_predicate_proxy": chosen_alpha,
+            "selected_target_recall_predicate_proxy": self._clip_target_recall(1.0 - chosen_alpha),
+            "selected_answer_recall": float(best["observation"]["recall"]),
+            "observations": observations,
+        }
+
+    def _answer_recall_candidate_observations(
+        self,
+        *,
+        query_context: Dict[str, Any],
+        alpha_map: Dict[str, float],
+        budget_total: float,
+    ) -> List[Dict[str, Any]]:
+        alpha_doc = float(alpha_map.get(STAGE_DOC_FILTERING, 0.0))
+        current_alpha = float(alpha_map.get(STAGE_PREDICATE_PROXY, 0.0))
+        candidates: List[float] = []
+        for value in self.alloc_config.alpha_grid:
+            candidate = float(value)
+            if candidate < current_alpha - 1e-12:
+                continue
+            trial = dict(alpha_map)
+            trial[STAGE_PREDICATE_PROXY] = candidate
+            if (
+                not self.alloc_config.answer_recall_calibration_allow_over_budget
+                and self._budget_used(trial) > budget_total + 1e-12
+            ):
+                continue
+            candidates.append(candidate)
+
+        observations: List[Dict[str, Any]] = []
+        for candidate in candidates:
+            estimate = self._estimate_answer_recall_for_alphas(
+                query_context=query_context,
+                alpha_doc=alpha_doc,
+                alpha_predicate=candidate,
+            )
+            if estimate is None:
+                continue
+            observations.append(
+                {
+                    "alpha_predicate_proxy": candidate,
+                    "target_recall_predicate_proxy": self._clip_target_recall(
+                        1.0 - candidate
+                    ),
+                    **estimate,
+                }
+            )
+        return observations
+
+    def _select_global_answer_recall_observations(
+        self,
+        plans: Dict[str, Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        selectable: List[Tuple[str, List[Dict[str, Any]]]] = []
+        selected: Dict[str, Any] = {}
+        for query_id, plan in plans.items():
+            observations = plan.get("observations") or []
+            if not observations:
+                continue
+            zero_weight = all(int(obs.get("total", 0) or 0) <= 0 for obs in observations)
+            if zero_weight:
+                selected[query_id] = max(
+                    observations,
+                    key=lambda obs: float(obs.get("alpha_predicate_proxy", 0.0)),
+                )
+            else:
+                dedup: Dict[int, Dict[str, Any]] = {}
+                for obs in observations:
+                    covered = int(obs.get("covered", 0) or 0)
+                    prior = dedup.get(covered)
+                    if prior is None or float(obs["alpha_predicate_proxy"]) > float(
+                        prior["alpha_predicate_proxy"]
+                    ):
+                        dedup[covered] = obs
+                selectable.append((query_id, list(dedup.values())))
+
+        total = 0
+        for _, observations in selectable:
+            total += max(int(obs.get("total", 0) or 0) for obs in observations)
+        if total <= 0:
+            return selected
+
+        target = float(self.alloc_config.target_recall)
+        dp: Dict[int, Tuple[float, Dict[str, Dict[str, Any]]]] = {0: (0.0, {})}
+        for query_id, observations in selectable:
+            next_dp: Dict[int, Tuple[float, Dict[str, Dict[str, Any]]]] = {}
+            for coverage, (alpha_score, chosen) in dp.items():
+                for obs in observations:
+                    new_coverage = coverage + int(obs.get("covered", 0) or 0)
+                    new_alpha_score = alpha_score + float(obs["alpha_predicate_proxy"])
+                    new_chosen = dict(chosen)
+                    new_chosen[query_id] = obs
+                    prior = next_dp.get(new_coverage)
+                    if prior is None or new_alpha_score > prior[0] + 1e-12:
+                        next_dp[new_coverage] = (new_alpha_score, new_chosen)
+            dp = next_dp
+
+        target_coverage = target * total
+        over_target_items = [
+            item for item in dp.items() if float(item[0]) + 1e-12 >= target_coverage
+        ]
+        candidates = over_target_items or list(dp.items())
+        best_coverage, (best_alpha_score, best_selection) = min(
+            candidates,
+            key=lambda item: (
+                abs(float(item[0]) - target_coverage),
+                -float(item[1][0]),
+            ),
+        )
+        del best_alpha_score
+        selected.update(best_selection)
+        selected["__global_training_answer_covered__"] = int(best_coverage)
+        selected["__global_training_answer_total__"] = int(total)
+        selected["__global_training_answer_recall__"] = (
+            float(best_coverage) / float(total) if total else None
+        )
+        return selected
 
     def _build_query_context(
         self,
@@ -212,6 +582,138 @@ class DataExtractionAlphaAllocator:
         cost = float(passed_docs)
         self._query_cache[key] = {"cost": cost}
         return cost
+
+    def _estimate_answer_recall_for_alphas(
+        self,
+        *,
+        query_context: Dict[str, Any],
+        alpha_doc: float,
+        alpha_predicate: float,
+    ) -> Optional[Dict[str, Any]]:
+        key = (
+            f"answer|{query_context['query_id']}|"
+            f"{alpha_doc:.12f}|{alpha_predicate:.12f}"
+        )
+        if key in self._query_cache:
+            cached = self._query_cache[key]
+            return dict(cached) if cached.get("executable") else None
+
+        train_docs_after_doc_filter = self._apply_doc_filter(
+            query_id=query_context["query_id"],
+            schema_query=list(query_context["table_to_schema"].values()),
+            alpha_doc=alpha_doc,
+        )
+        if not train_docs_after_doc_filter:
+            result = {"executable": True, "recall": 0.0, "covered": 0, "total": 0}
+            self._query_cache[key] = result
+            return result
+
+        query_info = query_context.get("query_info", {})
+        evaluator = EvalDataExtraction(
+            {
+                "training_data_count": 0,
+                "training_data_split": "prefix",
+            },
+            data_loader=self.loader,
+        )
+        required_by_table = evaluator._required_attrs_by_table(
+            self.loader,
+            query_context["query_id"],
+            query_info,
+        )
+        if not required_by_table:
+            self._query_cache[key] = {"executable": False, "reason": "no_required_tables"}
+            return None
+
+        result_dict = self._run_proxy_for_answer_calibration(
+            query_context=query_context,
+            doc_ids=train_docs_after_doc_filter,
+            predicate_target_recall=self._clip_target_recall(1.0 - alpha_predicate),
+        )
+        answer = evaluator._evaluate_answer_recall(
+            loader=self.loader,
+            result_dict=result_dict,
+            query_info=query_info,
+            eval_doc_ids=list(self.train_doc_ids),
+            required_by_table=required_by_table,
+        )
+        if not answer.get("executable", False) or answer.get("recall") is None:
+            self._query_cache[key] = {
+                "executable": False,
+                "reason": answer.get("reason", "not_executable"),
+            }
+            return None
+
+        result = {
+            "executable": True,
+            "recall": float(answer.get("recall", 0.0)),
+            "covered": int(answer.get("covered", 0)),
+            "total": int(answer.get("total", 0)),
+        }
+        self._query_cache[key] = result
+        return result
+
+    def _run_proxy_for_answer_calibration(
+        self,
+        *,
+        query_context: Dict[str, Any],
+        doc_ids: List[str],
+        predicate_target_recall: float,
+    ) -> Dict[str, Dict[str, Any]]:
+        proxy_pipeline_config = self._build_proxy_pipeline_config(
+            query_id=query_context["query_id"],
+            predicate_target_recall=predicate_target_recall,
+        )
+        pipeline = ProxyPipeline(proxy_pipeline_config)
+        pipeline._data_loader = self.loader
+        pipeline._query_info = query_context.get("query_info", {})
+        pipeline._schema = list(query_context["table_to_schema"].values())
+        pipeline._oracle = GoldenOracle(self.loader)
+
+        all_tables = query_context["all_tables"]
+        gt_to_task_table = query_context["gt_to_task_table"]
+        train_doc_to_table = query_context["train_doc_to_table"]
+        table_to_schema = query_context["table_to_schema"]
+        predicates_by_table = query_context["predicates_by_table"]
+        query_text = query_context.get("query_info", {}).get("query", "")
+
+        table_to_doc_ids: Dict[str, List[str]] = {}
+        for doc_id in doc_ids:
+            table_name = train_doc_to_table.get(doc_id)
+            if table_name is None:
+                table_name = self._get_task_table_for_doc(
+                    doc_id=doc_id,
+                    all_tables=all_tables,
+                    gt_to_task_table=gt_to_task_table,
+                )
+            if table_name:
+                table_to_doc_ids.setdefault(table_name, []).append(doc_id)
+
+        result_dict: Dict[str, Dict[str, Any]] = {}
+        for table_name, table_doc_ids in table_to_doc_ids.items():
+            if not table_doc_ids:
+                continue
+            table_schema = table_to_schema.get(table_name, {})
+            predicates = predicates_by_table.get(table_name, [])
+            train_ids_for_table = [
+                doc_id for doc_id in self.train_doc_ids if train_doc_to_table.get(doc_id) == table_name
+            ]
+            results = pipeline.run_for_documents(
+                doc_ids=table_doc_ids,
+                train_doc_ids=train_ids_for_table,
+                predicates=predicates,
+                table_schema=table_schema,
+                query_text=query_text,
+                data_loader=self.loader,
+                extra_proxies=None,
+            )
+            for doc_id, extracted in results.extractions.items():
+                result_dict[doc_id] = {
+                    RESULT_TABLE_KEY: table_name,
+                    RESULT_DATA_KEY: extracted if isinstance(extracted, dict) else {},
+                }
+
+        return result_dict
 
     def _apply_doc_filter(
         self,

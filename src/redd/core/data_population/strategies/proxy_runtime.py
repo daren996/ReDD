@@ -30,7 +30,11 @@ from ...utils.constants import (
     RESULT_TABLE_KEY,
     SCHEMA_NAME_KEY,
 )
-from ...utils.data_split import resolve_training_data_count
+from ...utils.data_split import (
+    resolve_training_data_count,
+    resolve_training_data_split,
+    resolve_training_data_split_seed,
+)
 from ...utils.progress import emit_progress_event
 from ...utils.sql_filter_parser import (
     compute_table_processing_order,
@@ -73,7 +77,9 @@ class OraclePredicateProxy:
         self,
         documents: List[str],
         doc_ids: Optional[List[str]] = None,
+        **kwargs: Any,
     ) -> tuple[Any, Any]:
+        del kwargs
         import numpy as np
 
         passed: list[bool] = []
@@ -123,7 +129,9 @@ class GTTextConsistencyProxy:
         self,
         documents: List[str],
         doc_ids: Optional[List[str]] = None,
+        **kwargs: Any,
     ) -> tuple[Any, Any]:
+        del kwargs
         import numpy as np
 
         passed: list[bool] = []
@@ -220,6 +228,10 @@ class ProxyRuntimeExtractionStrategy:
                 False,
             ),
             training_data_count=resolve_training_data_count(extraction_config),
+            training_data_split=resolve_training_data_split(extraction_config),
+            training_data_split_seed=resolve_training_data_split_seed(
+                extraction_config
+            ),
             min_training_data=0,
             min_calibration_data=0,
             proxy_threshold=resolve_proxy_threshold(proxy_cfg, extraction_config),
@@ -426,8 +438,10 @@ class ProxyRuntimeExtractionStrategy:
         if join_graph and self.proxy_runtime_config.use_join_resolution:
             logging.info(f"[{self.__class__.__name__}] Join detected: processing order {table_order}")
 
-        # 5. Run the proxy runtime per table. When use_gt_extraction is True, populate with GT data.
-        use_gt_extraction = self.extraction_config.get("use_gt_extraction", False)
+        # 5. Run the proxy runtime per table. This explicit shortcut bypasses
+        # proxies and is only for tests/offline full-GT population.
+        mode = str(self.extraction_config.get("mode", "")).strip().lower()
+        use_gt_extraction = bool(self.extraction_config.get("use_gt_extraction", False))
         if use_gt_extraction:
             self._populate_gt_extraction(
                 table_to_doc_ids=table_to_doc_ids,
@@ -454,7 +468,12 @@ class ProxyRuntimeExtractionStrategy:
         all_proxy_decisions: Dict[str, Any] = {}
 
         # 6. Run proxy execution per table.
-        use_oracle = self.extraction_config.get("use_oracle_extraction", False)
+        use_oracle = bool(
+            self.extraction_config.get("use_oracle_extraction", False)
+            or self.extraction_config.get("use_gt_attr_extraction", False)
+            or self.extraction_config.get("use_ground_truth", False)
+            or mode in {"ground_truth", "gt"}
+        )
         pipeline = ProxyPipeline(self.proxy_runtime_config)
         pipeline._data_loader = self.loader
         pipeline._query_info = query_info
@@ -613,6 +632,11 @@ class ProxyRuntimeExtractionStrategy:
             logging.info(
                 f"[{self.__class__.__name__}] Processing table {table_name}: "
                 f"{len(doc_ids)} docs, {len(predicates)} predicates, {len(extra_proxies)} join resolvers"
+            )
+            pipeline.config = self._proxy_config_for_table(
+                table_name=table_name,
+                predicates=predicates,
+                train_doc_ids_for_table=train_doc_ids_for_table,
             )
             results = pipeline.run_for_documents(
                 doc_ids=doc_ids,
@@ -951,6 +975,38 @@ class ProxyRuntimeExtractionStrategy:
             }
             reached = reached - rejected_by_proxy
         return recalls
+
+    def _proxy_config_for_table(
+        self,
+        *,
+        table_name: str,
+        predicates: List[Any],
+        train_doc_ids_for_table: List[str],
+    ) -> ProxyPipelineConfig:
+        """
+        Return the proxy config for a table.
+
+        Train-mode sweeps can have global training documents while a specific
+        table has no training examples. In that local case, fall back to the
+        conservative heuristic pretrained proxy instead of aborting the whole
+        query run.
+        """
+        proxy_mode = str(self.proxy_runtime_config.predicate_proxy_mode).strip().lower()
+        if proxy_mode != "train" or not predicates or train_doc_ids_for_table:
+            return self.proxy_runtime_config
+
+        logging.warning(
+            "[%s] Table %s has predicates but no table-specific training docs; "
+            "falling back to heuristic pretrained predicate proxies for this table.",
+            self.__class__.__name__,
+            table_name,
+        )
+        return replace(
+            self.proxy_runtime_config,
+            predicate_proxy_mode="pretrained",
+            use_finetuned_learned_proxies=True,
+            finetuned_model="heuristic",
+        )
 
     def _select_train_doc_ids_for_table(
         self,

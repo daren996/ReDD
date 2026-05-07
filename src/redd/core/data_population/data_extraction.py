@@ -50,7 +50,12 @@ from ..utils.constants import (
     SCHEMA_NAME_KEY,
     TARGET_ATTRIBUTE_KEY,
 )
-from ..utils.data_split import resolve_training_data_count, split_doc_ids
+from ..utils.data_split import (
+    resolve_training_data_count,
+    resolve_training_data_split,
+    resolve_training_data_split_seed,
+    split_doc_ids,
+)
 from ..utils.output_path import build_task_output_root
 from ..utils.progress import emit_progress_event, tqdm
 from ..utils.prompt_utils import create_prompt, get_api_key
@@ -108,6 +113,8 @@ class DataExtraction(DataPopulator):
         super().__init__(config)
         config = self.config
         self.training_data_count = resolve_training_data_count(config)
+        self.training_data_split = resolve_training_data_split(config)
+        self.training_data_split_seed = resolve_training_data_split_seed(config)
         self.train_doc_ids: List[str] = []
         self.test_doc_ids: List[str] = []
         self._train_doc_ids_set: Set[str] = set()
@@ -209,6 +216,10 @@ class DataExtraction(DataPopulator):
             self.doc_filter_config = dict(self.doc_filter_strategy.config)
             self.doc_filter_enabled = self.doc_filter_strategy.enabled
             self.doc_filter_only = self.doc_filter_strategy.only
+            self.result_save_interval = max(
+                1,
+                int(config.get("result_save_interval", 1) or 1),
+            )
             table_cache_config = config.get("table_assignment_cache", {})
             self.table_assignment_cache_general_schema = bool(
                 isinstance(table_cache_config, dict)
@@ -243,6 +254,22 @@ class DataExtraction(DataPopulator):
         wait_fn = getattr(controller, "wait_if_paused", None)
         if callable(wait_fn):
             wait_fn(stage)
+
+    def _save_results_progress(
+        self,
+        res_path: Path | str,
+        res_data: Dict[str, Any],
+        update_count: int,
+        *,
+        force: bool = False,
+    ) -> None:
+        save_interval = max(1, int(getattr(self, "result_save_interval", 1) or 1))
+        if (
+            force
+            or save_interval <= 1
+            or update_count % save_interval == 0
+        ):
+            self.save_results(res_path, res_data)
 
     def __call__(self, dataset_task: Optional[str] = None) -> None:
         """
@@ -282,6 +309,8 @@ class DataExtraction(DataPopulator):
         self.train_doc_ids, self.test_doc_ids = split_doc_ids(
             all_doc_ids,
             self.training_data_count,
+            strategy=self.training_data_split,
+            seed=self.training_data_split_seed,
         )
         self._proxy_extraction_cache: Dict[tuple[str, str, str], Dict[str, Any]] = {}
         self._table_assignment_cache: Dict[str, str] = {}
@@ -292,7 +321,9 @@ class DataExtraction(DataPopulator):
         logging.info(
             f"[{self.__class__.__name__}:_process_dataset] Global split: "
             f"training={len(self.train_doc_ids)}, test={len(self.test_doc_ids)}, "
-            f"training_data_count={self.training_data_count}, total={len(all_doc_ids)}"
+            f"training_data_count={self.training_data_count}, "
+            f"training_data_split={self.training_data_split}, "
+            f"total={len(all_doc_ids)}"
         )
 
         query_dict = self.loader.load_query_dict()
@@ -323,12 +354,19 @@ class DataExtraction(DataPopulator):
             train_doc_ids=self.train_doc_ids,
             proxy_runtime_enabled=self.use_proxy_runtime,
         )
-
+        schema_by_query: Dict[str, List[Dict[str, Any]]] = {}
         for qid in selected_query_ids:
-            self._wait_if_paused(f"query-{qid}")
             schema_query = self.loader.load_schema_query(qid)
             if not schema_query:
                 schema_query = self.schema_general
+            schema_by_query[qid] = schema_query
+        allocation_results_by_query = alpha_strategy.allocate_for_queries(
+            query_schemas=schema_by_query,
+        )
+
+        for qid in selected_query_ids:
+            self._wait_if_paused(f"query-{qid}")
+            schema_query = schema_by_query[qid]
             res_path = self.out_root / PATH_TEMPLATES.data_population_result(qid, self.param_str)
             if bool(self.config.get("force_rerun", False)):
                 self._clear_query_outputs(qid=qid, res_path=res_path)
@@ -338,10 +376,12 @@ class DataExtraction(DataPopulator):
 
             doc_target_recall_override = None
             proxy_target_recall_override = None
-            allocation_result = alpha_strategy.allocate_for_query(
-                query_id=qid,
-                schema_query=schema_query,
-            )
+            allocation_result = allocation_results_by_query.get(qid)
+            if allocation_result is None:
+                allocation_result = alpha_strategy.allocate_for_query(
+                    query_id=qid,
+                    schema_query=schema_query,
+                )
             if allocation_result is not None:
                 doc_target_recall_override = (
                     allocation_result.target_recall_doc_filtering
@@ -354,6 +394,13 @@ class DataExtraction(DataPopulator):
                     f"doc_target_recall={doc_target_recall_override:.4f}, "
                     f"predicate_target_recall={proxy_target_recall_override:.4f}, "
                     f"estimated_cost={allocation_result.estimated_cost:.4f}"
+                )
+                allocation_path = (
+                    self.out_root / f"alpha_allocation_{qid}_{self.param_str}.json"
+                )
+                allocation_path.write_text(
+                    json.dumps(allocation_result.to_dict(), indent=2),
+                    encoding="utf-8",
                 )
 
             # Phase 0: Doc filtering (optional) - exclude schema-irrelevant docs
@@ -683,6 +730,7 @@ class DataExtraction(DataPopulator):
         source_table_metadata_miss_count = 0
         unknown_schema_null_count = 0
         max_retries_null_count = 0
+        updated_result_count = 0
         for doc_id in target_doc_ids:
             self._wait_if_paused(f"table-assignment:{doc_id}")
             # Skip if already has table assignment
@@ -708,19 +756,34 @@ class DataExtraction(DataPopulator):
             null_cache_key = (schema_signature, doc_id)
             if cache_enabled and cached_table and cached_table in all_tables:
                 res_data[doc_id] = {RESULT_TABLE_KEY: cached_table, RESULT_DATA_KEY: {}}
-                self.save_results(res_path, res_data)
+                updated_result_count += 1
+                self._save_results_progress(
+                    res_path,
+                    res_data,
+                    updated_result_count,
+                )
                 cache_hit_count += 1
                 progress_bar.update(1)
                 continue
             if cache_enabled and cached_table:
                 res_data[doc_id] = {RESULT_TABLE_KEY: NULL_VALUE, RESULT_DATA_KEY: {}}
-                self.save_results(res_path, res_data)
+                updated_result_count += 1
+                self._save_results_progress(
+                    res_path,
+                    res_data,
+                    updated_result_count,
+                )
                 cache_hit_count += 1
                 progress_bar.update(1)
                 continue
             if cache_enabled and null_cache_key in self._table_assignment_null_cache:
                 res_data[doc_id] = {RESULT_TABLE_KEY: NULL_VALUE, RESULT_DATA_KEY: {}}
-                self.save_results(res_path, res_data)
+                updated_result_count += 1
+                self._save_results_progress(
+                    res_path,
+                    res_data,
+                    updated_result_count,
+                )
                 cache_hit_count += 1
                 progress_bar.update(1)
                 continue
@@ -779,12 +842,17 @@ class DataExtraction(DataPopulator):
                 table_assigned = NULL_VALUE
             # Initialize entry with table assignment and empty data
             res_data[doc_id] = {RESULT_TABLE_KEY: table_assigned, RESULT_DATA_KEY: {}}
-            self.save_results(res_path, res_data)
+            updated_result_count += 1
+            self._save_results_progress(
+                res_path,
+                res_data,
+                updated_result_count,
+            )
             progress_bar.update(1)
 
         progress_bar.close()
-        if not res_path.exists():
-            self.save_results(res_path, res_data)
+        if updated_result_count or not res_path.exists():
+            self._save_results_progress(res_path, res_data, updated_result_count, force=True)
         stats_parts = [f"excluded: {excluded_count}"]
         if cache_enabled:
             stats_parts.append(f"cache_hits: {cache_hit_count}")
@@ -866,13 +934,26 @@ class DataExtraction(DataPopulator):
             return False, None
         if not isinstance(metadata, dict):
             return False, None
+
+        schema_tables = metadata.get("schema_tables")
+        if isinstance(schema_tables, list):
+            for table_name in schema_tables:
+                table = str(table_name or "").strip()
+                if table in cache_tables:
+                    return True, table
+
+        for key in ("schema_table", "table_id"):
+            table = str(metadata.get(key) or "").strip()
+            if table:
+                return True, table if table in cache_tables else NULL_VALUE
+
         source_table = metadata.get("table_name") or metadata.get("source_table")
         if is_none_value(source_table):
             return False, None
         table = str(source_table).strip()
-        if not table:
+        if not table or table not in cache_tables:
             return False, None
-        return True, table if table in cache_tables else NULL_VALUE
+        return True, table
 
     def _process_proxy_runtime_per_table(
         self,
@@ -1120,6 +1201,7 @@ class DataExtraction(DataPopulator):
             return
 
         # Process each (doc_id, attr) pair
+        updated_attr_count = 0
         for doc_id, attr in pending_tasks:
             self._wait_if_paused(f"attr-extraction:{doc_id}:{attr}")
             table_assigned = res_data[doc_id].get(RESULT_TABLE_KEY)
@@ -1149,10 +1231,12 @@ class DataExtraction(DataPopulator):
             res_data[doc_id][RESULT_DATA_KEY][attr] = attr_val
 
             # Save after each attr extraction
-            self.save_results(res_path, res_data)
+            updated_attr_count += 1
+            self._save_results_progress(res_path, res_data, updated_attr_count)
             progress_bar.update(1)
 
         progress_bar.close()
+        self._save_results_progress(res_path, res_data, updated_attr_count, force=True)
         logging.info(f"[{self.__class__.__name__}:_process_attr_extraction] Done attr extraction -> {res_path}")
 
     def _materialize_query_output(self, query_id: str, res_path: Path) -> None:
