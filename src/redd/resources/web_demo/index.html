@@ -15,6 +15,7 @@
         </div>
         <nav class="global-nav" aria-label="Pages">
           <button class="nav-tab active" type="button" data-page-button="workbench">Workbench</button>
+          <button class="nav-tab" type="button" data-page-button="experiments">Experiments</button>
           <button class="nav-tab" type="button" data-page-button="operators">Operators</button>
           <button class="nav-tab" type="button" data-page-button="papers">Papers</button>
         </nav>
@@ -742,6 +743,29 @@
             <pre id="raw-json">{}</pre>
           </section>
         </section>
+          </section>
+        </div>
+      </section>
+
+      <section id="experiments-page" class="app-page info-page">
+        <div class="info-shell">
+          <section class="info-hero">
+            <p class="eyebrow">Paper Verification</p>
+            <h2>Experiment Replays</h2>
+            <p>
+              Replay the paper-model and analogous experiments from the web UI, including provider checks,
+              LLM extraction, schema discovery, controlled sweeps, and the completion gate.
+            </p>
+            <div class="paper-experiment-actions">
+              <button id="paper-experiment-refresh" class="secondary-button" type="button">Refresh</button>
+              <button id="paper-experiment-run-all" type="button">Run All</button>
+            </div>
+          </section>
+
+          <section class="paper-experiment-panel">
+            <div id="paper-experiment-list" class="paper-experiment-list">
+              <div class="empty-state">Loading experiments...</div>
+            </div>
           </section>
         </div>
       </section>

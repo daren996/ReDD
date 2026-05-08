@@ -45,6 +45,23 @@ def _generated_schema_files(run_root: Path) -> list[Path]:
     return sorted(run_root.glob("**/preprocessing/**/res_*.json"))
 
 
+def _usage_models(run_root: Path) -> list[str]:
+    labels: list[str] = []
+    for path in sorted(run_root.glob("**/llm_usage*.jsonl")):
+        with path.open() as file:
+            for line in file:
+                line = line.strip()
+                if not line:
+                    continue
+                item = json.loads(line)
+                provider = str(item.get("provider") or "unknown")
+                model = str(item.get("response_model") or item.get("configured_model") or "unknown")
+                label = f"{provider}:{model}"
+                if label not in labels:
+                    labels.append(label)
+    return labels
+
+
 def _generated_items(run_root: Path) -> tuple[set[str], set[str], dict[str, list[str]], list[dict[str, Any]], list[str]]:
     tables: set[str] = set()
     attrs: set[str] = set()
@@ -109,6 +126,7 @@ def _semantic_attr_matches(
     aliases = {
         "appelation": {"appellation", "appellation_region", "region", "wine_region", "designation", "wine_name"},
         "appellation": {"appelation", "region", "wine_region", "designation", "wine_name"},
+        "winery": {"winery_name", "producer", "producer_name"},
     }
     for gt_attr in sorted(gt_attrs - set(gt_to_pred)):
         candidates = aliases.get(gt_attr, set())
@@ -161,6 +179,7 @@ def summarize_run(run_root: Path, dataset_root: Path) -> dict[str, Any]:
     return {
         "run_root": str(run_root),
         "dataset_root": str(dataset_root),
+        "models": _usage_models(run_root),
         "metrics": metrics,
         "files": files,
         "rows": rows,
@@ -195,6 +214,7 @@ def _write_markdown(path: Path, summary: dict[str, Any]) -> None:
 
 def _analogous_result(summary: dict[str, Any]) -> dict[str, Any]:
     metrics = summary["metrics"]
+    model_label = ", ".join(summary.get("models") or ["unknown model"])
     full = (
         metrics.get("schema_files", 0) > 0
         and metrics.get("table_recall") == 1.0
@@ -206,7 +226,7 @@ def _analogous_result(summary: dict[str, Any]) -> dict[str, Any]:
         "experiment_id": "table4_schema_discovery",
         "status": "analogous_supported" if full else "partial",
         "observed": (
-            f"Analogous DeepSeek schema run: table_recall={metrics.get('table_recall')}, "
+            f"Analogous LLM schema run ({model_label}): table_recall={metrics.get('table_recall')}, "
             f"table_precision={metrics.get('table_precision')}, "
             f"attribute_recall={metrics.get('attribute_recall')}, "
             f"attribute_precision={metrics.get('attribute_precision')}, "

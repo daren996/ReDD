@@ -123,6 +123,9 @@ const themeToggle = document.querySelector("#theme-toggle");
 const themeLabel = document.querySelector("#theme-label");
 const paperViewerMount = document.querySelector("#paper-viewer-mount");
 const paperTabs = document.querySelectorAll(".paper-tab");
+const paperExperimentList = document.querySelector("#paper-experiment-list");
+const paperExperimentRefresh = document.querySelector("#paper-experiment-refresh");
+const paperExperimentRunAll = document.querySelector("#paper-experiment-run-all");
 const CUSTOM_MODEL_VALUE = "__custom__";
 const SEARCH_DATASET_ALLOWLIST = new Set(["spider.college_demo", "bird.schools_demo"]);
 const DEFAULT_MODELS = {
@@ -172,6 +175,8 @@ const state = {
   activeDatasetId: null,
   configMaterialized: false,
   selectedPaper: "paper",
+  paperExperiments: [],
+  paperExperimentOutputRoot: "",
   lastPayload: {},
   resultLibrary: [],
   resultsUnavailable: "",
@@ -1074,7 +1079,7 @@ function buildConsoleSteps() {
   return [...COMMON_RUN_STEPS, ...stageSteps, ...TAIL_RUN_STEPS];
 }
 
-function resetConsoleRun() {
+function resetConsoleRun(stepsOverride = null) {
   if (state.consoleEventSource) {
     state.consoleEventSource.close();
     state.consoleEventSource = null;
@@ -1083,7 +1088,11 @@ function resetConsoleRun() {
     window.clearInterval(state.consoleElapsedTimer);
     state.consoleElapsedTimer = null;
   }
-  const steps = buildConsoleSteps().map((step) => ({ ...step, status: "pending", message: "" }));
+  const steps = (stepsOverride || buildConsoleSteps()).map((step) => ({
+    ...step,
+    status: "pending",
+    message: "",
+  }));
   state.consoleRun = {
     id: "",
     status: "queued",
@@ -1677,6 +1686,9 @@ function handleConsoleEvent(event) {
   } else if (event.type === "step_completed") {
     updateConsoleStep(event.step, "done", event.message);
     appendConsoleLog(event.message || `Completed ${event.step}.`);
+  } else if (event.type === "step_failed") {
+    updateConsoleStep(event.step, "failed", event.message);
+    appendConsoleLog(event.message || `Failed ${event.step}.`, "error");
   } else if (event.type === "optimization_update") {
     const optimization = event.optimization || {};
     upsertOptimization(optimization);
@@ -1916,9 +1928,9 @@ function upsertProgress(item) {
   renderConsoleProgress();
 }
 
-async function startStreamingRun(payload) {
-  resetConsoleRun();
-  const run = await fetchJson("/api/runs", {
+async function startStreamingRun(payload, options = {}) {
+  resetConsoleRun(options.steps || null);
+  const run = await fetchJson(options.endpoint || "/api/runs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -3187,6 +3199,86 @@ function renderPaperViewer() {
   `;
 }
 
+function renderPaperExperiments() {
+  if (!paperExperimentList) {
+    return;
+  }
+  const experiments = state.paperExperiments || [];
+  if (!experiments.length) {
+    paperExperimentList.innerHTML = '<div class="empty-state">No web paper experiments are registered.</div>';
+    return;
+  }
+  paperExperimentList.innerHTML = experiments
+    .map((item) => {
+      const readyCount = (item.evidence || []).filter((evidence) => evidence.exists).length;
+      const totalCount = (item.evidence || []).length;
+      const evidenceCopy = totalCount ? `${readyCount}/${totalCount} artifacts` : "No artifacts yet";
+      const stepCopy = (item.steps || []).map((step) => step.label).join(" -> ");
+      return `
+        <article class="paper-experiment-card" data-paper-experiment-id="${escapeHtml(item.id)}">
+          <header>
+            <div>
+              <span>${escapeHtml(item.id)}</span>
+              <h3>${escapeHtml(item.title)}</h3>
+            </div>
+            <strong class="${item.evidence_ready ? "ready" : "pending"}">${escapeHtml(evidenceCopy)}</strong>
+          </header>
+          <p>${escapeHtml(item.description)}</p>
+          ${item.config_path ? `<code>${escapeHtml(item.config_path)}</code>` : ""}
+          <small>${escapeHtml(stepCopy || "No runnable steps")}</small>
+          <button type="button" data-paper-experiment-run="${escapeHtml(item.id)}">Run</button>
+        </article>
+      `;
+    })
+    .join("");
+  paperExperimentList.querySelectorAll("[data-paper-experiment-run]").forEach((button) => {
+    button.addEventListener("click", () => {
+      runPaperExperiment(button.dataset.paperExperimentRun).catch((error) => {
+        setStatus("Error", "error");
+        setError(error.message || String(error));
+      });
+    });
+  });
+}
+
+async function loadPaperExperiments() {
+  const payload = await fetchJson("/api/paper-experiments");
+  state.paperExperiments = payload.experiments || [];
+  state.paperExperimentOutputRoot = payload.output_root || "";
+  renderPaperExperiments();
+}
+
+function paperExperimentSteps(experimentId) {
+  const item = (state.paperExperiments || []).find((experimentItem) => experimentItem.id === experimentId);
+  const steps = item?.steps || [];
+  return steps.length
+    ? steps.map((step) => ({ id: step.id, label: step.label }))
+    : [{ id: experimentId, label: item?.title || experimentId }];
+}
+
+async function runPaperExperiment(experimentId) {
+  if (!experimentId) {
+    return;
+  }
+  setError("");
+  setStatus("Running", "running");
+  runTitle.textContent = "Running paper experiment";
+  setActivePage("workbench");
+  setActiveView("console");
+  const payload = await startStreamingRun(
+    {},
+    {
+      endpoint: `/api/paper-experiments/${encodeURIComponent(experimentId)}/runs`,
+      steps: paperExperimentSteps(experimentId),
+    },
+  );
+  await loadPaperExperiments();
+  await loadOutputResults();
+  setStatus("Success", "success");
+  runTitle.textContent = "Paper experiment complete";
+  renderPayload(payload);
+}
+
 async function loadDefaults() {
   const defaults = await fetchJson("/api/defaults");
   state.defaults = defaults;
@@ -3198,7 +3290,7 @@ async function loadDefaults() {
   document.querySelectorAll('input[name="stages"]').forEach((item) => {
     item.checked = (defaults.default_stages || []).includes(item.value);
   });
-  await Promise.all([loadRegistryDatasets(), loadOutputResults()]);
+  await Promise.all([loadRegistryDatasets(), loadOutputResults(), loadPaperExperiments()]);
 }
 
 form.addEventListener("submit", async (event) => {
@@ -3244,6 +3336,30 @@ form.addEventListener("submit", async (event) => {
 
 refreshButton.addEventListener("click", () => {
   refreshRuntimeResources();
+});
+
+paperExperimentRefresh?.addEventListener("click", async () => {
+  setError("");
+  paperExperimentRefresh.disabled = true;
+  try {
+    await loadPaperExperiments();
+  } catch (error) {
+    setError(error.message || String(error));
+  } finally {
+    paperExperimentRefresh.disabled = false;
+  }
+});
+
+paperExperimentRunAll?.addEventListener("click", async () => {
+  paperExperimentRunAll.disabled = true;
+  try {
+    await runPaperExperiment("all_paper_analogous");
+  } catch (error) {
+    setStatus("Error", "error");
+    setError(error.message || String(error));
+  } finally {
+    paperExperimentRunAll.disabled = false;
+  }
 });
 
 loadConfig.addEventListener("click", async () => {

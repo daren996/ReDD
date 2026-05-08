@@ -38,7 +38,7 @@ def _classify_error(error: Exception) -> dict[str, Any]:
     }
 
 
-def smoke_provider(provider: str, model: str) -> dict[str, Any]:
+def smoke_provider(provider: str, model: str, *, temperature: float | None = None) -> dict[str, Any]:
     try:
         runtime = LLMRuntime.from_config(
             provider,
@@ -54,7 +54,7 @@ def smoke_provider(provider: str, model: str) -> dict[str, Any]:
             CompletionRequest(
                 messages=[{"role": "user", "content": 'Return JSON only: {"ok": true}'}],
                 response_format="json_object",
-                temperature=0,
+                temperature=temperature,
                 max_tokens=20,
             )
         )
@@ -73,8 +73,8 @@ def smoke_provider(provider: str, model: str) -> dict[str, Any]:
         }
 
 
-def run_smoke(providers: list[tuple[str, str]]) -> dict[str, Any]:
-    results = [smoke_provider(provider, model) for provider, model in providers]
+def run_smoke(providers: list[tuple[str, str]], *, temperature: float | None = None) -> dict[str, Any]:
+    results = [smoke_provider(provider, model, temperature=temperature) for provider, model in providers]
     return {
         "env_keys_present": {
             "DEEPSEEK_API_KEY": bool(os.getenv("DEEPSEEK_API_KEY")),
@@ -123,6 +123,12 @@ def main() -> int:
         default=[],
         help="Provider/model pair as provider:model. Defaults to DeepSeek, OpenAI, and SiliconFlow.",
     )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=None,
+        help="Optional temperature to pass to providers. Omit for provider defaults.",
+    )
     args = parser.parse_args()
 
     providers = []
@@ -136,7 +142,7 @@ def main() -> int:
 
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
-    summary = run_smoke(providers)
+    summary = run_smoke(providers, temperature=args.temperature)
     json_path = output_root / "provider_smoke.json"
     md_path = output_root / "provider_smoke.md"
     json_path.write_text(json.dumps(summary, indent=2) + "\n")

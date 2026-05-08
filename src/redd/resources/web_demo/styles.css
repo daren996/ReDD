@@ -3026,6 +3026,87 @@ pre {
   line-height: 1.65;
 }
 
+.paper-experiment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.paper-experiment-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.paper-experiment-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.paper-experiment-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 220px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 10px 24px var(--shadow);
+  padding: 16px;
+}
+
+.paper-experiment-card header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.paper-experiment-card header span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.paper-experiment-card header strong {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 5px 8px;
+}
+
+.paper-experiment-card header strong.ready {
+  border-color: rgba(37, 130, 90, 0.35);
+  color: var(--ok);
+}
+
+.paper-experiment-card h3 {
+  font-size: 16px;
+}
+
+.paper-experiment-card p,
+.paper-experiment-card small {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.paper-experiment-card code {
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-soft);
+  padding: 8px;
+}
+
+.paper-experiment-card button {
+  align-self: end;
+  width: fit-content;
+}
+
 .operator-map {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -3233,7 +3314,8 @@ pre {
   .saved-results-grid,
   .console-grid,
   .console-tail-grid,
-  .operator-map {
+  .operator-map,
+  .paper-experiment-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -3315,7 +3397,8 @@ pre {
   .saved-results-grid,
   .config-empty-state,
   .dataset-row-main,
-  .operator-map {
+  .operator-map,
+  .paper-experiment-list {
     grid-template-columns: 1fr;
   }
 

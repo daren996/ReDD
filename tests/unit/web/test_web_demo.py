@@ -109,6 +109,37 @@ class WebDemoTests(unittest.TestCase):
         self.assertIn("gemini", payload["model_catalog"]["llm"])
         self.assertIn("openai", payload["model_catalog"]["embedding"])
 
+    def test_paper_experiments_endpoint_lists_web_replay_recipes(self) -> None:
+        client = TestClient(create_web_demo_app())
+
+        response = client.get("/api/paper-experiments")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        experiment_ids = {item["id"] for item in payload["experiments"]}
+        self.assertEqual(payload["output_root"], "outputs/fastredd_paper_model_partial")
+        self.assertIn("provider_smoke", experiment_ids)
+        self.assertIn("qwen3_data_population", experiment_ids)
+        self.assertIn("gpt5_schema_attempt", experiment_ids)
+        self.assertIn("qwen3_schema_analogous", experiment_ids)
+        self.assertIn("controlled_analogous", experiment_ids)
+        self.assertIn("completion_gate", experiment_ids)
+        qwen = next(item for item in payload["experiments"] if item["id"] == "qwen3_data_population")
+        self.assertEqual(qwen["config_path"], "configs/examples/fastredd_qwen3_partial_single_doc.yaml")
+        self.assertTrue(qwen["steps"])
+        run_all = next(item for item in payload["experiments"] if item["id"] == "all_paper_analogous")
+        run_all_step_ids = {step["id"] for step in run_all["steps"]}
+        self.assertIn("deepseek_schema", run_all_step_ids)
+        self.assertIn("completion_gate", run_all_step_ids)
+
+    def test_paper_experiment_run_rejects_unknown_recipe(self) -> None:
+        client = TestClient(create_web_demo_app())
+
+        response = client.post("/api/paper-experiments/not-real/runs")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {"detail": "Not Found"})
+
     def test_config_inspect_falls_back_from_stale_experiment_selection(self) -> None:
         client = TestClient(create_web_demo_app())
 
@@ -824,6 +855,7 @@ class WebDemoTests(unittest.TestCase):
         self.assertEqual(index.status_code, 200)
         self.assertIn("ReDD", index.text)
         self.assertIn("data-page-button=\"operators\"", index.text)
+        self.assertIn("data-page-button=\"experiments\"", index.text)
         self.assertIn("data-source=\"upload\"", index.text)
         self.assertIn("refresh-button", index.text)
         self.assertIn("refresh-label\">Refresh", index.text)
@@ -838,9 +870,12 @@ class WebDemoTests(unittest.TestCase):
         self.assertNotIn("config-models-json", index.text)
         self.assertIn("upload-source-panel", index.text)
         self.assertIn("theme-toggle", index.text)
+        self.assertIn("paper-experiment-list", index.text)
         self.assertEqual(script.status_code, 200)
         self.assertIn("/api/run", script.text)
         self.assertIn("/api/runs", script.text)
+        self.assertIn("/api/paper-experiments", script.text)
+        self.assertIn("function runPaperExperiment", script.text)
         self.assertIn('method: "DELETE"', script.text)
         self.assertIn("CUSTOM_MODEL_VALUE", script.text)
         self.assertIn("paperCatalog", script.text)

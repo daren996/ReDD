@@ -7,6 +7,8 @@ import importlib
 import json
 import os
 import re
+import subprocess
+import sys
 import threading
 import time
 import uuid
@@ -70,6 +72,7 @@ WEB_DEMO_PAPERS = {
     "2025_ReDD.pdf": "papers/2025_ReDD.pdf",
     "2025_ReDD_TechReport.pdf": "papers/2025_ReDD_TechReport.pdf",
 }
+WEB_DEMO_PAPER_OUTPUT_ROOT = "outputs/fastredd_paper_model_partial"
 WEB_DEMO_API_KEY_ENV_VARS = tuple(dict.fromkeys(API_KEY_ENV_VARS.values()))
 DEFAULT_WEB_DEMO_MODELS = {
     "llm": {
@@ -93,6 +96,58 @@ DEFAULT_WEB_DEMO_MODELS = {
         "base_url": None,
         "batch_size": 100,
         "storage_file": "embeddings.sqlite3",
+    },
+}
+WEB_DEMO_PAPER_EXPERIMENT_METADATA = {
+    "provider_smoke": {
+        "title": "Provider Smoke",
+        "description": "Check paper-model providers: OpenAI GPT-5 and SiliconFlow Qwen3.",
+        "evidence": ["reports/provider_smoke/provider_smoke.json"],
+    },
+    "qwen3_data_population": {
+        "title": "Qwen3 Data Population",
+        "description": "Run the single-document Table 2-style LLM extraction and evaluation.",
+        "config_path": "configs/examples/fastredd_qwen3_partial_single_doc.yaml",
+        "evidence": [
+            "qwen3_single_doc/reports/redd_paper_analogous_summary.json",
+            "qwen3_single_doc/reports/redd_paper_llm_usage_summary.json",
+        ],
+    },
+    "gpt5_schema_attempt": {
+        "title": "GPT-5 Schema Attempt",
+        "description": "Attempt the paper schema-discovery model and record provider quota blockers.",
+        "config_path": "configs/examples/fastredd_gpt5_schema_partial_single_doc.yaml",
+        "evidence": ["gpt5_schema_single_doc/reports/gpt5_schema_attempt.log"],
+    },
+    "qwen3_schema_analogous": {
+        "title": "Qwen3 Schema Analogous",
+        "description": "Run the schema-discovery prompt with a currently available LLM provider.",
+        "config_path": "configs/examples/qwen3_schema_analogous_single_doc_v1.yaml",
+        "evidence": ["qwen3_schema_analogous_single_doc/reports/redd_paper_analogous_schema_summary.json"],
+    },
+    "deepseek_schema_analogous": {
+        "title": "DeepSeek Schema Analogous",
+        "description": "Run the same schema-discovery prompt with DeepSeek as an alternate provider.",
+        "config_path": "configs/examples/deepseek_schema_analogous_single_doc_v2.yaml",
+        "evidence": ["deepseek_schema_analogous_single_doc/reports/redd_paper_analogous_schema_summary.json"],
+    },
+    "controlled_analogous": {
+        "title": "Controlled Analogous Sweeps",
+        "description": "Generate controlled evidence for Table 2/3, Figures 2-6, density, one-to-many, and optimizer claims.",
+        "evidence": ["reports/redd_paper_controlled_analogous_experiments.json"],
+    },
+    "completion_gate": {
+        "title": "Completion Gate",
+        "description": "Run the paper-claim verifier in analogous mode over the output tree.",
+        "evidence": [
+            "reports/redd_paper_completion_gate.json",
+            "reports/redd_paper_completion_audit.json",
+        ],
+    },
+    "all_paper_analogous": {
+        "title": "All Paper Analogous Experiments",
+        "description": "Run the full web-supported sequence used to reproduce the current analogous evidence.",
+        "evidence": ["reports/redd_paper_completion_audit.json"],
     },
 }
 
@@ -652,6 +707,390 @@ class _WebRunRegistry:
             return self._runs.get(run_id)
 
 
+def _python_command(code: str) -> list[str]:
+    return [sys.executable, "-c", code]
+
+
+def _script_command(script: str, *args: str) -> list[str]:
+    return [sys.executable, str(resolve_repo_path(script)), *args]
+
+
+def _paper_step(
+    step_id: str,
+    label: str,
+    argv: Sequence[str],
+    *,
+    env: Mapping[str, str] | None = None,
+    allow_failure: bool = False,
+    expected_blocker: str | None = None,
+    log_path: str | None = None,
+    exitcode_path: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "id": step_id,
+        "label": label,
+        "argv": [str(item) for item in argv],
+        "env": dict(env or {}),
+        "allow_failure": allow_failure,
+        "expected_blocker": expected_blocker,
+        "log_path": log_path,
+        "exitcode_path": exitcode_path,
+    }
+
+
+def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
+    output_root = WEB_DEMO_PAPER_OUTPUT_ROOT
+    steps: dict[str, list[dict[str, Any]]] = {
+        "provider_smoke": [
+            _paper_step(
+                "provider_smoke",
+                "Provider smoke",
+                _script_command(
+                    "scripts/redd_provider_smoke.py",
+                    "--output-root",
+                    f"{output_root}/reports/provider_smoke",
+                    "--provider",
+                    "openai:gpt-5",
+                    "--provider",
+                    "siliconflow:Qwen/Qwen3-30B-A3B-Instruct-2507",
+                ),
+                allow_failure=True,
+                expected_blocker="OpenAI GPT-5 may return quota_or_rate_limit.",
+            )
+        ],
+        "qwen3_data_population": [
+            _paper_step(
+                "qwen3_extract",
+                "Run Qwen3 extraction",
+                _python_command(
+                    "from redd.runners import run_extract; "
+                    "run_extract('configs/examples/fastredd_qwen3_partial_single_doc.yaml', 'demo')"
+                ),
+                env={
+                    "REDD_LLM_USAGE_LOG": (
+                        f"{output_root}/qwen3_single_doc/reports/llm_usage.jsonl"
+                    )
+                },
+            ),
+            _paper_step(
+                "qwen3_evaluation",
+                "Evaluate Qwen3 extraction",
+                _python_command(
+                    "from redd.runners import run_evaluation; "
+                    "run_evaluation('configs/examples/fastredd_qwen3_partial_single_doc.yaml', 'demo')"
+                ),
+            ),
+            _paper_step(
+                "qwen3_summary",
+                "Summarize Qwen3 extraction",
+                _script_command(
+                    "scripts/redd_paper_analogous_summarize.py",
+                    "--run-root",
+                    f"{output_root}/qwen3_single_doc",
+                    "--paper-output-root",
+                    output_root,
+                ),
+            ),
+            _paper_step(
+                "qwen3_usage",
+                "Summarize Qwen3 token usage",
+                _script_command(
+                    "scripts/redd_paper_llm_usage_summarize.py",
+                    "--run-root",
+                    f"{output_root}/qwen3_single_doc",
+                    "--paper-output-root",
+                    output_root,
+                ),
+            ),
+        ],
+        "gpt5_schema_attempt": [
+            _paper_step(
+                "gpt5_schema",
+                "Attempt GPT-5 schema discovery",
+                _python_command(
+                    "from redd.runners import run_experiment; "
+                    "run_experiment('configs/examples/fastredd_gpt5_schema_partial_single_doc.yaml', 'demo')"
+                ),
+                env={
+                    "REDD_LLM_USAGE_LOG": (
+                        f"{output_root}/gpt5_schema_single_doc/reports/llm_usage.jsonl"
+                    )
+                },
+                allow_failure=True,
+                expected_blocker="OpenAI GPT-5 is expected to fail when the account has insufficient quota.",
+                log_path=f"{output_root}/gpt5_schema_single_doc/reports/gpt5_schema_attempt.log",
+                exitcode_path=f"{output_root}/gpt5_schema_single_doc/reports/gpt5_schema_attempt.exitcode",
+            )
+        ],
+        "qwen3_schema_analogous": [
+            _paper_step(
+                "qwen3_schema",
+                "Run Qwen3 schema analogous",
+                _python_command(
+                    "from redd.runners import run_experiment; "
+                    "run_experiment('configs/examples/qwen3_schema_analogous_single_doc_v1.yaml', 'demo')"
+                ),
+                env={
+                    "REDD_LLM_USAGE_LOG": (
+                        f"{output_root}/qwen3_schema_analogous_single_doc/reports/llm_usage.jsonl"
+                    )
+                },
+            ),
+            _paper_step(
+                "qwen3_schema_summary",
+                "Summarize Qwen3 schema analogous",
+                _script_command(
+                    "scripts/redd_paper_analogous_schema_summarize.py",
+                    "--run-root",
+                    f"{output_root}/qwen3_schema_analogous_single_doc",
+                    "--dataset-root",
+                    "dataset/canonical/examples.single_doc_demo",
+                    "--paper-output-root",
+                    output_root,
+                ),
+            ),
+        ],
+        "deepseek_schema_analogous": [
+            _paper_step(
+                "deepseek_schema",
+                "Run DeepSeek schema analogous",
+                _python_command(
+                    "from redd.runners import run_experiment; "
+                    "run_experiment('configs/examples/deepseek_schema_analogous_single_doc_v2.yaml', 'demo')"
+                ),
+                env={
+                    "REDD_LLM_USAGE_LOG": (
+                        f"{output_root}/deepseek_schema_analogous_single_doc/reports/llm_usage.jsonl"
+                    )
+                },
+            ),
+            _paper_step(
+                "deepseek_schema_summary",
+                "Summarize DeepSeek schema analogous",
+                _script_command(
+                    "scripts/redd_paper_analogous_schema_summarize.py",
+                    "--run-root",
+                    f"{output_root}/deepseek_schema_analogous_single_doc",
+                    "--dataset-root",
+                    "dataset/canonical/examples.single_doc_demo",
+                    "--paper-output-root",
+                    output_root,
+                ),
+            ),
+        ],
+        "controlled_analogous": [
+            _paper_step(
+                "dataset_setup",
+                "Summarize dataset setup",
+                _script_command(
+                    "scripts/redd_paper_dataset_setup_summarize.py",
+                    "--dataset-root",
+                    "dataset/canonical",
+                    "--run-root",
+                    f"{output_root}/qwen3_single_doc",
+                    "--paper-output-root",
+                    output_root,
+                ),
+            ),
+            _paper_step(
+                "controlled_analogous",
+                "Run controlled analogous sweeps",
+                _script_command(
+                    "scripts/redd_paper_controlled_analogous_experiments.py",
+                    "--output-root",
+                    output_root,
+                ),
+            ),
+        ],
+        "completion_gate": [
+            _paper_step(
+                "completion_gate",
+                "Run completion gate",
+                _script_command(
+                    "scripts/redd_paper_verify_all.py",
+                    "--output-root",
+                    output_root,
+                    "--dataset-root",
+                    "dataset/canonical",
+                    "--evidence-mode",
+                    "analogous",
+                ),
+            )
+        ],
+    }
+    if experiment_id == "all_paper_analogous":
+        ordered_ids = [
+            "provider_smoke",
+            "qwen3_data_population",
+            "gpt5_schema_attempt",
+            "qwen3_schema_analogous",
+            "deepseek_schema_analogous",
+            "controlled_analogous",
+            "completion_gate",
+        ]
+        return [step for item in ordered_ids for step in steps[item]]
+    try:
+        return steps[experiment_id]
+    except KeyError as exc:
+        raise KeyError(f"Paper experiment `{experiment_id}` is not registered.") from exc
+
+
+def _paper_evidence_status(experiment_id: str) -> list[dict[str, Any]]:
+    output_root = resolve_repo_path(WEB_DEMO_PAPER_OUTPUT_ROOT)
+    meta = WEB_DEMO_PAPER_EXPERIMENT_METADATA.get(experiment_id, {})
+    evidence = []
+    for relative in meta.get("evidence", []):
+        path = output_root / str(relative)
+        evidence.append(
+            {
+                "path": str(path),
+                "relative_path": str(Path(WEB_DEMO_PAPER_OUTPUT_ROOT) / str(relative)),
+                "exists": path.exists(),
+                "size_bytes": path.stat().st_size if path.exists() else 0,
+                "modified": (
+                    datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).isoformat()
+                    if path.exists()
+                    else None
+                ),
+            }
+        )
+    return evidence
+
+
+def list_web_paper_experiments() -> dict[str, Any]:
+    experiments = []
+    for experiment_id, meta in WEB_DEMO_PAPER_EXPERIMENT_METADATA.items():
+        evidence = _paper_evidence_status(experiment_id)
+        steps = _paper_experiment_steps(experiment_id)
+        experiments.append(
+            {
+                "id": experiment_id,
+                "title": meta["title"],
+                "description": meta["description"],
+                "config_path": meta.get("config_path"),
+                "steps": [{"id": step["id"], "label": step["label"]} for step in steps],
+                "evidence": evidence,
+                "supported": True,
+                "evidence_ready": bool(evidence) and all(item["exists"] for item in evidence),
+            }
+        )
+    return {
+        "output_root": WEB_DEMO_PAPER_OUTPUT_ROOT,
+        "experiments": experiments,
+    }
+
+
+def _tail_text(text: str, limit: int = 8000) -> str:
+    if len(text) <= limit:
+        return text
+    return text[-limit:]
+
+
+def _run_command_step(step: dict[str, Any]) -> dict[str, Any]:
+    env = os.environ.copy()
+    env.update({str(key): str(value) for key, value in step.get("env", {}).items()})
+    for value in step.get("env", {}).values():
+        path = resolve_repo_path(value)
+        path.parent.mkdir(parents=True, exist_ok=True)
+    completed = subprocess.run(
+        step["argv"],
+        cwd=PROJECT_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if step.get("log_path"):
+        log_path = resolve_repo_path(str(step["log_path"]))
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text(
+            (completed.stdout or "") + ("\n" if completed.stdout and completed.stderr else "") + (completed.stderr or ""),
+            encoding="utf-8",
+        )
+    if step.get("exitcode_path"):
+        exitcode_path = resolve_repo_path(str(step["exitcode_path"]))
+        exitcode_path.parent.mkdir(parents=True, exist_ok=True)
+        exitcode_path.write_text(f"{int(completed.returncode)}\n", encoding="utf-8")
+    return {
+        "id": step["id"],
+        "label": step["label"],
+        "returncode": int(completed.returncode),
+        "stdout": _tail_text(completed.stdout or ""),
+        "stderr": _tail_text(completed.stderr or ""),
+        "allow_failure": bool(step.get("allow_failure")),
+        "expected_blocker": step.get("expected_blocker"),
+    }
+
+
+def _run_web_paper_experiment_async(record: _WebRunRecord, experiment_id: str) -> None:
+    record.started_at = time.time()
+    record.status = "running"
+    record.append(
+        {
+            "type": "run_started",
+            "step": None,
+            "message": f"Paper experiment `{experiment_id}` started.",
+            "status": "running",
+        }
+    )
+    started = time.perf_counter()
+    steps = _paper_experiment_steps(experiment_id)
+    result: dict[str, Any] = {
+        "experiment": experiment_id,
+        "paper_experiment": True,
+        "output_root": WEB_DEMO_PAPER_OUTPUT_ROOT,
+        "steps": [],
+    }
+    try:
+        for step in steps:
+            record.append(
+                {
+                    "type": "step_started",
+                    "step": step["id"],
+                    "message": step["label"],
+                }
+            )
+            step_result = _run_command_step(step)
+            result["steps"].append(step_result)
+            failed = step_result["returncode"] != 0
+            allowed = bool(step_result.get("allow_failure"))
+            message = (
+                f"{step['label']} finished with exit code {step_result['returncode']}."
+                if failed
+                else f"{step['label']} completed."
+            )
+            if failed and allowed and step_result.get("expected_blocker"):
+                message = f"{message} Expected blocker: {step_result['expected_blocker']}"
+            record.append(
+                {
+                    "type": "step_completed" if not failed or allowed else "step_failed",
+                    "step": step["id"],
+                    "message": message,
+                    "returncode": step_result["returncode"],
+                }
+            )
+            if failed and not allowed:
+                raise RuntimeError(message)
+
+        result["catalog"] = list_web_paper_experiments()
+        result["elapsed_seconds"] = round(time.perf_counter() - started, 4)
+        record.result = result
+        record.status = "completed"
+        record.ended_at = time.time()
+        record.append(
+            {
+                "type": "run_completed",
+                "step": None,
+                "message": "Paper experiment completed.",
+                "status": "completed",
+                "elapsed_seconds": result["elapsed_seconds"],
+                "payload": result,
+            }
+        )
+    except Exception as exc:
+        _fail_web_run_record(record, exc, status_code=500)
+
+
 def _run_request_from_payload(
     payload: dict[str, Any],
     *,
@@ -1057,6 +1496,34 @@ def create_web_demo_app(
                 status_code=400,
                 detail={"error": exc.__class__.__name__, "detail": str(exc)},
             ) from exc
+
+    @app.get("/api/paper-experiments")
+    def paper_experiments_index():
+        try:
+            return JSONResponse(list_web_paper_experiments())
+        except (FileNotFoundError, KeyError, TypeError, ValueError) as exc:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": exc.__class__.__name__, "detail": str(exc)},
+            ) from exc
+
+    @app.post("/api/paper-experiments/{experiment_id}/runs")
+    def create_paper_experiment_run(experiment_id: str):
+        try:
+            _paper_experiment_steps(experiment_id)
+        except KeyError as exc:
+            raise HTTPException(
+                status_code=404,
+                detail={"error": "PaperExperimentNotFound", "detail": str(exc)},
+            ) from exc
+        record = run_registry.create()
+        worker = threading.Thread(
+            target=_run_web_paper_experiment_async,
+            kwargs={"record": record, "experiment_id": experiment_id},
+            daemon=True,
+        )
+        worker.start()
+        return JSONResponse({"run_id": record.run_id, "status": record.status})
 
     @app.delete("/api/results")
     def delete_result(payload: dict[str, Any] = Body(default_factory=dict)):
