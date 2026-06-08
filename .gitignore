@@ -117,6 +117,7 @@ api_keys.json
 .playwright-mcp/
 
 # Runtime artifacts
+.codex_artifacts/
 logs/
 outputs/
 fig/

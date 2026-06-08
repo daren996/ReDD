@@ -1,7 +1,7 @@
 """
 Lazy Attribute Extraction with Cost-Based Ordering
 
-Optimizes data population by extracting attributes in order that fails fast.
+Optimizes data extraction by extracting attributes in order that fails fast.
 """
 import logging
 from dataclasses import dataclass

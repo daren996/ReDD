@@ -137,7 +137,7 @@ def test_suite_applies_analogous_result_overrides(tmp_path: Path) -> None:
                 "evidence_mode": "analogous",
                 "results": [
                     {
-                        "experiment_id": "table2_data_population_accuracy",
+                        "experiment_id": "table2_data_extraction_accuracy",
                         "status": "analogous_supported",
                         "observed": "ACCpop=0.91 from analogous LLM run",
                     }
@@ -147,7 +147,7 @@ def test_suite_applies_analogous_result_overrides(tmp_path: Path) -> None:
     )
     original = [
         suite.ExperimentResult(
-            "table2_data_population_accuracy",
+            "table2_data_extraction_accuracy",
             "Table 2",
             "blocked",
             "claim",
@@ -182,7 +182,7 @@ def test_extraction_analogous_summary_merges_results(tmp_path: Path) -> None:
     summarize._merge_analogous_result(
         path,
         {
-            "experiment_id": "table2_data_population_accuracy",
+            "experiment_id": "table2_data_extraction_accuracy",
             "status": "analogous_supported",
             "observed": "full extraction",
         },
@@ -190,7 +190,7 @@ def test_extraction_analogous_summary_merges_results(tmp_path: Path) -> None:
 
     payload = json.loads(path.read_text())
     result_ids = {item["experiment_id"] for item in payload["results"]}
-    assert result_ids == {"table2_data_population_accuracy", "table4_schema_discovery"}
+    assert result_ids == {"table2_data_extraction_accuracy", "table4_schema_discovery"}
 
 
 def test_schema_analogous_summary_reports_partial_attribute_match(tmp_path: Path) -> None:
@@ -325,7 +325,7 @@ def test_completion_audit_maps_expected_artifacts_to_gate_status(tmp_path: Path)
                         "status": "not_experimental",
                     },
                     {
-                        "experiment_id": "table2_data_population_accuracy",
+                        "experiment_id": "table2_data_extraction_accuracy",
                         "paper_ref": "Table 2",
                         "status": "analogous_supported",
                     },
@@ -344,7 +344,7 @@ def test_completion_audit_maps_expected_artifacts_to_gate_status(tmp_path: Path)
     by_id = {item["experiment_id"]: item for item in audit["checklist"]}
 
     assert audit["achieved"] is False
-    assert by_id["table2_data_population_accuracy"]["passing"] is True
+    assert by_id["table2_data_extraction_accuracy"]["passing"] is True
     assert by_id["table1_dataset_setup"]["status"] == "missing"
     assert audit["failing_count"] > 0
 

@@ -1,0 +1,11 @@
+schema_version: redd.manifest.v1
+dataset_id: deepseek_ablation_multi.spider_wine_1
+kind: derived
+version: 0.1.0
+parents:
+- spider.wine_1.wine_appellations
+paths:
+  documents: data/documents.parquet
+  ground_truth: data/ground_truth.parquet
+  schema: metadata/schema.json
+  queries: metadata/queries.json

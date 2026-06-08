@@ -1,0 +1,11 @@
+schema_version: redd.manifest.v1
+dataset_id: deepseek_ablation_multi.bird_student_club
+kind: derived
+version: 0.1.0
+parents:
+- bird.student_club.default_task
+paths:
+  documents: data/documents.parquet
+  ground_truth: data/ground_truth.parquet
+  schema: metadata/schema.json
+  queries: metadata/queries.json

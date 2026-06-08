@@ -1,0 +1,75 @@
+config_version: 2.1.1
+project:
+  name: deepseek-ablation-bike-table_cache_plus_proxy
+  seed: 42
+runtime:
+  output_dir: outputs/deepseek_ablation_bike
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: deepseek-ablation-table_cache_plus_proxy-v1
+  console_log_level: WARNING
+  force_rerun: true
+models:
+  llm:
+    provider: deepseek
+    model: deepseek-chat
+    api_key_env: DEEPSEEK_API_KEY
+    structured_backend: json
+    max_retries: 2
+    wait_time: 1
+    temperature: 0
+    max_tokens: 256
+  embedding:
+    provider: none
+    model: none
+    enabled: false
+    api_key_env: null
+datasets:
+  deepseek_ablation.spider.bike_1:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_ablation_bike
+    query_ids:
+    - Q_end_624
+    - Q_start_624
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 5
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: llm
+    prompts:
+      prompt_table: prompts/data_extraction_table_json.txt
+      prompt_attr: prompts/data_extraction_attr_json.txt
+    options:
+      force_rerun: true
+      result_save_interval: 1
+    table_assignment_cache:
+      enabled: true
+      source_table_metadata: true
+      general_schema: false
+    proxy_runtime:
+      enabled: true
+      predicate_proxy_mode: pretrained
+      target_recall: 0.95
+      use_embedding_proxies: false
+      use_learned_proxies: true
+      use_finetuned_learned_proxies: true
+      finetuned_model: heuristic
+      finetuned_epochs: 0
+      proxy_threshold: 0.51
+      allow_embedding_fallback: false
+      use_join_resolution: false
+      save_hard_negatives: false
+      verbose: true
+    alpha_allocation:
+      enabled: false
+experiments:
+  demo:
+    datasets:
+    - deepseek_ablation.spider.bike_1
+    stages:
+    - data_extraction
+    artifact_id: deepseek-ablation-table_cache_plus_proxy-v1

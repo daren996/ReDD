@@ -14,13 +14,16 @@ from redd.api import (
     DATA_EXTRACTION,
     PREPROCESSING,
     SCHEMA_REFINEMENT,
-    DataPopulator,
+    DataExtractor,
     SchemaGenerator,
     run_pipeline,
 )
+from redd.config import load_experiment_runtime
 from redd.core.data_loader.data_loader_hf_manifest import DataLoaderHFManifest
 from redd.core.utils.constants import PATH_TEMPLATES
 from redd.dataset_contract import validate_dataset_manifest
+from redd.experiment import select_runtime
+from redd.runners import run_experiment
 from redd.runtime import resolve_schema_artifact_source
 
 
@@ -94,8 +97,8 @@ class ApiContractTests(unittest.TestCase):
             self.assertEqual(generator.preprocessing(datasets=["wine_1/default_task"]), [{"ok": True}])
             mocked.assert_called_once_with(generator, datasets=["wine_1/default_task"])
 
-    def test_data_populator_loader_config_injects_schema_paths(self) -> None:
-        populator = DataPopulator(
+    def test_data_extractor_loader_config_injects_schema_paths(self) -> None:
+        extractor = DataExtractor(
             {
                 "mode": "openai",
                 "out_main": "outputs/data",
@@ -104,7 +107,7 @@ class ApiContractTests(unittest.TestCase):
             configure_logging=False,
         )
 
-        loader_config = populator._build_loader_config(
+        loader_config = extractor._build_loader_config(
             schema_source="generated",
             base_loader_config={"filemap": {"documents": "documents.json"}},
             dataset="wine_1/default_task",
@@ -130,8 +133,8 @@ class ApiContractTests(unittest.TestCase):
             ),
         )
 
-    def test_data_populator_loader_config_uses_ground_truth_schema_when_requested(self) -> None:
-        populator = DataPopulator(
+    def test_data_extractor_loader_config_uses_ground_truth_schema_when_requested(self) -> None:
+        extractor = DataExtractor(
             {
                 "mode": "openai",
                 "out_main": "outputs/data",
@@ -141,7 +144,7 @@ class ApiContractTests(unittest.TestCase):
             configure_logging=False,
         )
 
-        loader_config = populator._build_loader_config(
+        loader_config = extractor._build_loader_config(
             schema_source="ground_truth",
             base_loader_config={"manifest": "manifest.yaml"},
             dataset="wine_1/gt_schema_task",
@@ -156,8 +159,8 @@ class ApiContractTests(unittest.TestCase):
         self.assertEqual(loader_config["manifest"], "manifest.yaml")
         self.assertNotIn("filemap", loader_config)
 
-    def test_data_populator_schema_source_accepts_ground_truth_aliases(self) -> None:
-        populator = DataPopulator(
+    def test_data_extractor_schema_source_accepts_ground_truth_aliases(self) -> None:
+        extractor = DataExtractor(
             {
                 "mode": "openai",
                 "out_main": "outputs/data",
@@ -167,10 +170,10 @@ class ApiContractTests(unittest.TestCase):
             configure_logging=False,
         )
 
-        self.assertEqual(populator._resolve_schema_source_mode(populator.config), "ground_truth")
+        self.assertEqual(extractor._resolve_schema_source_mode(extractor.config), "ground_truth")
 
-    def test_data_populator_delegates_to_stage_orchestrator(self) -> None:
-        populator = DataPopulator(
+    def test_data_extractor_delegates_to_stage_orchestrator(self) -> None:
+        extractor = DataExtractor(
             {
                 "mode": "openai",
                 "out_main": "outputs/data",
@@ -180,9 +183,9 @@ class ApiContractTests(unittest.TestCase):
         )
 
         with patch("redd.stages.data_extraction.run_data_extraction", return_value=[{"ok": True}]) as mocked:
-            self.assertEqual(populator.data_extraction(datasets=["wine_1/default_task"]), [{"ok": True}])
+            self.assertEqual(extractor.data_extraction(datasets=["wine_1/default_task"]), [{"ok": True}])
             mocked.assert_called_once_with(
-                populator,
+                extractor,
                 datasets=["wine_1/default_task"],
                 schema_generator=None,
                 schema_config=None,
@@ -203,17 +206,17 @@ class ApiContractTests(unittest.TestCase):
                 calls.append(("ref", datasets))
                 return ["ref"]
 
-        class FakePopulator:
+        class FakeExtractor:
             def data_extraction(self, datasets=None, schema_generator=None):
                 calls.append(("data", datasets, schema_generator))
                 return ["data"]
 
         generator = FakeGenerator()
-        populator = FakePopulator()
+        extractor = FakeExtractor()
 
         results = run_pipeline(
             schema_generator=cast(SchemaGenerator, generator),
-            data_populator=cast(DataPopulator, populator),
+            data_extractor=cast(DataExtractor, extractor),
             datasets=["wine_1/default_task"],
         )
 
@@ -229,6 +232,41 @@ class ApiContractTests(unittest.TestCase):
     def test_run_pipeline_requires_requested_components(self) -> None:
         with self.assertRaisesRegex(ValueError, "PREPROCESSING requires `schema_generator=`"):
             run_pipeline(stages=[PREPROCESSING])
+
+    def test_experiment_runtime_selection_accepts_registry_dataset_queries_and_stage_aliases(self) -> None:
+        runtime, _ = load_experiment_runtime("configs/examples/ground_truth_demo.yaml", "demo")
+
+        selected = select_runtime(
+            runtime,
+            datasets="examples.single_doc_demo",
+            query_ids="Q1",
+            stages="extract",
+        )
+
+        dataset = selected.datasets["examples.single_doc_demo"]
+        self.assertEqual(selected.stage_order, [DATA_EXTRACTION.value])
+        self.assertEqual(dataset.query_ids, ["Q1"])
+        self.assertEqual(dataset.split.train_count, 0)
+        context = selected.stage_runtime_dict(DATA_EXTRACTION.value)["_runtime_contexts"][0]
+        self.assertEqual(context["dataset"], "examples.single_doc_demo")
+        self.assertEqual(context["query_ids"], ["Q1"])
+
+    def test_runner_api_accepts_runtime_selection(self) -> None:
+        with patch("redd.runners.run_pipeline", return_value={"data_extraction": []}) as mocked:
+            payload = run_experiment(
+                "configs/examples/ground_truth_demo.yaml",
+                "demo",
+                datasets=["examples.single_doc_demo"],
+                query_ids=["Q1"],
+                stages=["extract"],
+            )
+
+        self.assertEqual(payload["datasets"], ["examples.single_doc_demo"])
+        self.assertEqual(payload["query_ids"], ["Q1"])
+        self.assertEqual(payload["stages"], [DATA_EXTRACTION.value])
+        _, kwargs = mocked.call_args
+        self.assertEqual(kwargs["datasets"], ["examples.single_doc_demo"])
+        self.assertEqual(kwargs["data_extractor"].config["exp_query_id_list"], ["Q1"])
 
     def test_schema_refinement_requires_preprocessing_artifact_when_general_schema_is_reused(self) -> None:
         with TemporaryDirectory() as temp_dir:

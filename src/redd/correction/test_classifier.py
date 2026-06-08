@@ -175,7 +175,7 @@ class ClassifierVal(ClassifierTrainer):
         return classifier_outputs
 
     def _load_dataset(self, loader, eval_output, out_root, qid, dids):
-        res_data_path = os.path.join(out_root, PATH_TEMPLATES.data_population_result(qid, self.param_str))
+        res_data_path = os.path.join(out_root, PATH_TEMPLATES.data_extraction_result(qid, self.param_str))
         res_data_dict = self.load_processed_res(res_data_path)
         states_dir = os.path.join(out_root, PATH_TEMPLATES.hidden_states_dir(qid, self.param_str))
         layer2dataset = {}

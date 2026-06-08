@@ -23,15 +23,13 @@ from .api import (
     DATA_EXTRACTION,
     PREPROCESSING,
     SCHEMA_REFINEMENT,
-    DataPopulator,
+    DataExtractor,
     SchemaGenerator,
     run_pipeline,
 )
 from .config import (
     API_KEY_ENV_VARS,
     PROJECT_ROOT,
-    DatasetRuntimeConfig,
-    DatasetSplitConfig,
     ExperimentRuntime,
     ReDDConfig,
     StageName,
@@ -46,6 +44,7 @@ from .diagnostics.dataset_consistency import (
     build_dataset_consistency_audit,
     write_dataset_consistency_audit,
 )
+from .experiment import select_runtime_datasets
 from .model_catalog import get_model_catalog
 
 DEFAULT_WEB_DEMO_CONFIG = "configs/demo/demo_datasets.yaml"
@@ -104,8 +103,8 @@ WEB_DEMO_PAPER_EXPERIMENT_METADATA = {
         "description": "Check paper-model providers: OpenAI GPT-5 and SiliconFlow Qwen3.",
         "evidence": ["reports/provider_smoke/provider_smoke.json"],
     },
-    "qwen3_data_population": {
-        "title": "Qwen3 Data Population",
+    "qwen3_data_extraction": {
+        "title": "Qwen3 Data Extraction",
         "description": "Run the single-document Table 2-style LLM extraction and evaluation.",
         "config_path": "configs/examples/fastredd_qwen3_partial_single_doc.yaml",
         "evidence": [
@@ -217,7 +216,7 @@ def run_web_demo(
         stage in {PREPROCESSING.value, SCHEMA_REFINEMENT.value}
         for stage in requested_stages
     )
-    needs_data_populator = DATA_EXTRACTION.value in requested_stages
+    needs_data_extractor = DATA_EXTRACTION.value in requested_stages
 
     schema_generator = (
         SchemaGenerator(
@@ -229,8 +228,8 @@ def run_web_demo(
         if needs_schema_generator
         else None
     )
-    data_populator = (
-        DataPopulator(
+    data_extractor = (
+        DataExtractor(
             _data_extraction_runtime(
                 runtime,
                 requested_query_ids,
@@ -239,7 +238,7 @@ def run_web_demo(
             api_key=api_key,
             configure_logging=False,
         )
-        if needs_data_populator
+        if needs_data_extractor
         else None
     )
     _emit_web_run_event(
@@ -253,7 +252,7 @@ def run_web_demo(
     if event_sink is None:
         result = run_pipeline(
             schema_generator=schema_generator,
-            data_populator=data_populator,
+            data_extractor=data_extractor,
             stages=requested_stages,
             datasets=requested_datasets,
         )
@@ -277,9 +276,9 @@ def run_web_demo(
                         raise ValueError("SCHEMA REFINEMENT requires `schema_generator=`.")
                     stage_result = schema_generator.schema_refinement(datasets=requested_datasets)
                 elif stage_id == DATA_EXTRACTION.value:
-                    if data_populator is None:
-                        raise ValueError("DATA EXTRACTION requires `data_populator=`.")
-                    stage_result = data_populator.data_extraction(
+                    if data_extractor is None:
+                        raise ValueError("DATA EXTRACTION requires `data_extractor=`.")
+                    stage_result = data_extractor.data_extraction(
                         datasets=requested_datasets,
                         schema_generator=schema_generator,
                     )
@@ -758,7 +757,7 @@ def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
                 expected_blocker="OpenAI GPT-5 may return quota_or_rate_limit.",
             )
         ],
-        "qwen3_data_population": [
+        "qwen3_data_extraction": [
             _paper_step(
                 "qwen3_extract",
                 "Run Qwen3 extraction",
@@ -921,7 +920,7 @@ def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
     if experiment_id == "all_paper_analogous":
         ordered_ids = [
             "provider_smoke",
-            "qwen3_data_population",
+            "qwen3_data_extraction",
             "gpt5_schema_attempt",
             "qwen3_schema_analogous",
             "deepseek_schema_analogous",
@@ -1343,7 +1342,7 @@ def create_web_demo_app(
 
     @app.get("/", response_class=HTMLResponse)
     def index():
-        return HTMLResponse(_read_web_resource("index.html"))
+        return HTMLResponse(_read_web_resource("index.html"), headers={"Cache-Control": "no-store"})
 
     @app.exception_handler(404)
     def not_found(request: Any, exc: Any):
@@ -1382,6 +1381,7 @@ def create_web_demo_app(
     def app_js():
         return PlainTextResponse(
             _read_web_resource("app.js"),
+            headers={"Cache-Control": "no-store"},
             media_type="application/javascript; charset=utf-8",
         )
 
@@ -1389,7 +1389,17 @@ def create_web_demo_app(
     def styles_css():
         return PlainTextResponse(
             _read_web_resource("styles.css"),
+            headers={"Cache-Control": "no-store"},
             media_type="text/css; charset=utf-8",
+        )
+
+    @app.api_route("/assets/FastReDD.webp", methods=["GET", "HEAD"])
+    def fastredd_figure():
+        figure = resources.files("redd.resources.web_demo").joinpath("FastReDD.webp")
+        return FileResponse(
+            figure,
+            headers={"Cache-Control": "no-store"},
+            media_type="image/webp",
         )
 
     @app.api_route("/assets/papers/{paper_name}", methods=["GET", "HEAD"])
@@ -1674,35 +1684,7 @@ def _runtime_with_selected_datasets(
     requested_datasets: Sequence[str],
     query_ids: Sequence[str] | None = None,
 ) -> ExperimentRuntime:
-    selected: dict[str, DatasetRuntimeConfig] = {}
-    registry: dict[str, Any] | None = None
-    registry_path: Path | None = None
-
-    for dataset_id in requested_datasets:
-        if dataset_id in runtime.datasets:
-            selected[dataset_id] = runtime.datasets[dataset_id]
-            continue
-
-        if registry is None or registry_path is None:
-            registry, registry_path = _load_dataset_registry()
-        try:
-            entry = _registry_entry(registry, dataset_id)
-        except KeyError as exc:
-            raise ValueError(
-                f"Dataset `{dataset_id}` is neither in the selected config experiment "
-                "nor registered in dataset/manifest.yaml."
-            ) from exc
-
-        selected[dataset_id] = DatasetRuntimeConfig(
-            id=dataset_id,
-            root=_dataset_manifest_path(entry, registry_path).parent,
-            loader="hf_manifest",
-            query_ids=[str(query_id) for query_id in query_ids] if query_ids else None,
-            split=DatasetSplitConfig(),
-            loader_options={"manifest": "manifest.yaml"},
-        )
-
-    return runtime.model_copy(update={"datasets": selected})
+    return select_runtime_datasets(runtime, datasets=requested_datasets, query_ids=query_ids)
 
 
 def _load_dataset_registry(
@@ -1831,14 +1813,21 @@ def _output_result_summary(path: Path, root: Path) -> dict[str, Any]:
     }
 
 
+def _query_id_from_artifact_name(name: str, *, prefix: str, suffix: str) -> str | None:
+    if not name.startswith(prefix) or not name.endswith(suffix):
+        return None
+    stem = name[len(prefix) : len(name) - len(suffix)]
+    if "_" not in stem:
+        return stem
+    return stem.rsplit("_", 1)[0]
+
+
 def _query_id_from_result_name(name: str) -> str | None:
-    match = re.match(r"res_tabular_data_(?P<query>.+?)_.+\.json$", name)
-    return match.group("query") if match else None
+    return _query_id_from_artifact_name(name, prefix="res_tabular_data_", suffix=".json")
 
 
 def _query_id_from_eval_name(name: str) -> str | None:
-    match = re.match(r"eval_(?P<query>.+?)_.+\.json$", name)
-    return match.group("query") if match else None
+    return _query_id_from_artifact_name(name, prefix="eval_", suffix=".json")
 
 
 def _json_result_stats(content: dict[str, Any]) -> dict[str, Any]:
@@ -1852,28 +1841,33 @@ def _json_result_stats(content: dict[str, Any]) -> dict[str, Any]:
     tables: set[str] = set()
     columns: set[str] = set()
     preview: list[dict[str, Any]] = []
-    for doc_id, record in list(content.items())[:5]:
+    fallback_preview: list[dict[str, Any]] = []
+    for doc_id, record in content.items():
         if not isinstance(record, dict):
-            preview.append({"id": str(doc_id), "value": record})
+            if len(fallback_preview) < 5:
+                fallback_preview.append({"id": str(doc_id), "value": record})
             continue
         table = record.get("res")
-        if table:
+        data = record.get("data") if isinstance(record.get("data"), dict) else None
+        has_tuple = bool((table and table != "None") or data)
+        if table and table != "None":
             tables.add(str(table))
-        data = record.get("data")
-        if isinstance(data, dict):
+        if data:
             columns.update(str(key) for key in data.keys())
-        preview.append(
-            {
-                "id": str(doc_id),
-                "table": table,
-                "data": data if isinstance(data, dict) else None,
-            }
-        )
+        item = {
+            "id": str(doc_id),
+            "table": table,
+            "data": data,
+        }
+        if has_tuple and len(preview) < 5:
+            preview.append(item)
+        elif len(fallback_preview) < 5:
+            fallback_preview.append(item)
     return {
         "records_count": len(content),
         "tables": sorted(tables),
         "columns": sorted(columns),
-        "preview": preview,
+        "preview": preview or fallback_preview,
     }
 
 
@@ -2109,17 +2103,7 @@ def _collect_doc_filter_metric(
             query_ids_by_root,
         )
     )
-    chunk_filter_files = _unique_existing_files(
-        path
-        for root in out_roots
-        for path in root.glob("chunk_filter/*.json")
-        if _artifact_query_allowed(
-            root,
-            _query_id_from_filter_name(path.name),
-            query_ids_by_root,
-        )
-    )
-    files = doc_filter_files or chunk_filter_files
+    files = doc_filter_files
     totals = {
         "input_docs": 0,
         "kept_docs": 0,
@@ -2169,9 +2153,9 @@ def _collect_doc_filter_metric(
     if not files:
         return {
             "id": "doc_filter",
-            "title": "Chunk / Document Filter",
+            "title": "Document Filter",
             "status": "not_enabled",
-            "message": "No doc_filter or chunk_filter artifact was emitted for this run.",
+            "message": "No doc_filter artifact was emitted for this run.",
             "metrics": {},
         }
 
@@ -2185,7 +2169,7 @@ def _collect_doc_filter_metric(
     llm_doc_calls_saved = max(llm_doc_calls_before - llm_doc_calls_after, 0)
     return {
         "id": "doc_filter",
-        "title": "Chunk / Document Filter",
+        "title": "Document Filter",
         "status": "measured",
         "message": "Filtered schema-irrelevant documents before expensive LLM extraction.",
         "metrics": {
@@ -2746,8 +2730,11 @@ def _query_id_from_filter_name(name: str) -> str | None:
 
 
 def _query_id_from_proxy_decision_name(name: str) -> str | None:
-    match = re.match(r"res_tabular_data_(?P<query>.+?)_.+_proxy_decisions\.json$", name)
-    return match.group("query") if match else None
+    return _query_id_from_artifact_name(
+        name,
+        prefix="res_tabular_data_",
+        suffix="_proxy_decisions.json",
+    )
 
 
 def _query_id_from_adaptive_stats_name(name: str) -> str | None:

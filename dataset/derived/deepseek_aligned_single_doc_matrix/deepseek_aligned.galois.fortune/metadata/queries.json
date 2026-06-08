@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.galois.fortune",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List industry from fortune500_companies.",
+      "sql": "SELECT industry FROM fortune500_companies;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.industry"
+      ],
+      "output_columns": [
+        "fortune500_companies.industry"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "galois.fortune",
+      "dataset_id": "deepseek_aligned.galois.fortune"
+    }
+  ]
+}

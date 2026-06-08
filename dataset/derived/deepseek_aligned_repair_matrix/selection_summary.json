@@ -1,0 +1,29 @@
+[
+  {
+    "source": "galois.fortune",
+    "doc_id": "464-0",
+    "table": "fortune500_companies",
+    "attr": "company",
+    "dataset_id": "deepseek_repair.galois.fortune",
+    "experiment": "repair_galois_fortune",
+    "value": "Concentrix"
+  },
+  {
+    "source": "quest.lcr",
+    "doc_id": "lcr_corpus_synthetic_corpus_000534",
+    "table": "corpus",
+    "attr": "plaintiff",
+    "dataset_id": "deepseek_repair.quest.lcr",
+    "experiment": "repair_quest_lcr",
+    "value": "Greenpeace Australia"
+  },
+  {
+    "source": "spider.bike_1",
+    "doc_id": "1160-0",
+    "table": "trip",
+    "attr": "end_station_name",
+    "dataset_id": "deepseek_repair.spider.bike_1",
+    "experiment": "repair_spider_bike_1",
+    "value": "Embarcadero at Sansome"
+  }
+]

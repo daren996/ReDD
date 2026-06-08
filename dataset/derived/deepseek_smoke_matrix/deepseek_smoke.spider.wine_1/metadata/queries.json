@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.spider.wine_1",
+  "queries": [
+    {
+      "query_id": "q3",
+      "question": "List the wineries that produce wine from a grape other than Chardonnay or Pinot Noir and have a score greater than 90.",
+      "sql": "SELECT winery FROM wine WHERE grape NOT IN ('Chardonnay', 'Pinot Noir') AND score > '90';",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.winery",
+        "wine.grape",
+        "wine.score"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "spider.wine_1",
+      "dataset_id": "deepseek_smoke.spider.wine_1"
+    }
+  ]
+}

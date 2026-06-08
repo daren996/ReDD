@@ -3,47 +3,3068 @@
   "dataset_id": "galois.fortune.default_task",
   "queries": [
     {
-      "query_id": "Q1",
-      "question": "",
-      "sql": "",
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_003_4340_1",
+      "question": "List company from fortune500_companies where assets m is at most 4340.1.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 4340.1;",
       "required_tables": [
         "fortune500_companies"
       ],
       "required_columns": [
-        "fortune500_companies.company",
-        "fortune500_companies.ticker",
-        "fortune500_companies.sector",
-        "fortune500_companies.industry",
-        "fortune500_companies.is_profitable",
-        "fortune500_companies.founder_is_ceo",
-        "fortune500_companies.is_female_ceo",
-        "fortune500_companies.growth_in_jobs",
-        "fortune500_companies.change_in_rank",
-        "fortune500_companies.gained_in_rank",
-        "fortune500_companies.dropped_in_rank",
-        "fortune500_companies.newcomer_to_the_fortune500",
-        "fortune500_companies.global500",
-        "fortune500_companies.worlds_most_admired_companies",
-        "fortune500_companies.best_companies_to_work_for",
-        "fortune500_companies.number_of_employees",
-        "fortune500_companies.market_cap_march28_m",
-        "fortune500_companies.revenues_m",
-        "fortune500_companies.revenue_percent_change",
-        "fortune500_companies.profits_m",
-        "fortune500_companies.profits_percent_change",
         "fortune500_companies.assets_m",
-        "fortune500_companies.ceo",
-        "fortune500_companies.country",
-        "fortune500_companies.headquarters_city",
-        "fortune500_companies.headquarters_state",
-        "fortune500_companies.company_type",
-        "fortune500_companies.market_cap_updated_m"
+        "fortune500_companies.company"
       ],
       "output_columns": [
         "fortune500_companies.company"
       ],
-      "tags": [],
-      "difficulty": null
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "4340.1",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_003_4340_1",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 13,
+        "profile_eval_required_cells": 26,
+        "profile_eval_relevant_doc_rate": 0.02754237288135593,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_ceo_in_003_christopher_a_caldwel",
+      "question": "List company from fortune500_companies where ceo is one of Christopher A. Caldwell, Malcolm C. Roberts, Gordon J. Hardie, Gary S. Guthart, and 6 more.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"ceo\" IN ('Christopher A. Caldwell', 'Malcolm C. Roberts', 'Gordon J. Hardie', 'Gary S. Guthart', 'Charles Liang', 'A. James Teague/W. Randall Fowler', 'Patricia K. Poppe', 'Mikael Bratt', 'Milan Galik', 'Niraj S. Shah');",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.ceo",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.ceo",
+        "operator": "IN",
+        "value": [
+          "Christopher A. Caldwell",
+          "Malcolm C. Roberts",
+          "Gordon J. Hardie",
+          "Gary S. Guthart",
+          "Charles Liang",
+          "A. James Teague/W. Randall Fowler",
+          "Patricia K. Poppe",
+          "Mikael Bratt",
+          "Milan Galik",
+          "Niraj S. Shah"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_ceo_in_003_christopher_a_caldwel",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.03177966101694915,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_003_77",
+      "question": "List company from fortune500_companies where change in rank is at most -77.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" <= -77;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": "<=",
+        "value": "-77",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_003_77",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.03177966101694915,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_headquarters_city_value_003_chicago",
+      "question": "List company from fortune500_companies where headquarters city equals Chicago.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"headquarters_city\" = 'Chicago';",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.headquarters_city",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.headquarters_city",
+        "operator": "=",
+        "value": "Chicago",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_headquarters_city_value_003_chicago",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 14,
+        "profile_eval_required_cells": 28,
+        "profile_eval_relevant_doc_rate": 0.029661016949152543,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_headquarters_state_value_003_connecticut",
+      "question": "List company from fortune500_companies where headquarters state equals Connecticut.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"headquarters_state\" = 'Connecticut';",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.headquarters_state",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.headquarters_state",
+        "operator": "=",
+        "value": "Connecticut",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_headquarters_state_value_003_connecticut",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 14,
+        "profile_eval_required_cells": 28,
+        "profile_eval_relevant_doc_rate": 0.029661016949152543,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_industry_value_003_semiconductors_and_other",
+      "question": "List company from fortune500_companies where industry equals Semiconductors and Other Electronic Components.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"industry\" = 'Semiconductors and Other Electronic Components';",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.industry",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.industry",
+        "operator": "=",
+        "value": "Semiconductors and Other Electronic Components",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_industry_value_003_semiconductors_and_other",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 13,
+        "profile_eval_required_cells": 26,
+        "profile_eval_relevant_doc_rate": 0.02754237288135593,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_003_1840_9",
+      "question": "List company from fortune500_companies where market cap march28 m is at most 1840.9.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_march28_m\" <= 1840.9;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_march28_m",
+        "operator": "<=",
+        "value": "1840.9",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_003_1840_9",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 13,
+        "profile_eval_required_cells": 26,
+        "profile_eval_relevant_doc_rate": 0.02754237288135593,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_003_1942_0",
+      "question": "List company from fortune500_companies where market cap updated m is at most 1942.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_updated_m\" <= 1942.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.030181086519114688,
+        "actual_table_doc_coverage": 0.030181086519114688,
+        "result_docs": 15,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_updated_m",
+        "operator": "<=",
+        "value": "1942.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_003_1942_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 30,
+        "profile_all_relevant_doc_rate": 0.030181086519114688,
+        "profile_eval_relevant_docs": 13,
+        "profile_eval_required_cells": 26,
+        "profile_eval_relevant_doc_rate": 0.02754237288135593,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_005_5363_0",
+      "question": "List company from fortune500_companies where assets m is at most 5363.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 5363.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "5363.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_005_5363_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 22,
+        "profile_eval_required_cells": 44,
+        "profile_eval_relevant_doc_rate": 0.046610169491525424,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_005_54",
+      "question": "List company from fortune500_companies where change in rank is at most -54.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" <= -54;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": "<=",
+        "value": "-54",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_005_54",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 25,
+        "profile_eval_required_cells": 50,
+        "profile_eval_relevant_doc_rate": 0.05296610169491525,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_005_2523_8",
+      "question": "List company from fortune500_companies where market cap march28 m is at most 2523.8.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_march28_m\" <= 2523.8;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_march28_m",
+        "operator": "<=",
+        "value": "2523.8",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_005_2523_8",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 22,
+        "profile_eval_required_cells": 44,
+        "profile_eval_relevant_doc_rate": 0.046610169491525424,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_005_2549_0",
+      "question": "List company from fortune500_companies where market cap updated m is at most 2549.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_updated_m\" <= 2549.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_updated_m",
+        "operator": "<=",
+        "value": "2549.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_005_2549_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 22,
+        "profile_eval_required_cells": 44,
+        "profile_eval_relevant_doc_rate": 0.046610169491525424,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_m_value_005_689_0",
+      "question": "List company from fortune500_companies where profits m is at most -689.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_m\" <= -689.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_m",
+        "operator": "<=",
+        "value": "-689.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_m_value_005_689_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 24,
+        "profile_eval_required_cells": 48,
+        "profile_eval_relevant_doc_rate": 0.05084745762711865,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_percent_change_value_005_117_4",
+      "question": "List company from fortune500_companies where profits percent change is at most -117.4.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_percent_change\" <= -117.4;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_percent_change",
+        "operator": "<=",
+        "value": "-117.4",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_percent_change_value_005_117_4",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 24,
+        "profile_eval_required_cells": 48,
+        "profile_eval_relevant_doc_rate": 0.05084745762711865,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_005_20_8",
+      "question": "List company from fortune500_companies where revenue percent change is at most -20.8.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenue_percent_change\" <= -20.8;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenue_percent_change",
+        "operator": "<=",
+        "value": "-20.8",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_005_20_8",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 24,
+        "profile_eval_required_cells": 48,
+        "profile_eval_relevant_doc_rate": 0.05084745762711865,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenues_m_value_005_7462_0",
+      "question": "List company from fortune500_companies where revenues m is at most 7462.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenues_m\" <= 7462.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05030181086519115,
+        "actual_table_doc_coverage": 0.05030181086519115,
+        "result_docs": 25,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenues_m",
+        "operator": "<=",
+        "value": "7462.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenues_m_value_005_7462_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.05030181086519115,
+        "profile_eval_relevant_docs": 24,
+        "profile_eval_required_cells": 48,
+        "profile_eval_relevant_doc_rate": 0.05084745762711865,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_010_7492_0",
+      "question": "List company from fortune500_companies where assets m is at most 7492.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 7492.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "7492.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_010_7492_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 45,
+        "profile_eval_required_cells": 90,
+        "profile_eval_relevant_doc_rate": 0.09533898305084745,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_010_33",
+      "question": "List company from fortune500_companies where change in rank is at most -33.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" <= -33;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": "<=",
+        "value": "-33",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_010_33",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 47,
+        "profile_eval_required_cells": 94,
+        "profile_eval_relevant_doc_rate": 0.09957627118644068,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_headquarters_state_value_010_new_york",
+      "question": "List company from fortune500_companies where headquarters state equals New York.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"headquarters_state\" = 'New York';",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.headquarters_state",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.headquarters_state",
+        "operator": "=",
+        "value": "New York",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_headquarters_state_value_010_new_york",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 48,
+        "profile_eval_required_cells": 96,
+        "profile_eval_relevant_doc_rate": 0.1016949152542373,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_010_5072_2",
+      "question": "List company from fortune500_companies where market cap march28 m is at most 5072.2.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_march28_m\" <= 5072.2;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_march28_m",
+        "operator": "<=",
+        "value": "5072.2",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_010_5072_2",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 47,
+        "profile_eval_required_cells": 94,
+        "profile_eval_relevant_doc_rate": 0.09957627118644068,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_010_5072_0",
+      "question": "List company from fortune500_companies where market cap updated m is at most 5072.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_updated_m\" <= 5072.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_updated_m",
+        "operator": "<=",
+        "value": "5072.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_010_5072_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 47,
+        "profile_eval_required_cells": 94,
+        "profile_eval_relevant_doc_rate": 0.09957627118644068,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_m_value_010_49_9",
+      "question": "List company from fortune500_companies where profits m is at most -49.9.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_m\" <= -49.9;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_m",
+        "operator": "<=",
+        "value": "-49.9",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_m_value_010_49_9",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 47,
+        "profile_eval_required_cells": 94,
+        "profile_eval_relevant_doc_rate": 0.09957627118644068,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_percent_change_value_010_71_5",
+      "question": "List company from fortune500_companies where profits percent change is at least 71.5.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_percent_change\" >= 71.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_percent_change",
+        "operator": ">=",
+        "value": "71.5",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_percent_change_value_010_71_5",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 47,
+        "profile_eval_required_cells": 94,
+        "profile_eval_relevant_doc_rate": 0.09957627118644068,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_010_14_3",
+      "question": "List company from fortune500_companies where revenue percent change is at most -14.3.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenue_percent_change\" <= -14.3;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.1006036217303823,
+        "actual_table_doc_coverage": 0.1006036217303823,
+        "result_docs": 50,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenue_percent_change",
+        "operator": "<=",
+        "value": "-14.3",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_010_14_3",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.1006036217303823,
+        "profile_eval_relevant_docs": 48,
+        "profile_eval_required_cells": 96,
+        "profile_eval_relevant_doc_rate": 0.1016949152542373,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_020_12058_0",
+      "question": "List company from fortune500_companies where assets m is at most 12058.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 12058.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19919517102615694,
+        "actual_table_doc_coverage": 0.19919517102615694,
+        "result_docs": 99,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "12058.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_020_12058_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.19919517102615694,
+        "profile_eval_relevant_docs": 93,
+        "profile_eval_required_cells": 186,
+        "profile_eval_relevant_doc_rate": 0.19703389830508475,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_020_9699_7",
+      "question": "List company from fortune500_companies where market cap march28 m is at most 9699.7.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_march28_m\" <= 9699.7;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19919517102615694,
+        "actual_table_doc_coverage": 0.19919517102615694,
+        "result_docs": 99,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_march28_m",
+        "operator": "<=",
+        "value": "9699.7",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_020_9699_7",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.19919517102615694,
+        "profile_eval_relevant_docs": 91,
+        "profile_eval_required_cells": 182,
+        "profile_eval_relevant_doc_rate": 0.19279661016949154,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_020_9574_0",
+      "question": "List company from fortune500_companies where market cap updated m is at most 9574.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_updated_m\" <= 9574.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19919517102615694,
+        "actual_table_doc_coverage": 0.19919517102615694,
+        "result_docs": 99,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_updated_m",
+        "operator": "<=",
+        "value": "9574.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_020_9574_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.19919517102615694,
+        "profile_eval_relevant_docs": 91,
+        "profile_eval_required_cells": 182,
+        "profile_eval_relevant_doc_rate": 0.19279661016949154,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_m_value_020_313_8",
+      "question": "List company from fortune500_companies where profits m is at most 313.8.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_m\" <= 313.8;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19919517102615694,
+        "actual_table_doc_coverage": 0.19919517102615694,
+        "result_docs": 99,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_m",
+        "operator": "<=",
+        "value": "313.8",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_m_value_020_313_8",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.19919517102615694,
+        "profile_eval_relevant_docs": 92,
+        "profile_eval_required_cells": 184,
+        "profile_eval_relevant_doc_rate": 0.19491525423728814,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_percent_change_value_020_38_5",
+      "question": "List company from fortune500_companies where profits percent change is at most -38.5.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_percent_change\" <= -38.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19919517102615694,
+        "actual_table_doc_coverage": 0.19919517102615694,
+        "result_docs": 99,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_percent_change",
+        "operator": "<=",
+        "value": "-38.5",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_percent_change_value_020_38_5",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.19919517102615694,
+        "profile_eval_relevant_docs": 94,
+        "profile_eval_required_cells": 188,
+        "profile_eval_relevant_doc_rate": 0.19915254237288135,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_020_7_5",
+      "question": "List company from fortune500_companies where revenue percent change is at most -7.5.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenue_percent_change\" <= -7.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19919517102615694,
+        "actual_table_doc_coverage": 0.19919517102615694,
+        "result_docs": 99,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenue_percent_change",
+        "operator": "<=",
+        "value": "-7.5",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_020_7_5",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.19919517102615694,
+        "profile_eval_relevant_docs": 95,
+        "profile_eval_required_cells": 190,
+        "profile_eval_relevant_doc_rate": 0.20127118644067796,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenues_m_value_020_9729_2",
+      "question": "List company from fortune500_companies where revenues m is at most 9729.2.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenues_m\" <= 9729.2;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19919517102615694,
+        "actual_table_doc_coverage": 0.19919517102615694,
+        "result_docs": 99,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenues_m",
+        "operator": "<=",
+        "value": "9729.2",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenues_m_value_020_9729_2",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.19919517102615694,
+        "profile_eval_relevant_docs": 92,
+        "profile_eval_required_cells": 184,
+        "profile_eval_relevant_doc_rate": 0.19491525423728814,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_020_17",
+      "question": "List company from fortune500_companies where change in rank is at most -17.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" <= -17;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.2012072434607646,
+        "actual_table_doc_coverage": 0.2012072434607646,
+        "result_docs": 100,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": "<=",
+        "value": "-17",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_020_17",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 100,
+        "profile_all_required_cells": 200,
+        "profile_all_relevant_doc_rate": 0.2012072434607646,
+        "profile_eval_relevant_docs": 96,
+        "profile_eval_required_cells": 192,
+        "profile_eval_relevant_doc_rate": 0.2033898305084746,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_040_22023_5",
+      "question": "List company from fortune500_companies where assets m is at most 22023.5.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 22023.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40040241448692154,
+        "actual_table_doc_coverage": 0.40040241448692154,
+        "result_docs": 199,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "22023.5",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_040_22023_5",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 199,
+        "profile_all_required_cells": 398,
+        "profile_all_relevant_doc_rate": 0.40040241448692154,
+        "profile_eval_relevant_docs": 187,
+        "profile_eval_required_cells": 374,
+        "profile_eval_relevant_doc_rate": 0.3961864406779661,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_040_21206_3",
+      "question": "List company from fortune500_companies where market cap march28 m is at most 21206.3.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_march28_m\" <= 21206.3;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40040241448692154,
+        "actual_table_doc_coverage": 0.40040241448692154,
+        "result_docs": 199,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_march28_m",
+        "operator": "<=",
+        "value": "21206.3",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_040_21206_3",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 199,
+        "profile_all_required_cells": 398,
+        "profile_all_relevant_doc_rate": 0.40040241448692154,
+        "profile_eval_relevant_docs": 187,
+        "profile_eval_required_cells": 374,
+        "profile_eval_relevant_doc_rate": 0.3961864406779661,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_040_20582_0",
+      "question": "List company from fortune500_companies where market cap updated m is at most 20582.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_updated_m\" <= 20582.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40040241448692154,
+        "actual_table_doc_coverage": 0.40040241448692154,
+        "result_docs": 199,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_updated_m",
+        "operator": "<=",
+        "value": "20582.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_040_20582_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 199,
+        "profile_all_required_cells": 398,
+        "profile_all_relevant_doc_rate": 0.40040241448692154,
+        "profile_eval_relevant_docs": 187,
+        "profile_eval_required_cells": 374,
+        "profile_eval_relevant_doc_rate": 0.3961864406779661,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_m_value_040_902_0",
+      "question": "List company from fortune500_companies where profits m is at most 902.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_m\" <= 902.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40040241448692154,
+        "actual_table_doc_coverage": 0.40040241448692154,
+        "result_docs": 199,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_m",
+        "operator": "<=",
+        "value": "902.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_m_value_040_902_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 199,
+        "profile_all_required_cells": 398,
+        "profile_all_relevant_doc_rate": 0.40040241448692154,
+        "profile_eval_relevant_docs": 187,
+        "profile_eval_required_cells": 374,
+        "profile_eval_relevant_doc_rate": 0.3961864406779661,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_percent_change_value_040_6_2",
+      "question": "List company from fortune500_companies where profits percent change is at most -6.2.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_percent_change\" <= -6.2;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40040241448692154,
+        "actual_table_doc_coverage": 0.40040241448692154,
+        "result_docs": 199,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_percent_change",
+        "operator": "<=",
+        "value": "-6.2",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_percent_change_value_040_6_2",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 199,
+        "profile_all_required_cells": 398,
+        "profile_all_relevant_doc_rate": 0.40040241448692154,
+        "profile_eval_relevant_docs": 190,
+        "profile_eval_required_cells": 380,
+        "profile_eval_relevant_doc_rate": 0.4025423728813559,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_040_1_3",
+      "question": "List company from fortune500_companies where revenue percent change is at most 1.3.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenue_percent_change\" <= 1.3;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40040241448692154,
+        "actual_table_doc_coverage": 0.40040241448692154,
+        "result_docs": 199,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenue_percent_change",
+        "operator": "<=",
+        "value": "1.3",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_040_1_3",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 199,
+        "profile_all_required_cells": 398,
+        "profile_all_relevant_doc_rate": 0.40040241448692154,
+        "profile_eval_relevant_docs": 187,
+        "profile_eval_required_cells": 374,
+        "profile_eval_relevant_doc_rate": 0.3961864406779661,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenues_m_value_040_14209_0",
+      "question": "List company from fortune500_companies where revenues m is at most 14209.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenues_m\" <= 14209.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40040241448692154,
+        "actual_table_doc_coverage": 0.40040241448692154,
+        "result_docs": 199,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenues_m",
+        "operator": "<=",
+        "value": "14209.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenues_m_value_040_14209_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 199,
+        "profile_all_required_cells": 398,
+        "profile_all_relevant_doc_rate": 0.40040241448692154,
+        "profile_eval_relevant_docs": 188,
+        "profile_eval_required_cells": 376,
+        "profile_eval_relevant_doc_rate": 0.3983050847457627,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_040_10",
+      "question": "List company from fortune500_companies where change in rank is at least 10.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" >= 10;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.3963782696177062,
+        "actual_table_doc_coverage": 0.3963782696177062,
+        "result_docs": 197,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": ">=",
+        "value": "10",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_040_10",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 197,
+        "profile_all_required_cells": 394,
+        "profile_all_relevant_doc_rate": 0.3963782696177062,
+        "profile_eval_relevant_docs": 188,
+        "profile_eval_required_cells": 376,
+        "profile_eval_relevant_doc_rate": 0.3983050847457627,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_060_42996_0",
+      "question": "List company from fortune500_companies where assets m is at most 42996.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 42996.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5995975855130785,
+        "actual_table_doc_coverage": 0.5995975855130785,
+        "result_docs": 298,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "42996.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_060_42996_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 298,
+        "profile_all_required_cells": 596,
+        "profile_all_relevant_doc_rate": 0.5995975855130785,
+        "profile_eval_relevant_docs": 280,
+        "profile_eval_required_cells": 560,
+        "profile_eval_relevant_doc_rate": 0.5932203389830508,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_060_48437_2",
+      "question": "List company from fortune500_companies where market cap march28 m is at most 48437.2.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_march28_m\" <= 48437.2;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5995975855130785,
+        "actual_table_doc_coverage": 0.5995975855130785,
+        "result_docs": 298,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_march28_m",
+        "operator": "<=",
+        "value": "48437.2",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_060_48437_2",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 298,
+        "profile_all_required_cells": 596,
+        "profile_all_relevant_doc_rate": 0.5995975855130785,
+        "profile_eval_relevant_docs": 281,
+        "profile_eval_required_cells": 562,
+        "profile_eval_relevant_doc_rate": 0.5953389830508474,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_060_47482_0",
+      "question": "List company from fortune500_companies where market cap updated m is at most 47482.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_updated_m\" <= 47482.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5995975855130785,
+        "actual_table_doc_coverage": 0.5995975855130785,
+        "result_docs": 298,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_updated_m",
+        "operator": "<=",
+        "value": "47482.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_060_47482_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 298,
+        "profile_all_required_cells": 596,
+        "profile_all_relevant_doc_rate": 0.5995975855130785,
+        "profile_eval_relevant_docs": 281,
+        "profile_eval_required_cells": 562,
+        "profile_eval_relevant_doc_rate": 0.5953389830508474,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_m_value_060_1829_0",
+      "question": "List company from fortune500_companies where profits m is at most 1829.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_m\" <= 1829.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5995975855130785,
+        "actual_table_doc_coverage": 0.5995975855130785,
+        "result_docs": 298,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_m",
+        "operator": "<=",
+        "value": "1829.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_m_value_060_1829_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 298,
+        "profile_all_required_cells": 596,
+        "profile_all_relevant_doc_rate": 0.5995975855130785,
+        "profile_eval_relevant_docs": 283,
+        "profile_eval_required_cells": 566,
+        "profile_eval_relevant_doc_rate": 0.5995762711864406,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_percent_change_value_060_15_4",
+      "question": "List company from fortune500_companies where profits percent change is at most 15.4.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_percent_change\" <= 15.4;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5995975855130785,
+        "actual_table_doc_coverage": 0.5995975855130785,
+        "result_docs": 298,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_percent_change",
+        "operator": "<=",
+        "value": "15.4",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_percent_change_value_060_15_4",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 298,
+        "profile_all_required_cells": 596,
+        "profile_all_relevant_doc_rate": 0.5995975855130785,
+        "profile_eval_relevant_docs": 284,
+        "profile_eval_required_cells": 568,
+        "profile_eval_relevant_doc_rate": 0.6016949152542372,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_060_1_3",
+      "question": "List company from fortune500_companies where revenue percent change is at least 1.3.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenue_percent_change\" >= 1.3;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5995975855130785,
+        "actual_table_doc_coverage": 0.5995975855130785,
+        "result_docs": 298,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenue_percent_change",
+        "operator": ">=",
+        "value": "1.3",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_060_1_3",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 298,
+        "profile_all_required_cells": 596,
+        "profile_all_relevant_doc_rate": 0.5995975855130785,
+        "profile_eval_relevant_docs": 285,
+        "profile_eval_required_cells": 570,
+        "profile_eval_relevant_doc_rate": 0.6038135593220338,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenues_m_value_060_20310_0",
+      "question": "List company from fortune500_companies where revenues m is at most 20310.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenues_m\" <= 20310.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5995975855130785,
+        "actual_table_doc_coverage": 0.5995975855130785,
+        "result_docs": 298,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenues_m",
+        "operator": "<=",
+        "value": "20310.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenues_m_value_060_20310_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 298,
+        "profile_all_required_cells": 596,
+        "profile_all_relevant_doc_rate": 0.5995975855130785,
+        "profile_eval_relevant_docs": 281,
+        "profile_eval_required_cells": 562,
+        "profile_eval_relevant_doc_rate": 0.5953389830508474,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_060_9",
+      "question": "List company from fortune500_companies where change in rank is at most 9.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" <= 9;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.6036217303822937,
+        "actual_table_doc_coverage": 0.6036217303822937,
+        "result_docs": 300,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": "<=",
+        "value": "9",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_060_9",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 300,
+        "profile_all_required_cells": 600,
+        "profile_all_relevant_doc_rate": 0.6036217303822937,
+        "profile_eval_relevant_docs": 284,
+        "profile_eval_required_cells": 568,
+        "profile_eval_relevant_doc_rate": 0.6016949152542372,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_080_97703_0",
+      "question": "List company from fortune500_companies where assets m is at most 97703.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 97703.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8008048289738431,
+        "actual_table_doc_coverage": 0.8008048289738431,
+        "result_docs": 398,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "97703.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_080_97703_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 398,
+        "profile_all_required_cells": 796,
+        "profile_all_relevant_doc_rate": 0.8008048289738431,
+        "profile_eval_relevant_docs": 376,
+        "profile_eval_required_cells": 752,
+        "profile_eval_relevant_doc_rate": 0.7966101694915254,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_080_123968_4",
+      "question": "List company from fortune500_companies where market cap march28 m is at most 123968.4.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_march28_m\" <= 123968.4;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8008048289738431,
+        "actual_table_doc_coverage": 0.8008048289738431,
+        "result_docs": 398,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_march28_m",
+        "operator": "<=",
+        "value": "123968.4",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_march28_m_value_080_123968_4",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 398,
+        "profile_all_required_cells": 796,
+        "profile_all_relevant_doc_rate": 0.8008048289738431,
+        "profile_eval_relevant_docs": 376,
+        "profile_eval_required_cells": 752,
+        "profile_eval_relevant_doc_rate": 0.7966101694915254,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_080_123968_0",
+      "question": "List company from fortune500_companies where market cap updated m is at most 123968.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"market_cap_updated_m\" <= 123968.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_updated_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8008048289738431,
+        "actual_table_doc_coverage": 0.8008048289738431,
+        "result_docs": 398,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.market_cap_updated_m",
+        "operator": "<=",
+        "value": "123968.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_market_cap_updated_m_value_080_123968_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 398,
+        "profile_all_required_cells": 796,
+        "profile_all_relevant_doc_rate": 0.8008048289738431,
+        "profile_eval_relevant_docs": 376,
+        "profile_eval_required_cells": 752,
+        "profile_eval_relevant_doc_rate": 0.7966101694915254,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_m_value_080_4124_5",
+      "question": "List company from fortune500_companies where profits m is at most 4124.5.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_m\" <= 4124.5;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8008048289738431,
+        "actual_table_doc_coverage": 0.8008048289738431,
+        "result_docs": 398,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_m",
+        "operator": "<=",
+        "value": "4124.5",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_m_value_080_4124_5",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 398,
+        "profile_all_required_cells": 796,
+        "profile_all_relevant_doc_rate": 0.8008048289738431,
+        "profile_eval_relevant_docs": 378,
+        "profile_eval_required_cells": 756,
+        "profile_eval_relevant_doc_rate": 0.8008474576271186,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_percent_change_value_080_90_9",
+      "question": "List company from fortune500_companies where profits percent change is at most 90.9.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_percent_change\" <= 90.9;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8008048289738431,
+        "actual_table_doc_coverage": 0.8008048289738431,
+        "result_docs": 398,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_percent_change",
+        "operator": "<=",
+        "value": "90.9",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_percent_change_value_080_90_9",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 398,
+        "profile_all_required_cells": 796,
+        "profile_all_relevant_doc_rate": 0.8008048289738431,
+        "profile_eval_relevant_docs": 377,
+        "profile_eval_required_cells": 754,
+        "profile_eval_relevant_doc_rate": 0.798728813559322,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_080_14_4",
+      "question": "List company from fortune500_companies where revenue percent change is at most 14.4.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenue_percent_change\" <= 14.4;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenue_percent_change",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8008048289738431,
+        "actual_table_doc_coverage": 0.8008048289738431,
+        "result_docs": 398,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenue_percent_change",
+        "operator": "<=",
+        "value": "14.4",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenue_percent_change_value_080_14_4",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 398,
+        "profile_all_required_cells": 796,
+        "profile_all_relevant_doc_rate": 0.8008048289738431,
+        "profile_eval_relevant_docs": 376,
+        "profile_eval_required_cells": 752,
+        "profile_eval_relevant_doc_rate": 0.7966101694915254,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenues_m_value_080_43452_0",
+      "question": "List company from fortune500_companies where revenues m is at most 43452.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenues_m\" <= 43452.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8008048289738431,
+        "actual_table_doc_coverage": 0.8008048289738431,
+        "result_docs": 398,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenues_m",
+        "operator": "<=",
+        "value": "43452.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenues_m_value_080_43452_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 398,
+        "profile_all_required_cells": 796,
+        "profile_all_relevant_doc_rate": 0.8008048289738431,
+        "profile_eval_relevant_docs": 375,
+        "profile_eval_required_cells": 750,
+        "profile_eval_relevant_doc_rate": 0.7944915254237288,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_080_16",
+      "question": "List company from fortune500_companies where change in rank is at least -16.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" >= -16;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.7987927565392354,
+        "actual_table_doc_coverage": 0.7987927565392354,
+        "result_docs": 397,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": ">=",
+        "value": "-16",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_080_16",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 397,
+        "profile_all_required_cells": 794,
+        "profile_all_relevant_doc_rate": 0.7987927565392354,
+        "profile_eval_relevant_docs": 376,
+        "profile_eval_required_cells": 752,
+        "profile_eval_relevant_doc_rate": 0.7966101694915254,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_assets_m_value_100_4325437_0",
+      "question": "List company from fortune500_companies where assets m is at most 4325437.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"assets_m\" <= 4325437.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.assets_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 1.0,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 497,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.assets_m",
+        "operator": "<=",
+        "value": "4325437.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_assets_m_value_100_4325437_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 497,
+        "profile_all_required_cells": 994,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 472,
+        "profile_eval_required_cells": 944,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_change_in_rank_value_100_420",
+      "question": "List company from fortune500_companies where change in rank is at most 420.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"change_in_rank\" <= 420;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.change_in_rank",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 1.0,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 497,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.change_in_rank",
+        "operator": "<=",
+        "value": "420",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_change_in_rank_value_100_420",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 497,
+        "profile_all_required_cells": 994,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 472,
+        "profile_eval_required_cells": 944,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_global500_in_100_0_1",
+      "question": "List company from fortune500_companies where global500 is one of 0, 1.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"global500\" IN (0, 1);",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.global500",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 1.0,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 497,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.global500",
+        "operator": "IN",
+        "value": [
+          "0",
+          "1"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_global500_in_100_0_1",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 497,
+        "profile_all_required_cells": 994,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 472,
+        "profile_eval_required_cells": 944,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_profits_m_value_100_96995_0",
+      "question": "List company from fortune500_companies where profits m is at most 96995.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"profits_m\" <= 96995.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.profits_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 1.0,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 497,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.profits_m",
+        "operator": "<=",
+        "value": "96995.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_profits_m_value_100_96995_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 497,
+        "profile_all_required_cells": 994,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 472,
+        "profile_eval_required_cells": 944,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fortune500_companies_revenues_m_value_100_648125_0",
+      "question": "List company from fortune500_companies where revenues m is at most 648125.0.",
+      "sql": "SELECT \"company\" FROM \"fortune500_companies\" WHERE \"revenues_m\" <= 648125.0;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.revenues_m",
+        "fortune500_companies.company"
+      ],
+      "output_columns": [
+        "fortune500_companies.company"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 1.0,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 497,
+        "total_docs": 497,
+        "table_total_docs": 497,
+        "predicate_table": "fortune500_companies",
+        "predicate_column": "fortune500_companies.revenues_m",
+        "operator": "<=",
+        "value": "648125.0",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "galois.fortune.default_task",
+        "source_dataset_id": "galois.fortune.default_task",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/galois.fortune.default_task",
+        "source_query_id": "Q_gen_fortune500_companies_revenues_m_value_100_648125_0",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 497,
+        "profile_all_required_cells": 994,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 472,
+        "profile_eval_required_cells": 944,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
     }
   ]
 }

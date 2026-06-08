@@ -22,12 +22,12 @@ This release makes strict config 2.1.1 the supported runtime contract.
 - Define primary runtime behavior under `stages`.
 - Define runnable combinations under `experiments`.
 - Use `schema_source: ground_truth` for ground-truth extraction demos.
-- Use strategy blocks such as `document_filtering`, `proxy_runtime`, and
+- Use strategy blocks such as `doc_filter`, `proxy_runtime`, and
   `alpha_allocation` instead of ad hoc top-level runtime flags.
 
 ## Compatibility Boundaries
 
-The public package API remains centered on `SchemaGenerator`, `DataPopulator`,
+The public package API remains centered on `SchemaGenerator`, `DataExtractor`,
 `preprocessing`, `schema_refine`, `data_extraction`, `create_data_loader`, and
 `run_pipeline`. Research APIs under `redd.exp` and `redd.correction` are useful
 but not part of the primary stage contract.

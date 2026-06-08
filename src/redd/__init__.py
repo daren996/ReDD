@@ -13,7 +13,7 @@ _LAZY_EXPORTS = {
     "PREPROCESSING": ".api",
     "SCHEMA_REFINEMENT": ".api",
     "DataLoaderBase": ".api",
-    "DataPopulator": ".api",
+    "DataExtractor": ".api",
     "PipelineStage": ".api",
     "SchemaGenerator": ".api",
     "AlphaAllocationConfig": ".parameter_optimization",
@@ -102,11 +102,22 @@ def run_evaluation(*args, **kwargs):
     return _run_evaluation(*args, **kwargs)
 
 
-def run_ensemble_classifiers(*args, **kwargs):
-    """Legacy wrapper retained for backwards compatibility."""
-    from .runners import run_ensemble_classifiers as _run_ensemble_classifiers
+def run_preprocessing(*args, **kwargs):
+    from .runners import run_preprocessing as _run_preprocessing
 
-    return _run_ensemble_classifiers(*args, **kwargs)
+    return _run_preprocessing(*args, **kwargs)
+
+
+def run_schema_refinement(*args, **kwargs):
+    from .runners import run_schema_refinement as _run_schema_refinement
+
+    return _run_schema_refinement(*args, **kwargs)
+
+
+def select_runtime(*args, **kwargs):
+    from .experiment import select_runtime as _select_runtime
+
+    return _select_runtime(*args, **kwargs)
 
 
 def __getattr__(name: str):
@@ -122,7 +133,7 @@ __all__ = [
     "PREPROCESSING",
     "SCHEMA_REFINEMENT",
     "DataLoaderBase",
-    "DataPopulator",
+    "DataExtractor",
     "PipelineStage",
     "SchemaGenerator",
     "AlphaAllocationConfig",
@@ -153,9 +164,11 @@ __all__ = [
     "schema_refinement",
     "create_data_loader",
     "run_evaluation",
-    "run_ensemble_classifiers",
     "run_experiment",
     "run_extract",
     "run_pipeline",
+    "run_preprocessing",
+    "run_schema_refinement",
     "run_web_demo",
+    "select_runtime",
 ]

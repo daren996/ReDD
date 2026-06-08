@@ -1,0 +1,113 @@
+config_version: 2.1.1
+project:
+  name: deepseek-alpha-goal-calibrated-alpha
+  seed: 42
+runtime:
+  output_dir: outputs/deepseek_alpha_goal_calibrated
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: deepseek-alpha-goal-calibrated-alpha-v3
+  console_log_level: WARNING
+  force_rerun: true
+models:
+  llm:
+    provider: deepseek
+    model: deepseek-chat
+    api_key_env: DEEPSEEK_API_KEY
+    structured_backend: json
+    max_retries: 2
+    wait_time: 1
+    temperature: 0
+    max_tokens: 2048
+  embedding:
+    provider: none
+    model: none
+    enabled: false
+    api_key_env: null
+datasets:
+  bird.schools_demo:
+    loader: hf_manifest
+    root: dataset/derived/bird.schools_demo
+    query_ids: [q1, q2]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 25, strategy: prefix}
+  spider.college_demo:
+    loader: hf_manifest
+    root: dataset/derived/spider.college_demo
+    query_ids: [q1, q2]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 25, strategy: prefix}
+  galois.premierleague.default_task:
+    loader: hf_manifest
+    root: dataset/derived/galois.premierleague.default_task
+    query_ids: [Q1]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 25, strategy: prefix}
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: llm
+    prompts:
+      prompt_table: prompts/data_extraction_table_json.txt
+      prompt_attr: prompts/data_extraction_attr_json.txt
+    options:
+      force_rerun: true
+      result_save_interval: 1
+      eval:
+        mode: deepseek
+        llm_model: deepseek-chat
+        structured_backend: json
+        max_retries: 2
+        wait_time: 1
+        prompts:
+          data_extraction_cmp_str: prompts/eval_data_extraction_cmp_str.txt
+    doc_filter:
+      enabled: true
+      filter_type: schema_relevance
+      target_recall: 0.95
+      enable_calibrate: true
+      embedding_model: local-hash-embedding
+      embeddings_cache_dir: outputs/deepseek_alpha_goal_calibrated/_embedding_cache
+      threshold: 0.585
+      use_source_table_metadata: true
+      source_table_metadata_only: false
+      source_table_keep_unknown: true
+    table_assignment_cache:
+      enabled: true
+      source_table_metadata: true
+      general_schema: true
+    proxy_runtime:
+      enabled: true
+      predicate_proxy_mode: pretrained
+      target_recall: 0.95
+      use_embedding_proxies: false
+      use_learned_proxies: true
+      use_finetuned_learned_proxies: true
+      finetuned_model: heuristic
+      finetuned_epochs: 0
+      proxy_threshold: 0.51
+      allow_embedding_fallback: false
+      use_join_resolution: true
+      bidirectional_join_resolution: true
+      join_order_strategy: selective_first
+      join_empty_short_circuit: true
+      cross_query_extraction_cache: true
+      cache_extract_full_table: true
+      save_hard_negatives: false
+      verbose: false
+    alpha_allocation:
+      enabled: true
+      target_recall: 0.95
+      alpha_grid: [0.0, 0.005, 0.01, 0.02, 0.03, 0.05, 0.08, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
+      answer_recall_calibration: true
+      answer_recall_calibration_allow_over_budget: true
+      answer_recall_calibration_global: true
+experiments:
+  demo:
+    datasets:
+      - bird.schools_demo
+      - spider.college_demo
+      - galois.premierleague.default_task
+    stages: [data_extraction]
+    artifact_id: deepseek-alpha-goal-calibrated-alpha-v3

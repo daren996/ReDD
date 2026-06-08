@@ -16,7 +16,7 @@ NON_PASSING_STATUSES = {"partial", "surrogate_only", "blocked", "missing", "unsu
 
 CLAIM_TO_EXPERIMENT = {
     "paper.table1_dataset_setup": "table1_dataset_setup",
-    "paper.table2_tdp_accuracy": "table2_data_population_accuracy",
+    "paper.table2_tdp_accuracy": "table2_data_extraction_accuracy",
     "paper.table3_fpr_overhead": "table3_false_positive_overhead",
     "paper.fig2_accuracy_cost_tradeoff": "fig2_accuracy_cost_tradeoff",
     "paper.fig3_lambda_sweep": "fig3_lambda_sweep",

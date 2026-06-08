@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.spider.flight_4",
+  "queries": [
+    {
+      "query_id": "Q5",
+      "question": "List airlines which do not have an IATA code and are inactive.",
+      "sql": "SELECT name FROM airlines WHERE iata = '' AND active = 'N';",
+      "required_tables": [
+        "airlines"
+      ],
+      "required_columns": [
+        "airlines.name",
+        "airlines.iata",
+        "airlines.active"
+      ],
+      "output_columns": [
+        "airlines.name"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "spider.flight_4",
+      "dataset_id": "deepseek_smoke.spider.flight_4"
+    }
+  ]
+}

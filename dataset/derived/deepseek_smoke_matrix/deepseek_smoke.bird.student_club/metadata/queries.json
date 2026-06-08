@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.bird.student_club",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List event_name, row_id, event_date from attendance where event_name contains 'meeting'.",
+      "sql": "SELECT event_name, row_id, event_date FROM attendance WHERE event_name LIKE '%meeting%';",
+      "required_tables": [
+        "attendance"
+      ],
+      "required_columns": [
+        "attendance.event_name",
+        "attendance.event_date"
+      ],
+      "output_columns": [
+        "attendance.event_name"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "bird.student_club",
+      "dataset_id": "deepseek_smoke.bird.student_club"
+    }
+  ]
+}

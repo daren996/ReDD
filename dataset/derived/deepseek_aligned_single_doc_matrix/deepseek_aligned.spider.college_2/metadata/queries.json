@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.spider.college_2",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List title from course.",
+      "sql": "SELECT title FROM course;",
+      "required_tables": [
+        "course"
+      ],
+      "required_columns": [
+        "course.title"
+      ],
+      "output_columns": [
+        "course.title"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "spider.college_2",
+      "dataset_id": "deepseek_aligned.spider.college_2"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.spider.apartment_rentals",
+  "queries": [
+    {
+      "query_id": "Q8",
+      "question": "Find the first names of guests who have a booking status of 'Cancelled'.",
+      "sql": "SELECT guest_first_name FROM apartment_bookings WHERE booking_status_code = 'Cancelled';",
+      "required_tables": [
+        "apartment_bookings"
+      ],
+      "required_columns": [
+        "apartment_bookings.guest_first_name",
+        "apartment_bookings.booking_status_code"
+      ],
+      "output_columns": [
+        "apartment_bookings.guest_first_name"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "spider.apartment_rentals",
+      "dataset_id": "deepseek_smoke.spider.apartment_rentals"
+    }
+  ]
+}

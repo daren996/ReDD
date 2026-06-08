@@ -3,35 +3,3145 @@
   "dataset_id": "fda.fda.fixed_size_50k",
   "queries": [
     {
-      "query_id": "Q1",
-      "question": "",
-      "sql": "",
+      "query_id": "Q_gen_fda_510k_device_submission_510k_number_value_003_k190219",
+      "question": "List proprietary and established names from fda_510k_device_submission where 510k number equals K190219.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"510k_number\" = 'K190219';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03278688524590164,
+        "actual_table_doc_coverage": 0.03278688524590164,
+        "result_docs": 4,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.510k_number",
+        "operator": "=",
+        "value": "K190219",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_510k_number_value_003_k190219",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.03278688524590164,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.041237113402061855,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_applicant_value_003_quidel_corporation",
+      "question": "List proprietary and established names from fda_510k_device_submission where applicant equals Quidel Corporation.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"applicant\" = 'Quidel Corporation';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.applicant",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03278688524590164,
+        "actual_table_doc_coverage": 0.03278688524590164,
+        "result_docs": 4,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.applicant",
+        "operator": "=",
+        "value": "Quidel Corporation",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_applicant_value_003_quidel_corporation",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.03278688524590164,
+        "profile_eval_relevant_docs": 3,
+        "profile_eval_required_cells": 6,
+        "profile_eval_relevant_doc_rate": 0.030927835051546393,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_not_in_003_class_ii_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification is not one of Class II, Class II, Class II, II, Class II, Class I, and 6 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" NOT IN ('Class II', 'Class II, Class II', 'II', 'Class II, Class I', 'Class II, Class II, Class I', 'Class I', 'II, I', 'II, II, I, Reserved', 'Class I, Class II', 'Class II, Class I, reserved');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03278688524590164,
+        "actual_table_doc_coverage": 0.03278688524590164,
+        "result_docs": 4,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "NOT IN",
+        "value": [
+          "Class II",
+          "Class II, Class II",
+          "II",
+          "Class II, Class I",
+          "Class II, Class II, Class I",
+          "Class I",
+          "II, I",
+          "II, II, I, Reserved",
+          "Class I, Class II",
+          "Class II, Class I, reserved"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_not_in_003_class_ii_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.03278688524590164,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.041237113402061855,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_panel_value_003_chemistry_75",
+      "question": "List proprietary and established names from fda_510k_device_submission where panel equals Chemistry (75).",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"panel\" = 'Chemistry (75)';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.panel",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03278688524590164,
+        "actual_table_doc_coverage": 0.03278688524590164,
+        "result_docs": 4,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.panel",
+        "operator": "=",
+        "value": "Chemistry (75)",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_panel_value_003_chemistry_75",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.03278688524590164,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.041237113402061855,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_value_003_liofilchem_mts_vancomyc",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate device name equals Liofilchem MTS, vancomycin.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_device_name\" = 'Liofilchem MTS, vancomycin';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_device_name",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03278688524590164,
+        "actual_table_doc_coverage": 0.03278688524590164,
+        "result_docs": 4,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_device_name",
+        "operator": "=",
+        "value": "Liofilchem MTS, vancomycin",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_value_003_liofilchem_mts_vancomyc",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.03278688524590164,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.041237113402061855,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_not_in_005_class_ii_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification is not one of Class II, Class II, Class II, II, Class II, Class I, and 4 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" NOT IN ('Class II', 'Class II, Class II', 'II', 'Class II, Class I', 'Class II, Class II, Class I', 'Class I', 'II, I', 'II, II, I, Reserved');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.04918032786885246,
+        "actual_table_doc_coverage": 0.04918032786885246,
+        "result_docs": 6,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "NOT IN",
+        "value": [
+          "Class II",
+          "Class II, Class II",
+          "II",
+          "Class II, Class I",
+          "Class II, Class II, Class I",
+          "Class I",
+          "II, I",
+          "II, II, I, Reserved"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_not_in_005_class_ii_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 6,
+        "profile_all_required_cells": 12,
+        "profile_all_relevant_doc_rate": 0.04918032786885246,
+        "profile_eval_relevant_docs": 6,
+        "profile_eval_required_cells": 12,
+        "profile_eval_relevant_doc_rate": 0.061855670103092786,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_value_005_k153687",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate 510k number equals K153687.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_510k_number\" = 'K153687';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.04918032786885246,
+        "actual_table_doc_coverage": 0.04918032786885246,
+        "result_docs": 6,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_510k_number",
+        "operator": "=",
+        "value": "K153687",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_value_005_k153687",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 6,
+        "profile_all_required_cells": 12,
+        "profile_all_relevant_doc_rate": 0.04918032786885246,
+        "profile_eval_relevant_docs": 6,
+        "profile_eval_required_cells": 12,
+        "profile_eval_relevant_doc_rate": 0.061855670103092786,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_panel_value_005_83_microbiology",
+      "question": "List proprietary and established names from fda_510k_device_submission where panel equals 83 – Microbiology.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"panel\" = '83 – Microbiology';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.panel",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.040983606557377046,
+        "actual_table_doc_coverage": 0.040983606557377046,
+        "result_docs": 5,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.panel",
+        "operator": "=",
+        "value": "83 – Microbiology",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_panel_value_005_83_microbiology",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 5,
+        "profile_all_required_cells": 10,
+        "profile_all_relevant_doc_rate": 0.040983606557377046,
+        "profile_eval_relevant_docs": 5,
+        "profile_eval_required_cells": 10,
+        "profile_eval_relevant_doc_rate": 0.05154639175257732,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_proposed_labeling_not_in_005_the_labeling_is_suffic",
+      "question": "List proprietary and established names from fda_510k_device_submission where proposed labeling is not one of The labeling is sufficient and it satisfies the requirements of 21 CFR Part 809.10., The labeling supports the finding of substantial equivalence for this device., The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809, as applicable., The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 809.10., and 3 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"proposed_labeling\" NOT IN ('The labeling is sufficient and it satisfies the requirements of 21 CFR Part 809.10.', 'The labeling supports the finding of substantial equivalence for this device.', 'The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809, as applicable.', 'The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 809.10.', 'The labeling is sufficient and it satisfies the requirement of 21 CFR Part 809.10.', 'The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809 and the special controls for this device type.', 'The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809, as applicable and the special controls for this device type under 21 CFR 862.1488.');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.proposed_labeling",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.04918032786885246,
+        "actual_table_doc_coverage": 0.04918032786885246,
+        "result_docs": 6,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.proposed_labeling",
+        "operator": "NOT IN",
+        "value": [
+          "The labeling is sufficient and it satisfies the requirements of 21 CFR Part 809.10.",
+          "The labeling supports the finding of substantial equivalence for this device.",
+          "The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809, as applicable.",
+          "The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 809.10.",
+          "The labeling is sufficient and it satisfies the requirement of 21 CFR Part 809.10.",
+          "The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809 and the special controls for this device type.",
+          "The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809, as applicable and the special controls for this device type under 21 CFR 862.1488."
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_proposed_labeling_not_in_005_the_labeling_is_suffic",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 122,
+        "profile_all_required_cells": 244,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 97,
+        "profile_eval_required_cells": 194,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_value_005_class_ii_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification equals Class II, Class II.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" = 'Class II, Class II';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05737704918032787,
+        "actual_table_doc_coverage": 0.05737704918032787,
+        "result_docs": 7,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "=",
+        "value": "Class II, Class II",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_value_005_class_ii_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 7,
+        "profile_all_required_cells": 14,
+        "profile_all_relevant_doc_rate": 0.05737704918032787,
+        "profile_eval_relevant_docs": 7,
+        "profile_eval_required_cells": 14,
+        "profile_eval_relevant_doc_rate": 0.07216494845360824,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_not_in_010_class_ii_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification is not one of Class II, Class II, Class II, II, Class II, Class I, and 1 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" NOT IN ('Class II', 'Class II, Class II', 'II', 'Class II, Class I', 'Class II, Class II, Class I');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.09836065573770492,
+        "actual_table_doc_coverage": 0.09836065573770492,
+        "result_docs": 12,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "NOT IN",
+        "value": [
+          "Class II",
+          "Class II, Class II",
+          "II",
+          "Class II, Class I",
+          "Class II, Class II, Class I"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_not_in_010_class_ii_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 12,
+        "profile_all_required_cells": 24,
+        "profile_all_relevant_doc_rate": 0.09836065573770492,
+        "profile_eval_relevant_docs": 11,
+        "profile_eval_required_cells": 22,
+        "profile_eval_relevant_doc_rate": 0.1134020618556701,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_panel_value_010_immunology_82",
+      "question": "List proprietary and established names from fda_510k_device_submission where panel equals Immunology (82).",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"panel\" = 'Immunology (82)';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.panel",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.10655737704918032,
+        "actual_table_doc_coverage": 0.10655737704918032,
+        "result_docs": 13,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.panel",
+        "operator": "=",
+        "value": "Immunology (82)",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_panel_value_010_immunology_82",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 13,
+        "profile_all_required_cells": 26,
+        "profile_all_relevant_doc_rate": 0.10655737704918032,
+        "profile_eval_relevant_docs": 5,
+        "profile_eval_required_cells": 10,
+        "profile_eval_relevant_doc_rate": 0.05154639175257732,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_in_010_k983084_k983083_k971",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate 510k number is one of K983084, K983083, K971614, K153687.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_510k_number\" IN ('K983084, K983083, K971614', 'K153687');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.10655737704918032,
+        "actual_table_doc_coverage": 0.10655737704918032,
+        "result_docs": 13,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_510k_number",
+        "operator": "IN",
+        "value": [
+          "K983084, K983083, K971614",
+          "K153687"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_in_010_k983084_k983083_k971",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 13,
+        "profile_all_required_cells": 26,
+        "profile_all_relevant_doc_rate": 0.10655737704918032,
+        "profile_eval_relevant_docs": 6,
+        "profile_eval_required_cells": 12,
+        "profile_eval_relevant_doc_rate": 0.061855670103092786,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_510k_number_in_010_k143736_k190219",
+      "question": "List proprietary and established names from fda_510k_device_submission where 510k number is one of K143736, K190219.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"510k_number\" IN ('K143736', 'K190219');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.09016393442622951,
+        "actual_table_doc_coverage": 0.09016393442622951,
+        "result_docs": 11,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.510k_number",
+        "operator": "IN",
+        "value": [
+          "K143736",
+          "K190219"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_510k_number_in_010_k143736_k190219",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 11,
+        "profile_all_required_cells": 22,
+        "profile_all_relevant_doc_rate": 0.09016393442622951,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.041237113402061855,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_010_inova_quantalite_rf_i",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate device name is one of Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA, Liofilchem MTS, vancomycin.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_device_name\" IN ('Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA', 'Liofilchem MTS, vancomycin');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_device_name",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.09016393442622951,
+        "actual_table_doc_coverage": 0.09016393442622951,
+        "result_docs": 11,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_device_name",
+        "operator": "IN",
+        "value": [
+          "Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA",
+          "Liofilchem MTS, vancomycin"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_010_inova_quantalite_rf_i",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 11,
+        "profile_all_required_cells": 22,
+        "profile_all_relevant_doc_rate": 0.09016393442622951,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.041237113402061855,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_proprietary_and_established_names_in_020_immulisa_enhanced_rf",
+      "question": "List predicate device name from fda_510k_device_submission where proprietary and established names is one of ImmuLisa Enhanced™ RF IgA Antibody ELISA, ImmuLisa Enhanced™ RF IgG Antibody ELISA, ImmuLisa Enhanced™ RF IgM Antibody ELISA, ImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA, Simplexa VZV Direct, Simplexa VZV Positive Control Pack, StatStrip Glucose Hospital Meter System, Elecsys BRAHMS PCT, and 3 more.",
+      "sql": "SELECT \"predicate_device_name\" FROM \"fda_510k_device_submission\" WHERE \"proprietary_and_established_names\" IN ('ImmuLisa Enhanced™ RF IgA Antibody ELISA, ImmuLisa Enhanced™ RF IgG Antibody ELISA, ImmuLisa Enhanced™ RF IgM Antibody ELISA, ImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA', 'Simplexa VZV Direct, Simplexa VZV Positive Control Pack', 'StatStrip Glucose Hospital Meter System', 'Elecsys BRAHMS PCT', 'INNOVANCE® Free PS Ag', 'FluChip-8G Influenza A+B Assay (FC8G assay)', 'Emit II Plus Cocaine Metabolite Assay');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names",
+        "fda_510k_device_submission.predicate_device_name"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.predicate_device_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19672131147540983,
+        "actual_table_doc_coverage": 0.19672131147540983,
+        "result_docs": 24,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.proprietary_and_established_names",
+        "operator": "IN",
+        "value": [
+          "ImmuLisa Enhanced™ RF IgA Antibody ELISA, ImmuLisa Enhanced™ RF IgG Antibody ELISA, ImmuLisa Enhanced™ RF IgM Antibody ELISA, ImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA",
+          "Simplexa VZV Direct, Simplexa VZV Positive Control Pack",
+          "StatStrip Glucose Hospital Meter System",
+          "Elecsys BRAHMS PCT",
+          "INNOVANCE® Free PS Ag",
+          "FluChip-8G Influenza A+B Assay (FC8G assay)",
+          "Emit II Plus Cocaine Metabolite Assay"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_proprietary_and_established_names_in_020_immulisa_enhanced_rf",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 24,
+        "profile_all_required_cells": 48,
+        "profile_all_relevant_doc_rate": 0.19672131147540983,
+        "profile_eval_relevant_docs": 16,
+        "profile_eval_required_cells": 32,
+        "profile_eval_relevant_doc_rate": 0.16494845360824742,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_510k_number_in_020_k143736_k190219",
+      "question": "List proprietary and established names from fda_510k_device_submission where 510k number is one of K143736, K190219, K181525, K141114, and 4 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"510k_number\" IN ('K143736', 'K190219', 'K181525', 'K141114', 'K150815', 'K192815', 'K182513', 'K181288');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19672131147540983,
+        "actual_table_doc_coverage": 0.19672131147540983,
+        "result_docs": 24,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.510k_number",
+        "operator": "IN",
+        "value": [
+          "K143736",
+          "K190219",
+          "K181525",
+          "K141114",
+          "K150815",
+          "K192815",
+          "K182513",
+          "K181288"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_510k_number_in_020_k143736_k190219",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 24,
+        "profile_all_required_cells": 48,
+        "profile_all_relevant_doc_rate": 0.19672131147540983,
+        "profile_eval_relevant_docs": 16,
+        "profile_eval_required_cells": 32,
+        "profile_eval_relevant_doc_rate": 0.16494845360824742,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_020_inova_quantalite_rf_i",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate device name is one of Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA, Liofilchem MTS, vancomycin, FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems, HardyDisk Tigecycline 15µg, and 2 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_device_name\" IN ('Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA', 'Liofilchem MTS, vancomycin', 'FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems', 'HardyDisk Tigecycline 15µg', 'Nova StatStrip Glucose Hospital Meter System', 'Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_device_name",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19672131147540983,
+        "actual_table_doc_coverage": 0.19672131147540983,
+        "result_docs": 24,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_device_name",
+        "operator": "IN",
+        "value": [
+          "Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA",
+          "Liofilchem MTS, vancomycin",
+          "FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems",
+          "HardyDisk Tigecycline 15µg",
+          "Nova StatStrip Glucose Hospital Meter System",
+          "Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_020_inova_quantalite_rf_i",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 24,
+        "profile_all_required_cells": 48,
+        "profile_all_relevant_doc_rate": 0.19672131147540983,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.15463917525773196,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_purpose_for_submission_value_020_new_device",
+      "question": "List proprietary and established names from fda_510k_device_submission where purpose for submission equals New device.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"purpose_for_submission\" = 'New device';",
       "required_tables": [
         "fda_510k_device_submission"
       ],
       "required_columns": [
         "fda_510k_device_submission.purpose_for_submission",
-        "fda_510k_device_submission.measurand",
-        "fda_510k_device_submission.type_of_test",
-        "fda_510k_device_submission.classification",
-        "fda_510k_device_submission.product_code",
-        "fda_510k_device_submission.panel",
-        "fda_510k_device_submission.intended_use",
-        "fda_510k_device_submission.indications_for_use",
-        "fda_510k_device_submission.predicate_device_name",
-        "fda_510k_device_submission.proposed_labeling",
-        "fda_510k_device_submission.conclusion",
-        "fda_510k_device_submission.510k_number",
-        "fda_510k_device_submission.applicant",
-        "fda_510k_device_submission.predicate_510k_number",
-        "fda_510k_device_submission.proprietary_and_established_names",
-        "fda_510k_device_submission.regulation_section"
+        "fda_510k_device_submission.proprietary_and_established_names"
       ],
       "output_columns": [
-        "fda_510k_device_submission.purpose_for_submission"
+        "fda_510k_device_submission.proprietary_and_established_names"
       ],
-      "tags": [],
-      "difficulty": null
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19672131147540983,
+        "actual_table_doc_coverage": 0.19672131147540983,
+        "result_docs": 24,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.purpose_for_submission",
+        "operator": "=",
+        "value": "New device",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_purpose_for_submission_value_020_new_device",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 24,
+        "profile_all_required_cells": 48,
+        "profile_all_relevant_doc_rate": 0.19672131147540983,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.15463917525773196,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_product_code_in_020_dhr_system_test_rhe",
+      "question": "List proprietary and established names from fda_510k_device_submission where product code is one of DHR: System, Test, Rheumatoid Factor, PLO, OOI, JWY – Manual Antimicrobial Test Systems, GKZ, Counter, differential cell, and 2 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"product_code\" IN ('DHR: System, Test, Rheumatoid Factor', 'PLO, OOI', 'JWY – Manual Antimicrobial Test Systems', 'GKZ, Counter, differential cell', 'GGP, Test, qualitative and quanititative factor deficiency', 'JWY - Manual Antimicrobial Susceptibility Test Systems');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.product_code",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.20491803278688525,
+        "actual_table_doc_coverage": 0.20491803278688525,
+        "result_docs": 25,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.product_code",
+        "operator": "IN",
+        "value": [
+          "DHR: System, Test, Rheumatoid Factor",
+          "PLO, OOI",
+          "JWY – Manual Antimicrobial Test Systems",
+          "GKZ, Counter, differential cell",
+          "GGP, Test, qualitative and quanititative factor deficiency",
+          "JWY - Manual Antimicrobial Susceptibility Test Systems"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_product_code_in_020_dhr_system_test_rhe",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.20491803278688525,
+        "profile_eval_relevant_docs": 16,
+        "profile_eval_required_cells": 32,
+        "profile_eval_relevant_doc_rate": 0.16494845360824742,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_regulation_section_in_020_866_1640_antimicrobial",
+      "question": "List proprietary and established names from fda_510k_device_submission where regulation section is one of 866.1640 Antimicrobial Susceptibility Test Powder, 21 CFR §866.5775: Rheumatoid factor immunological test system, 21 CFR 862.1345, Glucose test system, 21 CFR 864.5220, Automated differential cell counter.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"regulation_section\" IN ('866.1640 Antimicrobial Susceptibility Test Powder', '21 CFR §866.5775: Rheumatoid factor immunological test system', '21 CFR 862.1345, Glucose test system', '21 CFR 864.5220, Automated differential cell counter');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.regulation_section",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.20491803278688525,
+        "actual_table_doc_coverage": 0.20491803278688525,
+        "result_docs": 25,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.regulation_section",
+        "operator": "IN",
+        "value": [
+          "866.1640 Antimicrobial Susceptibility Test Powder",
+          "21 CFR §866.5775: Rheumatoid factor immunological test system",
+          "21 CFR 862.1345, Glucose test system",
+          "21 CFR 864.5220, Automated differential cell counter"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_regulation_section_in_020_866_1640_antimicrobial",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 25,
+        "profile_all_required_cells": 50,
+        "profile_all_relevant_doc_rate": 0.20491803278688525,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.15463917525773196,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_not_in_020_class_ii_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification is not one of Class II, Class II, Class II.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" NOT IN ('Class II', 'Class II, Class II');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.1885245901639344,
+        "actual_table_doc_coverage": 0.1885245901639344,
+        "result_docs": 23,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "NOT IN",
+        "value": [
+          "Class II",
+          "Class II, Class II"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_not_in_020_class_ii_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 23,
+        "profile_all_required_cells": 46,
+        "profile_all_relevant_doc_rate": 0.1885245901639344,
+        "profile_eval_relevant_docs": 19,
+        "profile_eval_required_cells": 38,
+        "profile_eval_relevant_doc_rate": 0.1958762886597938,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_measurand_in_020_rheumatoid_factors_rf",
+      "question": "List proprietary and established names from fda_510k_device_submission where measurand is one of Rheumatoid Factors (RF) IgA, IgG, IgM, and Rheumatoid Factor Total, Varizella zoster virus DNA, Free Protein S Antigen (%), Procalcitonin (PCT), and 3 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"measurand\" IN ('Rheumatoid Factors (RF) IgA, IgG, IgM, and Rheumatoid Factor Total', 'Varizella zoster virus DNA', 'Free Protein S Antigen (%)', 'Procalcitonin (PCT)', '1,5-Anhydroglucitol (1,5-AG)', 'Capillary whole blood glucose', '25-hydroxyvitamin D [25(OH) Vitamin D]');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.measurand",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.1885245901639344,
+        "actual_table_doc_coverage": 0.1885245901639344,
+        "result_docs": 23,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.measurand",
+        "operator": "IN",
+        "value": [
+          "Rheumatoid Factors (RF) IgA, IgG, IgM, and Rheumatoid Factor Total",
+          "Varizella zoster virus DNA",
+          "Free Protein S Antigen (%)",
+          "Procalcitonin (PCT)",
+          "1,5-Anhydroglucitol (1,5-AG)",
+          "Capillary whole blood glucose",
+          "25-hydroxyvitamin D [25(OH) Vitamin D]"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_measurand_in_020_rheumatoid_factors_rf",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 23,
+        "profile_all_required_cells": 46,
+        "profile_all_relevant_doc_rate": 0.1885245901639344,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.15463917525773196,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_regulation_section_in_040_866_1640_antimicrobial",
+      "question": "List proprietary and established names from fda_510k_device_submission where regulation section is one of 866.1640 Antimicrobial Susceptibility Test Powder, 21 CFR §866.5775: Rheumatoid factor immunological test system, 21 CFR 862.1345, Glucose test system, 21 CFR 864.5220, Automated differential cell counter, and 8 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"regulation_section\" IN ('866.1640 Antimicrobial Susceptibility Test Powder', '21 CFR §866.5775: Rheumatoid factor immunological test system', '21 CFR 862.1345, Glucose test system', '21 CFR 864.5220, Automated differential cell counter', '21 CFR 866.3970 -, 21 CFR 862.2570 -', '21 CFR 866.3980, Respiratory viral panel multiplex nucleic acid assay', '21 CFR 862.1345', '21 CFR 864.7290, Factor deficiency test', '21 CFR 866.1620 Antimicrobial Susceptibility Test Disc', '21 CFR 866.3980 Respiratory viral panel multiplex nucleic acid assay', '21 CFR 866.3215; Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis', '21 CFR 866.3215 - Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.regulation_section",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.39344262295081966,
+        "actual_table_doc_coverage": 0.39344262295081966,
+        "result_docs": 48,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.regulation_section",
+        "operator": "IN",
+        "value": [
+          "866.1640 Antimicrobial Susceptibility Test Powder",
+          "21 CFR §866.5775: Rheumatoid factor immunological test system",
+          "21 CFR 862.1345, Glucose test system",
+          "21 CFR 864.5220, Automated differential cell counter",
+          "21 CFR 866.3970 -, 21 CFR 862.2570 -",
+          "21 CFR 866.3980, Respiratory viral panel multiplex nucleic acid assay",
+          "21 CFR 862.1345",
+          "21 CFR 864.7290, Factor deficiency test",
+          "21 CFR 866.1620 Antimicrobial Susceptibility Test Disc",
+          "21 CFR 866.3980 Respiratory viral panel multiplex nucleic acid assay",
+          "21 CFR 866.3215; Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis",
+          "21 CFR 866.3215 - Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_regulation_section_in_040_866_1640_antimicrobial",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 48,
+        "profile_all_required_cells": 96,
+        "profile_all_relevant_doc_rate": 0.39344262295081966,
+        "profile_eval_relevant_docs": 37,
+        "profile_eval_required_cells": 74,
+        "profile_eval_relevant_doc_rate": 0.38144329896907214,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_indications_for_use_in_040_same_as_intended_use",
+      "question": "List proprietary and established names from fda_510k_device_submission where indications for use is one of Same as Intended Use, Same as intended use, Same as Intended Use., Same as intended use..",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"indications_for_use\" IN ('Same as Intended Use', 'Same as intended use', 'Same as Intended Use.', 'Same as intended use.');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.indications_for_use",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.4098360655737705,
+        "actual_table_doc_coverage": 0.4098360655737705,
+        "result_docs": 50,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.indications_for_use",
+        "operator": "IN",
+        "value": [
+          "Same as Intended Use",
+          "Same as intended use",
+          "Same as Intended Use.",
+          "Same as intended use."
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_indications_for_use_in_040_same_as_intended_use",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.4098360655737705,
+        "profile_eval_relevant_docs": 36,
+        "profile_eval_required_cells": 72,
+        "profile_eval_relevant_doc_rate": 0.3711340206185567,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_panel_in_040_hematology_81_mic",
+      "question": "List proprietary and established names from fda_510k_device_submission where panel is one of Hematology (81), Microbiology (83), Immunology (82).",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"panel\" IN ('Hematology (81)', 'Microbiology (83)', 'Immunology (82)');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.panel",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.4098360655737705,
+        "actual_table_doc_coverage": 0.4098360655737705,
+        "result_docs": 50,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.panel",
+        "operator": "IN",
+        "value": [
+          "Hematology (81)",
+          "Microbiology (83)",
+          "Immunology (82)"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_panel_in_040_hematology_81_mic",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 50,
+        "profile_all_required_cells": 100,
+        "profile_all_relevant_doc_rate": 0.4098360655737705,
+        "profile_eval_relevant_docs": 33,
+        "profile_eval_required_cells": 66,
+        "profile_eval_relevant_doc_rate": 0.3402061855670103,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_purpose_for_submission_in_040_new_device_new_devi",
+      "question": "List proprietary and established names from fda_510k_device_submission where purpose for submission is one of New device, New Device, Clearance of a new device.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"purpose_for_submission\" IN ('New device', 'New Device', 'Clearance of a new device');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.purpose_for_submission",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.38524590163934425,
+        "actual_table_doc_coverage": 0.38524590163934425,
+        "result_docs": 47,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.purpose_for_submission",
+        "operator": "IN",
+        "value": [
+          "New device",
+          "New Device",
+          "Clearance of a new device"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_purpose_for_submission_in_040_new_device_new_devi",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 47,
+        "profile_all_required_cells": 94,
+        "profile_all_relevant_doc_rate": 0.38524590163934425,
+        "profile_eval_relevant_docs": 36,
+        "profile_eval_required_cells": 72,
+        "profile_eval_relevant_doc_rate": 0.3711340206185567,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_in_040_k983084_k983083_k971",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate 510k number is one of K983084, K983083, K971614, K153687, K160462, K010963, and 8 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_510k_number\" IN ('K983084, K983083, K971614', 'K153687', 'K160462', 'K010963', 'K112605', 'K062245', 'k123660', 'K151873', 'K172091', 'K173927', 'K131813', 'K121546');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.3114754098360656,
+        "actual_table_doc_coverage": 0.3114754098360656,
+        "result_docs": 38,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_510k_number",
+        "operator": "IN",
+        "value": [
+          "K983084, K983083, K971614",
+          "K153687",
+          "K160462",
+          "K010963",
+          "K112605",
+          "K062245",
+          "k123660",
+          "K151873",
+          "K172091",
+          "K173927",
+          "K131813",
+          "K121546"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_in_040_k983084_k983083_k971",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 38,
+        "profile_all_required_cells": 76,
+        "profile_all_relevant_doc_rate": 0.3114754098360656,
+        "profile_eval_relevant_docs": 28,
+        "profile_eval_required_cells": 56,
+        "profile_eval_relevant_doc_rate": 0.28865979381443296,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_040_inova_quantalite_rf_i",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate device name is one of Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA, Liofilchem MTS, vancomycin, FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems, HardyDisk Tigecycline 15µg, and 8 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_device_name\" IN ('Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA', 'Liofilchem MTS, vancomycin', 'FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems', 'HardyDisk Tigecycline 15µg', 'Nova StatStrip Glucose Hospital Meter System', 'Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer', 'STA-Liatest Free Protein S', 'ETEST Ceftaroline', 'Elecsys BRAHMS PCT', 'EUROIMMUN 25-OH Vitamin D ELISA', 'Emit II Plus Cocaine Metabolite Assay', 'CDC Human Influenza Virus Real-Time PCR Diagnostic Panel');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_device_name",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.30327868852459017,
+        "actual_table_doc_coverage": 0.30327868852459017,
+        "result_docs": 37,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_device_name",
+        "operator": "IN",
+        "value": [
+          "Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA",
+          "Liofilchem MTS, vancomycin",
+          "FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems",
+          "HardyDisk Tigecycline 15µg",
+          "Nova StatStrip Glucose Hospital Meter System",
+          "Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer",
+          "STA-Liatest Free Protein S",
+          "ETEST Ceftaroline",
+          "Elecsys BRAHMS PCT",
+          "EUROIMMUN 25-OH Vitamin D ELISA",
+          "Emit II Plus Cocaine Metabolite Assay",
+          "CDC Human Influenza Virus Real-Time PCR Diagnostic Panel"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_040_inova_quantalite_rf_i",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 37,
+        "profile_all_required_cells": 74,
+        "profile_all_relevant_doc_rate": 0.30327868852459017,
+        "profile_eval_relevant_docs": 27,
+        "profile_eval_required_cells": 54,
+        "profile_eval_relevant_doc_rate": 0.27835051546391754,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_product_code_in_040_dhr_system_test_rhe",
+      "question": "List proprietary and established names from fda_510k_device_submission where product code is one of DHR: System, Test, Rheumatoid Factor, PLO, OOI, JWY – Manual Antimicrobial Test Systems, GKZ, Counter, differential cell, and 8 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"product_code\" IN ('DHR: System, Test, Rheumatoid Factor', 'PLO, OOI', 'JWY – Manual Antimicrobial Test Systems', 'GKZ, Counter, differential cell', 'GGP, Test, qualitative and quanititative factor deficiency', 'JWY - Manual Antimicrobial Susceptibility Test Systems', 'NOZ; Assay, 1,5-Anhydroglucitol', 'PGI', 'PMG, Automated multicolor fluorescent imaging cytometric analysis system, OYE, System, Test, Flow cytometric reagents and accessories, GKL Hemoglobin assay, JPK, Analyte Controls, Hematology Quality Control', 'JTN', 'NBW, System, Test, Blood Glucose, Over the Counter, LFR, Glucose Dehydrogenase, Glucose', 'GGN, Plasma, Coagulation Control');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.product_code",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.30327868852459017,
+        "actual_table_doc_coverage": 0.30327868852459017,
+        "result_docs": 37,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.product_code",
+        "operator": "IN",
+        "value": [
+          "DHR: System, Test, Rheumatoid Factor",
+          "PLO, OOI",
+          "JWY – Manual Antimicrobial Test Systems",
+          "GKZ, Counter, differential cell",
+          "GGP, Test, qualitative and quanititative factor deficiency",
+          "JWY - Manual Antimicrobial Susceptibility Test Systems",
+          "NOZ; Assay, 1,5-Anhydroglucitol",
+          "PGI",
+          "PMG, Automated multicolor fluorescent imaging cytometric analysis system, OYE, System, Test, Flow cytometric reagents and accessories, GKL Hemoglobin assay, JPK, Analyte Controls, Hematology Quality Control",
+          "JTN",
+          "NBW, System, Test, Blood Glucose, Over the Counter, LFR, Glucose Dehydrogenase, Glucose",
+          "GGN, Plasma, Coagulation Control"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_product_code_in_040_dhr_system_test_rhe",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 37,
+        "profile_all_required_cells": 74,
+        "profile_all_relevant_doc_rate": 0.30327868852459017,
+        "profile_eval_relevant_docs": 24,
+        "profile_eval_required_cells": 48,
+        "profile_eval_relevant_doc_rate": 0.24742268041237114,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_type_of_test_in_040_immunoassay_qualitati",
+      "question": "List proprietary and established names from fda_510k_device_submission where type of test is one of Immunoassay, qualitative and semi-quantitative, Realtime Polymerase Chain Reaction, Quantitative immunoassay, Antimicrobial Susceptibility Test Disks, and 8 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"type_of_test\" IN ('Immunoassay, qualitative and semi-quantitative', 'Realtime Polymerase Chain Reaction', 'Quantitative immunoassay', 'Antimicrobial Susceptibility Test Disks', 'Quantitative, Electrochemiluminescence Immunoassay', 'Quantitative', 'Quantitative amperometric assay, glucose oxidase', 'Quantitative immunoturbidimetric assay', 'Quantitative Antimicrobial Susceptibility Test growth based detection', 'Quantitative test for CD4% and CD4 absolute count by cytometry imaging and quantitative test for hemoglobin by absorbance spectrometer', 'Quantitative multiplexed flow immunoassay', 'Quantitative AST growth-based detection');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.type_of_test",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.30327868852459017,
+        "actual_table_doc_coverage": 0.30327868852459017,
+        "result_docs": 37,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.type_of_test",
+        "operator": "IN",
+        "value": [
+          "Immunoassay, qualitative and semi-quantitative",
+          "Realtime Polymerase Chain Reaction",
+          "Quantitative immunoassay",
+          "Antimicrobial Susceptibility Test Disks",
+          "Quantitative, Electrochemiluminescence Immunoassay",
+          "Quantitative",
+          "Quantitative amperometric assay, glucose oxidase",
+          "Quantitative immunoturbidimetric assay",
+          "Quantitative Antimicrobial Susceptibility Test growth based detection",
+          "Quantitative test for CD4% and CD4 absolute count by cytometry imaging and quantitative test for hemoglobin by absorbance spectrometer",
+          "Quantitative multiplexed flow immunoassay",
+          "Quantitative AST growth-based detection"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_type_of_test_in_040_immunoassay_qualitati",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 37,
+        "profile_all_required_cells": 74,
+        "profile_all_relevant_doc_rate": 0.30327868852459017,
+        "profile_eval_relevant_docs": 28,
+        "profile_eval_required_cells": 56,
+        "profile_eval_relevant_doc_rate": 0.28865979381443296,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_indications_for_use_not_in_060_same_as_intended_use",
+      "question": "List proprietary and established names from fda_510k_device_submission where indications for use is not one of Same as Intended Use, Same as intended use, Same as Intended Use., Same as intended use..",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"indications_for_use\" NOT IN ('Same as Intended Use', 'Same as intended use', 'Same as Intended Use.', 'Same as intended use.');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.indications_for_use",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5901639344262295,
+        "actual_table_doc_coverage": 0.5901639344262295,
+        "result_docs": 72,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.indications_for_use",
+        "operator": "NOT IN",
+        "value": [
+          "Same as Intended Use",
+          "Same as intended use",
+          "Same as Intended Use.",
+          "Same as intended use."
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_indications_for_use_not_in_060_same_as_intended_use",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 72,
+        "profile_all_required_cells": 144,
+        "profile_all_relevant_doc_rate": 0.5901639344262295,
+        "profile_eval_relevant_docs": 61,
+        "profile_eval_required_cells": 122,
+        "profile_eval_relevant_doc_rate": 0.6288659793814433,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_panel_not_in_060_hematology_81_mic",
+      "question": "List proprietary and established names from fda_510k_device_submission where panel is not one of Hematology (81), Microbiology (83), Immunology (82).",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"panel\" NOT IN ('Hematology (81)', 'Microbiology (83)', 'Immunology (82)');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.panel",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5901639344262295,
+        "actual_table_doc_coverage": 0.5901639344262295,
+        "result_docs": 72,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.panel",
+        "operator": "NOT IN",
+        "value": [
+          "Hematology (81)",
+          "Microbiology (83)",
+          "Immunology (82)"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_panel_not_in_060_hematology_81_mic",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 72,
+        "profile_all_required_cells": 144,
+        "profile_all_relevant_doc_rate": 0.5901639344262295,
+        "profile_eval_relevant_docs": 64,
+        "profile_eval_required_cells": 128,
+        "profile_eval_relevant_doc_rate": 0.6597938144329897,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_purpose_for_submission_not_in_060_new_device_new_devi",
+      "question": "List proprietary and established names from fda_510k_device_submission where purpose for submission is not one of New device, New Device, Clearance of a new device.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"purpose_for_submission\" NOT IN ('New device', 'New Device', 'Clearance of a new device');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.purpose_for_submission",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.6147540983606558,
+        "actual_table_doc_coverage": 0.6147540983606558,
+        "result_docs": 75,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.purpose_for_submission",
+        "operator": "NOT IN",
+        "value": [
+          "New device",
+          "New Device",
+          "Clearance of a new device"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_purpose_for_submission_not_in_060_new_device_new_devi",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 75,
+        "profile_all_required_cells": 150,
+        "profile_all_relevant_doc_rate": 0.6147540983606558,
+        "profile_eval_relevant_docs": 61,
+        "profile_eval_required_cells": 122,
+        "profile_eval_relevant_doc_rate": 0.6288659793814433,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_value_060_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification equals Class II.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" = 'Class II';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.7540983606557377,
+        "actual_table_doc_coverage": 0.7540983606557377,
+        "result_docs": 92,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "=",
+        "value": "Class II",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_value_060_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 92,
+        "profile_all_required_cells": 184,
+        "profile_all_relevant_doc_rate": 0.7540983606557377,
+        "profile_eval_relevant_docs": 71,
+        "profile_eval_required_cells": 142,
+        "profile_eval_relevant_doc_rate": 0.7319587628865979,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_applicant_not_in_060_immco_diagnostics_inc",
+      "question": "List proprietary and established names from fda_510k_device_submission where applicant is not one of IMMCO Diagnostics, Inc., bioMérieux, Inc., Roche Diagnostics, Siemens Healthcare Diagnostics Product GmbH, and 6 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"applicant\" NOT IN ('IMMCO Diagnostics, Inc.', 'bioMérieux, Inc.', 'Roche Diagnostics', 'Siemens Healthcare Diagnostics Product GmbH', 'Liofilchem s.r.l.', 'Quidel Corporation', 'Roche Molecular Systems, Inc.', 'Nova Biomedical Corporation', 'DiaSorin', 'BD Biosciences');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.applicant",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5983606557377049,
+        "actual_table_doc_coverage": 0.5983606557377049,
+        "result_docs": 73,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.applicant",
+        "operator": "NOT IN",
+        "value": [
+          "IMMCO Diagnostics, Inc.",
+          "bioMérieux, Inc.",
+          "Roche Diagnostics",
+          "Siemens Healthcare Diagnostics Product GmbH",
+          "Liofilchem s.r.l.",
+          "Quidel Corporation",
+          "Roche Molecular Systems, Inc.",
+          "Nova Biomedical Corporation",
+          "DiaSorin",
+          "BD Biosciences"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_applicant_not_in_060_immco_diagnostics_inc",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 96,
+        "profile_all_required_cells": 192,
+        "profile_all_relevant_doc_rate": 0.7868852459016393,
+        "profile_eval_relevant_docs": 75,
+        "profile_eval_required_cells": 150,
+        "profile_eval_relevant_doc_rate": 0.7731958762886598,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_intended_use_not_in_060_see_indications_for_us",
+      "question": "List proprietary and established names from fda_510k_device_submission where intended use is not one of See Indications for Use below., See indications for use below., ImmuLisa Enhanced™ RF IgA Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgA antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgG Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgG antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgM Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgM antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative detection of Rheumatoid Factor \nIgA, IgG and IgM antibodies in human serum to aid in the diagnosis of rheumatoid \narthritis (RA) in conjunction with other laboratory tests and clinical findings., See indication(s) for use below., and 5 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"intended_use\" NOT IN ('See Indications for Use below.', 'See indications for use below.', 'ImmuLisa Enhanced™ RF IgA Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgA antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgG Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgG antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgM Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgM antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative detection of Rheumatoid Factor \nIgA, IgG and IgM antibodies in human serum to aid in the diagnosis of rheumatoid \narthritis (RA) in conjunction with other laboratory tests and clinical findings.', 'See indication(s) for use below.', 'SimplexaVZV Direct: The DiaSorin Molecular Simplexa VZV Direct assay is intended\nfor use on the LIAISON MDX instrument for the qualitative detection of varicella-zoster \nvirus (VZV) DNA in cerebrospinal fluid (CSF) from patients with signs and/or symptoms \nof meningitis and/or encephalitis. This test is intended as an aid in the diagnosis of VZV \ninfections of the central nervous system (CNS).  \n \nNegative results do not preclude VZV infection and should not be used as the sole basis \nfor treatment or other patient management decisions. \n \nThe assay is not intended for use as a donor screening test. The assay is for professional \nuse only.  \n \nSimplexa VZV Positive Control Pack. The Simplexa VZV Positive Control Pack is \nintended to be used as a control with the Simplexa VZV Direct kit. This control is not \nintended for use with other assays or systems.', 'For the quantitative determination of free protein S antigen in human plasma collected from venous blood samples in 3.2% sodium citrate tubes on the Sysmex CS- 5100 analyzer. As an aid in the diagnosis of protein S deficiency in patients who are suspected of free protein S deficiency. The performance of this device has not been established in neonate and pediatric patient populations.', 'See indication for use below.', 'See Indication(s) for use.', 'See Indication(s) for use below.');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.intended_use",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.6065573770491803,
+        "actual_table_doc_coverage": 0.6065573770491803,
+        "result_docs": 74,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.intended_use",
+        "operator": "NOT IN",
+        "value": [
+          "See Indications for Use below.",
+          "See indications for use below.",
+          "ImmuLisa Enhanced™ RF IgA Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgA antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgG Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgG antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgM Antibody ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative or semi-quantitative detection \nof Rheumatoid Factor IgM antibodies in human serum to aid in the diagnosis of \nrheumatoid arthritis (RA) in conjunction with other laboratory tests and clinical findings. \nImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA: \nEnzyme linked immunoassay (ELISA) for the qualitative detection of Rheumatoid Factor \nIgA, IgG and IgM antibodies in human serum to aid in the diagnosis of rheumatoid \narthritis (RA) in conjunction with other laboratory tests and clinical findings.",
+          "See indication(s) for use below.",
+          "SimplexaVZV Direct: The DiaSorin Molecular Simplexa VZV Direct assay is intended\nfor use on the LIAISON MDX instrument for the qualitative detection of varicella-zoster \nvirus (VZV) DNA in cerebrospinal fluid (CSF) from patients with signs and/or symptoms \nof meningitis and/or encephalitis. This test is intended as an aid in the diagnosis of VZV \ninfections of the central nervous system (CNS).  \n \nNegative results do not preclude VZV infection and should not be used as the sole basis \nfor treatment or other patient management decisions. \n \nThe assay is not intended for use as a donor screening test. The assay is for professional \nuse only.  \n \nSimplexa VZV Positive Control Pack. The Simplexa VZV Positive Control Pack is \nintended to be used as a control with the Simplexa VZV Direct kit. This control is not \nintended for use with other assays or systems.",
+          "For the quantitative determination of free protein S antigen in human plasma collected from venous blood samples in 3.2% sodium citrate tubes on the Sysmex CS- 5100 analyzer. As an aid in the diagnosis of protein S deficiency in patients who are suspected of free protein S deficiency. The performance of this device has not been established in neonate and pediatric patient populations.",
+          "See indication for use below.",
+          "See Indication(s) for use.",
+          "See Indication(s) for use below."
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_intended_use_not_in_060_see_indications_for_us",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 115,
+        "profile_all_required_cells": 230,
+        "profile_all_relevant_doc_rate": 0.9426229508196722,
+        "profile_eval_relevant_docs": 92,
+        "profile_eval_required_cells": 184,
+        "profile_eval_relevant_doc_rate": 0.9484536082474226,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_panel_in_060_hematology_81_mic",
+      "question": "List proprietary and established names from fda_510k_device_submission where panel is one of Hematology (81), Microbiology (83), Immunology (82), Clinical Chemistry (75), and 3 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"panel\" IN ('Hematology (81)', 'Microbiology (83)', 'Immunology (82)', 'Clinical Chemistry (75)', '83 – Microbiology', 'Chemistry (75)', '83 - Microbiology');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.panel",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5819672131147541,
+        "actual_table_doc_coverage": 0.5819672131147541,
+        "result_docs": 71,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.panel",
+        "operator": "IN",
+        "value": [
+          "Hematology (81)",
+          "Microbiology (83)",
+          "Immunology (82)",
+          "Clinical Chemistry (75)",
+          "83 – Microbiology",
+          "Chemistry (75)",
+          "83 - Microbiology"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_panel_in_060_hematology_81_mic",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 71,
+        "profile_all_required_cells": 142,
+        "profile_all_relevant_doc_rate": 0.5819672131147541,
+        "profile_eval_relevant_docs": 51,
+        "profile_eval_required_cells": 102,
+        "profile_eval_relevant_doc_rate": 0.5257731958762887,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_proprietary_and_established_names_not_in_080_immulisa_enhanced_rf",
+      "question": "List predicate device name from fda_510k_device_submission where proprietary and established names is not one of ImmuLisa Enhanced™ RF IgA Antibody ELISA, ImmuLisa Enhanced™ RF IgG Antibody ELISA, ImmuLisa Enhanced™ RF IgM Antibody ELISA, ImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA, Simplexa VZV Direct, Simplexa VZV Positive Control Pack, StatStrip Glucose Hospital Meter System, Elecsys BRAHMS PCT, and 3 more.",
+      "sql": "SELECT \"predicate_device_name\" FROM \"fda_510k_device_submission\" WHERE \"proprietary_and_established_names\" NOT IN ('ImmuLisa Enhanced™ RF IgA Antibody ELISA, ImmuLisa Enhanced™ RF IgG Antibody ELISA, ImmuLisa Enhanced™ RF IgM Antibody ELISA, ImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA', 'Simplexa VZV Direct, Simplexa VZV Positive Control Pack', 'StatStrip Glucose Hospital Meter System', 'Elecsys BRAHMS PCT', 'INNOVANCE® Free PS Ag', 'FluChip-8G Influenza A+B Assay (FC8G assay)', 'Emit II Plus Cocaine Metabolite Assay');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names",
+        "fda_510k_device_submission.predicate_device_name"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.predicate_device_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8032786885245902,
+        "actual_table_doc_coverage": 0.8032786885245902,
+        "result_docs": 98,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.proprietary_and_established_names",
+        "operator": "NOT IN",
+        "value": [
+          "ImmuLisa Enhanced™ RF IgA Antibody ELISA, ImmuLisa Enhanced™ RF IgG Antibody ELISA, ImmuLisa Enhanced™ RF IgM Antibody ELISA, ImmuLisa Enhanced™ RF IgA/IgG/IgM ELISA",
+          "Simplexa VZV Direct, Simplexa VZV Positive Control Pack",
+          "StatStrip Glucose Hospital Meter System",
+          "Elecsys BRAHMS PCT",
+          "INNOVANCE® Free PS Ag",
+          "FluChip-8G Influenza A+B Assay (FC8G assay)",
+          "Emit II Plus Cocaine Metabolite Assay"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_proprietary_and_established_names_not_in_080_immulisa_enhanced_rf",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 98,
+        "profile_all_required_cells": 196,
+        "profile_all_relevant_doc_rate": 0.8032786885245902,
+        "profile_eval_relevant_docs": 81,
+        "profile_eval_required_cells": 162,
+        "profile_eval_relevant_doc_rate": 0.8350515463917526,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_510k_number_not_in_080_k143736_k190219",
+      "question": "List proprietary and established names from fda_510k_device_submission where 510k number is not one of K143736, K190219, K181525, K141114, and 4 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"510k_number\" NOT IN ('K143736', 'K190219', 'K181525', 'K141114', 'K150815', 'K192815', 'K182513', 'K181288');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8032786885245902,
+        "actual_table_doc_coverage": 0.8032786885245902,
+        "result_docs": 98,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.510k_number",
+        "operator": "NOT IN",
+        "value": [
+          "K143736",
+          "K190219",
+          "K181525",
+          "K141114",
+          "K150815",
+          "K192815",
+          "K182513",
+          "K181288"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_510k_number_not_in_080_k143736_k190219",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 98,
+        "profile_all_required_cells": 196,
+        "profile_all_relevant_doc_rate": 0.8032786885245902,
+        "profile_eval_relevant_docs": 81,
+        "profile_eval_required_cells": 162,
+        "profile_eval_relevant_doc_rate": 0.8350515463917526,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_measurand_not_in_080_rheumatoid_factors_rf",
+      "question": "List proprietary and established names from fda_510k_device_submission where measurand is not one of Rheumatoid Factors (RF) IgA, IgG, IgM, and Rheumatoid Factor Total, Varizella zoster virus DNA, Free Protein S Antigen (%), Procalcitonin (PCT).",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"measurand\" NOT IN ('Rheumatoid Factors (RF) IgA, IgG, IgM, and Rheumatoid Factor Total', 'Varizella zoster virus DNA', 'Free Protein S Antigen (%)', 'Procalcitonin (PCT)');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.measurand",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8032786885245902,
+        "actual_table_doc_coverage": 0.8032786885245902,
+        "result_docs": 98,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.measurand",
+        "operator": "NOT IN",
+        "value": [
+          "Rheumatoid Factors (RF) IgA, IgG, IgM, and Rheumatoid Factor Total",
+          "Varizella zoster virus DNA",
+          "Free Protein S Antigen (%)",
+          "Procalcitonin (PCT)"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_measurand_not_in_080_rheumatoid_factors_rf",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 98,
+        "profile_all_required_cells": 196,
+        "profile_all_relevant_doc_rate": 0.8032786885245902,
+        "profile_eval_relevant_docs": 84,
+        "profile_eval_required_cells": 168,
+        "profile_eval_relevant_doc_rate": 0.865979381443299,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_not_in_080_inova_quantalite_rf_i",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate device name is not one of Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA, Liofilchem MTS, vancomycin, FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems, HardyDisk Tigecycline 15µg, and 2 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_device_name\" NOT IN ('Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA', 'Liofilchem MTS, vancomycin', 'FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems', 'HardyDisk Tigecycline 15µg', 'Nova StatStrip Glucose Hospital Meter System', 'Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_device_name",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8032786885245902,
+        "actual_table_doc_coverage": 0.8032786885245902,
+        "result_docs": 98,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_device_name",
+        "operator": "NOT IN",
+        "value": [
+          "Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA",
+          "Liofilchem MTS, vancomycin",
+          "FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems",
+          "HardyDisk Tigecycline 15µg",
+          "Nova StatStrip Glucose Hospital Meter System",
+          "Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_not_in_080_inova_quantalite_rf_i",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 98,
+        "profile_all_required_cells": 196,
+        "profile_all_relevant_doc_rate": 0.8032786885245902,
+        "profile_eval_relevant_docs": 82,
+        "profile_eval_required_cells": 164,
+        "profile_eval_relevant_doc_rate": 0.845360824742268,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_product_code_not_in_080_dhr_system_test_rhe",
+      "question": "List proprietary and established names from fda_510k_device_submission where product code is not one of DHR: System, Test, Rheumatoid Factor, PLO, OOI, JWY – Manual Antimicrobial Test Systems, GKZ, Counter, differential cell, and 2 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"product_code\" NOT IN ('DHR: System, Test, Rheumatoid Factor', 'PLO, OOI', 'JWY – Manual Antimicrobial Test Systems', 'GKZ, Counter, differential cell', 'GGP, Test, qualitative and quanititative factor deficiency', 'JWY - Manual Antimicrobial Susceptibility Test Systems');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.product_code",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.7950819672131147,
+        "actual_table_doc_coverage": 0.7950819672131147,
+        "result_docs": 97,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.product_code",
+        "operator": "NOT IN",
+        "value": [
+          "DHR: System, Test, Rheumatoid Factor",
+          "PLO, OOI",
+          "JWY – Manual Antimicrobial Test Systems",
+          "GKZ, Counter, differential cell",
+          "GGP, Test, qualitative and quanititative factor deficiency",
+          "JWY - Manual Antimicrobial Susceptibility Test Systems"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_product_code_not_in_080_dhr_system_test_rhe",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 97,
+        "profile_all_required_cells": 194,
+        "profile_all_relevant_doc_rate": 0.7950819672131147,
+        "profile_eval_relevant_docs": 81,
+        "profile_eval_required_cells": 162,
+        "profile_eval_relevant_doc_rate": 0.8350515463917526,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_regulation_section_not_in_080_866_1640_antimicrobial",
+      "question": "List proprietary and established names from fda_510k_device_submission where regulation section is not one of 866.1640 Antimicrobial Susceptibility Test Powder, 21 CFR §866.5775: Rheumatoid factor immunological test system, 21 CFR 862.1345, Glucose test system, 21 CFR 864.5220, Automated differential cell counter.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"regulation_section\" NOT IN ('866.1640 Antimicrobial Susceptibility Test Powder', '21 CFR §866.5775: Rheumatoid factor immunological test system', '21 CFR 862.1345, Glucose test system', '21 CFR 864.5220, Automated differential cell counter');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.regulation_section",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.7950819672131147,
+        "actual_table_doc_coverage": 0.7950819672131147,
+        "result_docs": 97,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.regulation_section",
+        "operator": "NOT IN",
+        "value": [
+          "866.1640 Antimicrobial Susceptibility Test Powder",
+          "21 CFR §866.5775: Rheumatoid factor immunological test system",
+          "21 CFR 862.1345, Glucose test system",
+          "21 CFR 864.5220, Automated differential cell counter"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_regulation_section_not_in_080_866_1640_antimicrobial",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 97,
+        "profile_all_required_cells": 194,
+        "profile_all_relevant_doc_rate": 0.7950819672131147,
+        "profile_eval_relevant_docs": 82,
+        "profile_eval_required_cells": 164,
+        "profile_eval_relevant_doc_rate": 0.845360824742268,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_in_080_class_ii_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification is one of Class II, Class II, Class II.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" IN ('Class II', 'Class II, Class II');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8114754098360656,
+        "actual_table_doc_coverage": 0.8114754098360656,
+        "result_docs": 99,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "IN",
+        "value": [
+          "Class II",
+          "Class II, Class II"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_in_080_class_ii_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.8114754098360656,
+        "profile_eval_relevant_docs": 78,
+        "profile_eval_required_cells": 156,
+        "profile_eval_relevant_doc_rate": 0.8041237113402062,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_not_in_080_k983084_k983083_k971",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate 510k number is not one of K983084, K983083, K971614, K153687, K160462, K010963, and 1 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_510k_number\" NOT IN ('K983084, K983083, K971614', 'K153687', 'K160462', 'K010963', 'K112605');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8114754098360656,
+        "actual_table_doc_coverage": 0.8114754098360656,
+        "result_docs": 99,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_510k_number",
+        "operator": "NOT IN",
+        "value": [
+          "K983084, K983083, K971614",
+          "K153687",
+          "K160462",
+          "K010963",
+          "K112605"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_not_in_080_k983084_k983083_k971",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.8114754098360656,
+        "profile_eval_relevant_docs": 83,
+        "profile_eval_required_cells": 166,
+        "profile_eval_relevant_doc_rate": 0.8556701030927835,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_applicant_value_100_the_binding_site_group",
+      "question": "List proprietary and established names from fda_510k_device_submission where applicant does not equal The Binding Site Group, Ltd..",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"applicant\" <> 'The Binding Site Group, Ltd.';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.applicant",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9918032786885246,
+        "actual_table_doc_coverage": 0.9918032786885246,
+        "result_docs": 121,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.applicant",
+        "operator": "!=",
+        "value": "The Binding Site Group, Ltd.",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_applicant_value_100_the_binding_site_group",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 122,
+        "profile_all_required_cells": 244,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 97,
+        "profile_eval_required_cells": 194,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_proposed_labeling_value_100_the_labeling_is_sufficie",
+      "question": "List proprietary and established names from fda_510k_device_submission where proposed labeling does not equal The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809 and the special controls for this device type..",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"proposed_labeling\" <> 'The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809 and the special controls for this device type.';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.proposed_labeling",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9918032786885246,
+        "actual_table_doc_coverage": 0.9918032786885246,
+        "result_docs": 121,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.proposed_labeling",
+        "operator": "!=",
+        "value": "The labeling is sufficient and it satisfies the requirements of 21 CFR Parts 801 and 809 and the special controls for this device type.",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_proposed_labeling_value_100_the_labeling_is_sufficie",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 122,
+        "profile_all_required_cells": 244,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 97,
+        "profile_eval_required_cells": 194,
+        "profile_eval_relevant_doc_rate": 1.0,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_proprietary_and_established_names_value_100_sd_gluconfc_blood_glucos",
+      "question": "List predicate device name from fda_510k_device_submission where proprietary and established names does not equal SD GlucoNFC Blood Glucose Monitoring System, SD GlucoNFC Multi Blood Glucose Monitoring System.",
+      "sql": "SELECT \"predicate_device_name\" FROM \"fda_510k_device_submission\" WHERE \"proprietary_and_established_names\" <> 'SD GlucoNFC Blood Glucose Monitoring System, SD GlucoNFC Multi Blood Glucose Monitoring System';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names",
+        "fda_510k_device_submission.predicate_device_name"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.predicate_device_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9918032786885246,
+        "actual_table_doc_coverage": 0.9918032786885246,
+        "result_docs": 121,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.proprietary_and_established_names",
+        "operator": "!=",
+        "value": "SD GlucoNFC Blood Glucose Monitoring System, SD GlucoNFC Multi Blood Glucose Monitoring System",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_proprietary_and_established_names_value_100_sd_gluconfc_blood_glucos",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 121,
+        "profile_all_required_cells": 242,
+        "profile_all_relevant_doc_rate": 0.9918032786885246,
+        "profile_eval_relevant_docs": 96,
+        "profile_eval_required_cells": 192,
+        "profile_eval_relevant_doc_rate": 0.9896907216494846,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_510k_number_value_100_k150588",
+      "question": "List proprietary and established names from fda_510k_device_submission where 510k number does not equal K150588.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"510k_number\" <> 'K150588';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9918032786885246,
+        "actual_table_doc_coverage": 0.9918032786885246,
+        "result_docs": 121,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.510k_number",
+        "operator": "!=",
+        "value": "K150588",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_510k_number_value_100_k150588",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 121,
+        "profile_all_required_cells": 242,
+        "profile_all_relevant_doc_rate": 0.9918032786885246,
+        "profile_eval_relevant_docs": 96,
+        "profile_eval_required_cells": 192,
+        "profile_eval_relevant_doc_rate": 0.9896907216494846,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_classification_value_100_class_i_class_ii",
+      "question": "List proprietary and established names from fda_510k_device_submission where classification does not equal Class I, Class II.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"classification\" <> 'Class I, Class II';",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.classification",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9918032786885246,
+        "actual_table_doc_coverage": 0.9918032786885246,
+        "result_docs": 121,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.classification",
+        "operator": "!=",
+        "value": "Class I, Class II",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_classification_value_100_class_i_class_ii",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 121,
+        "profile_all_required_cells": 242,
+        "profile_all_relevant_doc_rate": 0.9918032786885246,
+        "profile_eval_relevant_docs": 96,
+        "profile_eval_required_cells": 192,
+        "profile_eval_relevant_doc_rate": 0.9896907216494846,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_in_040_k983084_k983083_k971_2",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate 510k number is one of K983084, K983083, K971614, K153687, K160462, K010963, and 12 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_510k_number\" IN ('K983084, K983083, K971614', 'K153687', 'K160462', 'K010963', 'K112605', 'K062245', 'k123660', 'K151873', 'K172091', 'K173927', 'K131813', 'K121546', 'k031604', 'K071967', 'K071141, K981761, K961610, BK990005, K982231, BK030067', 'k993988');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_510k_number",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.3770491803278688,
+        "actual_table_doc_coverage": 0.3770491803278688,
+        "result_docs": 46,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_510k_number",
+        "operator": "IN",
+        "value": [
+          "K983084, K983083, K971614",
+          "K153687",
+          "K160462",
+          "K010963",
+          "K112605",
+          "K062245",
+          "k123660",
+          "K151873",
+          "K172091",
+          "K173927",
+          "K131813",
+          "K121546",
+          "k031604",
+          "K071967",
+          "K071141, K981761, K961610, BK990005, K982231, BK030067",
+          "k993988"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_510k_number_in_040_k983084_k983083_k971",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 46,
+        "profile_all_required_cells": 92,
+        "profile_all_relevant_doc_rate": 0.3770491803278688,
+        "profile_eval_relevant_docs": 36,
+        "profile_eval_required_cells": 72,
+        "profile_eval_relevant_doc_rate": 0.3711340206185567,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_040_inova_quantalite_rf_i_2",
+      "question": "List proprietary and established names from fda_510k_device_submission where predicate device name is one of Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA, Liofilchem MTS, vancomycin, FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems, HardyDisk Tigecycline 15µg, and 12 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"predicate_device_name\" IN ('Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA', 'Liofilchem MTS, vancomycin', 'FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems', 'HardyDisk Tigecycline 15µg', 'Nova StatStrip Glucose Hospital Meter System', 'Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer', 'STA-Liatest Free Protein S', 'ETEST Ceftaroline', 'Elecsys BRAHMS PCT', 'EUROIMMUN 25-OH Vitamin D ELISA', 'Emit II Plus Cocaine Metabolite Assay', 'CDC Human Influenza Virus Real-Time PCR Diagnostic Panel', 'VITEK®2 AST-GN Doxycycline', 'GlycoMark', 'BD FACSCalibur using BD Tritest CD3/CD4/CD45 with BD Trucount Tubes, Sysmex Automated Hematology Analyzer KX-21N, R&D Systems Whole Blood Flow Control, also known as StatusFlow, StatusFlow Lo, Eurotrol Hb 301 Control (Levels 1−3)', 'Lyra RSV+hMPV Assay');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.predicate_device_name",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.36885245901639346,
+        "actual_table_doc_coverage": 0.36885245901639346,
+        "result_docs": 45,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.predicate_device_name",
+        "operator": "IN",
+        "value": [
+          "Inova QuantaLite® RF IgA ELISA, Inova QuantaLite® RF IgG ELISA, Inova QuantaLite® RF IgM ELISA",
+          "Liofilchem MTS, vancomycin",
+          "FilmArray Meningitis/Encephalitis (ME) Panel for use with FilmArray and FilmArray 2.0 systems",
+          "HardyDisk Tigecycline 15µg",
+          "Nova StatStrip Glucose Hospital Meter System",
+          "Sysmex XN-Series (XN-10, XN-20) Automated Hematology Analyzer",
+          "STA-Liatest Free Protein S",
+          "ETEST Ceftaroline",
+          "Elecsys BRAHMS PCT",
+          "EUROIMMUN 25-OH Vitamin D ELISA",
+          "Emit II Plus Cocaine Metabolite Assay",
+          "CDC Human Influenza Virus Real-Time PCR Diagnostic Panel",
+          "VITEK®2 AST-GN Doxycycline",
+          "GlycoMark",
+          "BD FACSCalibur using BD Tritest CD3/CD4/CD45 with BD Trucount Tubes, Sysmex Automated Hematology Analyzer KX-21N, R&D Systems Whole Blood Flow Control, also known as StatusFlow, StatusFlow Lo, Eurotrol Hb 301 Control (Levels 1−3)",
+          "Lyra RSV+hMPV Assay"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_predicate_device_name_in_040_inova_quantalite_rf_i",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 45,
+        "profile_all_required_cells": 90,
+        "profile_all_relevant_doc_rate": 0.36885245901639346,
+        "profile_eval_relevant_docs": 35,
+        "profile_eval_required_cells": 70,
+        "profile_eval_relevant_doc_rate": 0.36082474226804123,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_product_code_in_040_dhr_system_test_rhe_2",
+      "question": "List proprietary and established names from fda_510k_device_submission where product code is one of DHR: System, Test, Rheumatoid Factor, PLO, OOI, JWY – Manual Antimicrobial Test Systems, GKZ, Counter, differential cell, and 12 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"product_code\" IN ('DHR: System, Test, Rheumatoid Factor', 'PLO, OOI', 'JWY – Manual Antimicrobial Test Systems', 'GKZ, Counter, differential cell', 'GGP, Test, qualitative and quanititative factor deficiency', 'JWY - Manual Antimicrobial Susceptibility Test Systems', 'NOZ; Assay, 1,5-Anhydroglucitol', 'PGI', 'PMG, Automated multicolor fluorescent imaging cytometric analysis system, OYE, System, Test, Flow cytometric reagents and accessories, GKL Hemoglobin assay, JPK, Analyte Controls, Hematology Quality Control', 'JTN', 'NBW, System, Test, Blood Glucose, Over the Counter, LFR, Glucose Dehydrogenase, Glucose', 'GGN, Plasma, Coagulation Control', 'OZE - Influenza A and influenza B multiplex nucleic acid assay (Primary), NSU - Instrumentation for clinical multiplex test systems (Subsequent), OEP - Influenza A virus subtype differentiation nucleic acid assay (Subsequent), OQW - 2009 H1N1 influenza virus (swine origin), nucleic acid or antigen, detection and identification (Subsequent)', 'DIO – Cocaine and cocaine', 'PRI', 'MRG, JIT, JJX');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.product_code",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.36885245901639346,
+        "actual_table_doc_coverage": 0.36885245901639346,
+        "result_docs": 45,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.product_code",
+        "operator": "IN",
+        "value": [
+          "DHR: System, Test, Rheumatoid Factor",
+          "PLO, OOI",
+          "JWY – Manual Antimicrobial Test Systems",
+          "GKZ, Counter, differential cell",
+          "GGP, Test, qualitative and quanititative factor deficiency",
+          "JWY - Manual Antimicrobial Susceptibility Test Systems",
+          "NOZ; Assay, 1,5-Anhydroglucitol",
+          "PGI",
+          "PMG, Automated multicolor fluorescent imaging cytometric analysis system, OYE, System, Test, Flow cytometric reagents and accessories, GKL Hemoglobin assay, JPK, Analyte Controls, Hematology Quality Control",
+          "JTN",
+          "NBW, System, Test, Blood Glucose, Over the Counter, LFR, Glucose Dehydrogenase, Glucose",
+          "GGN, Plasma, Coagulation Control",
+          "OZE - Influenza A and influenza B multiplex nucleic acid assay (Primary), NSU - Instrumentation for clinical multiplex test systems (Subsequent), OEP - Influenza A virus subtype differentiation nucleic acid assay (Subsequent), OQW - 2009 H1N1 influenza virus (swine origin), nucleic acid or antigen, detection and identification (Subsequent)",
+          "DIO – Cocaine and cocaine",
+          "PRI",
+          "MRG, JIT, JJX"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_product_code_in_040_dhr_system_test_rhe",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 45,
+        "profile_all_required_cells": 90,
+        "profile_all_relevant_doc_rate": 0.36885245901639346,
+        "profile_eval_relevant_docs": 31,
+        "profile_eval_required_cells": 62,
+        "profile_eval_relevant_doc_rate": 0.31958762886597936,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_type_of_test_in_040_immunoassay_qualitati_2",
+      "question": "List proprietary and established names from fda_510k_device_submission where type of test is one of Immunoassay, qualitative and semi-quantitative, Realtime Polymerase Chain Reaction, Quantitative immunoassay, Antimicrobial Susceptibility Test Disks, and 12 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"type_of_test\" IN ('Immunoassay, qualitative and semi-quantitative', 'Realtime Polymerase Chain Reaction', 'Quantitative immunoassay', 'Antimicrobial Susceptibility Test Disks', 'Quantitative, Electrochemiluminescence Immunoassay', 'Quantitative', 'Quantitative amperometric assay, glucose oxidase', 'Quantitative immunoturbidimetric assay', 'Quantitative Antimicrobial Susceptibility Test growth based detection', 'Quantitative test for CD4% and CD4 absolute count by cytometry imaging and quantitative test for hemoglobin by absorbance spectrometer', 'Quantitative multiplexed flow immunoassay', 'Quantitative AST growth-based detection', 'Qualitative and semi-quantative homogenous enzyme immunoassay', 'Qualitative multiplex one-step RT-PCR followed by downstream microarray-based hybridization, imaging, and subsequent influenza virus detection and characterization using a pattern recognition-based algorithm', 'Quantitative AST growth based detection', 'Quantitative Antimicrobial Susceptibility Test growth-based detection');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.type_of_test",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.36885245901639346,
+        "actual_table_doc_coverage": 0.36885245901639346,
+        "result_docs": 45,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.type_of_test",
+        "operator": "IN",
+        "value": [
+          "Immunoassay, qualitative and semi-quantitative",
+          "Realtime Polymerase Chain Reaction",
+          "Quantitative immunoassay",
+          "Antimicrobial Susceptibility Test Disks",
+          "Quantitative, Electrochemiluminescence Immunoassay",
+          "Quantitative",
+          "Quantitative amperometric assay, glucose oxidase",
+          "Quantitative immunoturbidimetric assay",
+          "Quantitative Antimicrobial Susceptibility Test growth based detection",
+          "Quantitative test for CD4% and CD4 absolute count by cytometry imaging and quantitative test for hemoglobin by absorbance spectrometer",
+          "Quantitative multiplexed flow immunoassay",
+          "Quantitative AST growth-based detection",
+          "Qualitative and semi-quantative homogenous enzyme immunoassay",
+          "Qualitative multiplex one-step RT-PCR followed by downstream microarray-based hybridization, imaging, and subsequent influenza virus detection and characterization using a pattern recognition-based algorithm",
+          "Quantitative AST growth based detection",
+          "Quantitative Antimicrobial Susceptibility Test growth-based detection"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_type_of_test_in_040_immunoassay_qualitati",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 45,
+        "profile_all_required_cells": 90,
+        "profile_all_relevant_doc_rate": 0.36885245901639346,
+        "profile_eval_relevant_docs": 36,
+        "profile_eval_required_cells": 72,
+        "profile_eval_relevant_doc_rate": 0.3711340206185567,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_fda_510k_device_submission_regulation_section_not_in_060_866_1640_antimicrobial",
+      "question": "List proprietary and established names from fda_510k_device_submission where regulation section is not one of 866.1640 Antimicrobial Susceptibility Test Powder, 21 CFR §866.5775: Rheumatoid factor immunological test system, 21 CFR 862.1345, Glucose test system, 21 CFR 864.5220, Automated differential cell counter, and 8 more.",
+      "sql": "SELECT \"proprietary_and_established_names\" FROM \"fda_510k_device_submission\" WHERE \"regulation_section\" NOT IN ('866.1640 Antimicrobial Susceptibility Test Powder', '21 CFR §866.5775: Rheumatoid factor immunological test system', '21 CFR 862.1345, Glucose test system', '21 CFR 864.5220, Automated differential cell counter', '21 CFR 866.3970 -, 21 CFR 862.2570 -', '21 CFR 866.3980, Respiratory viral panel multiplex nucleic acid assay', '21 CFR 862.1345', '21 CFR 864.7290, Factor deficiency test', '21 CFR 866.1620 Antimicrobial Susceptibility Test Disc', '21 CFR 866.3980 Respiratory viral panel multiplex nucleic acid assay', '21 CFR 866.3215; Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis', '21 CFR 866.3215 - Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis');",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.regulation_section",
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.proprietary_and_established_names"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.6065573770491803,
+        "actual_table_doc_coverage": 0.6065573770491803,
+        "result_docs": 74,
+        "total_docs": 122,
+        "table_total_docs": 122,
+        "predicate_table": "fda_510k_device_submission",
+        "predicate_column": "fda_510k_device_submission.regulation_section",
+        "operator": "NOT IN",
+        "value": [
+          "866.1640 Antimicrobial Susceptibility Test Powder",
+          "21 CFR §866.5775: Rheumatoid factor immunological test system",
+          "21 CFR 862.1345, Glucose test system",
+          "21 CFR 864.5220, Automated differential cell counter",
+          "21 CFR 866.3970 -, 21 CFR 862.2570 -",
+          "21 CFR 866.3980, Respiratory viral panel multiplex nucleic acid assay",
+          "21 CFR 862.1345",
+          "21 CFR 864.7290, Factor deficiency test",
+          "21 CFR 866.1620 Antimicrobial Susceptibility Test Disc",
+          "21 CFR 866.3980 Respiratory viral panel multiplex nucleic acid assay",
+          "21 CFR 866.3215; Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis",
+          "21 CFR 866.3215 - Device to detect and measure non-microbial analyte(s) in human clinical specimens to aid in assessment of patients with suspected sepsis"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_id": "fda.fda.fixed_size_50k",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/fda.fda.fixed_size_50k",
+        "source_query_id": "Q_gen_fda_510k_device_submission_regulation_section_not_in_060_866_1640_antimicrobial",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 74,
+        "profile_all_required_cells": 148,
+        "profile_all_relevant_doc_rate": 0.6065573770491803,
+        "profile_eval_relevant_docs": 60,
+        "profile_eval_required_cells": 120,
+        "profile_eval_relevant_doc_rate": 0.6185567010309279,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
     }
   ]
 }

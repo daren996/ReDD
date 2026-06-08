@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.examples.single_doc_demo",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List winery from wine.",
+      "sql": "SELECT winery FROM wine;",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.winery"
+      ],
+      "output_columns": [
+        "wine.winery"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "examples.single_doc_demo",
+      "dataset_id": "deepseek_aligned.examples.single_doc_demo"
+    }
+  ]
+}

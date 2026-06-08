@@ -1,0 +1,48 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_ablation_multi.bird_student_club",
+  "queries": [
+    {
+      "query_id": "Q_bird_student_club_1",
+      "question": "Which state uses the short state CT?",
+      "sql": "SELECT state FROM zip_code WHERE short_state = 'CT';",
+      "required_tables": [
+        "zip_code"
+      ],
+      "required_columns": [
+        "zip_code.short_state",
+        "zip_code.state"
+      ],
+      "output_columns": [
+        "zip_code.state"
+      ],
+      "tags": [
+        "ablation",
+        "predicate",
+        "multi_dataset"
+      ],
+      "difficulty": "controlled"
+    },
+    {
+      "query_id": "Q_bird_student_club_2",
+      "question": "Which county is recorded for the CT zip code row?",
+      "sql": "SELECT county FROM zip_code WHERE short_state = 'CT';",
+      "required_tables": [
+        "zip_code"
+      ],
+      "required_columns": [
+        "zip_code.short_state",
+        "zip_code.county"
+      ],
+      "output_columns": [
+        "zip_code.county"
+      ],
+      "tags": [
+        "ablation",
+        "predicate",
+        "multi_dataset"
+      ],
+      "difficulty": "controlled"
+    }
+  ]
+}

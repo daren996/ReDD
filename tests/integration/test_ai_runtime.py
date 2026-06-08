@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from pydantic import BaseModel
 
-from redd.core.data_population.data_extraction import DataExtraction
+from redd.core.data_extraction.data_extraction import DataExtraction
 from redd.core.utils.constants import TABLE_ASSIGNMENT_KEY
 from redd.core.utils.structured_outputs import AttributeExtractionOutput, TableAssignmentOutput
 from redd.embedding.providers import EmbeddingProvider

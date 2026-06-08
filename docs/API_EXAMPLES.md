@@ -56,14 +56,27 @@ Explicit query records may restrict extraction through `required_tables` and
 ## Full Pipeline
 
 ```python
-from redd import DataPopulator, SchemaGenerator, run_pipeline
+from redd import DataExtractor, SchemaGenerator, run_pipeline
 
 schema = SchemaGenerator.from_experiment("configs/pipeline.yaml", "demo")
-extractor = DataPopulator.from_experiment("configs/pipeline.yaml", "demo")
+extractor = DataExtractor.from_experiment("configs/pipeline.yaml", "demo")
 
 results = run_pipeline(
     schema_generator=schema,
-    data_populator=extractor,
+    data_extractor=extractor,
+)
+```
+
+## Experiment Runner Selection
+
+```python
+from redd import run_extract
+
+payload = run_extract(
+    "configs/examples/ground_truth_demo.yaml",
+    "demo",
+    datasets=["examples.single_doc_demo"],
+    query_ids=["Q1"],
 )
 ```
 

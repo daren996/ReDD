@@ -1,0 +1,196 @@
+config_version: 2.1.1
+project:
+  name: deepseek-alpha-goal-alpha
+  seed: 42
+runtime:
+  output_dir: outputs/deepseek_alpha_goal_smoke
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: deepseek-alpha-goal-alpha-v1
+  console_log_level: WARNING
+  force_rerun: true
+models:
+  llm:
+    provider: deepseek
+    model: deepseek-chat
+    api_key_env: DEEPSEEK_API_KEY
+    structured_backend: json
+    max_retries: 2
+    wait_time: 1
+    temperature: 0
+    max_tokens: 2048
+  embedding:
+    provider: none
+    model: none
+    enabled: false
+    api_key_env: null
+datasets:
+  deepseek_smoke.bird.california_schools:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.bird.california_schools
+    query_ids: [Q1]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.bird.debit_card_specializing:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.bird.debit_card_specializing
+    query_ids: [Q1]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.bird.student_club:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.bird.student_club
+    query_ids: [Q1]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.fda.fda:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.fda.fda
+    query_ids: [Q1]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.galois.fortune:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.galois.fortune
+    query_ids: [Q1]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.galois.premierleague:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.galois.premierleague
+    query_ids: [Q1]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.quest.lcr:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.quest.lcr
+    query_ids: [Q6]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.quest.swde_movie:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.quest.swde_movie
+    query_ids: [Q2]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.quest.swde_university:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.quest.swde_university
+    query_ids: [Q7]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.quest.wikitext:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.quest.wikitext
+    query_ids: [Q3]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.spider.apartment_rentals:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.spider.apartment_rentals
+    query_ids: [Q8]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.spider.bike_1:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.spider.bike_1
+    query_ids: [Q2]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.spider.college_2:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.spider.college_2
+    query_ids: [Q3]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.spider.flight_4:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.spider.flight_4
+    query_ids: [Q5]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.spider.soccer_1:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.spider.soccer_1
+    query_ids: [Q8]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+  deepseek_smoke.spider.wine_1:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_smoke_matrix/deepseek_smoke.spider.wine_1
+    query_ids: [q3]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 1, strategy: prefix}
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: llm
+    prompts:
+      prompt_table: prompts/data_extraction_table_json.txt
+      prompt_attr: prompts/data_extraction_attr_json.txt
+    options:
+      force_rerun: true
+      result_save_interval: 1
+    doc_filter:
+      enabled: true
+      filter_type: schema_relevance
+      target_recall: 0.95
+      enable_calibrate: true
+      embedding_model: local-hash-embedding
+      embeddings_cache_dir: outputs/deepseek_alpha_goal_smoke/_embedding_cache
+      threshold: 0.585
+      use_source_table_metadata: true
+      source_table_metadata_only: false
+      source_table_keep_unknown: true
+    table_assignment_cache:
+      enabled: true
+      source_table_metadata: true
+      general_schema: true
+    proxy_runtime:
+      enabled: true
+      predicate_proxy_mode: pretrained
+      target_recall: 0.95
+      use_embedding_proxies: false
+      use_learned_proxies: true
+      use_finetuned_learned_proxies: true
+      finetuned_model: heuristic
+      finetuned_epochs: 0
+      proxy_threshold: 0.51
+      allow_embedding_fallback: false
+      use_join_resolution: true
+      bidirectional_join_resolution: true
+      join_order_strategy: selective_first
+      join_empty_short_circuit: true
+      cross_query_extraction_cache: true
+      cache_extract_full_table: true
+      save_hard_negatives: false
+      verbose: false
+    alpha_allocation:
+      enabled: true
+      target_recall: 0.95
+      alpha_grid: [0.0, 0.005, 0.01, 0.02, 0.03, 0.05, 0.08, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
+      answer_recall_calibration: true
+      answer_recall_calibration_allow_over_budget: true
+      answer_recall_calibration_global: true
+experiments:
+  demo:
+    datasets:
+      - deepseek_smoke.bird.california_schools
+      - deepseek_smoke.bird.debit_card_specializing
+      - deepseek_smoke.bird.student_club
+      - deepseek_smoke.fda.fda
+      - deepseek_smoke.galois.fortune
+      - deepseek_smoke.galois.premierleague
+      - deepseek_smoke.quest.lcr
+      - deepseek_smoke.quest.swde_movie
+      - deepseek_smoke.quest.swde_university
+      - deepseek_smoke.quest.wikitext
+      - deepseek_smoke.spider.apartment_rentals
+      - deepseek_smoke.spider.bike_1
+      - deepseek_smoke.spider.college_2
+      - deepseek_smoke.spider.flight_4
+      - deepseek_smoke.spider.soccer_1
+      - deepseek_smoke.spider.wine_1
+    stages: [data_extraction]
+    artifact_id: deepseek-alpha-goal-alpha-v1

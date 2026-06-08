@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.quest.swde_movie",
+  "queries": [
+    {
+      "query_id": "Q2",
+      "question": "Find the titles of movies directed by 'Quentin Tarantino'.",
+      "sql": "SELECT title FROM movie WHERE director = 'Quentin Tarantino'",
+      "required_tables": [
+        "movie"
+      ],
+      "required_columns": [
+        "movie.title",
+        "movie.director"
+      ],
+      "output_columns": [
+        "movie.title"
+      ],
+      "tags": [],
+      "difficulty": "simple",
+      "source_dataset_id": "quest.swde_movie",
+      "dataset_id": "deepseek_smoke.quest.swde_movie"
+    }
+  ]
+}

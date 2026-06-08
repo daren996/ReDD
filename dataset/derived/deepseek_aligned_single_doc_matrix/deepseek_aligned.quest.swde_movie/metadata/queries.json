@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.quest.swde_movie",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List actors from movie.",
+      "sql": "SELECT actors FROM movie;",
+      "required_tables": [
+        "movie"
+      ],
+      "required_columns": [
+        "movie.actors"
+      ],
+      "output_columns": [
+        "movie.actors"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "quest.swde_movie",
+      "dataset_id": "deepseek_aligned.quest.swde_movie"
+    }
+  ]
+}

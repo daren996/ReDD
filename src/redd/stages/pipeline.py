@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Sequence
 
 if TYPE_CHECKING:
-    from redd.api import DataPopulator, PipelineStage, SchemaGenerator
+    from redd.api import DataExtractor, PipelineStage, SchemaGenerator
 
 __all__ = ["run_pipeline"]
 
@@ -13,7 +13,7 @@ __all__ = ["run_pipeline"]
 def run_pipeline(
     *,
     schema_generator: SchemaGenerator | None = None,
-    data_populator: DataPopulator | None = None,
+    data_extractor: DataExtractor | None = None,
     stages: Sequence[PipelineStage | str] | None = None,
     datasets: Sequence[str] | None = None,
     stage_type: type[PipelineStage],
@@ -28,7 +28,7 @@ def run_pipeline(
             resolved_stages.append(preprocessing)
         if schema_generator and schema_generator.refinement_config is not None:
             resolved_stages.append(schema_refinement)
-        if data_populator:
+        if data_extractor:
             resolved_stages.append(data_extraction)
 
         if not resolved_stages:
@@ -48,9 +48,9 @@ def run_pipeline(
                 raise ValueError("SCHEMA REFINEMENT requires `schema_generator=`.")
             results[stage.value] = schema_generator.schema_refinement(datasets=datasets)
         elif stage is data_extraction:
-            if data_populator is None:
-                raise ValueError("DATA EXTRACTION requires `data_populator=`.")
-            results[stage.value] = data_populator.data_extraction(
+            if data_extractor is None:
+                raise ValueError("DATA EXTRACTION requires `data_extractor=`.")
+            results[stage.value] = data_extractor.data_extraction(
                 datasets=datasets,
                 schema_generator=schema_generator,
             )

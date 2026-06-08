@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_repair.spider.bike_1",
+  "queries": [
+    {
+      "query_id": "Q_repair",
+      "question": "List end_station_name from trip.",
+      "sql": "SELECT end_station_name FROM trip;",
+      "required_tables": [
+        "trip"
+      ],
+      "required_columns": [
+        "trip.end_station_name"
+      ],
+      "output_columns": [
+        "trip.end_station_name"
+      ],
+      "tags": [
+        "deepseek_repair_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "spider.bike_1",
+      "dataset_id": "deepseek_repair.spider.bike_1"
+    }
+  ]
+}

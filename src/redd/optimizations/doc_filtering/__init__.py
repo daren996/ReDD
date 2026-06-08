@@ -2,7 +2,7 @@
 Doc Filtering Module for ReDD.
 
 This module provides interfaces and implementations for filtering documents
-based on their relevance to queries. Doc filtering improves data population
+based on their relevance to queries. Doc filtering improves data extraction
 efficiency by skipping irrelevant documents.
 
 Main components:

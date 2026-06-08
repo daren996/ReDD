@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 
-from . import dataset, extract, preprocessing, run, schema_refinement, web
+from . import dataset, exp, extract, preprocessing, run, schema_refinement, web
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -37,6 +37,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     extract_parser.set_defaults(handler=extract.run)
 
+    evaluate_parser = subparsers.add_parser(
+        "evaluate",
+        parents=[exp.build_evaluation_parser(add_help=False)],
+        help="Run data-extraction evaluation",
+    )
+    evaluate_parser.set_defaults(command="evaluate", handler=exp.run_evaluation)
+
+    exp_parser = subparsers.add_parser(
+        "exp",
+        parents=[exp.build_parser(add_help=False)],
+        help="Run experiment-side workflows",
+    )
+    exp_parser.set_defaults(handler=exp.run)
+
     dataset_parser = subparsers.add_parser(
         "dataset",
         parents=[dataset.build_parser(add_help=False)],
@@ -61,3 +75,7 @@ def main(argv: list[str] | None = None) -> int:
     if handler is None:
         parser.error("Missing subcommand handler")
     return handler(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

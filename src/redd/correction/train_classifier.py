@@ -102,7 +102,7 @@ class ClassifierTrainer:
             self.qids = list(query_dict.keys())
         for qid in self.qids:
             logging.info("[%s:process_dataset] Start processing query %s", self.__class__.__name__, qid)
-            res_data_path = os.path.join(out_root, PATH_TEMPLATES.data_population_result(qid, self.param_str))
+            res_data_path = os.path.join(out_root, PATH_TEMPLATES.data_extraction_result(qid, self.param_str))
             res_data_dict = self.load_processed_res(res_data_path)
             eval_path = os.path.join(out_root, PATH_TEMPLATES.eval_result(qid, self.param_str))
             eval_output = self.load_json(eval_path)

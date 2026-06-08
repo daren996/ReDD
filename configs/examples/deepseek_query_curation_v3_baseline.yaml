@@ -1,0 +1,124 @@
+config_version: 2.1.1
+project:
+  name: deepseek-query-curation-baseline
+  seed: 42
+runtime:
+  output_dir: outputs/deepseek_query_curation_v3
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: deepseek-query-curation-v3-baseline-v1
+  console_log_level: WARNING
+  force_rerun: true
+models:
+  llm:
+    provider: deepseek
+    model: deepseek-chat
+    api_key_env: DEEPSEEK_API_KEY
+    structured_backend: json
+    max_retries: 2
+    wait_time: 1
+    temperature: 0
+    max_tokens: 1024
+  embedding:
+    provider: none
+    model: none
+    enabled: false
+    api_key_env: null
+datasets:
+  bird.schools_demo:
+    loader: hf_manifest
+    root: dataset/derived/bird.schools_demo
+    query_ids:
+    - Q_gen_satscores_enroll12_value_020_80
+    - Q_gen_satscores_dname_value_080_oakland_unified
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 25
+      strategy: prefix
+  fda.fda.no_chunk:
+    loader: hf_manifest
+    root: dataset/derived/fda.fda.no_chunk
+    query_ids:
+    - Q_gen_fda_510k_device_submission_applicant_value_003_luminex_corporation
+    - Q_gen_fda_510k_device_submission_panel_in_080_hematology_81_mic
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 25
+      strategy: prefix
+  galois.fortune.default_task:
+    loader: hf_manifest
+    root: dataset/derived/galois.fortune.default_task
+    query_ids:
+    - Q_gen_fortune500_companies_assets_m_value_005_5363_0
+    - Q_gen_fortune500_companies_assets_m_value_100_4325437_0
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 25
+      strategy: prefix
+  spider.apartment_rentals.default_task:
+    loader: hf_manifest
+    root: dataset/derived/spider.apartment_rentals.default_task
+    query_ids:
+    - Q_join_apartment_facilities_apartments_apartment_facilities_apartments_bedroom_count_005_1
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 25
+      strategy: prefix
+  spider.college_demo:
+    loader: hf_manifest
+    root: dataset/derived/spider.college_demo
+    query_ids:
+    - Q_gen_course_title_in_020_journalism_compiler
+    - Q_join_course_instructor_instructor_all_all_040_all
+    - Q_join_course_instructor_course_instructor_salary_060_121141_99
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 25
+      strategy: prefix
+  spider.wine_1.wine_appellations:
+    loader: hf_manifest
+    root: dataset/derived/spider.wine_1.wine_appellations
+    query_ids:
+    - Q_join_appellation_wines_appellation_wines_wine_name_003_reserve
+    - Q_join_appellation_wines_appellation_wines_wine_name_020_chardonnay_pinot_no
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 25
+      strategy: prefix
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: llm
+    prompts:
+      prompt_table: prompts/data_extraction_table_json.txt
+      prompt_attr: prompts/data_extraction_attr_json.txt
+    options:
+      force_rerun: true
+      result_save_interval: 1
+      eval:
+        mode: deepseek
+        llm_model: deepseek-chat
+        structured_backend: json
+        max_retries: 2
+        wait_time: 1
+        prompts:
+          data_extraction_cmp_str: prompts/eval_data_extraction_cmp_str.txt
+experiments:
+  demo:
+    datasets:
+    - bird.schools_demo
+    - fda.fda.no_chunk
+    - galois.fortune.default_task
+    - spider.apartment_rentals.default_task
+    - spider.college_demo
+    - spider.wine_1.wine_appellations
+    stages:
+    - data_extraction
+    artifact_id: deepseek-query-curation-v3-baseline-v1

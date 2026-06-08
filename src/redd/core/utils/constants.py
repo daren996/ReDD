@@ -45,7 +45,7 @@ ASSIGN_THRESHOLD = 5
 
 
 # ============================================================================
-# Data Population Constants
+# Data Extraction Constants
 # ============================================================================
 
 # Null value representation
@@ -64,7 +64,7 @@ TARGET_ATTRIBUTE_KEY = "Target Attribute"
 
 # Prompt output field names
 TABLE_ASSIGNMENT_KEY = "Table Assignment"
-DATA_POPULATED_KEY = "Data Populated"
+DATA_EXTRACTED_KEY = "Data Extracted"
 REASONING_KEY = "Reasoning"
 
 # Result entry field names
@@ -96,16 +96,16 @@ class FilePathTemplates:
         from redd.core.utils.constants import PATH_TEMPLATES
         
         # Generate a file path
-        file_path = PATH_TEMPLATES.data_population_result(qid="Q1", param_str="ds_v1")
+        file_path = PATH_TEMPLATES.data_extraction_result(qid="Q1", param_str="ds_v1")
         # Returns: "res_tabular_data_Q1_ds_v1.json"
         
         # Access raw template string
-        template = PATH_TEMPLATES.DATA_POPULATION_RESULT
+        template = PATH_TEMPLATES.DATA_EXTRACTION_RESULT
         # Returns: "res_tabular_data_{qid}_{param_str}.json"
     """
     
-    # ============ Data Population Templates ============
-    DATA_POPULATION_RESULT = "res_tabular_data_{qid}_{param_str}.json"
+    # ============ Data Extraction Templates ============
+    DATA_EXTRACTION_RESULT = "res_tabular_data_{qid}_{param_str}.json"
     HIDDEN_STATES_DIR = "hidden_states_{qid}_{param_str}"
 
     # ============ Doc Filtering Templates ============
@@ -134,9 +134,9 @@ class FilePathTemplates:
     # ============ Helper Methods ============
     
     @classmethod
-    def data_population_result(cls, qid: str, param_str: str) -> str:
-        """Generate data population result filename."""
-        return cls.DATA_POPULATION_RESULT.format(qid=qid, param_str=param_str)
+    def data_extraction_result(cls, qid: str, param_str: str) -> str:
+        """Generate data extraction result filename."""
+        return cls.DATA_EXTRACTION_RESULT.format(qid=qid, param_str=param_str)
     
     @classmethod
     def hidden_states_dir(cls, qid: str, param_str: str) -> str:
@@ -155,17 +155,6 @@ class FilePathTemplates:
         recall_str = f"{target_recall:.2f}".replace(".", "")
         return cls.DOC_FILTER_EVAL.format(param_str=param_str, target_recall=recall_str)
 
-    @classmethod
-    def chunk_filter_result(cls, qid: str, param_str: str, target_recall: float = 0.95) -> str:
-        """Legacy alias for doc-filter result filenames."""
-        recall_str = f"{target_recall:.2f}".replace(".", "")
-        return f"chunk_filter_{qid}_{param_str}_recall{recall_str}.json"
-
-    @classmethod
-    def chunk_filter_eval(cls, param_str: str, target_recall: float = 0.95) -> str:
-        """Legacy alias for doc-filter evaluation filenames."""
-        return cls.doc_filter_eval(param_str=param_str, target_recall=target_recall)
-    
     @classmethod
     def eval_result(cls, qid: str, param_str: str) -> str:
         """Generate evaluation result filename."""

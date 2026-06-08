@@ -32,6 +32,129 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+_UNQUOTED_IDENTIFIER_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
+
+def _consume_sql_identifier(text: str, index: int = 0) -> Optional[Tuple[str, int]]:
+    """Consume one SQL identifier, returning its unquoted value and end index."""
+    i = index
+    while i < len(text) and text[i].isspace():
+        i += 1
+    if i >= len(text):
+        return None
+
+    char = text[i]
+    if char in {'"', "`", "'"}:
+        quote = char
+        i += 1
+        value: list[str] = []
+        while i < len(text):
+            if text[i] == quote:
+                if i + 1 < len(text) and text[i + 1] == quote:
+                    value.append(quote)
+                    i += 2
+                    continue
+                return "".join(value), i + 1
+            value.append(text[i])
+            i += 1
+        return None
+
+    if char == "[":
+        i += 1
+        value = []
+        while i < len(text):
+            if text[i] == "]":
+                if i + 1 < len(text) and text[i + 1] == "]":
+                    value.append("]")
+                    i += 2
+                    continue
+                return "".join(value), i + 1
+            value.append(text[i])
+            i += 1
+        return None
+
+    match = _UNQUOTED_IDENTIFIER_RE.match(text, i)
+    if match:
+        return match.group(0), match.end()
+    return None
+
+
+def _consume_qualified_identifier(text: str, index: int = 0) -> Optional[Tuple[List[str], int]]:
+    """Consume a possibly-qualified SQL identifier such as schema.table.column."""
+    consumed = _consume_sql_identifier(text, index)
+    if not consumed:
+        return None
+    parts = [consumed[0]]
+    i = consumed[1]
+
+    while True:
+        while i < len(text) and text[i].isspace():
+            i += 1
+        if i >= len(text) or text[i] != ".":
+            break
+        i += 1
+        consumed = _consume_sql_identifier(text, i)
+        if not consumed:
+            return None
+        parts.append(consumed[0])
+        i = consumed[1]
+
+    return parts, i
+
+
+def _split_qualified_identifier(text: str) -> Optional[List[str]]:
+    consumed = _consume_qualified_identifier(text.strip(), 0)
+    if not consumed:
+        return None
+    parts, end = consumed
+    remainder = text.strip()[end:].strip()
+    if remainder:
+        return None
+    return parts
+
+
+def _strip_sql_identifier_quotes(value: str) -> str:
+    parts = _split_qualified_identifier(value)
+    if parts and len(parts) == 1:
+        return parts[0]
+    text = value.strip()
+    if len(text) >= 2 and text[0] == text[-1] and text[0] in {'"', "'", "`"}:
+        quote = text[0]
+        return text[1:-1].replace(quote * 2, quote)
+    if len(text) >= 2 and text[0] == "[" and text[-1] == "]":
+        return text[1:-1].replace("]]", "]")
+    return text
+
+
+def _parse_table_reference(part: str) -> Optional[Tuple[str, str]]:
+    """
+    Parse a FROM/JOIN table reference and return (alias, table_name).
+
+    Supports quoted identifiers, schema-qualified tables, and optional aliases.
+    """
+    text = part.strip().rstrip(",")
+    if not text:
+        return None
+    consumed = _consume_qualified_identifier(text, 0)
+    if not consumed:
+        return None
+    table_parts, index = consumed
+    table_name = table_parts[-1]
+
+    remainder = text[index:].strip()
+    alias = table_name
+    if remainder:
+        if remainder.upper().startswith("AS "):
+            remainder = remainder[3:].strip()
+        alias_consumed = _consume_sql_identifier(remainder, 0)
+        if alias_consumed:
+            alias = alias_consumed[0]
+    return alias, table_name
+
+
+JOIN_SPLIT_PATTERN = r'\b(?:(?:LEFT|RIGHT|FULL)(?:\s+OUTER)?\s+|INNER\s+|CROSS\s+)?JOIN\b'
+
+
 __all__ = [
     "SQLFilterParser",
     "AttributePredicate",
@@ -258,31 +381,48 @@ class SQLFilterParser:
         result = []
         current = ""
         paren_depth = 0
+        quote_char = None
         i = 0
         
         while i < len(where_clause):
             char = where_clause[i]
-            
-            if char == '(':
+
+            if quote_char:
+                current += char
+                if char == quote_char:
+                    if i + 1 < len(where_clause) and where_clause[i + 1] == quote_char:
+                        current += where_clause[i + 1]
+                        i += 2
+                        continue
+                    quote_char = None
+            elif char in ("'", '"', "`"):
+                quote_char = char
+                current += char
+            elif char == '[':
+                quote_char = ']'
+                current += char
+            elif char == '(':
                 paren_depth += 1
                 current += char
             elif char == ')':
                 paren_depth -= 1
                 current += char
             elif paren_depth == 0:
-                # Check for AND keyword
-                remaining = where_clause[i:].upper()
-                if remaining.startswith(' AND ') or remaining.startswith('\nAND '):
+                # Check for AND keyword, but only at a real word boundary.
+                remaining = where_clause[i:]
+                before = where_clause[i - 1] if i > 0 else " "
+                after = where_clause[i + 3] if i + 3 < len(where_clause) else " "
+                if (
+                    remaining[:3].upper() == "AND"
+                    and not (before.isalnum() or before == "_")
+                    and not (after.isalnum() or after == "_")
+                ):
                     if current.strip():
                         result.append(current.strip())
                     current = ""
-                    i += 5  # Skip ' AND '
-                    continue
-                elif remaining.startswith('AND '):
-                    if current.strip():
-                        result.append(current.strip())
-                    current = ""
-                    i += 4  # Skip 'AND '
+                    i += 3
+                    while i < len(where_clause) and where_clause[i].isspace():
+                        i += 1
                     continue
                 else:
                     current += char
@@ -393,6 +533,12 @@ class SQLFilterParser:
         """
         column_str = self._normalize_column_expr(column_str.strip())
         
+        parts = _split_qualified_identifier(column_str)
+        if parts:
+            if len(parts) >= 2:
+                return parts[-2], parts[-1]
+            return None, parts[0]
+
         if '.' in column_str:
             parts = column_str.split('.', 1)
             return self._strip_identifier_quotes(parts[0].strip()), self._strip_identifier_quotes(parts[1].strip())
@@ -429,14 +575,11 @@ class SQLFilterParser:
         func_match = re.match(r"(?is)^(?:LOWER|UPPER|TRIM)\s*\((.+)\)$", text)
         if func_match:
             return self._normalize_column_expr(func_match.group(1))
-        return self._strip_identifier_quotes(text)
+        return text
 
     @staticmethod
     def _strip_identifier_quotes(value: str) -> str:
-        text = value.strip()
-        if len(text) >= 2 and text[0] == text[-1] and text[0] in {'"', "'", "`"}:
-            return text[1:-1]
-        return text
+        return _strip_sql_identifier_quotes(value)
     
     def _parse_value(self, value_str: str) -> Any:
         """
@@ -665,7 +808,7 @@ def parse_alias_mapping(sql: str) -> Dict[str, str]:
     from_join_clause = from_match.group(1).strip()
     
     # Split by JOIN (case insensitive) - first part is FROM, rest are JOINs
-    parts = re.split(r'\bJOIN\b', from_join_clause, flags=re.IGNORECASE)
+    parts = re.split(JOIN_SPLIT_PATTERN, from_join_clause, flags=re.IGNORECASE)
     
     for part in parts:
         part = part.strip()
@@ -677,25 +820,11 @@ def parse_alias_mapping(sql: str) -> Dict[str, str]:
         if using_match:
             part = part[:using_match.start()].strip()
         
-        # Parse "table AS alias" or "table alias" or just "table"
-        # Pattern: optional schema.table, optional AS alias
-        # table_name (AS)? alias?
-        match = re.match(
-            r'([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?)\s+(?:AS\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*$',
-            part.strip(),
-            re.IGNORECASE
-        )
-        if match:
-            table_ref, alias = match.groups()
-            table_name = table_ref.split('.')[-1]  # Use last part if schema.table
+        parsed_ref = _parse_table_reference(part)
+        if parsed_ref:
+            alias, table_name = parsed_ref
             result[alias] = table_name
             result[table_name] = table_name  # Table name is also its own ref
-        else:
-            # Single identifier: table name
-            single = re.match(r'([A-Za-z_][A-Za-z0-9_]*)', part)
-            if single:
-                table_name = single.group(1)
-                result[table_name] = table_name
     
     return result
 
@@ -855,13 +984,13 @@ def _extract_on_clauses(sql: str) -> List[str]:
     from_join_clause = from_match.group(1).strip()
     
     # Find all ON clauses: ON <condition> (until next JOIN or end)
-    on_pattern = re.compile(r'\bON\s+(.+?)(?=\b(?:JOIN|LEFT|RIGHT|INNER|OUTER|WHERE|GROUP|ORDER|HAVING|LIMIT)\b|$)', 
+    on_pattern = re.compile(r'\bON\s+(.+?)(?=\b(?:(?:LEFT|RIGHT|FULL)(?:\s+OUTER)?\s+|INNER\s+|CROSS\s+)?JOIN\b|\b(?:WHERE|GROUP|ORDER|HAVING|LIMIT)\b|$)',
                             re.IGNORECASE | re.DOTALL)
     
     for match in on_pattern.finditer(from_join_clause):
         cond = match.group(1).strip()
         # Split by AND for multiple conditions
-        and_parts = re.split(r'\s+AND\s+', cond, flags=re.IGNORECASE)
+        and_parts = SQLFilterParser()._split_conditions(cond)
         for part in and_parts:
             part = part.strip().strip('()')
             if part:
@@ -876,15 +1005,14 @@ def _parse_column_eq_column(condition: str) -> Optional[Tuple[str, str, str, str
     Returns None if not a column=column equality.
     """
     condition = condition.strip()
-    # Match: x.y = z.w (column = column)
-    match = re.match(
-        r'([A-Za-z_][A-Za-z0-9_]*)\s*\.\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*([A-Za-z_][A-Za-z0-9_]*)\s*\.\s*([A-Za-z_][A-Za-z0-9_]*)',
-        condition,
-        re.IGNORECASE
-    )
-    if match:
-        return match.groups()  # (alias_left, attr_left, alias_right, attr_right)
-    return None
+    parts = re.split(r"\s*=\s*", condition, maxsplit=1)
+    if len(parts) != 2:
+        return None
+    left = _split_qualified_identifier(parts[0])
+    right = _split_qualified_identifier(parts[1])
+    if not left or not right or len(left) < 2 or len(right) < 2:
+        return None
+    return left[-2], left[-1], right[-2], right[-1]
 
 
 def parse_join_conditions(sql: str) -> List[JoinCondition]:
@@ -915,7 +1043,7 @@ def parse_join_conditions(sql: str) -> List[JoinCondition]:
         return join_conditions
     
     from_join_clause = from_match.group(1).strip()
-    parts = re.split(r'\bJOIN\b', from_join_clause, flags=re.IGNORECASE)
+    parts = re.split(JOIN_SPLIT_PATTERN, from_join_clause, flags=re.IGNORECASE)
     
     # First part is FROM table; each subsequent part is a JOIN
     # For "FROM a JOIN b ON a.c = b.c": left side of = is from earlier table (parent)
@@ -935,21 +1063,10 @@ def parse_join_conditions(sql: str) -> List[JoinCondition]:
         if using_match:
             part = part[:using_match.start()].strip()
         
-        match = re.match(
-            r'([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?)\s+(?:AS\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*$',
-            part,
-            re.IGNORECASE
-        )
-        if match:
-            table_ref, alias = match.groups()
-            table_name = table_ref.split('.')[-1]
+        parsed_ref = _parse_table_reference(part)
+        if parsed_ref:
+            alias, table_name = parsed_ref
             join_order.append((alias, table_name))
-        else:
-            single = re.match(r'([A-Za-z_][A-Za-z0-9_]*)', part)
-            if single:
-                ident = single.group(1)
-                table_name = alias_to_table.get(ident, ident)
-                join_order.append((ident, table_name))
     
     # Resolve alias -> table for lookup
     alias_to_table_resolved = dict(alias_to_table)

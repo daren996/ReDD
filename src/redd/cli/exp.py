@@ -2,20 +2,28 @@ from __future__ import annotations
 
 import argparse
 
+from .common import add_experiment_args, add_output_args, add_selection_args, run_and_print
 
-def _build_evaluation_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
+
+def build_evaluation_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=add_help)
-    parser.add_argument("--config", type=str, default="configs/siliconflow_qwen30B.yaml")
-    parser.add_argument("--exp", type=str, default="wine_reddv0")
-    parser.add_argument("--api-key", type=str, default=None)
+    add_experiment_args(
+        parser,
+        default_config="configs/siliconflow_qwen30B.yaml",
+        experiment_required=False,
+        experiment_default="wine_reddv0",
+        experiment_flag="--exp",
+    )
+    add_selection_args(parser)
+    add_output_args(parser)
     return parser
 
 
-def _run_evaluation(args: argparse.Namespace) -> int:
+def run_evaluation(args: argparse.Namespace) -> int:
     from redd.runners import run_evaluation
 
-    run_evaluation(args.config, args.exp, api_key=args.api_key)
-    return 0
+    args.experiment = args.exp
+    return run_and_print(args, run_evaluation)
 
 
 def build_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
@@ -24,10 +32,10 @@ def build_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
 
     evaluation_parser = subparsers.add_parser(
         "evaluation",
-        parents=[_build_evaluation_parser(add_help=False)],
+        parents=[build_evaluation_parser(add_help=False)],
         help="Run experiment-side evaluation workflows",
     )
-    evaluation_parser.set_defaults(handler=_run_evaluation)
+    evaluation_parser.set_defaults(handler=run_evaluation)
 
     return parser
 

@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.spider.flight_4",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List dst_ap_name from routes.",
+      "sql": "SELECT dst_ap_name FROM routes;",
+      "required_tables": [
+        "routes"
+      ],
+      "required_columns": [
+        "routes.dst_ap_name"
+      ],
+      "output_columns": [
+        "routes.dst_ap_name"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "spider.flight_4",
+      "dataset_id": "deepseek_aligned.spider.flight_4"
+    }
+  ]
+}

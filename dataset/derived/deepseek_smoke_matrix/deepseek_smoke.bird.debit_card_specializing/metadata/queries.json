@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.bird.debit_card_specializing",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List Segment, row_id, ChainID from gasstations where Segment contains 'other'.",
+      "sql": "SELECT segment, row_id, chain_id FROM gasstations WHERE segment LIKE '%other%';",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.segment",
+        "gasstations.chain_id"
+      ],
+      "output_columns": [
+        "gasstations.segment"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "bird.debit_card_specializing",
+      "dataset_id": "deepseek_smoke.bird.debit_card_specializing"
+    }
+  ]
+}

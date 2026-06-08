@@ -133,7 +133,7 @@ stages:
     enabled: true
     schema_source: schema_refinement
     oracle: llm
-    document_filtering:
+    doc_filter:
       enabled: false
     proxy_runtime:
       enabled: false
@@ -161,4 +161,5 @@ Run with:
 
 ```bash
 redd run --config configs/examples/ground_truth_demo.yaml --experiment demo
+redd run --config configs/examples/ground_truth_demo.yaml --experiment demo --dataset demo --query-id Q1 --stage extract --json
 ```

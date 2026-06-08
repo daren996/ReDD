@@ -50,7 +50,7 @@ stages:
   schema_refinement:
     enabled: true
     source_stage: preprocessing
-    document_filtering:
+    doc_filter:
       enabled: true
       target_recall: 0.95
   data_extraction:
@@ -116,7 +116,7 @@ class ConfigV2Tests(unittest.TestCase):
             "    enabled: true\n"
             "    schema_source: schema_refinement\n"
             "    oracle: llm\n"
-            "    document_filtering:\n"
+            "    doc_filter:\n"
             "      enabled: true\n"
             "    proxy_runtime:\n"
             "      enabled: true\n",

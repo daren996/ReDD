@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ReDD Web Demo</title>
     <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%2317191f"/><text x="16" y="21" font-size="15" text-anchor="middle" fill="white" font-family="Arial">R</text></svg>' />
-    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="stylesheet" href="/assets/styles.css?v=redd-web-demo-fastredd-layout-3" />
   </head>
   <body>
     <header class="global-menu">
       <div class="global-menu-inner">
         <div class="global-brand">
-          <h1>ReDD</h1>
+          <h1>ReDD Web Demo</h1>
+          <p>Balancing query cost and correctness with strict statistical guarantees.</p>
         </div>
         <nav class="global-nav" aria-label="Pages">
-          <button class="nav-tab active" type="button" data-page-button="workbench">Workbench</button>
+          <button class="nav-tab active" type="button" data-page-button="workbench">Overview</button>
           <button class="nav-tab" type="button" data-page-button="experiments">Experiments</button>
           <button class="nav-tab" type="button" data-page-button="operators">Operators</button>
           <button class="nav-tab" type="button" data-page-button="papers">Papers</button>
@@ -40,17 +41,17 @@
           <aside class="sidebar">
         <form id="run-form" class="control-form">
           <fieldset>
-            <legend>Run Configuration</legend>
+            <legend>1. The Control Deck</legend>
             <div class="segmented-control" role="group" aria-label="Configuration source">
-              <button class="segment active" type="button" data-source="config">From Config</button>
-              <button class="segment" type="button" data-source="all">Search</button>
+              <button class="segment active" type="button" data-source="config">Config</button>
+              <button class="segment" type="button" data-source="all">Datasets</button>
               <button class="segment" type="button" data-source="upload">Upload</button>
             </div>
 
             <div id="config-source-panel" class="source-panel active">
               <label>
                 <span>Config</span>
-                <input id="config-path" name="config_path" autocomplete="off" />
+                <textarea id="config-path" name="config_path" rows="2" autocomplete="off"></textarea>
               </label>
 
               <label>
@@ -59,24 +60,42 @@
               </label>
 
               <button id="load-config" class="secondary-button source-action-button" type="button">
-                Load
+                Load Config
               </button>
             </div>
 
             <div id="all-source-panel" class="source-panel">
-              <label>
-                <span>Dataset</span>
-                <select id="dataset-select" aria-label="Select dataset">
-                  <option value="">Select dataset</option>
-                </select>
-              </label>
+              <div class="dataset-select-box">
+                <div class="selected-head">
+                  <span>Dataset</span>
+                  <strong id="dataset-picker-badge">Browse</strong>
+                </div>
+                <div class="selection-dropdown dataset-picker-dropdown">
+                  <button
+                    id="dataset-picker-trigger"
+                    class="query-select-trigger dataset-picker-trigger"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="dataset-picker-list"
+                  >
+                    <span id="dataset-picker-label">Select dataset</span>
+                    <strong id="dataset-picker-count">0 available</strong>
+                  </button>
+                  <select id="dataset-select" class="dataset-native-select" aria-label="Select dataset">
+                    <option value="">Select dataset</option>
+                  </select>
+                  <div id="dataset-picker-list" class="query-list query-menu dataset-picker-menu" hidden>
+                    <div class="empty-state compact">Loading datasets...</div>
+                  </div>
+                </div>
+              </div>
 
               <div class="query-select-box">
                 <div class="selected-head">
                   <span>Queries</span>
                   <strong id="selected-query-count">0</strong>
                 </div>
-                <div class="query-dropdown">
+                <div class="selection-dropdown query-dropdown">
                   <button
                     id="query-select-trigger"
                     class="query-select-trigger"
@@ -94,7 +113,7 @@
                 </div>
               </div>
               <button id="add-dataset" class="secondary-button source-action-button" type="button" disabled>
-                Add to Config
+                Add Dataset
               </button>
             </div>
 
@@ -108,9 +127,9 @@
 
           <section class="run-summary" aria-label="Run summary">
             <div class="selected-head">
-              <span>Run Summary</span>
+              <span>2. The Extraction Showdown</span>
               <span class="summary-status">
-                <strong id="overview-state">Ready</strong>
+                <strong id="overview-state">Setup</strong>
                 <strong id="selected-count">0 datasets</strong>
               </span>
             </div>
@@ -148,14 +167,112 @@
             </div>
           </section>
 
-          <button id="run-button" type="submit">Run</button>
+          <button id="run-button" type="submit">Execute Query Pipeline</button>
         </form>
           </aside>
+
+          <section class="architecture-column panel-stack" aria-label="ReDD architecture funnel">
+            <section class="panel architecture-funnel-panel" data-funnel-collapsed="false">
+              <div class="funnel-panel-head">
+                <span>Tracking document reduction through the decoupled pipeline.</span>
+                <h2>3. The Architecture Funnel</h2>
+                <button
+                  id="architecture-funnel-toggle"
+                  class="funnel-toggle"
+                  type="button"
+                  aria-expanded="true"
+                  aria-controls="architecture-funnel-body"
+                  aria-label="Hide architecture funnel"
+                  title="Hide architecture funnel"
+                >-</button>
+              </div>
+
+              <div id="architecture-funnel-body" class="funnel-body">
+                <div class="funnel-shell">
+                  <article class="funnel-node raw-node">
+                    <div class="node-header">
+                      <strong>Raw Document Corpus</strong>
+                      <span id="funnel-raw">Waiting</span>
+                    </div>
+                    <p>Registered datasets and selected query workloads enter the run planner.</p>
+                  </article>
+
+                  <div class="funnel-arrow" aria-hidden="true">↓</div>
+
+                  <article class="funnel-node csf-node">
+                    <div class="node-header">
+                      <strong>CSF: Corpus Screening Filter</strong>
+                      <span id="funnel-csf">Full corpus</span>
+                    </div>
+                    <p>Document filtering prunes unlikely evidence before costly extraction.</p>
+                  </article>
+
+                  <div class="funnel-arrow" aria-hidden="true">↓</div>
+
+                  <div class="branch-column schema-branch">
+                    <span class="branch-label">Schema planning</span>
+                    <article class="funnel-node schema-node">
+                      <div class="node-header">
+                        <strong>ASC: Adaptive Schema Constructor</strong>
+                        <span id="funnel-asc">Static</span>
+                      </div>
+                      <p>Global and query-specific schema artifacts guide extraction.</p>
+                    </article>
+                  </div>
+
+                  <div class="funnel-arrow" aria-hidden="true">↓</div>
+
+                  <div class="branch-column tuple-branch">
+                    <span class="branch-label">Tuple extraction</span>
+                    <article class="funnel-node guard-node">
+                      <div class="node-header">
+                        <strong>CCG: Cost-Correctness Guard</strong>
+                        <span id="funnel-ccg">Ground truth</span>
+                      </div>
+                      <p>Proxy and join controls trade work for measured recall guarantees.</p>
+                    </article>
+
+                    <div class="funnel-arrow" aria-hidden="true">↓</div>
+
+                    <article class="funnel-node teo-node">
+                      <div class="node-header">
+                        <strong>TEO: Tuple Extraction Operator</strong>
+                        <span id="funnel-teo">Ready</span>
+                      </div>
+                      <p>Extracted tuples are assembled into the latent relation shown on the right.</p>
+                    </article>
+
+                    <div class="tuple-subgroup">
+                      <span class="tuple-subgroup-label">Tuple extraction optimizations</span>
+                      <div class="support-grid" aria-label="Support modules">
+                        <article class="support-node support-ddg">
+                          <strong>DDG</strong>
+                          <span id="funnel-ddg">Optional</span>
+                        </article>
+                        <article class="support-node support-dep">
+                          <strong>DEP</strong>
+                          <span id="funnel-dep">Optional</span>
+                        </article>
+                        <article class="support-node support-acc">
+                          <strong>ACC</strong>
+                          <span id="funnel-acc">alpha guard</span>
+                        </article>
+                        <article class="support-node support-jpo">
+                          <strong>JPO</strong>
+                          <span id="funnel-jpo">Optional</span>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
 
           <section class="workspace">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Runtime</p>
+            <p id="view-eyebrow" class="eyebrow">1. Configuration</p>
             <h2 id="run-title">Ready</h2>
           </div>
           <nav class="view-tabs" aria-label="Views">
@@ -173,10 +290,10 @@
             </svg>
             <strong id="refresh-label">Refresh</strong>
           </button>
-          <div id="status-pill" class="status-pill idle">Idle</div>
+          <div id="status-pill" class="status-pill idle">Setup</div>
         </header>
 
-        <section id="error-panel" class="error-panel" hidden></section>
+        <section id="error-panel" class="error-panel" role="alert" aria-live="assertive" tabindex="-1" hidden></section>
         <section id="datasets-view" class="view-panel">
           <section class="panel">
             <div class="panel-head">
@@ -206,11 +323,7 @@
               <span class="config-empty-icon" aria-hidden="true">!</span>
               <div>
                 <strong>No config loaded</strong>
-                <p>Load the path on the left, or choose a dataset in Search and add it to config.</p>
-              </div>
-              <div class="config-empty-actions">
-                <button id="empty-load-config" type="button">Load</button>
-                <button id="empty-search-datasets" type="button">Search</button>
+                <p>Configuration has not been materialized for this run.</p>
               </div>
             </div>
             <div id="config-workspace" class="config-workspace" hidden>
@@ -255,11 +368,11 @@
                   <div class="config-controls config-grid">
                     <label>
                       <span>Name</span>
-                      <input id="config-project-name" autocomplete="off" />
+                      <textarea id="config-project-name" rows="2" autocomplete="off"></textarea>
                     </label>
                     <label>
                       <span>Experiment ID</span>
-                      <input id="config-experiment-id" autocomplete="off" />
+                      <textarea id="config-experiment-id" rows="2" autocomplete="off"></textarea>
                     </label>
                     <label>
                       <span>Seed</span>
@@ -292,15 +405,15 @@
                   <div class="config-controls config-grid">
                     <label>
                       <span>Output Dir</span>
-                      <input id="config-output-dir" autocomplete="off" />
+                      <textarea id="config-output-dir" rows="2" autocomplete="off"></textarea>
                     </label>
                     <label>
                       <span>Log Dir</span>
-                      <input id="config-log-dir" autocomplete="off" />
+                      <textarea id="config-log-dir" rows="2" autocomplete="off"></textarea>
                     </label>
                     <label>
                       <span>Artifact ID</span>
-                      <input id="config-artifact-id" autocomplete="off" />
+                      <textarea id="config-artifact-id" rows="3" autocomplete="off"></textarea>
                     </label>
                     <label>
                       <span>Output Layout</span>
@@ -355,7 +468,7 @@
                       </div>
                       <label id="config-llm-custom-wrap" class="model-custom-field" hidden>
                         <span>Custom Model</span>
-                        <input id="config-llm-custom-model" autocomplete="off" />
+                        <textarea id="config-llm-custom-model" rows="2" autocomplete="off"></textarea>
                       </label>
                       <details class="model-advanced">
                         <summary>
@@ -367,15 +480,15 @@
                             <h5>Connection</h5>
                             <label>
                               <span>API Key Env</span>
-                              <input id="config-llm-api-key-env" autocomplete="off" />
+                              <textarea id="config-llm-api-key-env" rows="2" autocomplete="off"></textarea>
                             </label>
                             <label>
                               <span>Base URL</span>
-                              <input id="config-llm-base-url" autocomplete="off" placeholder="Provider default" />
+                              <textarea id="config-llm-base-url" rows="2" autocomplete="off" placeholder="Provider default"></textarea>
                             </label>
                             <label>
                               <span>Local Model Path</span>
-                              <input id="config-llm-local-model-path" autocomplete="off" placeholder="Local only" />
+                              <textarea id="config-llm-local-model-path" rows="2" autocomplete="off" placeholder="Local only"></textarea>
                             </label>
                           </section>
                           <section class="model-field-group">
@@ -439,7 +552,7 @@
                       </div>
                       <label id="config-embedding-custom-wrap" class="model-custom-field" hidden>
                         <span>Custom Model</span>
-                        <input id="config-embedding-custom-model" autocomplete="off" />
+                        <textarea id="config-embedding-custom-model" rows="2" autocomplete="off"></textarea>
                       </label>
                       <details class="model-advanced">
                         <summary>
@@ -451,11 +564,11 @@
                             <h5>Connection</h5>
                             <label>
                               <span>API Key Env</span>
-                              <input id="config-embedding-api-key-env" autocomplete="off" />
+                              <textarea id="config-embedding-api-key-env" rows="2" autocomplete="off"></textarea>
                             </label>
                             <label>
                               <span>Base URL</span>
-                              <input id="config-embedding-base-url" autocomplete="off" placeholder="Provider default" />
+                              <textarea id="config-embedding-base-url" rows="2" autocomplete="off" placeholder="Provider default"></textarea>
                             </label>
                           </section>
                           <section class="model-field-group">
@@ -466,7 +579,7 @@
                             </label>
                             <label>
                               <span>Storage File</span>
-                              <input id="config-embedding-storage-file" autocomplete="off" />
+                              <textarea id="config-embedding-storage-file" rows="2" autocomplete="off"></textarea>
                             </label>
                           </section>
                         </div>
@@ -585,7 +698,7 @@
                             </label>
                             <label>
                               <span>Pretrained Model</span>
-                              <input id="config-opt-proxy-model" autocomplete="off" />
+                              <textarea id="config-opt-proxy-model" rows="2" autocomplete="off"></textarea>
                             </label>
                           </div>
                           <div class="compact-grid four">
@@ -635,6 +748,7 @@
               </aside>
             </div>
           </section>
+
         </section>
 
         <section id="console-view" class="view-panel">
@@ -733,8 +847,25 @@
         <section id="results-view" class="view-panel">
           <section class="panel">
             <div class="panel-head">
-              <h3>Stage Results</h3>
+              <h3>4. Latent Relational View (R_Q)</h3>
               <span id="results-count-label" class="muted-label">No saved results</span>
+            </div>
+            <div class="relation-table-shell" aria-label="Latent relational view">
+              <table class="relation-table">
+                <thead>
+                  <tr>
+                    <th>Doc</th>
+                    <th>Table</th>
+                    <th>Attributes</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="relation-preview-body">
+                  <tr>
+                    <td colspan="4">Run a query pipeline to extract R_Q.</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div id="stage-results" class="stage-results">
               <div class="empty-state">No run yet.</div>
@@ -780,6 +911,10 @@
               set of composable operators: dataset loading, schema generation, schema refinement,
               tuple extraction, filtering, and runtime optimization.
             </p>
+          </section>
+
+          <section class="operator-figure-panel">
+            <img src="/assets/FastReDD.webp" alt="FastReDD pipeline architecture" />
           </section>
 
           <section class="operator-map" aria-label="Operator map">
@@ -833,7 +968,7 @@
             <p class="eyebrow">Papers</p>
             <h2>ReDD Papers</h2>
             <p>
-              Read the main ReDD paper or the technical report directly inside the demo.
+              Open the main ReDD paper or the technical report from the demo.
             </p>
           </section>
 
@@ -848,6 +983,6 @@
       </section>
     </main>
 
-    <script src="/assets/app.js"></script>
+    <script src="/assets/app.js?v=redd-web-demo-fastredd-layout-3"></script>
   </body>
 </html>

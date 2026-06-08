@@ -80,6 +80,33 @@ class QueryAwareLoader(DataLoaderBase):
         ]
 
 
+class SemanticQueryAwareEvaluator(EvalDataExtraction):
+    def _semantic_eval_enabled(self) -> bool:
+        return True
+
+    def _semantic_match_attribute(
+        self,
+        *,
+        pred_attr: str,
+        pred_value: Any,
+        gt_attr: str,
+        gt_value: Any,
+    ) -> dict[str, Any]:
+        if self._compare_attribute_values(pred_value, gt_value):
+            return {
+                "result": True,
+                "method": "strict",
+                "reasoning": "strict",
+                "cached": False,
+            }
+        return {
+            "result": str(pred_value) == "DB Systems" and str(gt_value) == "Databases",
+            "method": "llm",
+            "reasoning": "fake semantic judge",
+            "cached": False,
+        }
+
+
 def test_query_aware_recall_uses_answer_row_provenance_for_cell_denominator() -> None:
     loader = QueryAwareLoader()
     evaluator = EvalDataExtraction({"res_param_str": "unit", "training_data_count": 0})
@@ -146,3 +173,29 @@ def test_query_aware_metadata_only_query_treats_nil_as_null() -> None:
     assert stats["cell_recall"]["null_gt_skipped"] == 2
     assert stats["answer_recall"]["reason"] == "query_has_no_sql"
     assert stats["summary"]["can_answer_query"] is True
+
+
+def test_query_aware_semantic_cell_accuracy_uses_required_attrvalue_cells() -> None:
+    loader = QueryAwareLoader()
+    evaluator = SemanticQueryAwareEvaluator({"res_param_str": "unit", "training_data_count": 0})
+    query_info = {
+        "query": "",
+        "sql": "",
+        "tables": ["course"],
+        "attributes": ["course.title", "course.credits"],
+    }
+    result = {
+        "course-1": {"res": "course", "data": {"title": "DB Systems", "credits": "4"}},
+        "missing-1": {"res": "course", "data": {"title": "Compilers", "credits": "4"}},
+    }
+
+    stats = evaluator.compute_query_aware_statistics(loader, result, "q1", query_info).to_dict()
+
+    assert stats["cell_recall"]["covered"] == 3
+    assert stats["cell_recall"]["total"] == 4
+    assert stats["semantic_cell_accuracy"]["scope"] == "query_required_answer_cells"
+    assert stats["semantic_cell_accuracy"]["correct"] == 4
+    assert stats["semantic_cell_accuracy"]["total"] == 4
+    assert stats["semantic_cell_accuracy"]["llm_judged"] == 1
+    assert stats["semantic_cell_accuracy"]["accuracy"] == 1.0
+    assert {cell["attr"] for cell in stats["semantic_cell_accuracy"]["cells"]} == {"title", "credits"}

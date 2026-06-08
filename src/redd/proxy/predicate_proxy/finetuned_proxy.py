@@ -53,14 +53,15 @@ def _threshold_for_target_recall(
     positive_scores: np.ndarray,
     target_recall: float,
 ) -> float:
-    scores = np.sort(np.asarray(positive_scores, dtype=np.float32))
+    scores = np.sort(np.asarray(positive_scores, dtype=np.float64))
     if len(scores) == 0:
         return 0.01
     target = min(max(float(target_recall), 0.0), 1.0)
     alpha = 1.0 - target
     missed_allowed = int(np.floor(alpha * len(scores)))
     missed_allowed = min(max(missed_allowed, 0), len(scores) - 1)
-    return max(float(scores[missed_allowed]), 0.0)
+    threshold = float(scores[missed_allowed])
+    return max(float(np.nextafter(threshold, -np.inf)), 0.0)
 
 
 def _is_gliclass_model(model_name: str) -> bool:

@@ -512,6 +512,10 @@ class ProxyPipeline:
                 "proxy_runtime.predicate_proxy_mode must be one of: auto, train, pretrained"
             )
         allow_embedding_fallback = bool(getattr(self.config, "allow_embedding_fallback", False))
+        preserve_all_predicate_recall = (
+            bool(predicates)
+            and float(getattr(self.config, "target_recall", 0.95)) >= 1.0 - 1e-6
+        )
 
         # Determine whether learned proxies can use a fine-tuned classifier.
         use_finetuned = False
@@ -553,6 +557,8 @@ class ProxyPipeline:
 
         # Create or train predicate proxies.
         proxies = []
+        calibration_docs_for_recalibration: Optional[List[str]] = None
+        calibration_extractions_for_recalibration: Optional[Dict[str, Dict[str, Any]]] = None
         batch = DocumentBatch(
             doc_ids=doc_ids,
             documents=doc_texts,
@@ -560,7 +566,7 @@ class ProxyPipeline:
             metadata=batch_metadata,
         )
 
-        if predicates:
+        if predicates and not preserve_all_predicate_recall:
             should_train_predicate_proxies = (
                 self.config.use_learned_proxies
                 and proxy_mode in {"auto", "train"}
@@ -603,6 +609,12 @@ class ProxyPipeline:
                             calibration_extractions[label_doc_id] = ext
                     except Exception as e:
                         logging.warning(f"[ProxyPipeline] Training extraction failed for {label_doc_id}: {e}")
+
+                if calibration_doc_ids:
+                    calibration_docs_for_recalibration = [
+                        label_doc_texts[doc_id] for doc_id in calibration_doc_ids
+                    ]
+                    calibration_extractions_for_recalibration = calibration_extractions
 
                 if train_extractions:
                     if use_finetuned:
@@ -673,6 +685,33 @@ class ProxyPipeline:
                     model_name="heuristic",
                     threshold=getattr(self.config, "proxy_threshold", None),
                 )
+                if proxies and calibration_doc_ids:
+                    calibration_docs = calibration_docs_for_recalibration
+                    calibration_extractions = calibration_extractions_for_recalibration
+                    if calibration_docs is None or calibration_extractions is None:
+                        calibration_context = self._build_calibration_context(
+                            loader=loader,
+                            doc_ids=calibration_doc_ids,
+                            schema_list=schema_list,
+                            attributes=attributes,
+                        )
+                        if calibration_context is not None:
+                            calibration_docs, calibration_extractions = calibration_context
+                    if calibration_docs is not None and calibration_extractions is not None:
+                        calibration_embeddings = None
+                        if any(not getattr(g, "uses_documents", False) for g in proxies):
+                            calibration_embeddings = self.compute_embeddings(
+                                calibration_docs,
+                                doc_ids=calibration_doc_ids,
+                            )
+                        self._recalibrate_learned_proxies(
+                            proxies=proxies,
+                            predicate_fns=predicate_fns,
+                            calibration_doc_ids=calibration_doc_ids,
+                            calibration_docs=calibration_docs,
+                            calibration_extractions=calibration_extractions,
+                            calibration_embeddings=calibration_embeddings,
+                        )
 
             if not proxies and should_load_pretrained_proxies:
                 model_name = getattr(
@@ -729,7 +768,7 @@ class ProxyPipeline:
                 )
         
         # Merge join-resolution proxies ahead of predicate proxies for fail-fast execution.
-        if extra_proxies:
+        if extra_proxies and not preserve_all_predicate_recall:
             proxies = list(extra_proxies) + proxies
             logging.info(f"[ProxyPipeline] Added {len(extra_proxies)} extra proxies (e.g., join resolution)")
         
@@ -1016,7 +1055,7 @@ class ProxyPipeline:
                 except Exception:
                     y_calib.append(0)
             y_calib_arr = np.array(y_calib, dtype=np.int32)
-            scores_arr = np.array(scores, dtype=np.float32)
+            scores_arr = np.array(scores, dtype=np.float64)
             pos_scores = scores_arr[y_calib_arr == 1]
             if len(pos_scores) <= 0:
                 old_threshold = float(getattr(proxy, "threshold", 0.5))
@@ -1050,14 +1089,15 @@ class ProxyPipeline:
         positive_scores: np.ndarray,
         target_recall: float,
     ) -> float:
-        scores = np.sort(np.asarray(positive_scores, dtype=np.float32))
+        scores = np.sort(np.asarray(positive_scores, dtype=np.float64))
         if len(scores) == 0:
             return 0.01
         target = min(max(float(target_recall), 0.0), 1.0)
         alpha = 1.0 - target
         missed_allowed = int(np.floor(alpha * len(scores)))
         missed_allowed = min(max(missed_allowed, 0), len(scores) - 1)
-        return max(float(scores[missed_allowed]), 0.0)
+        threshold = float(scores[missed_allowed])
+        return max(float(np.nextafter(threshold, -np.inf)), 0.0)
 
     @staticmethod
     def _is_heuristic_proxy(proxy: Any) -> bool:

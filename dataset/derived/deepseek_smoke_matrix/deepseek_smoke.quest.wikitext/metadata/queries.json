@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.quest.wikitext",
+  "queries": [
+    {
+      "query_id": "Q3",
+      "question": "What are the song titles released before 2010 and after 1990 that originate from countries other than the United States?",
+      "sql": "SELECT song_title FROM music WHERE strftime('%Y', release_date) BETWEEN '1990' AND '2010' AND country_of_origin != 'United States';",
+      "required_tables": [
+        "music"
+      ],
+      "required_columns": [
+        "song_title",
+        "release_date",
+        "country_of_origin"
+      ],
+      "output_columns": [
+        "music.song_title"
+      ],
+      "tags": [],
+      "difficulty": "medium",
+      "source_dataset_id": "quest.wikitext",
+      "dataset_id": "deepseek_smoke.quest.wikitext"
+    }
+  ]
+}

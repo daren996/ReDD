@@ -1,0 +1,11 @@
+schema_version: redd.manifest.v1
+dataset_id: deepseek_smoke.spider.wine_1
+kind: derived
+version: 0.1.0
+parents:
+- spider.wine_1
+paths:
+  documents: data/documents.parquet
+  ground_truth: data/ground_truth.parquet
+  schema: metadata/schema.json
+  queries: metadata/queries.json

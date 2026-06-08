@@ -2,7 +2,7 @@
 Doc Filtering Runtime Utilities.
 
 This module contains orchestration helpers for running doc filtering
-inside higher-level pipelines (e.g., data population), while keeping
+inside higher-level pipelines (e.g., data extraction), while keeping
 filter implementations in this package and reducing caller complexity.
 """
 
@@ -101,22 +101,6 @@ def save_doc_filter_result(
     else:
         save_results_fn(str(cf_path), payload)
 
-    legacy_dir = out_root / "chunk_filter"
-    legacy_dir.mkdir(parents=True, exist_ok=True)
-    legacy_cf_path = legacy_dir / PATH_TEMPLATES.chunk_filter_result(
-        query_id,
-        param_str,
-        target_recall,
-    )
-    if legacy_cf_path != cf_path:
-        if save_results_fn is None:
-            import json
-
-            with open(legacy_cf_path, "w", encoding="utf-8") as f:
-                json.dump(payload, f, ensure_ascii=False, indent=2)
-        else:
-            save_results_fn(str(legacy_cf_path), payload)
-
     logging.info(
         "[doc_filtering.runtime:save_doc_filter_result] Saved doc filter result: %s",
         cf_path,
@@ -135,18 +119,16 @@ def load_doc_filter_result(
         return None, None
 
     candidates = []
-    for dirname in ("doc_filter", "chunk_filter"):
-        candidates.extend((root / dirname).glob(f"*_{query_id}_*.json"))
-        candidates.extend((root / dirname).glob(f"*_{query_id}.json"))
+    candidates.extend((root / "doc_filter").glob(f"*_{query_id}_*.json"))
+    candidates.extend((root / "doc_filter").glob(f"*_{query_id}.json"))
     if not candidates:
         normalized_query_id = str(query_id).lower()
-        for dirname in ("doc_filter", "chunk_filter"):
-            candidates.extend(
-                path
-                for path in (root / dirname).glob("*.json")
-                if f"_{normalized_query_id}_" in path.name.lower()
-                or f"_{normalized_query_id}.json" in path.name.lower()
-            )
+        candidates.extend(
+            path
+            for path in (root / "doc_filter").glob("*.json")
+            if f"_{normalized_query_id}_" in path.name.lower()
+            or f"_{normalized_query_id}.json" in path.name.lower()
+        )
     if not candidates:
         return None, None
 

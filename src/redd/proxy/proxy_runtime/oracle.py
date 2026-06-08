@@ -88,7 +88,7 @@ class DataExtractionOracle:
         mode: str = "gemini",
         llm_model: str = "gemini-2.5-flash-lite",
         api_key: Optional[str] = None,
-        prompt_attr_path: str = "prompts/datapop_attr_json.txt"
+        prompt_attr_path: str = "prompts/data_extraction_attr_json.txt"
     ):
         """
         Initialize data-extraction oracle.

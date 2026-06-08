@@ -7,7 +7,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
-from redd.core.data_population.strategies.doc_filtering import DocFilteringStrategy
+from redd.core.data_extraction.strategies.doc_filtering import DocFilteringStrategy
 from redd.core.schema_gen import create_schema_generator
 from redd.core.utils.constants import PATH_TEMPLATES
 from redd.core.utils.data_split import (

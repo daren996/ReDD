@@ -1,0 +1,86 @@
+config_version: 2.1.1
+project:
+  name: alpha-goal-gt-logreg-noalpha
+  seed: 42
+runtime:
+  output_dir: outputs/alpha_goal_gt_logreg_alpha
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: alpha-goal-gt-logreg-noalpha-v1
+  console_log_level: WARNING
+  force_rerun: true
+models:
+  llm:
+    provider: none
+    model: ground_truth
+  embedding:
+    provider: local
+    model: local-hash-embedding
+    enabled: true
+    api_key_env: null
+datasets:
+  bird.schools_demo:
+    loader: hf_manifest
+    root: dataset/derived/bird.schools_demo
+    query_ids: [q1, q2, q3, q4, q5]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 25, strategy: prefix}
+  spider.college_demo:
+    loader: hf_manifest
+    root: dataset/derived/spider.college_demo
+    query_ids: [q1, q2, q3]
+    loader_options: {manifest: manifest.yaml}
+    split: {train_count: 25, strategy: prefix}
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: ground_truth
+    options:
+      force_rerun: true
+      result_save_interval: 5000
+    doc_filter:
+      enabled: true
+      filter_type: schema_relevance
+      target_recall: 0.95
+      enable_calibrate: false
+      embedding_model: local-hash-embedding
+      embeddings_cache_dir: outputs/alpha_goal_gt_logreg_alpha/_embedding_cache
+      threshold: 0.58
+      use_source_table_metadata: true
+      source_table_metadata_only: true
+      source_table_keep_unknown: true
+    table_assignment_cache:
+      enabled: true
+      source_table_metadata: true
+      general_schema: true
+    proxy_runtime:
+      enabled: true
+      predicate_proxy_mode: train
+      target_recall: 0.95
+      use_embedding_proxies: false
+      use_learned_proxies: true
+      use_finetuned_learned_proxies: false
+      finetuned_model: logreg
+      finetuned_epochs: 0
+      proxy_threshold: 0.5
+      allow_embedding_fallback: false
+      use_join_resolution: true
+      bidirectional_join_resolution: true
+      join_order_strategy: selective_first
+      join_empty_short_circuit: true
+      cross_query_extraction_cache: true
+      cache_extract_full_table: true
+      embedding_model: local-hash-embedding
+      embeddings_cache_dir: outputs/alpha_goal_gt_logreg_alpha/_embedding_cache
+      save_hard_negatives: false
+      verbose: false
+    alpha_allocation:
+      enabled: false
+experiments:
+  demo:
+    datasets:
+      - bird.schools_demo
+      - spider.college_demo
+    stages: [data_extraction]
+    artifact_id: alpha-goal-gt-logreg-noalpha-v1

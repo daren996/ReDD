@@ -1,0 +1,200 @@
+[
+  {
+    "source_dataset": "bird.california_schools",
+    "dataset_id": "deepseek_aligned.bird.california_schools",
+    "experiment": "aligned_bird_california_schools",
+    "doc_id": "477-0",
+    "table": "schools",
+    "attr": "adm_email1",
+    "value": "delphine.sherman@aspirepublicschools.org",
+    "word_count": 266,
+    "score": 150
+  },
+  {
+    "source_dataset": "bird.debit_card_specializing",
+    "dataset_id": "deepseek_aligned.bird.debit_card_specializing",
+    "experiment": "aligned_bird_debit_card_specializing",
+    "doc_id": "1221-0",
+    "table": "gasstations",
+    "attr": "segment",
+    "value": "Value for money",
+    "word_count": 42,
+    "score": 125
+  },
+  {
+    "source_dataset": "bird.student_club",
+    "dataset_id": "deepseek_aligned.bird.student_club",
+    "experiment": "aligned_bird_student_club",
+    "doc_id": "421-0",
+    "table": "major",
+    "attr": "department",
+    "value": "School of Applied Sciences, Technology and Education",
+    "word_count": 45,
+    "score": 162
+  },
+  {
+    "source_dataset": "cuad.cuad",
+    "dataset_id": "deepseek_aligned.cuad.cuad",
+    "experiment": "aligned_cuad_cuad",
+    "doc_id": "46",
+    "table": "cuad_contract",
+    "attr": "license_grant",
+    "value": "In the event Galacticomm, Inc. chooses to terminate this agreement, Horst Entertainment Inc. will have the right to purchase a license copy of the software in the amount of $15,000.00.",
+    "word_count": 223,
+    "score": 170
+  },
+  {
+    "source_dataset": "examples.single_doc_demo",
+    "dataset_id": "deepseek_aligned.examples.single_doc_demo",
+    "experiment": "aligned_examples_single_doc_demo",
+    "doc_id": "doc-1",
+    "table": "wine",
+    "attr": "winery",
+    "value": "Mount Demo Winery",
+    "word_count": 15,
+    "score": 127
+  },
+  {
+    "source_dataset": "fda.fda",
+    "dataset_id": "deepseek_aligned.fda.fda",
+    "experiment": "aligned_fda_fda",
+    "doc_id": "9",
+    "table": "fda_510k_device_submission",
+    "attr": "conclusion",
+    "value": "The submitted information in this premarket notification is complete and supports a substantial equivalence decision.",
+    "word_count": 1115,
+    "score": 160
+  },
+  {
+    "source_dataset": "galois.fortune",
+    "dataset_id": "deepseek_aligned.galois.fortune",
+    "experiment": "aligned_galois_fortune",
+    "doc_id": "71-0",
+    "table": "fortune500_companies",
+    "attr": "industry",
+    "value": "Semiconductors and Other Electronic Components",
+    "word_count": 408,
+    "score": 146
+  },
+  {
+    "source_dataset": "galois.premierleague",
+    "dataset_id": "deepseek_aligned.galois.premierleague",
+    "experiment": "aligned_galois_premierleague",
+    "doc_id": "42-0",
+    "table": "match_result",
+    "attr": "home_team",
+    "value": "Nottingham Forest",
+    "word_count": 887,
+    "score": 117
+  },
+  {
+    "source_dataset": "quest.lcr",
+    "dataset_id": "deepseek_aligned.quest.lcr",
+    "experiment": "aligned_quest_lcr",
+    "doc_id": "lcr_corpus_synthetic_corpus_000534",
+    "table": "corpus",
+    "attr": "legal_basis",
+    "value": "Environment Protection and Biodiversity Conservation Act 1999",
+    "word_count": 629,
+    "score": 160
+  },
+  {
+    "source_dataset": "quest.swde_movie",
+    "dataset_id": "deepseek_aligned.quest.swde_movie",
+    "experiment": "aligned_quest_swde_movie",
+    "doc_id": "swde_movie_movie_synthetic_movie_000302",
+    "table": "movie",
+    "attr": "actors",
+    "value": "Leonardo DiCaprio, Joseph Gordon-Levitt",
+    "word_count": 675,
+    "score": 139
+  },
+  {
+    "source_dataset": "quest.swde_university",
+    "dataset_id": "deepseek_aligned.quest.swde_university",
+    "experiment": "aligned_quest_swde_university",
+    "doc_id": "swde_university_university_synthetic_university_000449",
+    "table": "university",
+    "attr": "university_name",
+    "value": "California Polytechnic State University, San Luis Obispo",
+    "word_count": 701,
+    "score": 156
+  },
+  {
+    "source_dataset": "quest.wikitext",
+    "dataset_id": "deepseek_aligned.quest.wikitext",
+    "experiment": "aligned_quest_wikitext",
+    "doc_id": "wikitext_team_synthetic_team_000135",
+    "table": "team",
+    "attr": "ownership",
+    "value": "Marc Lasry, Wes Edens, and Jamie Dinan",
+    "word_count": 463,
+    "score": 138
+  },
+  {
+    "source_dataset": "spider.apartment_rentals",
+    "dataset_id": "deepseek_aligned.spider.apartment_rentals",
+    "experiment": "aligned_spider_apartment_rentals",
+    "doc_id": "504-0",
+    "table": "apartment_buildings",
+    "attr": "building_phone",
+    "value": "+1-735-836-5493x2924",
+    "word_count": 88,
+    "score": 130
+  },
+  {
+    "source_dataset": "spider.bike_1",
+    "dataset_id": "deepseek_aligned.spider.bike_1",
+    "experiment": "aligned_spider_bike_1",
+    "doc_id": "692-0",
+    "table": "trip",
+    "attr": "end_station_name",
+    "value": "Powell at Post (Union Square)",
+    "word_count": 91,
+    "score": 139
+  },
+  {
+    "source_dataset": "spider.college_2",
+    "dataset_id": "deepseek_aligned.spider.college_2",
+    "experiment": "aligned_spider_college_2",
+    "doc_id": "262-0",
+    "table": "course",
+    "attr": "title",
+    "value": "How to Succeed in Business Without Really Trying",
+    "word_count": 53,
+    "score": 158
+  },
+  {
+    "source_dataset": "spider.flight_4",
+    "dataset_id": "deepseek_aligned.spider.flight_4",
+    "experiment": "aligned_spider_flight_4",
+    "doc_id": "1199-0",
+    "table": "routes",
+    "attr": "dst_ap_name",
+    "value": "Düsseldorf International Airport",
+    "word_count": 65,
+    "score": 142
+  },
+  {
+    "source_dataset": "spider.soccer_1",
+    "dataset_id": "deepseek_aligned.spider.soccer_1",
+    "experiment": "aligned_spider_soccer_1",
+    "doc_id": "51-0",
+    "table": "league",
+    "attr": "name",
+    "value": "England Premier League",
+    "word_count": 52,
+    "score": 132
+  },
+  {
+    "source_dataset": "spider.wine_1",
+    "dataset_id": "deepseek_aligned.spider.wine_1",
+    "experiment": "aligned_spider_wine_1",
+    "doc_id": "289-0",
+    "table": "wine",
+    "attr": "appelation",
+    "value": "Santa Lucia Highlands",
+    "word_count": 98,
+    "score": 131
+  }
+]

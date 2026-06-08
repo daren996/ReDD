@@ -3,12 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from .api import DataPopulator, SchemaGenerator
+from .api import DataExtractor, SchemaGenerator
 
 
 def data_extraction(
     *,
-    data_populator: DataPopulator | None = None,
+    data_extractor: DataExtractor | None = None,
     config: Mapping[str, Any] | None = None,
     config_path: str | Path | None = None,
     exp: str | None = None,
@@ -19,42 +19,42 @@ def data_extraction(
     configure_logging: bool = True,
 ) -> list[dict[str, Any]]:
     """Run the data extraction stage."""
-    populator = _resolve_data_populator(
-        data_populator=data_populator,
+    extractor = _resolve_data_extractor(
+        data_extractor=data_extractor,
         config=config,
         config_path=config_path,
         exp=exp,
         api_key=api_key,
         configure_logging=configure_logging,
     )
-    return populator.data_extraction(
+    return extractor.data_extraction(
         datasets=datasets,
         schema_generator=schema_generator,
         schema_config=schema_config,
     )
 
 
-def _resolve_data_populator(
+def _resolve_data_extractor(
     *,
-    data_populator: DataPopulator | None,
+    data_extractor: DataExtractor | None,
     config: Mapping[str, Any] | None,
     config_path: str | Path | None,
     exp: str | None,
     api_key: str | None,
     configure_logging: bool,
-) -> DataPopulator:
-    if data_populator is not None:
-        return data_populator
+) -> DataExtractor:
+    if data_extractor is not None:
+        return data_extractor
 
     if config is not None:
-        return DataPopulator(
+        return DataExtractor(
             config,
             api_key=api_key,
             configure_logging=configure_logging,
         )
 
     if config_path is not None and exp is not None:
-        return DataPopulator.from_experiment(
+        return DataExtractor.from_experiment(
             config_path,
             exp,
             api_key=api_key,
@@ -62,7 +62,7 @@ def _resolve_data_populator(
         )
 
     raise ValueError(
-        "data_extraction requires either `data_populator=`, "
+        "data_extraction requires either `data_extractor=`, "
         "`config=`, or both `config_path=` and `exp=`."
     )
 

@@ -49,8 +49,8 @@ def _build_schema_generator_impl(config: Mapping[str, Any], api_key: str | None 
     return schema_stage.build_schema_generator_impl(config, api_key=api_key)
 
 
-def _build_data_populator_impl(config: Mapping[str, Any], api_key: str | None = None):
-    return data_extraction_stage.build_data_populator_impl(config, api_key=api_key)
+def _build_data_extractor_impl(config: Mapping[str, Any], api_key: str | None = None):
+    return data_extraction_stage.build_data_extractor_impl(config, api_key=api_key)
 
 
 def _build_doc_dict(loader: Any) -> dict[str, list[str]]:
@@ -147,7 +147,7 @@ class SchemaGenerator:
         )
 
 
-class DataPopulator:
+class DataExtractor:
     """Stable public entry point for the DATA EXTRACTION stage."""
 
     def __init__(
@@ -171,7 +171,7 @@ class DataPopulator:
         *,
         api_key: str | None = None,
         configure_logging: bool = True,
-    ) -> "DataPopulator":
+    ) -> "DataExtractor":
         runtime, _ = load_experiment_runtime(config_path, exp)
         config = _stage_config_from_runtime(runtime, "data_extraction")
         if config is None:
@@ -252,7 +252,7 @@ class DataPopulator:
 def run_pipeline(
     *,
     schema_generator: SchemaGenerator | None = None,
-    data_populator: DataPopulator | None = None,
+    data_extractor: DataExtractor | None = None,
     stages: Sequence[PipelineStage | str] | None = None,
     datasets: Sequence[str] | None = None,
 ) -> dict[str, Any]:
@@ -260,7 +260,7 @@ def run_pipeline(
 
     return _run_pipeline(
         schema_generator=schema_generator,
-        data_populator=data_populator,
+        data_extractor=data_extractor,
         stages=stages,
         datasets=datasets,
         stage_type=PipelineStage,
@@ -269,7 +269,7 @@ def run_pipeline(
 
 __all__ = [
     "DataLoaderBase",
-    "DataPopulator",
+    "DataExtractor",
     "PipelineStage",
     "PREPROCESSING",
     "SCHEMA_REFINEMENT",

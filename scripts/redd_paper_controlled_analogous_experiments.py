@@ -54,7 +54,7 @@ def _score_cell(index: int, error: bool, lambda_value: float = 0.5, training_siz
     return (1.0 - lambda_value) * base + lambda_value * conflict + training_bonus
 
 
-def _population(n: int = 240) -> list[dict[str, Any]]:
+def _sample_cells(n: int = 240) -> list[dict[str, Any]]:
     return [{"cell_id": i, "error": i % 7 == 0 or i % 19 == 0} for i in range(n)]
 
 
@@ -90,7 +90,7 @@ def _evaluate(cells: list[dict[str, Any]], *, alpha: float, lambda_value: float 
 
 
 def _run_controlled() -> dict[str, Any]:
-    cells = _population()
+    cells = _sample_cells()
     no_correction = {"accpop": round(1.0 - sum(c["error"] for c in cells) / len(cells), 4), "fprpop": 0.0}
     alpha_sweep = [_evaluate(cells, alpha=a) for a in [0.50, 0.30, 0.15, 0.05, 0.01]]
     method_tradeoff = {

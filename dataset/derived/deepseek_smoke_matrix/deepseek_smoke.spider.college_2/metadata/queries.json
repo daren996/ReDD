@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.spider.college_2",
+  "queries": [
+    {
+      "query_id": "Q3",
+      "question": "Find the titles of courses that have 4 credits.",
+      "sql": "SELECT title FROM course WHERE credits = '4';",
+      "required_tables": [
+        "course"
+      ],
+      "required_columns": [
+        "course.title",
+        "course.credits"
+      ],
+      "output_columns": [
+        "course.title"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "spider.college_2",
+      "dataset_id": "deepseek_smoke.spider.college_2"
+    }
+  ]
+}

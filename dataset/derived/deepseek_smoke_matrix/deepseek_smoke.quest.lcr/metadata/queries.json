@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.quest.lcr",
+  "queries": [
+    {
+      "query_id": "Q6",
+      "question": "List the distinct judges who presided over cases related to 'Competition Code' and whose name contains 'Justice'.",
+      "sql": "SELECT DISTINCT judge_name FROM corpus WHERE legal_basis LIKE '%Competition Code%' AND judge_name LIKE '%Justice%';",
+      "required_tables": [
+        "corpus"
+      ],
+      "required_columns": [
+        "judge_name",
+        "legal_basis"
+      ],
+      "output_columns": [
+        "corpus.judge_name"
+      ],
+      "tags": [],
+      "difficulty": "medium",
+      "source_dataset_id": "quest.lcr",
+      "dataset_id": "deepseek_smoke.quest.lcr"
+    }
+  ]
+}

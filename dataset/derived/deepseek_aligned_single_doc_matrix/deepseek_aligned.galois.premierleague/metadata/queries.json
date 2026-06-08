@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.galois.premierleague",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List home_team from match_result.",
+      "sql": "SELECT home_team FROM match_result;",
+      "required_tables": [
+        "match_result"
+      ],
+      "required_columns": [
+        "match_result.home_team"
+      ],
+      "output_columns": [
+        "match_result.home_team"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "galois.premierleague",
+      "dataset_id": "deepseek_aligned.galois.premierleague"
+    }
+  ]
+}

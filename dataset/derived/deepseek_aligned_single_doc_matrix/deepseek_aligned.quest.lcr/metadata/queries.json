@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.quest.lcr",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List legal_basis from corpus.",
+      "sql": "SELECT legal_basis FROM corpus;",
+      "required_tables": [
+        "corpus"
+      ],
+      "required_columns": [
+        "corpus.legal_basis"
+      ],
+      "output_columns": [
+        "corpus.legal_basis"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "quest.lcr",
+      "dataset_id": "deepseek_aligned.quest.lcr"
+    }
+  ]
+}

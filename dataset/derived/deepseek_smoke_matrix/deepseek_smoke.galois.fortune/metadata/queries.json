@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.galois.fortune",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List MarketCap_March28_M, row_id, Assets_M from fortune500_companies where MarketCap_March28_M <= 14507.3.",
+      "sql": "SELECT market_cap_march28_m, row_id, assets_m FROM fortune500_companies WHERE market_cap_march28_m <= 14507.3;",
+      "required_tables": [
+        "fortune500_companies"
+      ],
+      "required_columns": [
+        "fortune500_companies.market_cap_march28_m",
+        "fortune500_companies.assets_m"
+      ],
+      "output_columns": [
+        "fortune500_companies.market_cap_march28_m"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "galois.fortune",
+      "dataset_id": "deepseek_smoke.galois.fortune"
+    }
+  ]
+}

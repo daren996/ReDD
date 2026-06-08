@@ -6,7 +6,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
-from redd.core.data_population import create_data_populator
+from redd.core.data_extraction import create_data_extractor
 from redd.runtime import (
     build_data_loader_config,
     resolve_dataset_roots,
@@ -14,10 +14,10 @@ from redd.runtime import (
 )
 
 if TYPE_CHECKING:
-    from redd.api import DataPopulator, SchemaGenerator
+    from redd.api import DataExtractor, SchemaGenerator
 
 __all__ = [
-    "build_data_populator_impl",
+    "build_data_extractor_impl",
     "build_loader_config",
     "resolve_general_schema_source",
     "resolve_query_schema_source",
@@ -26,19 +26,19 @@ __all__ = [
 ]
 
 
-def build_data_populator_impl(config: Mapping[str, Any], api_key: str | None = None):
-    return create_data_populator(dict(config), api_key=api_key)
+def build_data_extractor_impl(config: Mapping[str, Any], api_key: str | None = None):
+    return create_data_extractor(dict(config), api_key=api_key)
 
 
 def run_data_extraction(
-    populator: DataPopulator,
+    extractor: DataExtractor,
     datasets: Sequence[str] | None = None,
     *,
     schema_generator: SchemaGenerator | None = None,
     schema_config: Mapping[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    config = deepcopy(populator.config)
-    impl = build_data_populator_impl(config, api_key=populator.api_key)
+    config = deepcopy(extractor.config)
+    impl = build_data_extractor_impl(config, api_key=extractor.api_key)
     base_impl_config = deepcopy(impl.config)
     summaries = []
     schema_source = resolve_schema_source_mode(config)
@@ -112,7 +112,7 @@ def _upstream_doc_filter_root(
         candidates.append(schema_config)
 
     for candidate in candidates:
-        doc_filter = candidate.get("doc_filter") or candidate.get("document_filtering") or {}
+        doc_filter = candidate.get("doc_filter") or {}
         if not isinstance(doc_filter, Mapping) or not doc_filter.get("enabled"):
             continue
         runtime_contexts = candidate.get("_runtime_contexts")

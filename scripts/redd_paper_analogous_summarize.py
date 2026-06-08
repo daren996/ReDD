@@ -108,7 +108,7 @@ def _analogous_result(summary: dict[str, Any]) -> dict[str, Any]:
         and metrics.get("answer_recall") == 1.0
     )
     return {
-        "experiment_id": "table2_data_population_accuracy",
+        "experiment_id": "table2_data_extraction_accuracy",
         "status": "analogous_supported" if full else "partial",
         "observed": (
             f"Analogous LLM extraction run: queries={metrics.get('queries')}, "
@@ -116,7 +116,7 @@ def _analogous_result(summary: dict[str, Any]) -> dict[str, Any]:
             f"answer_recall={metrics.get('answer_recall')}; summary={summary['run_root']}/reports/redd_paper_analogous_summary.json"
         ),
         "comparison": (
-            "Paper-like Table 2 smoke evidence for LLM data population on the current demo dataset; "
+            "Paper-like Table 2 smoke evidence for LLM data extraction on the current demo dataset; "
             "not exact paper Table 2 reproduction."
         ),
         "next_action": "Scale the analogous run to the target datasets and add correction/cost variants.",

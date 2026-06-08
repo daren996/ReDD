@@ -144,6 +144,7 @@ redd run --config configs/examples/ground_truth_demo.yaml --experiment demo
 redd preprocess --config <config-v2.yaml> --experiment <experiment-id>
 redd refine --config <config-v2.yaml> --experiment <experiment-id>
 redd extract --config <config-v2.yaml> --experiment <experiment-id>
+redd evaluate --config <config-v2.yaml> --exp <experiment-id>
 ```
 
 ## Web Demo
@@ -179,18 +180,16 @@ redd run --config <config-v2.yaml> --experiment <experiment-id>
 redd preprocess --config <config-v2.yaml> --experiment <experiment-id>
 redd refine --config <config-v2.yaml> --experiment <experiment-id>
 redd extract --config <config-v2.yaml> --experiment <experiment-id>
+redd evaluate --config <config-v2.yaml> --exp <experiment-id>
+redd run --config <config-v2.yaml> --experiment <experiment-id> --dataset <dataset-id> --query-id <query-id> --stage extract --json
 redd dataset validate dataset/manifest.yaml
 redd web --config configs/demo/demo_datasets.yaml --experiment demo
 ```
 
-Each stage command accepts `--api-key` as a temporary override. For repeatable
-experiments, prefer environment variables or `api_key_env` in config files.
-
-Research-oriented workflows live outside the primary CLI surface:
-
-```bash
-python scripts/main_exp.py evaluation --config <config-v2.yaml> --exp <experiment-id>
-```
+Each experiment command accepts `--api-key`, repeated or comma-separated
+`--dataset`, and repeated or comma-separated `--query-id`. `redd run` also
+accepts `--stage` to execute a selected stage subset, and `--json` prints the
+structured runner payload.
 
 ## Python API
 
@@ -206,10 +205,10 @@ summaries = data_extraction(
 )
 ```
 
-The public API also exposes `SchemaGenerator`, `DataPopulator`,
-`run_pipeline`, `create_data_loader`, `preprocessing`, `schema_refine`, and
-`run_web_demo`. See [docs/API_EXAMPLES.md](docs/API_EXAMPLES.md) for practical
-usage patterns.
+The public API also exposes `SchemaGenerator`, `DataExtractor`,
+`run_pipeline`, `run_extract`, `run_experiment`, `run_evaluation`,
+`create_data_loader`, `preprocessing`, `schema_refine`, and `run_web_demo`.
+See [docs/API_EXAMPLES.md](docs/API_EXAMPLES.md) for practical usage patterns.
 
 ## Configuration
 
@@ -334,7 +333,7 @@ Run validation:
 
 ```bash
 pytest -q
-ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_population/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/llm/providers.py tests
+ruff check src/redd/__init__.py src/redd/api.py src/redd/config.py src/redd/runtime.py src/redd/core/data_extraction/factory.py src/redd/core/schema_gen/factory.py src/redd/core/utils/prompt_utils.py src/redd/llm/providers.py tests
 mypy
 python -m build
 ```

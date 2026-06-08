@@ -158,7 +158,7 @@ Current analogous smoke evidence supports:
 
 - `table1_dataset_setup`: current canonical dataset setup only, not exact paper
   Table 1.
-- `table2_data_population_accuracy`: one-document DeepSeek extraction smoke
+- `table2_data_extraction_accuracy`: one-document DeepSeek extraction smoke
   with table, cell, and answer recall all equal to `1.0`.
 - `table4_schema_discovery`: one-document DeepSeek schema discovery smoke
   with table recall/precision `1.0` and semantic attribute recall/precision

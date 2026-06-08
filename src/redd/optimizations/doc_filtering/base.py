@@ -3,7 +3,7 @@ Base class for doc filtering.
 
 This module provides the abstract base class for implementing various doc filtering
 strategies. Doc filtering is used to identify which document chunks are irrelevant
-to a given query and can be skipped during data population, improving efficiency.
+to a given query and can be skipped during data extraction, improving efficiency.
 """
 
 from __future__ import annotations

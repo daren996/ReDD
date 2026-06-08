@@ -1,0 +1,627 @@
+[
+  {
+    "source_dataset": "bird.california_schools",
+    "smoke_dataset": "deepseek_smoke.bird.california_schools",
+    "experiment": "smoke_bird_california_schools",
+    "query_id": "Q1",
+    "question": "List EILName, row_id, AdmEmail1 from schools where EILName contains 'middle'.",
+    "sql": "SELECT eil_name, row_id, adm_email1 FROM schools WHERE eil_name LIKE '%middle%';",
+    "required_tables": [
+      "schools"
+    ],
+    "required_columns": [
+      "schools.eil_name",
+      "schools.adm_email1"
+    ],
+    "selected_doc_ids": [
+      "914-0",
+      "30-0"
+    ],
+    "predicates_parsed": [
+      [
+        "eil_name",
+        "like",
+        "%middle%"
+      ]
+    ],
+    "candidate_count": 494,
+    "selected_doc_word_counts": {
+      "914-0": 223,
+      "30-0": 230
+    }
+  },
+  {
+    "source_dataset": "bird.debit_card_specializing",
+    "smoke_dataset": "deepseek_smoke.bird.debit_card_specializing",
+    "experiment": "smoke_bird_debit_card_specializing",
+    "query_id": "Q1",
+    "question": "List Segment, row_id, ChainID from gasstations where Segment contains 'other'.",
+    "sql": "SELECT segment, row_id, chain_id FROM gasstations WHERE segment LIKE '%other%';",
+    "required_tables": [
+      "gasstations"
+    ],
+    "required_columns": [
+      "gasstations.segment",
+      "gasstations.chain_id"
+    ],
+    "selected_doc_ids": [
+      "1302-0",
+      "67-0"
+    ],
+    "predicates_parsed": [
+      [
+        "segment",
+        "like",
+        "%other%"
+      ]
+    ],
+    "candidate_count": 309,
+    "selected_doc_word_counts": {
+      "1302-0": 33,
+      "67-0": 36
+    }
+  },
+  {
+    "source_dataset": "bird.student_club",
+    "smoke_dataset": "deepseek_smoke.bird.student_club",
+    "experiment": "smoke_bird_student_club",
+    "query_id": "Q1",
+    "question": "List event_name, row_id, event_date from attendance where event_name contains 'meeting'.",
+    "sql": "SELECT event_name, row_id, event_date FROM attendance WHERE event_name LIKE '%meeting%';",
+    "required_tables": [
+      "attendance"
+    ],
+    "required_columns": [
+      "attendance.event_name",
+      "attendance.event_date"
+    ],
+    "selected_doc_ids": [
+      "360-0",
+      "521-0"
+    ],
+    "predicates_parsed": [
+      [
+        "event_name",
+        "like",
+        "%meeting%"
+      ]
+    ],
+    "candidate_count": 326,
+    "selected_doc_word_counts": {
+      "360-0": 20,
+      "521-0": 20
+    }
+  },
+  {
+    "source_dataset": "cuad.cuad",
+    "smoke_dataset": "deepseek_smoke.cuad.cuad",
+    "experiment": "smoke_cuad_cuad",
+    "query_id": "Q1",
+    "question": "",
+    "sql": "",
+    "required_tables": [
+      "cuad_contract"
+    ],
+    "required_columns": [
+      "cuad_contract.document_name",
+      "cuad_contract.parties",
+      "cuad_contract.agreement_date",
+      "cuad_contract.effective_date",
+      "cuad_contract.expiration_date",
+      "cuad_contract.renewal_term",
+      "cuad_contract.notice_period_to_terminate_renewal",
+      "cuad_contract.governing_law",
+      "cuad_contract.most_favored_nation",
+      "cuad_contract.non_compete",
+      "cuad_contract.exclusivity",
+      "cuad_contract.no_solicit_of_customers",
+      "cuad_contract.no_solicit_of_employees",
+      "cuad_contract.non_disparagement",
+      "cuad_contract.termination_for_convenience",
+      "cuad_contract.rofr_rofo_rofn",
+      "cuad_contract.change_of_control",
+      "cuad_contract.anti_assignment",
+      "cuad_contract.revenue_profit_sharing",
+      "cuad_contract.price_restrictions",
+      "cuad_contract.minimum_commitment",
+      "cuad_contract.volume_restriction",
+      "cuad_contract.ip_ownership_assignment",
+      "cuad_contract.joint_ip_ownership",
+      "cuad_contract.license_grant",
+      "cuad_contract.non_transferable_license",
+      "cuad_contract.affiliate_license_licensor",
+      "cuad_contract.affiliate_license_licensee",
+      "cuad_contract.unlimited_all_you_can_eat_license",
+      "cuad_contract.irrevocable_or_perpetual_license",
+      "cuad_contract.source_code_escrow",
+      "cuad_contract.post_termination_services",
+      "cuad_contract.audit_rights",
+      "cuad_contract.uncapped_liability",
+      "cuad_contract.cap_on_liability",
+      "cuad_contract.liquidated_damages",
+      "cuad_contract.warranty_duration",
+      "cuad_contract.insurance",
+      "cuad_contract.covenant_not_to_sue",
+      "cuad_contract.third_party_beneficiary"
+    ],
+    "selected_doc_ids": [
+      "0"
+    ],
+    "predicates_parsed": [],
+    "candidate_count": 0,
+    "selected_doc_word_counts": {
+      "0": 5998
+    }
+  },
+  {
+    "source_dataset": "examples.single_doc_demo",
+    "smoke_dataset": "deepseek_smoke.examples.single_doc_demo",
+    "experiment": "smoke_examples_single_doc_demo",
+    "query_id": "Q1",
+    "question": "Which winery from Sonoma Coast has a score above 90?",
+    "sql": "SELECT winery FROM wine WHERE appelation = 'Sonoma Coast' AND score > '90';",
+    "required_tables": [
+      "wine"
+    ],
+    "required_columns": [
+      "wine.winery",
+      "wine.appelation",
+      "wine.score"
+    ],
+    "selected_doc_ids": [
+      "doc-1"
+    ],
+    "predicates_parsed": [
+      [
+        "appelation",
+        "=",
+        "Sonoma Coast"
+      ],
+      [
+        "score",
+        ">",
+        "90"
+      ]
+    ],
+    "candidate_count": 1,
+    "selected_doc_word_counts": {
+      "doc-1": 15
+    }
+  },
+  {
+    "source_dataset": "fda.fda",
+    "smoke_dataset": "deepseek_smoke.fda.fda",
+    "experiment": "smoke_fda_fda",
+    "query_id": "Q1",
+    "question": "",
+    "sql": "",
+    "required_tables": [
+      "fda_510k_device_submission"
+    ],
+    "required_columns": [
+      "fda_510k_device_submission.510k_number",
+      "fda_510k_device_submission.applicant",
+      "fda_510k_device_submission.classification",
+      "fda_510k_device_submission.conclusion",
+      "fda_510k_device_submission.indications_for_use",
+      "fda_510k_device_submission.intended_use",
+      "fda_510k_device_submission.measurand",
+      "fda_510k_device_submission.panel",
+      "fda_510k_device_submission.predicate_510k_number",
+      "fda_510k_device_submission.predicate_device_name",
+      "fda_510k_device_submission.product_code",
+      "fda_510k_device_submission.proposed_labeling",
+      "fda_510k_device_submission.proprietary_and_established_names",
+      "fda_510k_device_submission.purpose_for_submission",
+      "fda_510k_device_submission.regulation_section",
+      "fda_510k_device_submission.type_of_test"
+    ],
+    "selected_doc_ids": [
+      "9",
+      "45"
+    ],
+    "predicates_parsed": [],
+    "candidate_count": 94,
+    "selected_doc_word_counts": {
+      "9": 1115,
+      "45": 1254
+    }
+  },
+  {
+    "source_dataset": "galois.fortune",
+    "smoke_dataset": "deepseek_smoke.galois.fortune",
+    "experiment": "smoke_galois_fortune",
+    "query_id": "Q1",
+    "question": "List MarketCap_March28_M, row_id, Assets_M from fortune500_companies where MarketCap_March28_M <= 14507.3.",
+    "sql": "SELECT market_cap_march28_m, row_id, assets_m FROM fortune500_companies WHERE market_cap_march28_m <= 14507.3;",
+    "required_tables": [
+      "fortune500_companies"
+    ],
+    "required_columns": [
+      "fortune500_companies.market_cap_march28_m",
+      "fortune500_companies.assets_m"
+    ],
+    "selected_doc_ids": [
+      "44-0",
+      "217-0"
+    ],
+    "predicates_parsed": [
+      [
+        "market_cap_march28_m",
+        "<=",
+        "14507.3"
+      ]
+    ],
+    "candidate_count": 470,
+    "selected_doc_word_counts": {
+      "44-0": 276,
+      "217-0": 284
+    }
+  },
+  {
+    "source_dataset": "galois.premierleague",
+    "smoke_dataset": "deepseek_smoke.galois.premierleague",
+    "experiment": "smoke_galois_premierleague",
+    "query_id": "Q1",
+    "question": "List home_goals, row_id, away_goals from match_result where home_goals is not null.",
+    "sql": "SELECT home_goals, row_id, away_goals FROM match_result WHERE home_goals IS NOT NULL;",
+    "required_tables": [
+      "match_result"
+    ],
+    "required_columns": [
+      "match_result.home_goals",
+      "match_result.away_goals"
+    ],
+    "selected_doc_ids": [
+      "42-0",
+      "30-0"
+    ],
+    "predicates_parsed": [
+      [
+        "home_goals",
+        "is_not_null",
+        null
+      ]
+    ],
+    "candidate_count": 45,
+    "selected_doc_word_counts": {
+      "42-0": 887,
+      "30-0": 900
+    }
+  },
+  {
+    "source_dataset": "quest.lcr",
+    "smoke_dataset": "deepseek_smoke.quest.lcr",
+    "experiment": "smoke_quest_lcr",
+    "query_id": "Q6",
+    "question": "List the distinct judges who presided over cases related to 'Competition Code' and whose name contains 'Justice'.",
+    "sql": "SELECT DISTINCT judge_name FROM corpus WHERE legal_basis LIKE '%Competition Code%' AND judge_name LIKE '%Justice%';",
+    "required_tables": [
+      "corpus"
+    ],
+    "required_columns": [
+      "judge_name",
+      "legal_basis"
+    ],
+    "selected_doc_ids": [
+      "lcr_corpus_synthetic_corpus_000377",
+      "lcr_corpus_synthetic_corpus_000464"
+    ],
+    "predicates_parsed": [
+      [
+        "legal_basis",
+        "like",
+        "%Competition Code%"
+      ],
+      [
+        "judge_name",
+        "like",
+        "%Justice%"
+      ]
+    ],
+    "candidate_count": 599,
+    "selected_doc_word_counts": {
+      "lcr_corpus_synthetic_corpus_000377": 483,
+      "lcr_corpus_synthetic_corpus_000464": 488
+    }
+  },
+  {
+    "source_dataset": "quest.swde_movie",
+    "smoke_dataset": "deepseek_smoke.quest.swde_movie",
+    "experiment": "smoke_quest_swde_movie",
+    "query_id": "Q2",
+    "question": "Find the titles of movies directed by 'Quentin Tarantino'.",
+    "sql": "SELECT title FROM movie WHERE director = 'Quentin Tarantino'",
+    "required_tables": [
+      "movie"
+    ],
+    "required_columns": [
+      "movie.title",
+      "movie.director"
+    ],
+    "selected_doc_ids": [
+      "swde_movie_movie_synthetic_movie_000020",
+      "swde_movie_movie_synthetic_movie_000496"
+    ],
+    "predicates_parsed": [
+      [
+        "director",
+        "=",
+        "Quentin Tarantino"
+      ]
+    ],
+    "candidate_count": 500,
+    "selected_doc_word_counts": {
+      "swde_movie_movie_synthetic_movie_000020": 537,
+      "swde_movie_movie_synthetic_movie_000496": 556
+    }
+  },
+  {
+    "source_dataset": "quest.swde_university",
+    "smoke_dataset": "deepseek_smoke.quest.swde_university",
+    "experiment": "smoke_quest_swde_university",
+    "query_id": "Q7",
+    "question": "List the university names and their campus sizes where the campus size is greater than 500 acres and the setting is suburban.",
+    "sql": "SELECT university_name, campus_size FROM university WHERE REPLACE(SUBSTR(campus_size, 1, LENGTH(campus_size) - 6), ',', '') > 500 AND setting = 'suburban'",
+    "required_tables": [
+      "university"
+    ],
+    "required_columns": [
+      "university_name",
+      "campus_size",
+      "setting"
+    ],
+    "selected_doc_ids": [
+      "swde_university_university_0031",
+      "swde_university_university_0366"
+    ],
+    "predicates_parsed": [
+      [
+        "setting",
+        "=",
+        "suburban"
+      ]
+    ],
+    "candidate_count": 599,
+    "selected_doc_word_counts": {
+      "swde_university_university_0031": 119,
+      "swde_university_university_0366": 122
+    }
+  },
+  {
+    "source_dataset": "quest.wikitext",
+    "smoke_dataset": "deepseek_smoke.quest.wikitext",
+    "experiment": "smoke_quest_wikitext",
+    "query_id": "Q3",
+    "question": "What are the song titles released before 2010 and after 1990 that originate from countries other than the United States?",
+    "sql": "SELECT song_title FROM music WHERE strftime('%Y', release_date) BETWEEN '1990' AND '2010' AND country_of_origin != 'United States';",
+    "required_tables": [
+      "music"
+    ],
+    "required_columns": [
+      "song_title",
+      "release_date",
+      "country_of_origin"
+    ],
+    "selected_doc_ids": [
+      "wikitext_music_synthetic_music_000152",
+      "wikitext_music_synthetic_music_000296"
+    ],
+    "predicates_parsed": [
+      [
+        "country_of_origin",
+        "!=",
+        "United States"
+      ]
+    ],
+    "candidate_count": 534,
+    "selected_doc_word_counts": {
+      "wikitext_music_synthetic_music_000152": 460,
+      "wikitext_music_synthetic_music_000296": 493
+    }
+  },
+  {
+    "source_dataset": "spider.apartment_rentals",
+    "smoke_dataset": "deepseek_smoke.spider.apartment_rentals",
+    "experiment": "smoke_spider_apartment_rentals",
+    "query_id": "Q8",
+    "question": "Find the first names of guests who have a booking status of 'Cancelled'.",
+    "sql": "SELECT guest_first_name FROM apartment_bookings WHERE booking_status_code = 'Cancelled';",
+    "required_tables": [
+      "apartment_bookings"
+    ],
+    "required_columns": [
+      "apartment_bookings.guest_first_name",
+      "apartment_bookings.booking_status_code"
+    ],
+    "selected_doc_ids": [
+      "262-0",
+      "322-0"
+    ],
+    "predicates_parsed": [
+      [
+        "booking_status_code",
+        "=",
+        "Cancelled"
+      ]
+    ],
+    "candidate_count": 115,
+    "selected_doc_word_counts": {
+      "262-0": 33,
+      "322-0": 37
+    }
+  },
+  {
+    "source_dataset": "spider.bike_1",
+    "smoke_dataset": "deepseek_smoke.spider.bike_1",
+    "experiment": "smoke_spider_bike_1",
+    "query_id": "Q2",
+    "question": "Show the station names and available bikes for stations with more than 5 available bikes at '2015-06-02 14:00:00'.",
+    "sql": "SELECT station_name, bikes_available FROM status WHERE bikes_available > '5' AND time LIKE '2015-06-02 14:%';",
+    "required_tables": [
+      "status"
+    ],
+    "required_columns": [
+      "status.station_name",
+      "status.bikes_available",
+      "status.time"
+    ],
+    "selected_doc_ids": [
+      "1017-0",
+      "897-0"
+    ],
+    "predicates_parsed": [
+      [
+        "bikes_available",
+        ">",
+        "5"
+      ],
+      [
+        "time",
+        "like",
+        "2015-06-02 14:%"
+      ]
+    ],
+    "candidate_count": 500,
+    "selected_doc_word_counts": {
+      "1017-0": 40,
+      "897-0": 42
+    }
+  },
+  {
+    "source_dataset": "spider.college_2",
+    "smoke_dataset": "deepseek_smoke.spider.college_2",
+    "experiment": "smoke_spider_college_2",
+    "query_id": "Q3",
+    "question": "Find the titles of courses that have 4 credits.",
+    "sql": "SELECT title FROM course WHERE credits = '4';",
+    "required_tables": [
+      "course"
+    ],
+    "required_columns": [
+      "course.title",
+      "course.credits"
+    ],
+    "selected_doc_ids": [
+      "30-0",
+      "172-0"
+    ],
+    "predicates_parsed": [
+      [
+        "credits",
+        "=",
+        "4"
+      ]
+    ],
+    "candidate_count": 200,
+    "selected_doc_word_counts": {
+      "30-0": 39,
+      "172-0": 40
+    }
+  },
+  {
+    "source_dataset": "spider.flight_4",
+    "smoke_dataset": "deepseek_smoke.spider.flight_4",
+    "experiment": "smoke_spider_flight_4",
+    "query_id": "Q5",
+    "question": "List airlines which do not have an IATA code and are inactive.",
+    "sql": "SELECT name FROM airlines WHERE iata = '' AND active = 'N';",
+    "required_tables": [
+      "airlines"
+    ],
+    "required_columns": [
+      "airlines.name",
+      "airlines.iata",
+      "airlines.active"
+    ],
+    "selected_doc_ids": [
+      "1244-0",
+      "1475-0"
+    ],
+    "predicates_parsed": [
+      [
+        "iata",
+        "=",
+        ""
+      ],
+      [
+        "active",
+        "=",
+        "N"
+      ]
+    ],
+    "candidate_count": 3,
+    "selected_doc_word_counts": {
+      "1244-0": 63,
+      "1475-0": 63
+    }
+  },
+  {
+    "source_dataset": "spider.soccer_1",
+    "smoke_dataset": "deepseek_smoke.spider.soccer_1",
+    "experiment": "smoke_spider_soccer_1",
+    "query_id": "Q8",
+    "question": "List the player names and their heights, showing only those players whose names start with 'A' and whose height is greater than 182cm.",
+    "sql": "SELECT p.player_name, p.height FROM player p WHERE p.player_name LIKE 'A%' AND p.height > '182';",
+    "required_tables": [
+      "player"
+    ],
+    "required_columns": [
+      "player.player_name",
+      "player.height"
+    ],
+    "selected_doc_ids": [
+      "21-0",
+      "203-0"
+    ],
+    "predicates_parsed": [
+      [
+        "player_name",
+        "like",
+        "A%"
+      ],
+      [
+        "height",
+        ">",
+        "182"
+      ]
+    ],
+    "candidate_count": 98,
+    "selected_doc_word_counts": {
+      "21-0": 32,
+      "203-0": 33
+    }
+  },
+  {
+    "source_dataset": "spider.wine_1",
+    "smoke_dataset": "deepseek_smoke.spider.wine_1",
+    "experiment": "smoke_spider_wine_1",
+    "query_id": "q3",
+    "question": "List the wineries that produce wine from a grape other than Chardonnay or Pinot Noir and have a score greater than 90.",
+    "sql": "SELECT winery FROM wine WHERE grape NOT IN ('Chardonnay', 'Pinot Noir') AND score > '90';",
+    "required_tables": [
+      "wine"
+    ],
+    "required_columns": [
+      "wine.winery",
+      "wine.grape",
+      "wine.score"
+    ],
+    "selected_doc_ids": [
+      "287-0",
+      "249-0"
+    ],
+    "predicates_parsed": [
+      [
+        "score",
+        ">",
+        "90"
+      ]
+    ],
+    "candidate_count": 500,
+    "selected_doc_word_counts": {
+      "287-0": 60,
+      "249-0": 61
+    }
+  }
+]

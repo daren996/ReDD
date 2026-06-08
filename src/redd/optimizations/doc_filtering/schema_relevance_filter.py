@@ -258,6 +258,24 @@ class SchemaRelevanceFilter(DocFilterBase):
                         ),
                     },
                 )
+
+        if float(self.target_recall) >= 1.0 - 1e-6:
+            kept_count = len(doc_ids) - len(metadata_excluded_doc_ids)
+            return FilterResult(
+                excluded_doc_ids=metadata_excluded_doc_ids,
+                metadata={
+                    "filter_name": self._name,
+                    "query_id": query_id,
+                    "threshold": None,
+                    "is_calibrated": False,
+                    "target_recall": self.target_recall,
+                    "num_docs_input": len(doc_ids),
+                    "num_docs_excluded": len(metadata_excluded_doc_ids),
+                    "num_docs_kept": kept_count,
+                    **source_table_metadata,
+                    "guarantee": "Target recall is effectively 1.0; embedding filter skipped.",
+                },
+            )
         
         # Get query text if not provided
         if query_text is None:

@@ -10,7 +10,7 @@ from pathlib import Path
 
 EXPERIMENT_IDS = [
     "table1_dataset_setup",
-    "table2_data_population_accuracy",
+    "table2_data_extraction_accuracy",
     "table2_cuad_chunk_merge",
     "table3_false_positive_overhead",
     "sec623_alpha_threshold_effect",

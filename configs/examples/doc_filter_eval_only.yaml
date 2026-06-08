@@ -45,7 +45,7 @@ stages:
     enabled: true
     schema_source: ground_truth
     oracle: ground_truth
-    document_filtering:
+    doc_filter:
       enabled: true
       filter_type: schema_relevance
       target_recall: 0.95

@@ -1,0 +1,48 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_ablation_multi.bird_debit_card",
+  "queries": [
+    {
+      "query_id": "Q_bird_debit_card_1",
+      "question": "What amount was recorded for the transaction at gas station 1119?",
+      "sql": "SELECT amount FROM transactions_1k WHERE gas_station_id = '1119';",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.gas_station_id",
+        "transactions_1k.amount"
+      ],
+      "output_columns": [
+        "transactions_1k.amount"
+      ],
+      "tags": [
+        "ablation",
+        "predicate",
+        "multi_dataset"
+      ],
+      "difficulty": "controlled"
+    },
+    {
+      "query_id": "Q_bird_debit_card_2",
+      "question": "Which customer id was recorded for the transaction at gas station 1119?",
+      "sql": "SELECT customer_id FROM transactions_1k WHERE gas_station_id = '1119';",
+      "required_tables": [
+        "transactions_1k"
+      ],
+      "required_columns": [
+        "transactions_1k.gas_station_id",
+        "transactions_1k.customer_id"
+      ],
+      "output_columns": [
+        "transactions_1k.customer_id"
+      ],
+      "tags": [
+        "ablation",
+        "predicate",
+        "multi_dataset"
+      ],
+      "difficulty": "controlled"
+    }
+  ]
+}

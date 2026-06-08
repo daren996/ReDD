@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.spider.soccer_1",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List name from league.",
+      "sql": "SELECT name FROM league;",
+      "required_tables": [
+        "league"
+      ],
+      "required_columns": [
+        "league.name"
+      ],
+      "output_columns": [
+        "league.name"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "spider.soccer_1",
+      "dataset_id": "deepseek_aligned.spider.soccer_1"
+    }
+  ]
+}

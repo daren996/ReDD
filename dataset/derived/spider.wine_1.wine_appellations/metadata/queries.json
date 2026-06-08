@@ -3,36 +3,4513 @@
   "dataset_id": "spider.wine_1.wine_appellations",
   "queries": [
     {
-      "query_id": "Q1",
-      "question": "",
-      "sql": "",
+      "query_id": "Q_join_appellation_wines_appellation_wines_production_volume_003_111",
+      "question": "List region name from appellation records linked to wines where wines production volume is at most 111.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"production_volume\" <= 111;",
       "required_tables": [
         "appellation",
         "wines"
       ],
       "required_columns": [
         "appellation.appellation",
+        "wines.appellation",
         "appellation.region_name",
-        "appellation.main_location",
-        "appellation.ava_status",
-        "appellation.terroir_description",
-        "wines.winery_name",
-        "wines.wine_name",
-        "wines.vintage_year",
-        "wines.region",
-        "wines.vineyard_name",
-        "wines.price",
-        "wines.score",
-        "wines.production_volume",
-        "wines.drinking_window",
-        "wines.grape_variety",
-        "wines.appellation"
+        "wines.production_volume"
       ],
       "output_columns": [
-        "appellation.appellation"
+        "appellation.region_name"
       ],
-      "tags": [],
-      "difficulty": null
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03052064631956912,
+        "result_docs": 17,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": "<=",
+        "value": "111",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_production_volume_003_111",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 17,
+        "profile_all_required_cells": 34,
+        "profile_all_relevant_doc_rate": 0.03052064631956912,
+        "profile_eval_relevant_docs": 17,
+        "profile_eval_required_cells": 34,
+        "profile_eval_relevant_doc_rate": 0.03195488721804511,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_003_reserve",
+      "question": "List region name from appellation records linked to wines where wines wine name equals Reserve.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" = 'Reserve';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03052064631956912,
+        "result_docs": 17,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "=",
+        "value": "Reserve",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_003_reserve",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 17,
+        "profile_all_required_cells": 34,
+        "profile_all_relevant_doc_rate": 0.03052064631956912,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.02819548872180451,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_appellation_value_003_sta_rita_hills",
+      "question": "List wine name from wines where appellation equals Sta. Rita Hills.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"appellation\" = 'Sta. Rita Hills';",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.appellation",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03052064631956912,
+        "actual_table_doc_coverage": 0.034,
+        "result_docs": 17,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.appellation",
+        "operator": "=",
+        "value": "Sta. Rita Hills",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_appellation_value_003_sta_rita_hills",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 17,
+        "profile_all_required_cells": 34,
+        "profile_all_relevant_doc_rate": 0.03052064631956912,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 30,
+        "profile_eval_relevant_doc_rate": 0.02819548872180451,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_appellation_region_name_value_003_central_coast",
+      "question": "List main location from appellation where region name equals Central Coast.",
+      "sql": "SELECT \"main_location\" FROM \"appellation\" WHERE \"region_name\" = 'Central Coast';",
+      "required_tables": [
+        "appellation"
+      ],
+      "required_columns": [
+        "appellation.region_name",
+        "appellation.main_location"
+      ],
+      "output_columns": [
+        "appellation.main_location"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.025134649910233394,
+        "actual_table_doc_coverage": 0.24561403508771928,
+        "result_docs": 14,
+        "total_docs": 557,
+        "table_total_docs": 57,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.region_name",
+        "operator": "=",
+        "value": "Central Coast",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_appellation_region_name_value_003_central_coast",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 14,
+        "profile_all_required_cells": 28,
+        "profile_all_relevant_doc_rate": 0.025134649910233394,
+        "profile_eval_relevant_docs": 14,
+        "profile_eval_required_cells": 28,
+        "profile_eval_relevant_doc_rate": 0.02631578947368421,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_winery_name_003_carlisle",
+      "question": "List region name from appellation records linked to wines where wines winery name equals Carlisle.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"winery_name\" = 'Carlisle';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.winery_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03052064631956912,
+        "result_docs": 17,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.winery_name",
+        "operator": "=",
+        "value": "Carlisle",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_winery_name_003_carlisle",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 17,
+        "profile_all_required_cells": 34,
+        "profile_all_relevant_doc_rate": 0.03052064631956912,
+        "profile_eval_relevant_docs": 16,
+        "profile_eval_required_cells": 32,
+        "profile_eval_relevant_doc_rate": 0.03007518796992481,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_price_003_135",
+      "question": "List region name from appellation records linked to wines where wines price is at least 135.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"price\" >= 135;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.price"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.02872531418312388,
+        "result_docs": 16,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": ">=",
+        "value": "135",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_price_003_135",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 16,
+        "profile_all_required_cells": 32,
+        "profile_all_relevant_doc_rate": 0.02872531418312388,
+        "profile_eval_relevant_docs": 14,
+        "profile_eval_required_cells": 28,
+        "profile_eval_relevant_doc_rate": 0.02631578947368421,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_score_003_84",
+      "question": "List region name from appellation records linked to wines where wines score is at most 84.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"score\" <= 84;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.score"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03590664272890485,
+        "result_docs": 20,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": "<=",
+        "value": "84",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_score_003_84",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 20,
+        "profile_all_required_cells": 40,
+        "profile_all_relevant_doc_rate": 0.03590664272890485,
+        "profile_eval_relevant_docs": 18,
+        "profile_eval_required_cells": 36,
+        "profile_eval_relevant_doc_rate": 0.03383458646616541,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_003_2004",
+      "question": "List region name from appellation records linked to wines where wines vintage year is at most 2004.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"vintage_year\" <= 2004;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.vintage_year"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.019748653500897665,
+        "result_docs": 11,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.vintage_year",
+        "operator": "<=",
+        "value": "2004",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_003_2004",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 11,
+        "profile_all_required_cells": 22,
+        "profile_all_relevant_doc_rate": 0.019748653500897665,
+        "profile_eval_relevant_docs": 10,
+        "profile_eval_required_cells": 20,
+        "profile_eval_relevant_doc_rate": 0.018796992481203006,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_price_005_12",
+      "question": "List region name from appellation records linked to wines where wines price is at most 12.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"price\" <= 12;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.price"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.04847396768402154,
+        "result_docs": 27,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": "<=",
+        "value": "12",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_price_005_12",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 27,
+        "profile_all_required_cells": 54,
+        "profile_all_relevant_doc_rate": 0.04847396768402154,
+        "profile_eval_relevant_docs": 24,
+        "profile_eval_required_cells": 48,
+        "profile_eval_relevant_doc_rate": 0.045112781954887216,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_production_volume_005_30000",
+      "question": "List region name from appellation records linked to wines where wines production volume is at least 30000.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"production_volume\" >= 30000;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.production_volume"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.04847396768402154,
+        "result_docs": 27,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": ">=",
+        "value": "30000",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_production_volume_005_30000",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 27,
+        "profile_all_required_cells": 54,
+        "profile_all_relevant_doc_rate": 0.04847396768402154,
+        "profile_eval_relevant_docs": 26,
+        "profile_eval_required_cells": 52,
+        "profile_eval_relevant_doc_rate": 0.04887218045112782,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_vintage_year_value_005_2005",
+      "question": "List wine name from wines where vintage year equals 2005.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"vintage_year\" = 2005;",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.vintage_year",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05026929982046679,
+        "actual_table_doc_coverage": 0.056,
+        "result_docs": 28,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.vintage_year",
+        "operator": "=",
+        "value": "2005",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_vintage_year_value_005_2005",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 28,
+        "profile_all_required_cells": 56,
+        "profile_all_relevant_doc_rate": 0.05026929982046679,
+        "profile_eval_relevant_docs": 27,
+        "profile_eval_required_cells": 54,
+        "profile_eval_relevant_doc_rate": 0.05075187969924812,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_appellation_region_name_value_005_north_coast",
+      "question": "List main location from appellation where region name equals North Coast.",
+      "sql": "SELECT \"main_location\" FROM \"appellation\" WHERE \"region_name\" = 'North Coast';",
+      "required_tables": [
+        "appellation"
+      ],
+      "required_columns": [
+        "appellation.region_name",
+        "appellation.main_location"
+      ],
+      "output_columns": [
+        "appellation.main_location"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05565529622980251,
+        "actual_table_doc_coverage": 0.543859649122807,
+        "result_docs": 31,
+        "total_docs": 557,
+        "table_total_docs": 57,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.region_name",
+        "operator": "=",
+        "value": "North Coast",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_appellation_region_name_value_005_north_coast",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 31,
+        "profile_all_required_cells": 62,
+        "profile_all_relevant_doc_rate": 0.05565529622980251,
+        "profile_eval_relevant_docs": 29,
+        "profile_eval_required_cells": 58,
+        "profile_eval_relevant_doc_rate": 0.05451127819548872,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_005_zinfandel",
+      "question": "List region name from appellation records linked to wines where wines wine name equals Zinfandel.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" = 'Zinfandel';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.04847396768402154,
+        "result_docs": 27,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "=",
+        "value": "Zinfandel",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_005_zinfandel",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 27,
+        "profile_all_required_cells": 53,
+        "profile_all_relevant_doc_rate": 0.04847396768402154,
+        "profile_eval_relevant_docs": 23,
+        "profile_eval_required_cells": 45,
+        "profile_eval_relevant_doc_rate": 0.043233082706766915,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_score_005_85",
+      "question": "List region name from appellation records linked to wines where wines score is at most 85.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"score\" <= 85;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.score"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05745062836624776,
+        "result_docs": 32,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": "<=",
+        "value": "85",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_score_005_85",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 32,
+        "profile_all_required_cells": 64,
+        "profile_all_relevant_doc_rate": 0.05745062836624776,
+        "profile_eval_relevant_docs": 28,
+        "profile_eval_required_cells": 56,
+        "profile_eval_relevant_doc_rate": 0.05263157894736842,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_winery_name_005_kosta_browne_loring",
+      "question": "List region name from appellation records linked to wines where wines winery name is one of Kosta Browne, Loring.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"winery_name\" IN ('Kosta Browne', 'Loring');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.winery_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05745062836624776,
+        "result_docs": 32,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.winery_name",
+        "operator": "IN",
+        "value": [
+          "Kosta Browne",
+          "Loring"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_winery_name_005_kosta_browne_loring",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 32,
+        "profile_all_required_cells": 64,
+        "profile_all_relevant_doc_rate": 0.05745062836624776,
+        "profile_eval_relevant_docs": 31,
+        "profile_eval_required_cells": 62,
+        "profile_eval_relevant_doc_rate": 0.05827067669172932,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_appellation_value_005_california",
+      "question": "List wine name from wines where appellation equals California.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"appellation\" = 'California';",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.appellation",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.05206463195691203,
+        "actual_table_doc_coverage": 0.058,
+        "result_docs": 29,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.appellation",
+        "operator": "=",
+        "value": "California",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_appellation_value_005_california",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 29,
+        "profile_all_required_cells": 58,
+        "profile_all_relevant_doc_rate": 0.05206463195691203,
+        "profile_eval_relevant_docs": 27,
+        "profile_eval_required_cells": 54,
+        "profile_eval_relevant_doc_rate": 0.05075187969924812,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_010_2005",
+      "question": "List region name from appellation records linked to wines where wines vintage year is at most 2005.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"vintage_year\" <= 2005;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.vintage_year"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.10053859964093358,
+        "result_docs": 56,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.vintage_year",
+        "operator": "<=",
+        "value": "2005",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_010_2005",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 56,
+        "profile_all_required_cells": 112,
+        "profile_all_relevant_doc_rate": 0.10053859964093358,
+        "profile_eval_relevant_docs": 52,
+        "profile_eval_required_cells": 104,
+        "profile_eval_relevant_doc_rate": 0.09774436090225563,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_price_010_16",
+      "question": "List region name from appellation records linked to wines where wines price is at most 16.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"price\" <= 16;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.price"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.09874326750448834,
+        "result_docs": 55,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": "<=",
+        "value": "16",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_price_010_16",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 55,
+        "profile_all_required_cells": 110,
+        "profile_all_relevant_doc_rate": 0.09874326750448834,
+        "profile_eval_relevant_docs": 51,
+        "profile_eval_required_cells": 102,
+        "profile_eval_relevant_doc_rate": 0.09586466165413533,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_appellation_region_name_in_010_north_coast_central",
+      "question": "List main location from appellation where region name is one of North Coast, Central Coast, Sierra Foothills, Santa Cruz Mountains, and 2 more.",
+      "sql": "SELECT \"main_location\" FROM \"appellation\" WHERE \"region_name\" IN ('North Coast', 'Central Coast', 'Sierra Foothills', 'Santa Cruz Mountains', 'Central Valley', 'California');",
+      "required_tables": [
+        "appellation"
+      ],
+      "required_columns": [
+        "appellation.region_name",
+        "appellation.main_location"
+      ],
+      "output_columns": [
+        "appellation.main_location"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.10053859964093358,
+        "actual_table_doc_coverage": 0.9824561403508771,
+        "result_docs": 56,
+        "total_docs": 557,
+        "table_total_docs": 57,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.region_name",
+        "operator": "IN",
+        "value": [
+          "North Coast",
+          "Central Coast",
+          "Sierra Foothills",
+          "Santa Cruz Mountains",
+          "Central Valley",
+          "California"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_appellation_region_name_in_010_north_coast_central",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 56,
+        "profile_all_required_cells": 112,
+        "profile_all_relevant_doc_rate": 0.10053859964093358,
+        "profile_eval_relevant_docs": 52,
+        "profile_eval_required_cells": 104,
+        "profile_eval_relevant_doc_rate": 0.09774436090225563,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_production_volume_value_010_204",
+      "question": "List wine name from wines where production volume is at most 204.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"production_volume\" <= 204;",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.production_volume",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.10053859964093358,
+        "actual_table_doc_coverage": 0.112,
+        "result_docs": 56,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": "<=",
+        "value": "204",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_production_volume_value_010_204",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 56,
+        "profile_all_required_cells": 112,
+        "profile_all_relevant_doc_rate": 0.10053859964093358,
+        "profile_eval_relevant_docs": 54,
+        "profile_eval_required_cells": 108,
+        "profile_eval_relevant_doc_rate": 0.10150375939849623,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_010_chardonnay",
+      "question": "List region name from appellation records linked to wines where wines wine name equals Chardonnay.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" = 'Chardonnay';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.10771992818671454,
+        "result_docs": 60,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "=",
+        "value": "Chardonnay",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_010_chardonnay",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 60,
+        "profile_all_required_cells": 120,
+        "profile_all_relevant_doc_rate": 0.10771992818671454,
+        "profile_eval_relevant_docs": 58,
+        "profile_eval_required_cells": 116,
+        "profile_eval_relevant_doc_rate": 0.10902255639097744,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_winery_name_010_kosta_browne_loring",
+      "question": "List region name from appellation records linked to wines where wines winery name is one of Kosta Browne, Loring, Rosenblum.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"winery_name\" IN ('Kosta Browne', 'Loring', 'Rosenblum');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.winery_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.09156193895870736,
+        "result_docs": 51,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.winery_name",
+        "operator": "IN",
+        "value": [
+          "Kosta Browne",
+          "Loring",
+          "Rosenblum"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_winery_name_010_kosta_browne_loring",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 51,
+        "profile_all_required_cells": 102,
+        "profile_all_relevant_doc_rate": 0.09156193895870736,
+        "profile_eval_relevant_docs": 50,
+        "profile_eval_required_cells": 100,
+        "profile_eval_relevant_doc_rate": 0.09398496240601503,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_score_010_86",
+      "question": "List region name from appellation records linked to wines where wines score is at most 86.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"score\" <= 86;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.score"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.12567324955116696,
+        "result_docs": 70,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": "<=",
+        "value": "86",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_score_010_86",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 70,
+        "profile_all_required_cells": 140,
+        "profile_all_relevant_doc_rate": 0.12567324955116696,
+        "profile_eval_relevant_docs": 66,
+        "profile_eval_required_cells": 132,
+        "profile_eval_relevant_doc_rate": 0.12406015037593984,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_appellation_ava_status_in_010_yes_no",
+      "question": "List region name from appellation where ava status is one of Yes, No.",
+      "sql": "SELECT \"region_name\" FROM \"appellation\" WHERE \"ava_status\" IN ('Yes', 'No');",
+      "required_tables": [
+        "appellation"
+      ],
+      "required_columns": [
+        "appellation.ava_status",
+        "appellation.region_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.10233393177737882,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 57,
+        "total_docs": 557,
+        "table_total_docs": 57,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.ava_status",
+        "operator": "IN",
+        "value": [
+          "Yes",
+          "No"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_appellation_ava_status_in_010_yes_no",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 57,
+        "profile_all_required_cells": 113,
+        "profile_all_relevant_doc_rate": 0.10233393177737882,
+        "profile_eval_relevant_docs": 53,
+        "profile_eval_required_cells": 105,
+        "profile_eval_relevant_doc_rate": 0.09962406015037593,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_price_020_65",
+      "question": "List region name from appellation records linked to wines where wines price is at least 65.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"price\" >= 65;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.price"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.1992818671454219,
+        "result_docs": 111,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": ">=",
+        "value": "65",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_price_020_65",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 111,
+        "profile_all_required_cells": 222,
+        "profile_all_relevant_doc_rate": 0.1992818671454219,
+        "profile_eval_relevant_docs": 101,
+        "profile_eval_required_cells": 202,
+        "profile_eval_relevant_doc_rate": 0.18984962406015038,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_production_volume_020_270",
+      "question": "List region name from appellation records linked to wines where wines production volume is at most 270.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"production_volume\" <= 270;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.production_volume"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.1992818671454219,
+        "result_docs": 111,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": "<=",
+        "value": "270",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_production_volume_020_270",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 111,
+        "profile_all_required_cells": 222,
+        "profile_all_relevant_doc_rate": 0.1992818671454219,
+        "profile_eval_relevant_docs": 103,
+        "profile_eval_required_cells": 206,
+        "profile_eval_relevant_doc_rate": 0.19360902255639098,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_score_value_020_93",
+      "question": "List wine name from wines where score is at least 93.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"score\" >= 93;",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.score",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.20107719928186715,
+        "actual_table_doc_coverage": 0.224,
+        "result_docs": 112,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": ">=",
+        "value": "93",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_score_value_020_93",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 112,
+        "profile_all_required_cells": 224,
+        "profile_all_relevant_doc_rate": 0.20107719928186715,
+        "profile_eval_relevant_docs": 106,
+        "profile_eval_required_cells": 212,
+        "profile_eval_relevant_doc_rate": 0.19924812030075187,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_wines_appellation_region_name_020_central_coast",
+      "question": "List wine name from wines records linked to appellation where appellation region name equals Central Coast.",
+      "sql": "SELECT \"wines\".\"wine_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"appellation\".\"region_name\" = 'Central Coast';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "wines.wine_name",
+        "appellation.region_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.1992818671454219,
+        "result_docs": 111,
+        "total_docs": 557,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.region_name",
+        "operator": "=",
+        "value": "Central Coast",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_wines_appellation_region_name_020_central_coast",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 111,
+        "profile_all_required_cells": 222,
+        "profile_all_relevant_doc_rate": 0.1992818671454219,
+        "profile_eval_relevant_docs": 108,
+        "profile_eval_required_cells": 216,
+        "profile_eval_relevant_doc_rate": 0.20300751879699247,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_winery_name_020_kosta_browne_loring",
+      "question": "List region name from appellation records linked to wines where wines winery name is one of Kosta Browne, Loring, Rosenblum, Carlisle, and 7 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"winery_name\" IN ('Kosta Browne', 'Loring', 'Rosenblum', 'Carlisle', 'A.P.Vin', 'DuMOL', 'Sine Qua Non', 'Brander', 'Kistler', 'Darioush', 'Sbragia Family');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.winery_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19569120287253142,
+        "result_docs": 109,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.winery_name",
+        "operator": "IN",
+        "value": [
+          "Kosta Browne",
+          "Loring",
+          "Rosenblum",
+          "Carlisle",
+          "A.P.Vin",
+          "DuMOL",
+          "Sine Qua Non",
+          "Brander",
+          "Kistler",
+          "Darioush",
+          "Sbragia Family"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_winery_name_020_kosta_browne_loring",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 109,
+        "profile_all_required_cells": 218,
+        "profile_all_relevant_doc_rate": 0.19569120287253142,
+        "profile_eval_relevant_docs": 104,
+        "profile_eval_required_cells": 208,
+        "profile_eval_relevant_doc_rate": 0.19548872180451127,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_020_chardonnay_pinot_no",
+      "question": "List region name from appellation records linked to wines where wines wine name is one of Chardonnay, Pinot Noir.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" IN ('Chardonnay', 'Pinot Noir');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.17773788150807898,
+        "result_docs": 99,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "IN",
+        "value": [
+          "Chardonnay",
+          "Pinot Noir"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_020_chardonnay_pinot_no",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.17773788150807898,
+        "profile_eval_relevant_docs": 96,
+        "profile_eval_required_cells": 192,
+        "profile_eval_relevant_doc_rate": 0.18045112781954886,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_020_2006",
+      "question": "List region name from appellation records linked to wines where wines vintage year is at most 2006.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"vintage_year\" <= 2006;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.vintage_year"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.28186714542190305,
+        "result_docs": 157,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.vintage_year",
+        "operator": "<=",
+        "value": "2006",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_020_2006",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 157,
+        "profile_all_required_cells": 314,
+        "profile_all_relevant_doc_rate": 0.28186714542190305,
+        "profile_eval_relevant_docs": 147,
+        "profile_eval_required_cells": 294,
+        "profile_eval_relevant_doc_rate": 0.27631578947368424,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_grape_variety_value_020_pinot_noir",
+      "question": "List wine name from wines where grape variety equals Pinot Noir.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"grape_variety\" = 'Pinot Noir';",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.grape_variety",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.19569120287253142,
+        "actual_table_doc_coverage": 0.218,
+        "result_docs": 109,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "=",
+        "value": "Pinot Noir",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_grape_variety_value_020_pinot_noir",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 109,
+        "profile_all_required_cells": 218,
+        "profile_all_relevant_doc_rate": 0.19569120287253142,
+        "profile_eval_relevant_docs": 104,
+        "profile_eval_required_cells": 208,
+        "profile_eval_relevant_doc_rate": 0.19548872180451127,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_production_volume_040_1138",
+      "question": "List region name from appellation records linked to wines where wines production volume is at least 1138.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"production_volume\" >= 1138;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.production_volume"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.400359066427289,
+        "result_docs": 223,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": ">=",
+        "value": "1138",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_production_volume_040_1138",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 223,
+        "profile_all_required_cells": 445,
+        "profile_all_relevant_doc_rate": 0.400359066427289,
+        "profile_eval_relevant_docs": 211,
+        "profile_eval_required_cells": 421,
+        "profile_eval_relevant_doc_rate": 0.3966165413533835,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_040_chardonnay_pinot_no",
+      "question": "List region name from appellation records linked to wines where wines wine name is one of Chardonnay, Pinot Noir, Cabernet Sauvignon, Sauvignon Blanc, and 7 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" IN ('Chardonnay', 'Pinot Noir', 'Cabernet Sauvignon', 'Sauvignon Blanc', 'Zinfandel', 'Syrah', 'Reserve', 'Garys Vineyard', 'Merlot', 'Rosellas Vineyard', 'Carneros');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.3985637342908438,
+        "result_docs": 222,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "IN",
+        "value": [
+          "Chardonnay",
+          "Pinot Noir",
+          "Cabernet Sauvignon",
+          "Sauvignon Blanc",
+          "Zinfandel",
+          "Syrah",
+          "Reserve",
+          "Garys Vineyard",
+          "Merlot",
+          "Rosellas Vineyard",
+          "Carneros"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_040_chardonnay_pinot_no",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 222,
+        "profile_all_required_cells": 443,
+        "profile_all_relevant_doc_rate": 0.3985637342908438,
+        "profile_eval_relevant_docs": 210,
+        "profile_eval_required_cells": 419,
+        "profile_eval_relevant_doc_rate": 0.39473684210526316,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_price_value_040_42",
+      "question": "List wine name from wines where price is at least 42.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"price\" >= 42;",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.price",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.40574506283662476,
+        "actual_table_doc_coverage": 0.452,
+        "result_docs": 226,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": ">=",
+        "value": "42",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_price_value_040_42",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 226,
+        "profile_all_required_cells": 452,
+        "profile_all_relevant_doc_rate": 0.40574506283662476,
+        "profile_eval_relevant_docs": 214,
+        "profile_eval_required_cells": 428,
+        "profile_eval_relevant_doc_rate": 0.40225563909774437,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_score_040_88",
+      "question": "List region name from appellation records linked to wines where wines score is at most 88.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"score\" <= 88;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.score"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.39497307001795334,
+        "result_docs": 220,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": "<=",
+        "value": "88",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_score_040_88",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 220,
+        "profile_all_required_cells": 439,
+        "profile_all_relevant_doc_rate": 0.39497307001795334,
+        "profile_eval_relevant_docs": 203,
+        "profile_eval_required_cells": 405,
+        "profile_eval_relevant_doc_rate": 0.3815789473684211,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_040_2008",
+      "question": "List region name from appellation records linked to wines where wines vintage year is at least 2008.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"vintage_year\" >= 2008;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.vintage_year"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.4129263913824057,
+        "result_docs": 230,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.vintage_year",
+        "operator": ">=",
+        "value": "2008",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_040_2008",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 230,
+        "profile_all_required_cells": 459,
+        "profile_all_relevant_doc_rate": 0.4129263913824057,
+        "profile_eval_relevant_docs": 216,
+        "profile_eval_required_cells": 431,
+        "profile_eval_relevant_doc_rate": 0.40601503759398494,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_winery_name_040_kosta_browne_loring",
+      "question": "List region name from appellation records linked to wines where wines winery name is one of Kosta Browne, Loring, Rosenblum, Carlisle, and 8 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"winery_name\" IN ('Kosta Browne', 'Loring', 'Rosenblum', 'Carlisle', 'A.P.Vin', 'DuMOL', 'Sine Qua Non', 'Brander', 'Kistler', 'Darioush', 'Sbragia Family', 'Siduri');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.winery_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.20466786355475763,
+        "result_docs": 114,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.winery_name",
+        "operator": "IN",
+        "value": [
+          "Kosta Browne",
+          "Loring",
+          "Rosenblum",
+          "Carlisle",
+          "A.P.Vin",
+          "DuMOL",
+          "Sine Qua Non",
+          "Brander",
+          "Kistler",
+          "Darioush",
+          "Sbragia Family",
+          "Siduri"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_winery_name_040_kosta_browne_loring",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 114,
+        "profile_all_required_cells": 228,
+        "profile_all_relevant_doc_rate": 0.20466786355475763,
+        "profile_eval_relevant_docs": 108,
+        "profile_eval_required_cells": 216,
+        "profile_eval_relevant_doc_rate": 0.20300751879699247,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_appellation_in_040_napa_valley_russian",
+      "question": "List wine name from wines where appellation is one of Napa Valley, Russian River Valley, Sonoma Coast, California.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"appellation\" IN ('Napa Valley', 'Russian River Valley', 'Sonoma Coast', 'California');",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.appellation",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.3895870736086176,
+        "actual_table_doc_coverage": 0.434,
+        "result_docs": 217,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.appellation",
+        "operator": "IN",
+        "value": [
+          "Napa Valley",
+          "Russian River Valley",
+          "Sonoma Coast",
+          "California"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_appellation_in_040_napa_valley_russian",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 217,
+        "profile_all_required_cells": 434,
+        "profile_all_relevant_doc_rate": 0.3895870736086176,
+        "profile_eval_relevant_docs": 206,
+        "profile_eval_required_cells": 412,
+        "profile_eval_relevant_doc_rate": 0.38721804511278196,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_grape_variety_in_040_pinot_noir_chardonn",
+      "question": "List wine name from wines where grape variety is one of Pinot Noir, Chardonnay.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"grape_variety\" IN ('Pinot Noir', 'Chardonnay');",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.grape_variety",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.38240574506283664,
+        "actual_table_doc_coverage": 0.426,
+        "result_docs": 213,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "IN",
+        "value": [
+          "Pinot Noir",
+          "Chardonnay"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_grape_variety_in_040_pinot_noir_chardonn",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 213,
+        "profile_all_required_cells": 426,
+        "profile_all_relevant_doc_rate": 0.38240574506283664,
+        "profile_eval_relevant_docs": 205,
+        "profile_eval_required_cells": 410,
+        "profile_eval_relevant_doc_rate": 0.38533834586466165,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_production_volume_060_541",
+      "question": "List region name from appellation records linked to wines where wines production volume is at least 541.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"production_volume\" >= 541;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.production_volume"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.599640933572711,
+        "result_docs": 334,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": ">=",
+        "value": "541",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_production_volume_060_541",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 334,
+        "profile_all_required_cells": 667,
+        "profile_all_relevant_doc_rate": 0.599640933572711,
+        "profile_eval_relevant_docs": 317,
+        "profile_eval_required_cells": 633,
+        "profile_eval_relevant_doc_rate": 0.5958646616541353,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_price_060_42",
+      "question": "List region name from appellation records linked to wines where wines price is at most 42.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"price\" <= 42;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.price"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5978456014362658,
+        "result_docs": 333,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": "<=",
+        "value": "42",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_price_060_42",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 333,
+        "profile_all_required_cells": 665,
+        "profile_all_relevant_doc_rate": 0.5978456014362658,
+        "profile_eval_relevant_docs": 314,
+        "profile_eval_required_cells": 627,
+        "profile_eval_relevant_doc_rate": 0.5902255639097744,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_appellation_in_060_napa_valley_russian",
+      "question": "List wine name from wines where appellation is one of Napa Valley, Russian River Valley, Sonoma Coast, California, and 5 more.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"appellation\" IN ('Napa Valley', 'Russian River Valley', 'Sonoma Coast', 'California', 'Sonoma County', 'Dry Creek Valley', 'Carneros', 'Santa Lucia Highlands', 'Sonoma Valley');",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.appellation",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.599640933572711,
+        "actual_table_doc_coverage": 0.668,
+        "result_docs": 334,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.appellation",
+        "operator": "IN",
+        "value": [
+          "Napa Valley",
+          "Russian River Valley",
+          "Sonoma Coast",
+          "California",
+          "Sonoma County",
+          "Dry Creek Valley",
+          "Carneros",
+          "Santa Lucia Highlands",
+          "Sonoma Valley"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_appellation_in_060_napa_valley_russian",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 334,
+        "profile_all_required_cells": 668,
+        "profile_all_relevant_doc_rate": 0.599640933572711,
+        "profile_eval_relevant_docs": 319,
+        "profile_eval_required_cells": 638,
+        "profile_eval_relevant_doc_rate": 0.599624060150376,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_score_060_90",
+      "question": "List region name from appellation records linked to wines where wines score is at least 90.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"score\" >= 90;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.score"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.5834829443447038,
+        "result_docs": 325,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": ">=",
+        "value": "90",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_score_060_90",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 325,
+        "profile_all_required_cells": 650,
+        "profile_all_relevant_doc_rate": 0.5834829443447038,
+        "profile_eval_relevant_docs": 309,
+        "profile_eval_required_cells": 618,
+        "profile_eval_relevant_doc_rate": 0.5808270676691729,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_060_2007",
+      "question": "List region name from appellation records linked to wines where wines vintage year is at most 2007.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"vintage_year\" <= 2007;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.vintage_year"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.6337522441651705,
+        "result_docs": 353,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.vintage_year",
+        "operator": "<=",
+        "value": "2007",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_060_2007",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 353,
+        "profile_all_required_cells": 706,
+        "profile_all_relevant_doc_rate": 0.6337522441651705,
+        "profile_eval_relevant_docs": 330,
+        "profile_eval_required_cells": 660,
+        "profile_eval_relevant_doc_rate": 0.6203007518796992,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_wines_appellation_region_name_060_north_coast",
+      "question": "List wine name from wines records linked to appellation where appellation region name equals North Coast.",
+      "sql": "SELECT \"wines\".\"wine_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"appellation\".\"region_name\" = 'North Coast';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "wines.wine_name",
+        "appellation.region_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.6894075403949731,
+        "result_docs": 384,
+        "total_docs": 557,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.region_name",
+        "operator": "=",
+        "value": "North Coast",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_wines_appellation_region_name_060_north_coast",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 384,
+        "profile_all_required_cells": 768,
+        "profile_all_relevant_doc_rate": 0.6894075403949731,
+        "profile_eval_relevant_docs": 358,
+        "profile_eval_required_cells": 716,
+        "profile_eval_relevant_doc_rate": 0.6729323308270677,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_060_chardonnay_pinot_no",
+      "question": "List region name from appellation records linked to wines where wines wine name is one of Chardonnay, Pinot Noir, Cabernet Sauvignon, Sauvignon Blanc, and 8 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" IN ('Chardonnay', 'Pinot Noir', 'Cabernet Sauvignon', 'Sauvignon Blanc', 'Zinfandel', 'Syrah', 'Reserve', 'Garys Vineyard', 'Merlot', 'Rosellas Vineyard', 'Carneros', 'Kanzler Vineyard');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.40574506283662476,
+        "result_docs": 226,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "IN",
+        "value": [
+          "Chardonnay",
+          "Pinot Noir",
+          "Cabernet Sauvignon",
+          "Sauvignon Blanc",
+          "Zinfandel",
+          "Syrah",
+          "Reserve",
+          "Garys Vineyard",
+          "Merlot",
+          "Rosellas Vineyard",
+          "Carneros",
+          "Kanzler Vineyard"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_060_chardonnay_pinot_no",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 226,
+        "profile_all_required_cells": 451,
+        "profile_all_relevant_doc_rate": 0.40574506283662476,
+        "profile_eval_relevant_docs": 214,
+        "profile_eval_required_cells": 427,
+        "profile_eval_relevant_doc_rate": 0.40225563909774437,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_wines_appellation_ava_status_060_yes",
+      "question": "List wine name from wines records linked to appellation where appellation ava status equals Yes.",
+      "sql": "SELECT \"wines\".\"wine_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"appellation\".\"ava_status\" = 'Yes';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "wines.wine_name",
+        "appellation.ava_status"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.8025134649910234,
+        "result_docs": 447,
+        "total_docs": 557,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.ava_status",
+        "operator": "=",
+        "value": "Yes",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_wines_appellation_ava_status_060_yes",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 447,
+        "profile_all_required_cells": 894,
+        "profile_all_relevant_doc_rate": 0.8025134649910234,
+        "profile_eval_relevant_docs": 419,
+        "profile_eval_required_cells": 838,
+        "profile_eval_relevant_doc_rate": 0.7875939849624061,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_production_volume_080_3368",
+      "question": "List region name from appellation records linked to wines where wines production volume is at most 3368.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"production_volume\" <= 3368;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.production_volume"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.800718132854578,
+        "result_docs": 446,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": "<=",
+        "value": "3368",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_production_volume_080_3368",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 446,
+        "profile_all_required_cells": 892,
+        "profile_all_relevant_doc_rate": 0.800718132854578,
+        "profile_eval_relevant_docs": 417,
+        "profile_eval_required_cells": 834,
+        "profile_eval_relevant_doc_rate": 0.7838345864661654,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_price_080_59",
+      "question": "List region name from appellation records linked to wines where wines price is at most 59.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"price\" <= 59;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.price"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.7953321364452424,
+        "result_docs": 443,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": "<=",
+        "value": "59",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_price_080_59",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 443,
+        "profile_all_required_cells": 885,
+        "profile_all_relevant_doc_rate": 0.7953321364452424,
+        "profile_eval_relevant_docs": 417,
+        "profile_eval_required_cells": 833,
+        "profile_eval_relevant_doc_rate": 0.7838345864661654,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_score_value_080_93",
+      "question": "List wine name from wines where score does not equal 93.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"score\" <> 93;",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.score",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.7989228007181328,
+        "actual_table_doc_coverage": 0.89,
+        "result_docs": 445,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": "!=",
+        "value": "93",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_score_value_080_93",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 445,
+        "profile_all_required_cells": 890,
+        "profile_all_relevant_doc_rate": 0.7989228007181328,
+        "profile_eval_relevant_docs": 427,
+        "profile_eval_required_cells": 854,
+        "profile_eval_relevant_doc_rate": 0.8026315789473685,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_080_chardonnay_pinot_no",
+      "question": "List region name from appellation records linked to wines where wines wine name is not one of Chardonnay, Pinot Noir, Cabernet Sauvignon.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" NOT IN ('Chardonnay', 'Pinot Noir', 'Cabernet Sauvignon');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8150807899461401,
+        "result_docs": 454,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "NOT IN",
+        "value": [
+          "Chardonnay",
+          "Pinot Noir",
+          "Cabernet Sauvignon"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_080_chardonnay_pinot_no",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 454,
+        "profile_all_required_cells": 907,
+        "profile_all_relevant_doc_rate": 0.8150807899461401,
+        "profile_eval_relevant_docs": 422,
+        "profile_eval_required_cells": 843,
+        "profile_eval_relevant_doc_rate": 0.793233082706767,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_080_2008",
+      "question": "List region name from appellation records linked to wines where wines vintage year is at most 2008.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"vintage_year\" <= 2008;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.vintage_year"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8779174147217235,
+        "result_docs": 489,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.vintage_year",
+        "operator": "<=",
+        "value": "2008",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_vintage_year_080_2008",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 489,
+        "profile_all_required_cells": 977,
+        "profile_all_relevant_doc_rate": 0.8779174147217235,
+        "profile_eval_relevant_docs": 458,
+        "profile_eval_required_cells": 915,
+        "profile_eval_relevant_doc_rate": 0.8609022556390977,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_wines_appellation_region_name_080_north_coast_central",
+      "question": "List wine name from wines records linked to appellation where appellation region name is one of North Coast, Central Coast.",
+      "sql": "SELECT \"wines\".\"wine_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"appellation\".\"region_name\" IN ('North Coast', 'Central Coast');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "wines.wine_name",
+        "appellation.region_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8886894075403949,
+        "result_docs": 495,
+        "total_docs": 557,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.region_name",
+        "operator": "IN",
+        "value": [
+          "North Coast",
+          "Central Coast"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_wines_appellation_region_name_080_north_coast_central",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 495,
+        "profile_all_required_cells": 990,
+        "profile_all_relevant_doc_rate": 0.8886894075403949,
+        "profile_eval_relevant_docs": 466,
+        "profile_eval_required_cells": 932,
+        "profile_eval_relevant_doc_rate": 0.8759398496240601,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_appellation_value_080_russian_river_valley",
+      "question": "List wine name from wines where appellation does not equal Russian River Valley.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"appellation\" <> 'Russian River Valley';",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.appellation",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8025134649910234,
+        "actual_table_doc_coverage": 0.894,
+        "result_docs": 447,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.appellation",
+        "operator": "!=",
+        "value": "Russian River Valley",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_appellation_value_080_russian_river_valley",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 447,
+        "profile_all_required_cells": 894,
+        "profile_all_relevant_doc_rate": 0.8025134649910234,
+        "profile_eval_relevant_docs": 431,
+        "profile_eval_required_cells": 862,
+        "profile_eval_relevant_doc_rate": 0.8101503759398496,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_winery_name_not_in_080_kosta_browne_loring",
+      "question": "List wine name from wines where winery name is not one of Kosta Browne, Loring, Rosenblum, Carlisle, and 1 more.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"winery_name\" NOT IN ('Kosta Browne', 'Loring', 'Rosenblum', 'Carlisle', 'A.P.Vin');",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.winery_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8025134649910234,
+        "actual_table_doc_coverage": 0.894,
+        "result_docs": 447,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.winery_name",
+        "operator": "NOT IN",
+        "value": [
+          "Kosta Browne",
+          "Loring",
+          "Rosenblum",
+          "Carlisle",
+          "A.P.Vin"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_winery_name_not_in_080_kosta_browne_loring",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 447,
+        "profile_all_required_cells": 894,
+        "profile_all_relevant_doc_rate": 0.8025134649910234,
+        "profile_eval_relevant_docs": 428,
+        "profile_eval_required_cells": 856,
+        "profile_eval_relevant_doc_rate": 0.8045112781954887,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_drinking_window_in_100_now_2012_2011",
+      "question": "List wine name from wines where drinking window is one of now, 2012, 2011, 2010, and 4 more.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"drinking_window\" IN ('now', 2012, 2011, 2010, 2013, 2008, 2001, 2015);",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.drinking_window",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.8976660682226212,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 500,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.drinking_window",
+        "operator": "IN",
+        "value": [
+          "now",
+          "2012",
+          "2011",
+          "2010",
+          "2013",
+          "2008",
+          "2001",
+          "2015"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_drinking_window_in_100_now_2012_2011",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 500,
+        "profile_all_required_cells": 1000,
+        "profile_all_relevant_doc_rate": 0.8976660682226212,
+        "profile_eval_relevant_docs": 479,
+        "profile_eval_required_cells": 958,
+        "profile_eval_relevant_doc_rate": 0.900375939849624,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_score_100_98",
+      "question": "List region name from appellation records linked to wines where wines score is at most 98.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"score\" <= 98;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.score"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 1.0,
+        "result_docs": 557,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.score",
+        "operator": "<=",
+        "value": "98",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_score_100_98",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 557,
+        "profile_all_required_cells": 1113,
+        "profile_all_relevant_doc_rate": 1.0,
+        "profile_eval_relevant_docs": 522,
+        "profile_eval_required_cells": 1043,
+        "profile_eval_relevant_doc_rate": 0.981203007518797,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_wines_appellation_region_name_100_north_coast_central",
+      "question": "List wine name from wines records linked to appellation where appellation region name is one of North Coast, Central Coast, California, Sierra Foothills, and 2 more.",
+      "sql": "SELECT \"wines\".\"wine_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"appellation\".\"region_name\" IN ('North Coast', 'Central Coast', 'California', 'Sierra Foothills', 'Santa Cruz Mountains', 'Central Valley');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "wines.wine_name",
+        "appellation.region_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9964093357271095,
+        "result_docs": 555,
+        "total_docs": 557,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.region_name",
+        "operator": "IN",
+        "value": [
+          "North Coast",
+          "Central Coast",
+          "California",
+          "Sierra Foothills",
+          "Santa Cruz Mountains",
+          "Central Valley"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_wines_appellation_region_name_100_north_coast_central",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 555,
+        "profile_all_required_cells": 1110,
+        "profile_all_relevant_doc_rate": 0.9964093357271095,
+        "profile_eval_relevant_docs": 520,
+        "profile_eval_required_cells": 1040,
+        "profile_eval_relevant_doc_rate": 0.9774436090225563,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_production_volume_100_250000",
+      "question": "List region name from appellation records linked to wines where wines production volume is at most 250000.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"production_volume\" <= 250000;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.production_volume"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9694793536804309,
+        "result_docs": 540,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.production_volume",
+        "operator": "<=",
+        "value": "250000",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_production_volume_100_250000",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 540,
+        "profile_all_required_cells": 1079,
+        "profile_all_relevant_doc_rate": 0.9694793536804309,
+        "profile_eval_relevant_docs": 507,
+        "profile_eval_required_cells": 1013,
+        "profile_eval_relevant_doc_rate": 0.9530075187969925,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_drinking_window_003_now_2012_2011",
+      "question": "List region name from appellation records linked to wines where wines drinking window is not one of now, 2012, 2011.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"drinking_window\" NOT IN ('now', 2012, 2011);",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.drinking_window"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03052064631956912,
+        "result_docs": 17,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.drinking_window",
+        "operator": "NOT IN",
+        "value": [
+          "now",
+          "2012",
+          "2011"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_drinking_window_003_now_2012_2011",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 17,
+        "profile_all_required_cells": 34,
+        "profile_all_relevant_doc_rate": 0.03052064631956912,
+        "profile_eval_relevant_docs": 17,
+        "profile_eval_required_cells": 34,
+        "profile_eval_relevant_doc_rate": 0.03195488721804511,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_003_grenache",
+      "question": "List region name from appellation records linked to wines where wines grape variety equals Grenache.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"grape_variety\" = 'Grenache';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.grape_variety"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.03052064631956912,
+        "result_docs": 17,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "=",
+        "value": "Grenache",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_003_grenache",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 17,
+        "profile_all_required_cells": 34,
+        "profile_all_relevant_doc_rate": 0.03052064631956912,
+        "profile_eval_relevant_docs": 16,
+        "profile_eval_required_cells": 32,
+        "profile_eval_relevant_doc_rate": 0.03007518796992481,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_appellation_appellation_in_003_alexander_valley_na",
+      "question": "List region name from appellation where appellation is one of Alexander Valley, Napa Valley, North Coast, Oakville, and 12 more.",
+      "sql": "SELECT \"region_name\" FROM \"appellation\" WHERE \"appellation\" IN ('Alexander Valley', 'Napa Valley', 'North Coast', 'Oakville', 'Paso Robles', 'Red Hills Lake County', 'Rockpile', 'Russian River Valley', 'Rutherford', 'San Luis Obispo County', 'Santa Barbara County', 'Santa Cruz Mountains', 'Santa Lucia Highlands', 'Santa Maria Valley', 'Santa Ynez Valley', 'Shenandoah Valley');",
+      "required_tables": [
+        "appellation"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "appellation.region_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.02872531418312388,
+        "actual_table_doc_coverage": 0.2807017543859649,
+        "result_docs": 16,
+        "total_docs": 557,
+        "table_total_docs": 57,
+        "predicate_table": "appellation",
+        "predicate_column": "appellation.appellation",
+        "operator": "IN",
+        "value": [
+          "Alexander Valley",
+          "Napa Valley",
+          "North Coast",
+          "Oakville",
+          "Paso Robles",
+          "Red Hills Lake County",
+          "Rockpile",
+          "Russian River Valley",
+          "Rutherford",
+          "San Luis Obispo County",
+          "Santa Barbara County",
+          "Santa Cruz Mountains",
+          "Santa Lucia Highlands",
+          "Santa Maria Valley",
+          "Santa Ynez Valley",
+          "Shenandoah Valley"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_appellation_appellation_in_003_alexander_valley_na",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 16,
+        "profile_all_required_cells": 32,
+        "profile_all_relevant_doc_rate": 0.02872531418312388,
+        "profile_eval_relevant_docs": 16,
+        "profile_eval_required_cells": 32,
+        "profile_eval_relevant_doc_rate": 0.03007518796992481,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_drinking_window_005_2012",
+      "question": "List region name from appellation records linked to wines where wines drinking window equals 2012.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"drinking_window\" = 2012;",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.drinking_window"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.04129263913824058,
+        "result_docs": 23,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.drinking_window",
+        "operator": "=",
+        "value": "2012",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_drinking_window_005_2012",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 23,
+        "profile_all_required_cells": 46,
+        "profile_all_relevant_doc_rate": 0.04129263913824058,
+        "profile_eval_relevant_docs": 20,
+        "profile_eval_required_cells": 40,
+        "profile_eval_relevant_doc_rate": 0.03759398496240601,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_010_sauvignon_blanc",
+      "question": "List region name from appellation records linked to wines where wines grape variety equals Sauvignon Blanc.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"grape_variety\" = 'Sauvignon Blanc';",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.grape_variety"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "actual_doc_coverage": 0.11310592459605028,
+        "result_docs": 63,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "=",
+        "value": "Sauvignon Blanc",
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_010_sauvignon_blanc",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 63,
+        "profile_all_required_cells": 126,
+        "profile_all_relevant_doc_rate": 0.11310592459605028,
+        "profile_eval_relevant_docs": 57,
+        "profile_eval_required_cells": 114,
+        "profile_eval_relevant_doc_rate": 0.10714285714285714,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_020_pinot_noir_chardonn",
+      "question": "List region name from appellation records linked to wines where wines grape variety is not one of Pinot Noir, Chardonnay, Zinfandel, Cabernet Sauvingnon, and 1 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"grape_variety\" NOT IN ('Pinot Noir', 'Chardonnay', 'Zinfandel', 'Cabernet Sauvingnon', 'Syrah');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.grape_variety"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.18491921005385997,
+        "result_docs": 103,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "NOT IN",
+        "value": [
+          "Pinot Noir",
+          "Chardonnay",
+          "Zinfandel",
+          "Cabernet Sauvingnon",
+          "Syrah"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_020_pinot_noir_chardonn",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 103,
+        "profile_all_required_cells": 206,
+        "profile_all_relevant_doc_rate": 0.18491921005385997,
+        "profile_eval_relevant_docs": 91,
+        "profile_eval_required_cells": 182,
+        "profile_eval_relevant_doc_rate": 0.17105263157894737,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_wines_price_not_in_040_40_45_25_48",
+      "question": "List wine name from wines where price is not one of 40, 45, 25, 48, and 11 more.",
+      "sql": "SELECT \"wine_name\" FROM \"wines\" WHERE \"price\" NOT IN (40, 45, 25, 48, 60, 35, 75, 18, 30, 20, 50, 55, 38, 36, 24);",
+      "required_tables": [
+        "wines"
+      ],
+      "required_columns": [
+        "wines.price",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "wines.wine_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.39497307001795334,
+        "actual_table_doc_coverage": 0.44,
+        "result_docs": 220,
+        "total_docs": 557,
+        "table_total_docs": 500,
+        "predicate_table": "wines",
+        "predicate_column": "wines.price",
+        "operator": "NOT IN",
+        "value": [
+          "40",
+          "45",
+          "25",
+          "48",
+          "60",
+          "35",
+          "75",
+          "18",
+          "30",
+          "20",
+          "50",
+          "55",
+          "38",
+          "36",
+          "24"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_gen_wines_price_not_in_040_40_45_25_48",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 220,
+        "profile_all_required_cells": 440,
+        "profile_all_relevant_doc_rate": 0.39497307001795334,
+        "profile_eval_relevant_docs": 209,
+        "profile_eval_required_cells": 418,
+        "profile_eval_relevant_doc_rate": 0.39285714285714285,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_040_pinot_noir_chardonn",
+      "question": "List region name from appellation records linked to wines where wines grape variety is one of Pinot Noir, Chardonnay.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"grape_variety\" IN ('Pinot Noir', 'Chardonnay');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.grape_variety"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.43447037701974867,
+        "result_docs": 242,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "IN",
+        "value": [
+          "Pinot Noir",
+          "Chardonnay"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_040_pinot_noir_chardonn",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 242,
+        "profile_all_required_cells": 484,
+        "profile_all_relevant_doc_rate": 0.43447037701974867,
+        "profile_eval_relevant_docs": 233,
+        "profile_eval_required_cells": 466,
+        "profile_eval_relevant_doc_rate": 0.43796992481203006,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_winery_name_040_kosta_browne_loring_2",
+      "question": "List region name from appellation records linked to wines where wines winery name is one of Kosta Browne, Loring, Rosenblum, Carlisle, and 12 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"winery_name\" IN ('Kosta Browne', 'Loring', 'Rosenblum', 'Carlisle', 'A.P.Vin', 'DuMOL', 'Sine Qua Non', 'Brander', 'Kistler', 'Darioush', 'Sbragia Family', 'Siduri', 'Peter Michael', 'Paul Hobbs', 'Robert Biale', 'Acacia');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.winery_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.24057450628366248,
+        "result_docs": 134,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.winery_name",
+        "operator": "IN",
+        "value": [
+          "Kosta Browne",
+          "Loring",
+          "Rosenblum",
+          "Carlisle",
+          "A.P.Vin",
+          "DuMOL",
+          "Sine Qua Non",
+          "Brander",
+          "Kistler",
+          "Darioush",
+          "Sbragia Family",
+          "Siduri",
+          "Peter Michael",
+          "Paul Hobbs",
+          "Robert Biale",
+          "Acacia"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_winery_name_040_kosta_browne_loring",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 134,
+        "profile_all_required_cells": 268,
+        "profile_all_relevant_doc_rate": 0.24057450628366248,
+        "profile_eval_relevant_docs": 123,
+        "profile_eval_required_cells": 246,
+        "profile_eval_relevant_doc_rate": 0.231203007518797,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_060_pinot_noir_chardonn",
+      "question": "List region name from appellation records linked to wines where wines grape variety is not one of Pinot Noir, Chardonnay.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"grape_variety\" NOT IN ('Pinot Noir', 'Chardonnay');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.grape_variety"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.6014362657091562,
+        "result_docs": 335,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "NOT IN",
+        "value": [
+          "Pinot Noir",
+          "Chardonnay"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_060_pinot_noir_chardonn",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 335,
+        "profile_all_required_cells": 669,
+        "profile_all_relevant_doc_rate": 0.6014362657091562,
+        "profile_eval_relevant_docs": 308,
+        "profile_eval_required_cells": 615,
+        "profile_eval_relevant_doc_rate": 0.5789473684210527,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_wine_name_060_chardonnay_pinot_no_2",
+      "question": "List region name from appellation records linked to wines where wines wine name is one of Chardonnay, Pinot Noir, Cabernet Sauvignon, Sauvignon Blanc, and 12 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"wine_name\" IN ('Chardonnay', 'Pinot Noir', 'Cabernet Sauvignon', 'Sauvignon Blanc', 'Zinfandel', 'Syrah', 'Reserve', 'Garys Vineyard', 'Merlot', 'Rosellas Vineyard', 'Carneros', 'Kanzler Vineyard', 'Old Vine', 'Beckstoffer To Kalon Vineyard', 'La Cruz Vineyard', 'Home Ranch');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.wine_name"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.43087971274685816,
+        "result_docs": 240,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.wine_name",
+        "operator": "IN",
+        "value": [
+          "Chardonnay",
+          "Pinot Noir",
+          "Cabernet Sauvignon",
+          "Sauvignon Blanc",
+          "Zinfandel",
+          "Syrah",
+          "Reserve",
+          "Garys Vineyard",
+          "Merlot",
+          "Rosellas Vineyard",
+          "Carneros",
+          "Kanzler Vineyard",
+          "Old Vine",
+          "Beckstoffer To Kalon Vineyard",
+          "La Cruz Vineyard",
+          "Home Ranch"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_wine_name_060_chardonnay_pinot_no",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 240,
+        "profile_all_required_cells": 479,
+        "profile_all_relevant_doc_rate": 0.43087971274685816,
+        "profile_eval_relevant_docs": 228,
+        "profile_eval_required_cells": 455,
+        "profile_eval_relevant_doc_rate": 0.42857142857142855,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_080_pinot_noir_chardonn",
+      "question": "List region name from appellation records linked to wines where wines grape variety is one of Pinot Noir, Chardonnay, Zinfandel, Cabernet Sauvingnon, and 1 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"grape_variety\" IN ('Pinot Noir', 'Chardonnay', 'Zinfandel', 'Cabernet Sauvingnon', 'Syrah');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.grape_variety"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.8491921005385996,
+        "result_docs": 473,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "IN",
+        "value": [
+          "Pinot Noir",
+          "Chardonnay",
+          "Zinfandel",
+          "Cabernet Sauvingnon",
+          "Syrah"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_080_pinot_noir_chardonn",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 473,
+        "profile_all_required_cells": 945,
+        "profile_all_relevant_doc_rate": 0.8491921005385996,
+        "profile_eval_relevant_docs": 448,
+        "profile_eval_required_cells": 895,
+        "profile_eval_relevant_doc_rate": 0.8421052631578947,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_100_pinot_noir_chardonn",
+      "question": "List region name from appellation records linked to wines where wines grape variety is one of Pinot Noir, Chardonnay, Zinfandel, Cabernet Sauvingnon, and 12 more.",
+      "sql": "SELECT \"appellation\".\"region_name\" FROM \"appellation\" JOIN \"wines\" ON \"appellation\".\"appellation\" = \"wines\".\"appellation\" WHERE \"wines\".\"grape_variety\" IN ('Pinot Noir', 'Chardonnay', 'Zinfandel', 'Cabernet Sauvingnon', 'Syrah', 'Sauvignon Blanc', 'Grenache', 'Merlot', 'Petite Sirah', 'Cabernet Franc', 'Roussanne', 'Sangiovese', 'Marsanne', 'Malbec', 'Tempranillo', 'Viognier');",
+      "required_tables": [
+        "appellation",
+        "wines"
+      ],
+      "required_columns": [
+        "appellation.appellation",
+        "wines.appellation",
+        "appellation.region_name",
+        "wines.grape_variety"
+      ],
+      "output_columns": [
+        "appellation.region_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.9982046678635548,
+        "result_docs": 556,
+        "total_docs": 557,
+        "predicate_table": "wines",
+        "predicate_column": "wines.grape_variety",
+        "operator": "IN",
+        "value": [
+          "Pinot Noir",
+          "Chardonnay",
+          "Zinfandel",
+          "Cabernet Sauvingnon",
+          "Syrah",
+          "Sauvignon Blanc",
+          "Grenache",
+          "Merlot",
+          "Petite Sirah",
+          "Cabernet Franc",
+          "Roussanne",
+          "Sangiovese",
+          "Marsanne",
+          "Malbec",
+          "Tempranillo",
+          "Viognier"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "appellation",
+          "wines"
+        ],
+        "join_columns": [
+          "appellation.appellation",
+          "wines.appellation"
+        ],
+        "join_shared_values": 57,
+        "join_score": 122.0,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_id": "spider.wine_1.wine_appellations",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.wine_1.wine_appellations",
+        "source_query_id": "Q_join_appellation_wines_appellation_wines_grape_variety_100_pinot_noir_chardonn",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 556,
+        "profile_all_required_cells": 1111,
+        "profile_all_relevant_doc_rate": 0.9982046678635548,
+        "profile_eval_relevant_docs": 522,
+        "profile_eval_required_cells": 1043,
+        "profile_eval_relevant_doc_rate": 0.981203007518797,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
     }
   ]
 }

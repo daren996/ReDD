@@ -1,0 +1,46 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_ablation.spider.bike_1",
+  "queries": [
+    {
+      "query_id": "Q_end_624",
+      "question": "Which end station did bike 624 arrive at?",
+      "sql": "SELECT end_station_name FROM trip WHERE bike_id = '624';",
+      "required_tables": [
+        "trip"
+      ],
+      "required_columns": [
+        "trip.bike_id",
+        "trip.end_station_name"
+      ],
+      "output_columns": [
+        "trip.end_station_name"
+      ],
+      "tags": [
+        "ablation",
+        "predicate"
+      ],
+      "difficulty": "smoke"
+    },
+    {
+      "query_id": "Q_start_624",
+      "question": "Which start station did bike 624 depart from?",
+      "sql": "SELECT start_station_name FROM trip WHERE bike_id = '624';",
+      "required_tables": [
+        "trip"
+      ],
+      "required_columns": [
+        "trip.bike_id",
+        "trip.start_station_name"
+      ],
+      "output_columns": [
+        "trip.start_station_name"
+      ],
+      "tags": [
+        "ablation",
+        "predicate"
+      ],
+      "difficulty": "smoke"
+    }
+  ]
+}

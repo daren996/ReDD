@@ -56,7 +56,7 @@ Current implementation-heavy internals still live under:
 - `src/redd/config.py`
 - `src/redd/llm/`
 - `src/redd/core/data_loader/`
-- `src/redd/core/data_population/`
+- `src/redd/core/data_extraction/`
 - `src/redd/core/schema_gen/`
 - `src/redd/core/schema_tailor/`
 - `src/redd/core/utils/`
@@ -68,7 +68,7 @@ thin by owning dataset loops, loader binding, and strategy coordination.
 
 In particular:
 
-- `src/redd/core/data_population/` is the current runtime home for execution-side query
+- `src/redd/core/data_extraction/` is the current runtime home for execution-side query
   optimization used by `data_extraction`
 - `src/redd/core/data_loader/registry.py` owns loader profiles and the internal loader
   family registry; dataset-specific layout behavior should live in loader config/profile

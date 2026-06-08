@@ -44,7 +44,7 @@ stages:
     enabled: true
     schema_source: ground_truth
     oracle: ground_truth
-    document_filtering:
+    doc_filter:
       enabled: false
       filter_type: schema_relevance
       enable_calibrate: false

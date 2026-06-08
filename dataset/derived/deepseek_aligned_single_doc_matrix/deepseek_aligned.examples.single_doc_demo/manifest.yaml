@@ -1,0 +1,11 @@
+schema_version: redd.manifest.v1
+dataset_id: deepseek_aligned.examples.single_doc_demo
+kind: derived
+version: 0.1.0
+parents:
+- examples.single_doc_demo
+paths:
+  documents: data/documents.parquet
+  ground_truth: data/ground_truth.parquet
+  schema: metadata/schema.json
+  queries: metadata/queries.json

@@ -13,7 +13,7 @@ from redd import (
     schema_global,
     schema_refine,
 )
-from redd.cli import extract, preprocessing, schema_refinement, web
+from redd.cli import evaluate, extract, preprocessing, schema_refinement, web
 from redd.cli import run as run_cli
 from redd.cli.main import build_parser
 from redd.config import resolve_repo_path
@@ -113,10 +113,31 @@ class PackageSmokeTests(unittest.TestCase):
         self.assertEqual(args.experiment, "demo")
 
         args = parser.parse_args(
-            ["run", "--config", "configs/examples/ground_truth_demo.yaml", "--experiment", "demo"]
+            [
+                "run",
+                "--config",
+                "configs/examples/ground_truth_demo.yaml",
+                "--experiment",
+                "demo",
+                "--dataset",
+                "examples.single_doc_demo",
+                "--query-id",
+                "Q1",
+                "--stage",
+                "extract",
+            ]
         )
         self.assertEqual(args.command, "run")
         self.assertEqual(args.experiment, "demo")
+        self.assertEqual(args.datasets, ["examples.single_doc_demo"])
+        self.assertEqual(args.query_ids, ["Q1"])
+        self.assertEqual(args.stages, ["extract"])
+
+        args = parser.parse_args(
+            ["evaluate", "--config", "configs/examples/ground_truth_demo.yaml", "--exp", "demo"]
+        )
+        self.assertEqual(args.command, "evaluate")
+        self.assertEqual(args.exp, "demo")
 
         args = parser.parse_args(
             ["web", "--config", "configs/examples/ground_truth_demo.yaml", "--experiment", "demo"]
@@ -137,7 +158,7 @@ class PackageSmokeTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             parser.parse_args(["correction", "--config", "configs/examples/ground_truth_demo.yaml"])
         with self.assertRaises(SystemExit):
-            parser.parse_args(["datapop", "--eval"])
+            parser.parse_args(["legacy-extract", "--eval"])
         with self.assertRaises(SystemExit):
             parser.parse_args(["preprocessing", "--config", "configs/examples/ground_truth_demo.yaml"])
 
@@ -148,6 +169,8 @@ class PackageSmokeTests(unittest.TestCase):
                 "configs/examples/ground_truth_demo.yaml",
                 "demo",
                 api_key=None,
+                datasets=None,
+                query_ids=None,
             )
 
         with patch("redd.runners.run_schema_refinement") as mocked_refinement:
@@ -156,14 +179,29 @@ class PackageSmokeTests(unittest.TestCase):
                 "configs/examples/ground_truth_demo.yaml",
                 "demo",
                 api_key=None,
+                datasets=None,
+                query_ids=None,
             )
 
         with patch("redd.runners.run_extract") as mocked_extract:
-            extract.main(["--config", "configs/examples/ground_truth_demo.yaml", "--experiment", "demo"])
+            extract.main(
+                [
+                    "--config",
+                    "configs/examples/ground_truth_demo.yaml",
+                    "--experiment",
+                    "demo",
+                    "--dataset",
+                    "examples.single_doc_demo",
+                    "--query-id",
+                    "Q1",
+                ]
+            )
             mocked_extract.assert_called_once_with(
                 "configs/examples/ground_truth_demo.yaml",
                 "demo",
                 api_key=None,
+                datasets=["examples.single_doc_demo"],
+                query_ids=["Q1"],
             )
 
         with patch("redd.runners.run_experiment") as mocked_run:
@@ -172,6 +210,19 @@ class PackageSmokeTests(unittest.TestCase):
                 "configs/examples/ground_truth_demo.yaml",
                 "demo",
                 api_key=None,
+                datasets=None,
+                query_ids=None,
+                stages=None,
+            )
+
+        with patch("redd.runners.run_evaluation") as mocked_evaluate:
+            evaluate.main(["--config", "configs/examples/ground_truth_demo.yaml", "--exp", "demo"])
+            mocked_evaluate.assert_called_once_with(
+                "configs/examples/ground_truth_demo.yaml",
+                "demo",
+                api_key=None,
+                datasets=None,
+                query_ids=None,
             )
 
         with patch("redd.web_demo.serve_web_demo") as mocked_web:
@@ -237,9 +288,9 @@ class PackageSmokeTests(unittest.TestCase):
         self.assertEqual(payload["query_ids"], ["Q1"])
         _, kwargs = mocked_pipeline.call_args
         self.assertEqual(kwargs["datasets"], ["examples.single_doc_demo"])
-        contexts = kwargs["data_populator"].config["_runtime_contexts"]
+        contexts = kwargs["data_extractor"].config["_runtime_contexts"]
         self.assertEqual(contexts[0]["dataset"], "examples.single_doc_demo")
-        self.assertEqual(kwargs["data_populator"].config["exp_query_id_list"], ["Q1"])
+        self.assertEqual(kwargs["data_extractor"].config["exp_query_id_list"], ["Q1"])
         self.assertEqual(
             Path(contexts[0]["data_root"]),
             resolve_repo_path("dataset/canonical/examples.single_doc_demo"),
@@ -249,7 +300,7 @@ class PackageSmokeTests(unittest.TestCase):
         readme = resolve_repo_path("README.md").read_text(encoding="utf-8")
 
         self.assertIn("redd extract --config configs/examples/ground_truth_demo.yaml --experiment demo", readme)
-        self.assertNotIn("redd datapop", readme)
+        self.assertNotIn("redd legacy-extract", readme)
         self.assertNotIn("redd schema-refinement", readme)
         self.assertNotIn("redd preprocessing", readme)
 

@@ -1,0 +1,27 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.quest.swde_university",
+  "queries": [
+    {
+      "query_id": "Q7",
+      "question": "List the university names and their campus sizes where the campus size is greater than 500 acres and the setting is suburban.",
+      "sql": "SELECT university_name, campus_size FROM university WHERE REPLACE(SUBSTR(campus_size, 1, LENGTH(campus_size) - 6), ',', '') > 500 AND setting = 'suburban'",
+      "required_tables": [
+        "university"
+      ],
+      "required_columns": [
+        "university_name",
+        "campus_size",
+        "setting"
+      ],
+      "output_columns": [
+        "university.university_name",
+        "university.campus_size"
+      ],
+      "tags": [],
+      "difficulty": "medium",
+      "source_dataset_id": "quest.swde_university",
+      "dataset_id": "deepseek_smoke.quest.swde_university"
+    }
+  ]
+}

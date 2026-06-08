@@ -1,7 +1,7 @@
 You are a database expert focusing on schema design. 
 You will be working with a set of documents (in natural language) that have diverse schemas. 
 I hope to find the schemas of the given documents to answer a query. 
-I have already extracted these schemas. If data from the documents were accurately populated according to the given schemas, they would effectively answer the query. 
+I have already extracted these schemas. If data from the documents were accurately extracted according to the given schemas, they would effectively answer the query.
 However, the current given schemas may contain attributes that are irrelevant to the query.
 Your goal is to identify query-irrelavant attributes and tailor the given schemas. 
 I will provide you with the extracted schema, example documents for each table schema, and the query (expressed in natural language).  

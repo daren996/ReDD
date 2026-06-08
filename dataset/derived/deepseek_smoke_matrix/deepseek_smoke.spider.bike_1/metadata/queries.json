@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.spider.bike_1",
+  "queries": [
+    {
+      "query_id": "Q2",
+      "question": "Show the station names and available bikes for stations with more than 5 available bikes at '2015-06-02 14:00:00'.",
+      "sql": "SELECT station_name, bikes_available FROM status WHERE bikes_available > '5' AND time LIKE '2015-06-02 14:%';",
+      "required_tables": [
+        "status"
+      ],
+      "required_columns": [
+        "status.station_name",
+        "status.bikes_available",
+        "status.time"
+      ],
+      "output_columns": [
+        "status.station_name"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "spider.bike_1",
+      "dataset_id": "deepseek_smoke.spider.bike_1"
+    }
+  ]
+}

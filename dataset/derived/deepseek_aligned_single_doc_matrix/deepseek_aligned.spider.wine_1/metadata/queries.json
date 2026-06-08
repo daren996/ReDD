@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.spider.wine_1",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List appelation from wine.",
+      "sql": "SELECT appelation FROM wine;",
+      "required_tables": [
+        "wine"
+      ],
+      "required_columns": [
+        "wine.appelation"
+      ],
+      "output_columns": [
+        "wine.appelation"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "spider.wine_1",
+      "dataset_id": "deepseek_aligned.spider.wine_1"
+    }
+  ]
+}

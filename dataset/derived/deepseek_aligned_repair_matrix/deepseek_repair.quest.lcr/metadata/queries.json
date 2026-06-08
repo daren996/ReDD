@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_repair.quest.lcr",
+  "queries": [
+    {
+      "query_id": "Q_repair",
+      "question": "List plaintiff from corpus.",
+      "sql": "SELECT plaintiff FROM corpus;",
+      "required_tables": [
+        "corpus"
+      ],
+      "required_columns": [
+        "corpus.plaintiff"
+      ],
+      "output_columns": [
+        "corpus.plaintiff"
+      ],
+      "tags": [
+        "deepseek_repair_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "quest.lcr",
+      "dataset_id": "deepseek_repair.quest.lcr"
+    }
+  ]
+}

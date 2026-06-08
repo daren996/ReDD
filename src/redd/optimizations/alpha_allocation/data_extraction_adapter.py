@@ -358,8 +358,8 @@ class DataExtractionAlphaAllocator:
             elif over_target == bool(best["over_target"]) and distance < best["distance"] - 1e-12:
                 best = {"observation": observation, "distance": distance, "over_target": over_target}
             elif over_target == bool(best["over_target"]) and abs(distance - best["distance"]) <= 1e-12:
-                # Equal answer recall should spend the tie on lower extraction cost.
-                if candidate > float(best_obs["alpha_predicate_proxy"]):
+                # Equal training recall should keep the held-out path conservative.
+                if candidate < float(best_obs["alpha_predicate_proxy"]):
                     best = {"observation": observation, "distance": distance, "over_target": over_target}
 
         if not observations or best is None:
@@ -389,12 +389,9 @@ class DataExtractionAlphaAllocator:
         budget_total: float,
     ) -> List[Dict[str, Any]]:
         alpha_doc = float(alpha_map.get(STAGE_DOC_FILTERING, 0.0))
-        current_alpha = float(alpha_map.get(STAGE_PREDICATE_PROXY, 0.0))
         candidates: List[float] = []
         for value in self.alloc_config.alpha_grid:
             candidate = float(value)
-            if candidate < current_alpha - 1e-12:
-                continue
             trial = dict(alpha_map)
             trial[STAGE_PREDICATE_PROXY] = candidate
             if (
@@ -445,7 +442,7 @@ class DataExtractionAlphaAllocator:
                 for obs in observations:
                     covered = int(obs.get("covered", 0) or 0)
                     prior = dedup.get(covered)
-                    if prior is None or float(obs["alpha_predicate_proxy"]) > float(
+                    if prior is None or float(obs["alpha_predicate_proxy"]) < float(
                         prior["alpha_predicate_proxy"]
                     ):
                         dedup[covered] = obs
@@ -468,7 +465,7 @@ class DataExtractionAlphaAllocator:
                     new_chosen = dict(chosen)
                     new_chosen[query_id] = obs
                     prior = next_dp.get(new_coverage)
-                    if prior is None or new_alpha_score > prior[0] + 1e-12:
+                    if prior is None or new_alpha_score < prior[0] - 1e-12:
                         next_dp[new_coverage] = (new_alpha_score, new_chosen)
             dp = next_dp
 
@@ -481,7 +478,7 @@ class DataExtractionAlphaAllocator:
             candidates,
             key=lambda item: (
                 abs(float(item[0]) - target_coverage),
-                -float(item[1][0]),
+                float(item[1][0]),
             ),
         )
         del best_alpha_score

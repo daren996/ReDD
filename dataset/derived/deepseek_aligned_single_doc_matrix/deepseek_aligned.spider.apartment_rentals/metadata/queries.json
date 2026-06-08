@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.spider.apartment_rentals",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List building_phone from apartment_buildings.",
+      "sql": "SELECT building_phone FROM apartment_buildings;",
+      "required_tables": [
+        "apartment_buildings"
+      ],
+      "required_columns": [
+        "apartment_buildings.building_phone"
+      ],
+      "output_columns": [
+        "apartment_buildings.building_phone"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "spider.apartment_rentals",
+      "dataset_id": "deepseek_aligned.spider.apartment_rentals"
+    }
+  ]
+}

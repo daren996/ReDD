@@ -56,6 +56,7 @@ const configSectionPages = document.querySelectorAll("[data-config-section-page]
 const runButton = document.querySelector("#run-button");
 const loadConfig = document.querySelector("#load-config");
 const runTitle = document.querySelector("#run-title");
+const viewEyebrow = document.querySelector("#view-eyebrow");
 const statusPill = document.querySelector("#status-pill");
 const errorPanel = document.querySelector("#error-panel");
 const stageResults = document.querySelector("#stage-results");
@@ -64,6 +65,9 @@ const refreshButton = document.querySelector("#refresh-button");
 const refreshLabel = document.querySelector("#refresh-label");
 const resultsLibrary = document.querySelector("#results-library");
 const resultsCountLabel = document.querySelector("#results-count-label");
+const architectureFunnelPanel = document.querySelector(".architecture-funnel-panel");
+const architectureFunnelBody = document.querySelector("#architecture-funnel-body");
+const architectureFunnelToggle = document.querySelector("#architecture-funnel-toggle");
 const consoleStateLabel = document.querySelector("#console-state-label");
 const consoleEmptyState = document.querySelector("#console-empty-state");
 const consoleActive = document.querySelector("#console-active");
@@ -84,8 +88,6 @@ const copyConfig = document.querySelector("#copy-config");
 const configSummary = document.querySelector("#config-summary");
 const configWorkspace = document.querySelector("#config-workspace");
 const configEmptyState = document.querySelector("#config-empty-state");
-const emptyLoadConfig = document.querySelector("#empty-load-config");
-const emptySearchDatasets = document.querySelector("#empty-search-datasets");
 const summaryExperiment = document.querySelector("#summary-experiment");
 const summaryDatasets = document.querySelector("#summary-datasets");
 const summaryStages = document.querySelector("#summary-stages");
@@ -94,6 +96,11 @@ const datasetBrowser = document.querySelector("#dataset-browser");
 const datasetDetail = document.querySelector("#dataset-detail");
 const detailTitle = document.querySelector("#detail-title");
 const datasetSelect = document.querySelector("#dataset-select");
+const datasetPickerTrigger = document.querySelector("#dataset-picker-trigger");
+const datasetPickerLabel = document.querySelector("#dataset-picker-label");
+const datasetPickerBadge = document.querySelector("#dataset-picker-badge");
+const datasetPickerCount = document.querySelector("#dataset-picker-count");
+const datasetPickerList = document.querySelector("#dataset-picker-list");
 const addDataset = document.querySelector("#add-dataset");
 const datasetSourceLabel = document.querySelector("#dataset-source-label");
 const selectedDatasets = document.querySelector("#selected-datasets");
@@ -115,6 +122,7 @@ const overviewOracleCost = document.querySelector("#overview-oracle-cost");
 const overviewSystemCost = document.querySelector("#overview-system-cost");
 const overviewSavings = document.querySelector("#overview-savings");
 const overviewRecall = document.querySelector("#overview-recall");
+const relationPreviewBody = document.querySelector("#relation-preview-body");
 const queryList = document.querySelector("#query-list");
 const configSourcePanel = document.querySelector("#config-source-panel");
 const allSourcePanel = document.querySelector("#all-source-panel");
@@ -128,6 +136,10 @@ const paperExperimentRefresh = document.querySelector("#paper-experiment-refresh
 const paperExperimentRunAll = document.querySelector("#paper-experiment-run-all");
 const CUSTOM_MODEL_VALUE = "__custom__";
 const SEARCH_DATASET_ALLOWLIST = new Set(["spider.college_demo", "bird.schools_demo"]);
+const MAX_CONSOLE_LOGS = 180;
+const CONSOLE_LOG_RENDER_LIMIT = 90;
+const RESULTS_RENDER_BATCH = 24;
+const THEME_STORAGE_KEY = "redd-theme-fastredd";
 const DEFAULT_MODELS = {
   llm: {
     provider: "none",
@@ -165,6 +177,7 @@ const state = {
   pendingDatasetId: "",
   pendingDatasetLoadedId: "",
   pendingQueryIds: new Set(),
+  datasetPickerOpen: false,
   queryDropdownOpen: false,
   pendingDatasetLoading: false,
   activeDatasetQueries: [],
@@ -180,6 +193,10 @@ const state = {
   lastPayload: {},
   resultLibrary: [],
   resultsUnavailable: "",
+  resultsRenderLimit: RESULTS_RENDER_BATCH,
+  currentRunOutputsReady: false,
+  runInFlight: false,
+  pendingDeleteResultPath: "",
   consoleRun: null,
   consoleEventSource: null,
   consoleElapsedTimer: null,
@@ -243,6 +260,47 @@ function selectedQueryIds() {
   return Array.from(state.selectedQueryIds);
 }
 
+function hasPendingRunDataset() {
+  return (
+    state.datasetSource === "all" &&
+    Boolean(state.pendingDatasetId) &&
+    state.pendingDatasetLoadedId === state.pendingDatasetId
+  );
+}
+
+function pendingDatasetRequiresQueries() {
+  return hasPendingRunDataset() && state.activeDatasetQueries.length > 0;
+}
+
+function runDatasetIds() {
+  if (state.datasetSource === "all") {
+    if (!hasPendingRunDataset()) {
+      return [];
+    }
+    if (pendingDatasetRequiresQueries() && !state.pendingQueryIds.size) {
+      return [];
+    }
+    return [state.pendingDatasetId];
+  }
+  return selectedDatasetIds();
+}
+
+function runQueryIds() {
+  if (state.datasetSource === "all") {
+    return hasPendingRunDataset() ? Array.from(state.pendingQueryIds) : [];
+  }
+  return configuredQueryIds();
+}
+
+function runQueryLabel() {
+  const datasetIds = runDatasetIds();
+  if (!datasetIds.length) {
+    return "-";
+  }
+  const queryIds = runQueryIds();
+  return queryIds.length ? String(queryIds.length) : "all";
+}
+
 function configuredQueryIds() {
   return Array.from(
     new Set(
@@ -269,6 +327,110 @@ function fieldString(value, fallback = "") {
 function nullableText(control) {
   const value = control.value.trim();
   return value ? value : null;
+}
+
+function controlTitleValue(control) {
+  if (!control || control.type === "password" || control.type === "checkbox") {
+    return "";
+  }
+  if (control.tagName === "SELECT") {
+    return control.selectedOptions?.[0]?.textContent?.trim() || control.value || "";
+  }
+  return String(control.value || "").trim();
+}
+
+function syncControlTitle(control) {
+  const value = controlTitleValue(control);
+  if (value) {
+    control.title = value;
+  } else {
+    control.removeAttribute("title");
+  }
+}
+
+function syncControlTitles(root = document) {
+  root.querySelectorAll("input, select, textarea").forEach((control) => {
+    syncControlTitle(control);
+    if (control.tagName === "TEXTAREA") {
+      autoGrowTextarea(control);
+    }
+  });
+}
+
+function textareaAutoGrowLimit(textarea) {
+  const viewportHeight = Math.max(window.innerHeight || 0, 320);
+  const datasetField = textarea.dataset?.datasetField || "";
+  if (textarea.id === "config-stages-json") {
+    return Math.min(Math.max(viewportHeight * 0.78, 320), 720);
+  }
+  if (datasetField === "loader_options" || datasetField === "split") {
+    return Math.min(Math.max(viewportHeight * 0.66, 260), 560);
+  }
+  if (datasetField === "root" || datasetField === "query_ids") {
+    return Math.min(Math.max(viewportHeight * 0.52, 180), 440);
+  }
+  return Math.min(Math.max(viewportHeight * 0.46, 150), 380);
+}
+
+function autoGrowTextarea(textarea) {
+  if (!textarea || textarea.tagName !== "TEXTAREA" || !textarea.isConnected) {
+    return;
+  }
+  if (textarea.readOnly && textarea.style.position === "fixed") {
+    return;
+  }
+  if (window.getComputedStyle(textarea).display === "none") {
+    return;
+  }
+  const limit = textareaAutoGrowLimit(textarea);
+  textarea.style.height = "auto";
+  textarea.style.height = `${Math.min(textarea.scrollHeight + 2, limit)}px`;
+  textarea.style.overflowY = textarea.scrollHeight > limit ? "auto" : "hidden";
+}
+
+function autoGrowTextareas(root = document) {
+  root.querySelectorAll("textarea").forEach(autoGrowTextarea);
+}
+
+function scheduleAutoGrowTextareas(root = document) {
+  autoGrowTextareas(root);
+  requestAnimationFrame(() => autoGrowTextareas(root));
+  window.setTimeout(() => autoGrowTextareas(root), 0);
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (_) {
+      // Fall through to the legacy copy path used by restricted browser shells.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    return document.execCommand("copy");
+  } catch (_) {
+    return false;
+  } finally {
+    textarea.remove();
+  }
+}
+
+function showCopyFeedback(button, copied) {
+  const previous = button.textContent;
+  button.textContent = copied ? "Copied" : "Copy unavailable";
+  window.setTimeout(() => {
+    button.textContent = previous || "Copy";
+  }, 1400);
 }
 
 function optionalInteger(control, fallback = null) {
@@ -572,6 +734,9 @@ function setConfigEditorFromDraft() {
   setModelControlsFromDraft("embedding", draft.models?.embedding);
   configStagesJson.value = prettyJson(draft.stageConfigs || {});
   setOptimizationControlsFromStageConfigs(draft.stageConfigs || {});
+  syncControlTitle(configPath);
+  syncControlTitle(experiment);
+  syncControlTitles(configWorkspace);
 }
 
 function apiKeyStatusLabel(status) {
@@ -698,8 +863,8 @@ function stageConfigValue(stageConfigs, stageId, key, fallback = null) {
 
 function setOptimizationControlsFromStageConfigs(stageConfigs = {}) {
   const schemaFilter =
-    stageConfigValue(stageConfigs, "schema_refinement", "document_filtering") ||
-    stageConfigValue(stageConfigs, "data_extraction", "document_filtering") ||
+    stageConfigValue(stageConfigs, "schema_refinement", "doc_filter") ||
+    stageConfigValue(stageConfigs, "data_extraction", "doc_filter") ||
     {};
   configOptDocFilterEnabled.checked = Boolean(schemaFilter.enabled);
 
@@ -800,10 +965,10 @@ function removeOptimizationKeys(stages, stageIds) {
       return;
     }
     delete stages[stageId].adaptive_sampling;
-    delete stages[stageId].document_filtering;
+    delete stages[stageId].doc_filter;
   });
   if (stageIds.includes("data_extraction") && stages.data_extraction) {
-    delete stages.data_extraction.document_filtering;
+    delete stages.data_extraction.doc_filter;
     delete stages.data_extraction.proxy_runtime;
     delete stages.data_extraction.alpha_allocation;
   }
@@ -811,8 +976,8 @@ function removeOptimizationKeys(stages, stageIds) {
 
 function applyOptimizationControlsToStages(stages, stageIds) {
   const existingDocFilter =
-    stageConfigValue(stages, "schema_refinement", "document_filtering") ||
-    stageConfigValue(stages, "data_extraction", "document_filtering") ||
+    stageConfigValue(stages, "schema_refinement", "doc_filter") ||
+    stageConfigValue(stages, "data_extraction", "doc_filter") ||
     {};
   const existingProxy = stageConfigValue(stages, "data_extraction", "proxy_runtime") || {};
   removeOptimizationKeys(stages, stageIds);
@@ -823,10 +988,10 @@ function applyOptimizationControlsToStages(stages, stageIds) {
       filter_type: existingDocFilter.filter_type || "schema_relevance",
     };
     if (stageIds.includes("schema_refinement") && stages.schema_refinement) {
-      stages.schema_refinement.document_filtering = fullDocFilter;
+      stages.schema_refinement.doc_filter = fullDocFilter;
     }
     if (stageIds.includes("data_extraction") && stages.data_extraction) {
-      stages.data_extraction.document_filtering = stageIds.includes("schema_refinement")
+      stages.data_extraction.doc_filter = stageIds.includes("schema_refinement")
         ? { enabled: true }
         : fullDocFilter;
     }
@@ -869,7 +1034,7 @@ function enabledOptimizationPlaceholders() {
   if (configOptDocFilterEnabled.checked) {
     items.push({
       id: "doc_filter",
-      title: "Chunk / Document Filter",
+      title: "Document Filter",
       status: "waiting",
       message: "Waiting for filter artifacts.",
       metrics: {},
@@ -966,10 +1131,23 @@ function datasetConfigForId(datasetId) {
   return draft;
 }
 
-function generatedConfigObject() {
+function datasetConfigForRun(datasetId) {
+  const draft = datasetConfigForId(datasetId);
+  if (hasPendingRunDataset() && datasetId === state.pendingDatasetId) {
+    if (state.pendingQueryIds.size) {
+      draft.query_ids = Array.from(state.pendingQueryIds);
+    } else {
+      delete draft.query_ids;
+    }
+  }
+  return draft;
+}
+
+function generatedConfigObject(options = {}) {
   const draft = state.configDraft || defaultConfigDraft(state.configInfo);
-  const datasetIds = selectedDatasetIds();
-  const configuredDatasetIds = configDatasetIds();
+  const forRun = Boolean(options.forRun);
+  const datasetIds = forRun ? runDatasetIds() : selectedDatasetIds();
+  const configuredDatasetIds = forRun && hasPendingRunDataset() ? datasetIds : configDatasetIds();
   const stageIds = selectedStages();
   const experimentId = draft.experimentId || experiment.value.trim() || state.configInfo?.experiment || "demo";
   const stages = {};
@@ -984,7 +1162,7 @@ function generatedConfigObject() {
   applyOptimizationControlsToStages(stages, stageIds);
   const datasets = {};
   configuredDatasetIds.forEach((datasetId) => {
-    datasets[datasetId] = datasetConfigForId(datasetId);
+    datasets[datasetId] = forRun ? datasetConfigForRun(datasetId) : datasetConfigForId(datasetId);
   });
   return {
     config_version: "2.1.1",
@@ -1007,6 +1185,13 @@ function setStatus(label, mode) {
   statusPill.className = `status-pill ${mode}`;
 }
 
+function revealErrorPanel() {
+  window.requestAnimationFrame(() => {
+    errorPanel.scrollIntoView({ block: "center", inline: "nearest" });
+    errorPanel.focus({ preventScroll: true });
+  });
+}
+
 function setError(message) {
   if (!message) {
     errorPanel.hidden = true;
@@ -1015,6 +1200,7 @@ function setError(message) {
   }
   errorPanel.hidden = false;
   errorPanel.textContent = message;
+  revealErrorPanel();
 }
 
 function escapeHtml(value) {
@@ -1032,9 +1218,20 @@ function truncate(value, length = 170) {
 
 async function fetchJson(url, options) {
   const response = await fetch(url, options);
-  const data = await response.json();
+  const text = await response.text();
+  let data = null;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch (error) {
+      if (response.ok) {
+        throw new Error(`Expected JSON response from ${url}. ${error.message}`);
+      }
+    }
+  }
   if (!response.ok) {
-    throw new Error(errorMessage(data));
+    const fallback = text ? `: ${truncate(text, 500)}` : "";
+    throw new Error(data ? errorMessage(data) : `HTTP ${response.status} ${response.statusText}${fallback}`);
   }
   return data;
 }
@@ -1106,11 +1303,14 @@ function resetConsoleRun(stepsOverride = null) {
     optimizationActivities: [],
     optimizationActivityKeys: new Set(),
     optimizationLogKeys: new Set(),
+    logDedupeKeys: new Set(),
+    droppedLogCount: 0,
     evaluation: null,
     error: null,
     lastHeartbeatAt: 0,
   };
   renderConsoleRun();
+  renderConsoleLogs();
   state.consoleElapsedTimer = window.setInterval(() => {
     if (!state.consoleRun || !["queued", "running"].includes(state.consoleRun.status)) {
       return;
@@ -1131,6 +1331,20 @@ function resetConsoleRun(stepsOverride = null) {
       );
     }
   }, 500);
+}
+
+function clearCurrentRunPayload() {
+  state.lastPayload = {};
+  state.currentRunOutputsReady = false;
+  summaryExperiment.textContent = "-";
+  summaryDatasets.textContent = "-";
+  summaryStages.textContent = "-";
+  summaryElapsed.textContent = "-";
+  rawJson.textContent = "";
+  renderStageResults({});
+  renderRelationPreview();
+  renderOutputResults();
+  renderOverview();
 }
 
 function renderConsoleRun() {
@@ -1154,7 +1368,6 @@ function renderConsoleRun() {
   renderOptimizationActivityFeed();
   renderEvaluationCards();
   renderConsoleProgress();
-  renderConsoleLogs();
 }
 
 function statusLabel(status) {
@@ -1604,16 +1817,24 @@ function renderConsoleLogs() {
     consoleLogs.innerHTML = '<div class="console-log-empty">Logs will appear when the run starts.</div>';
     return;
   }
-  consoleLogs.innerHTML = run.logs
-    .map(
-      (entry) => `
+  const visibleLogs = run.logs.slice(-CONSOLE_LOG_RENDER_LIMIT);
+  const hiddenCount =
+    (run.droppedLogCount || 0) + Math.max(0, run.logs.length - visibleLogs.length);
+  const truncatedNotice = hiddenCount
+    ? `<div class="console-log-truncated">Showing latest ${visibleLogs.length} logs. ${hiddenCount} older logs hidden.</div>`
+    : "";
+  consoleLogs.innerHTML =
+    truncatedNotice +
+    visibleLogs
+      .map(
+        (entry) => `
         <div class="console-log-line ${escapeHtml(entry.level || "info")}">
           <time>${escapeHtml(entry.time)}</time>
           <span>${escapeHtml(entry.message)}</span>
         </div>
       `,
-    )
-    .join("");
+      )
+      .join("");
   consoleLogs.scrollTop = consoleLogs.scrollHeight;
 }
 
@@ -1621,12 +1842,25 @@ function appendConsoleLog(message, level = "info") {
   if (!state.consoleRun) {
     return;
   }
+  if (!state.consoleRun.logDedupeKeys) {
+    state.consoleRun.logDedupeKeys = new Set();
+  }
+  const logKey = message;
+  if (state.consoleRun.logDedupeKeys.has(logKey)) {
+    return;
+  }
+  state.consoleRun.logDedupeKeys.add(logKey);
   const date = new Date();
   state.consoleRun.logs.push({
     time: date.toLocaleTimeString([], { hour12: false }),
     message,
     level,
   });
+  if (state.consoleRun.logs.length > MAX_CONSOLE_LOGS) {
+    const overflow = state.consoleRun.logs.length - MAX_CONSOLE_LOGS;
+    state.consoleRun.logs.splice(0, overflow);
+    state.consoleRun.droppedLogCount = (state.consoleRun.droppedLogCount || 0) + overflow;
+  }
   renderConsoleLogs();
 }
 
@@ -1930,6 +2164,7 @@ function upsertProgress(item) {
 
 async function startStreamingRun(payload, options = {}) {
   resetConsoleRun(options.steps || null);
+  clearCurrentRunPayload();
   const run = await fetchJson(options.endpoint || "/api/runs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -1949,8 +2184,12 @@ async function startStreamingRun(payload, options = {}) {
         if (event.type === "run_completed") {
           source.close();
           state.consoleEventSource = null;
+          state.consoleRun.status = "running";
           updateConsoleStep("refresh_outputs", "running", "Refreshing saved output cards.");
+          renderConsoleRun();
+          state.currentRunOutputsReady = false;
           renderPayload(event.payload);
+          state.currentRunOutputsReady = true;
           await loadOutputResults();
           updateConsoleStep("refresh_outputs", "done", "Saved outputs refreshed.");
           state.consoleRun.status = "completed";
@@ -2043,11 +2282,260 @@ function countRunQueries(payload) {
   return count || null;
 }
 
+function setFunnelStatus(id, value) {
+  const node = document.querySelector(`#${id}`);
+  if (node) {
+    node.textContent = value;
+  }
+}
+
+function setArchitectureFunnelOpen(open) {
+  const expanded = Boolean(open);
+  if (architectureFunnelBody) {
+    architectureFunnelBody.hidden = !expanded;
+  }
+  if (architectureFunnelPanel) {
+    architectureFunnelPanel.dataset.funnelCollapsed = String(!expanded);
+  }
+  if (architectureFunnelToggle) {
+    architectureFunnelToggle.textContent = expanded ? "-" : "+";
+    architectureFunnelToggle.setAttribute("aria-expanded", String(expanded));
+    architectureFunnelToggle.setAttribute(
+      "aria-label",
+      expanded ? "Hide architecture funnel" : "Show architecture funnel",
+    );
+    architectureFunnelToggle.title = expanded ? "Hide architecture funnel" : "Show architecture funnel";
+  }
+}
+
+function renderArchitectureFunnel(context = {}) {
+  const stages = selectedStages();
+  const payload = context.payload || state.lastPayload || {};
+  const hasRun = Boolean(context.hasRun);
+  const runDatasets = countRunDatasets(payload);
+  const runQueries = countRunQueries(payload);
+  const selectedDatasetCount = context.selectedDatasetCount ?? state.selectedDatasetIds.size;
+  const selectedQueryLabel = context.selectedQueryLabel || (selectedDatasetCount ? "all" : "-");
+  const rawLabel = hasRun
+    ? `${runDatasets || selectedDatasetCount || 0} datasets`
+    : selectedDatasetCount
+      ? `${selectedDatasetCount} datasets / ${selectedQueryLabel} queries`
+      : "Waiting";
+  const recallLabel = context.recallLabel || "alpha guard";
+
+  setFunnelStatus("funnel-raw", rawLabel);
+  setFunnelStatus("funnel-csf", configOptDocFilterEnabled?.checked ? "Pruning enabled" : "Full corpus");
+  setFunnelStatus("funnel-asc", configOptSchemaAdaptiveEnabled?.checked ? "Adaptive" : "Static");
+  setFunnelStatus("funnel-ccg", configOptProxyEnabled?.checked ? "Proxy on" : "Ground truth");
+  setFunnelStatus("funnel-teo", hasRun ? `${runQueries || "-"} queries` : selectedDatasetCount ? "Ready" : "Waiting");
+  setFunnelStatus("funnel-ddg", stages.includes("preprocessing") ? "Selected" : "Optional");
+  setFunnelStatus("funnel-dep", stages.includes("schema_refinement") ? "Selected" : "Optional");
+  setFunnelStatus("funnel-acc", hasRun ? recallLabel : "alpha guard");
+  setFunnelStatus("funnel-jpo", configOptJoinEnabled?.checked ? "Join on" : "Optional");
+}
+
+function relationAttributes(data, fallback = "") {
+  if (data && typeof data === "object" && Object.keys(data).length) {
+    return Object.entries(data)
+      .slice(0, 4)
+      .map(([key, value]) => `${key}: ${truncate(value, 44)}`)
+      .join(" · ");
+  }
+  return truncate(fallback || "-", 140);
+}
+
+function hasRelationContent(data, fallback = "") {
+  if (data && typeof data === "object" && Object.keys(data).length) {
+    return true;
+  }
+  if (fallback == null || typeof fallback === "object") {
+    return false;
+  }
+  const text = String(fallback).trim();
+  return Boolean(text && text !== "-" && text !== "None");
+}
+
+function collectRelationRowsFromValue(value, rows = [], path = []) {
+  if (!value || rows.length >= 8) {
+    return rows;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => {
+      collectRelationRowsFromValue(item, rows, path.concat(String(index)));
+    });
+    return rows;
+  }
+  if (typeof value !== "object") {
+    return rows;
+  }
+  if ("data" in value && ("res" in value || "table" in value || "id" in value)) {
+    const table = value.table || value.res || "-";
+    const data = value.data && typeof value.data === "object" ? value.data : {};
+    if (hasRelationContent(data, value.value)) {
+      rows.push({
+        id: value.id || path[path.length - 1] || "-",
+        table,
+        attributes: relationAttributes(data, value.value),
+        status: Object.keys(data).length ? "extracted" : "empty",
+      });
+    }
+    return rows;
+  }
+  Object.entries(value).forEach(([key, nested]) => {
+    collectRelationRowsFromValue(nested, rows, path.concat(key));
+  });
+  return rows;
+}
+
+function savedRelationRows(results = []) {
+  const rows = [];
+  results.forEach((result) => {
+    if (rows.length >= 8 || result.evaluation || !Array.isArray(result.preview)) {
+      return;
+    }
+    result.preview.forEach((item) => {
+      if (rows.length >= 8) {
+        return;
+      }
+      const data = item.data && typeof item.data === "object" ? item.data : {};
+      const table = item.table || result.tables?.[0] || "";
+      if (!table || !hasRelationContent(data, item.value)) {
+        return;
+      }
+      rows.push({
+        id: item.id || result.query_id || "-",
+        table,
+        attributes: relationAttributes(data, item.value),
+        status: result.stage || "saved",
+      });
+    });
+  });
+  return rows;
+}
+
+function currentRunQueryIds(payload = {}) {
+  const ids = new Set();
+  if (Array.isArray(payload.query_ids)) {
+    payload.query_ids.forEach((id) => ids.add(String(id)));
+  }
+  Object.values(payload.dataset_roots || {}).forEach((item) => {
+    if (Array.isArray(item?.query_ids)) {
+      item.query_ids.forEach((id) => ids.add(String(id)));
+    }
+  });
+  return ids;
+}
+
+function outputScopeFromRoot(outRoot = "") {
+  const normalized = String(outRoot || "").replace(/\\/g, "/");
+  const marker = "/outputs/";
+  const parts = (normalized.includes(marker) ? normalized.split(marker).pop() : normalized)
+    .split("/")
+    .filter(Boolean);
+  if (parts.length < 4) {
+    return null;
+  }
+  return {
+    project: parts[0],
+    dataset_id: parts[1],
+    stage: parts[2],
+    artifact: parts.slice(3).join("/"),
+  };
+}
+
+function currentRunOutputScopes(payload = {}) {
+  const scopes = [];
+  const extractionItems = payload.result?.data_extraction;
+  if (Array.isArray(extractionItems)) {
+    extractionItems.forEach((item) => {
+      const scope = outputScopeFromRoot(item?.out_root);
+      if (scope) {
+        scopes.push({
+          ...scope,
+          dataset_id: item?.dataset || scope.dataset_id,
+        });
+      }
+    });
+  }
+  return scopes;
+}
+
+function savedResultsForCurrentRun(results = []) {
+  const payload = state.lastPayload || {};
+  const datasetIds = new Set((payload.datasets || []).map(String));
+  const queryIds = currentRunQueryIds(payload);
+  const outputScopes = currentRunOutputScopes(payload);
+  if (!datasetIds.size && !queryIds.size) {
+    return [];
+  }
+  return results.filter((result) => {
+    const datasetId = result.dataset_id || result.dataset || "";
+    const queryId = result.query_id || "";
+    const datasetMatches = !datasetIds.size || datasetIds.has(String(datasetId));
+    const queryMatches = !queryIds.size || (queryId && queryIds.has(String(queryId)));
+    const outputMatches =
+      !outputScopes.length ||
+      outputScopes.some((scope) => {
+        const artifact = String(result.artifact || "");
+        return (
+          (!scope.project || result.project === scope.project) &&
+          (!scope.dataset_id || String(datasetId) === String(scope.dataset_id)) &&
+          (!scope.stage || result.stage === scope.stage) &&
+          (!scope.artifact || artifact === scope.artifact)
+        );
+      });
+    return datasetMatches && queryMatches && outputMatches;
+  });
+}
+
+function renderRelationPreview() {
+  if (!relationPreviewBody) {
+    return;
+  }
+  const payloadRows = collectRelationRowsFromValue(state.lastPayload?.result || {});
+  const hasRunResult = Boolean(state.lastPayload?.result);
+  const activeRun = state.consoleRun && ["queued", "running"].includes(state.consoleRun.status);
+  const savedRows = hasRunResult
+    ? state.currentRunOutputsReady
+      ? savedRelationRows(savedResultsForCurrentRun(state.resultLibrary || []))
+      : []
+    : activeRun
+      ? []
+    : savedRelationRows(state.resultLibrary || []);
+  const rows = payloadRows.length ? payloadRows : savedRows;
+  if (!rows.length) {
+    const message = activeRun && !hasRunResult
+      ? "Run in progress. Tuple preview will appear after completion."
+      : hasRunResult && !state.currentRunOutputsReady
+        ? "Refreshing tuple preview from saved outputs."
+        : state.lastPayload?.result
+      ? "No tuple preview rows were returned for the current run."
+      : "Run a query pipeline to extract R_Q.";
+    relationPreviewBody.innerHTML = `<tr><td colspan="4">${escapeHtml(message)}</td></tr>`;
+    return;
+  }
+  relationPreviewBody.innerHTML = rows
+    .map(
+      (row) => `
+        <tr>
+          <td>${escapeHtml(row.id)}</td>
+          <td><span class="relation-table-pill">${escapeHtml(row.table)}</span></td>
+          <td>${escapeHtml(row.attributes)}</td>
+          <td>${escapeHtml(row.status)}</td>
+        </tr>
+      `,
+    )
+    .join("");
+}
+
 function renderStageResults(payload) {
   const result = payload.result || {};
   const entries = Object.entries(result);
   if (!entries.length) {
-    stageResults.innerHTML = state.resultLibrary.length
+    const activeRun = state.consoleRun && ["queued", "running"].includes(state.consoleRun.status);
+    stageResults.innerHTML = activeRun
+      ? '<div class="empty-state">Run in progress. Stage results will appear after completion.</div>'
+      : state.resultLibrary.length
       ? '<div class="empty-state">No in-memory run. Saved outputs are loaded below.</div>'
       : '<div class="empty-state">No run yet.</div>';
     return;
@@ -2152,9 +2640,11 @@ function renderResultPreview(result) {
       </div>
     `;
   }
-  const rows = result.preview || [];
+  const rows = (result.preview || []).filter((row) =>
+    hasRelationContent(row.data && typeof row.data === "object" ? row.data : {}, row.value),
+  );
   if (!rows.length) {
-    return '<div class="empty-state compact">No preview records.</div>';
+    return '<div class="empty-state compact">No extracted attribute preview records.</div>';
   }
   return rows
     .map((row) => {
@@ -2176,6 +2666,7 @@ function renderResultPreview(result) {
 
 function renderOutputResults() {
   const results = state.resultLibrary || [];
+  syncResultsRenderLimit(results.length);
   if (resultsCountLabel) {
     resultsCountLabel.textContent = state.resultsUnavailable
       ? "Results refresh unavailable"
@@ -2192,29 +2683,119 @@ function renderOutputResults() {
         ${escapeHtml(state.resultsUnavailable)}
       </div>
     `;
+    renderRelationPreview();
     return;
   }
   if (!results.length) {
     resultsLibrary.innerHTML = "";
+    renderRelationPreview();
     return;
   }
-  const projects = groupResultsByProject(results);
+  const visibleResults = results.slice(0, visibleResultCount(results.length));
+  const projects = groupResultsByProject(visibleResults);
+  const projectTotals = new Map(
+    groupResultsByProject(results).map((group) => [group.project, group.items.length]),
+  );
   resultsLibrary.innerHTML = `
     <section class="saved-results-head">
       <div>
         <span class="eyebrow">Outputs</span>
         <h4>Saved Results by Project</h4>
       </div>
-      <strong>${projects.length} projects / ${results.length} files</strong>
+      <strong>${projectTotals.size} projects / ${visibleResults.length} of ${results.length} files</strong>
     </section>
     <div class="project-results-list">
-      ${projects.map(renderProjectResults).join("")}
+      ${projects.map((group) => renderProjectResults(group, projectTotals)).join("")}
     </div>
+    ${renderResultsPager(visibleResults.length, results.length)}
   `;
+  resultsLibrary.querySelector("[data-results-show-more]")?.addEventListener("click", () => {
+    state.resultsRenderLimit = visibleResultCount(results.length) + RESULTS_RENDER_BATCH;
+    renderOutputResults();
+  });
+  resultsLibrary.querySelector("[data-results-show-all]")?.addEventListener("click", () => {
+    state.resultsRenderLimit = results.length;
+    renderOutputResults();
+  });
+  resultsLibrary.querySelector("[data-results-collapse]")?.addEventListener("click", () => {
+    state.resultsRenderLimit = RESULTS_RENDER_BATCH;
+    state.pendingDeleteResultPath = "";
+    renderOutputResults();
+    resultsLibrary.scrollTop = 0;
+  });
   resultsLibrary.querySelectorAll("[data-result-delete]").forEach((button) => {
     button.addEventListener("click", () => {
-      deleteResultFile(button.dataset.resultDelete || "");
+      state.pendingDeleteResultPath = button.dataset.resultDelete || "";
+      renderOutputResults();
     });
+  });
+  resultsLibrary.querySelectorAll("[data-result-delete-cancel]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.pendingDeleteResultPath = "";
+      renderOutputResults();
+    });
+  });
+  resultsLibrary.querySelectorAll("[data-result-delete-confirm]").forEach((button) => {
+    button.addEventListener("click", () => {
+      deleteResultFile(button.dataset.resultDeleteConfirm || "");
+    });
+  });
+  revealPendingResultDeleteConfirm();
+  renderRelationPreview();
+}
+
+function syncResultsRenderLimit(totalResults) {
+  const count = Math.max(0, Number(totalResults) || 0);
+  if (!Number.isFinite(state.resultsRenderLimit) || state.resultsRenderLimit < RESULTS_RENDER_BATCH) {
+    state.resultsRenderLimit = RESULTS_RENDER_BATCH;
+  }
+  if (!count) {
+    state.resultsRenderLimit = RESULTS_RENDER_BATCH;
+    state.pendingDeleteResultPath = "";
+    return;
+  }
+  state.resultsRenderLimit = Math.min(Math.max(state.resultsRenderLimit, RESULTS_RENDER_BATCH), count);
+}
+
+function visibleResultCount(totalResults) {
+  syncResultsRenderLimit(totalResults);
+  return Math.min(Number(totalResults) || 0, state.resultsRenderLimit);
+}
+
+function renderResultsPager(visibleCount, totalCount) {
+  if (totalCount <= RESULTS_RENDER_BATCH) {
+    return "";
+  }
+  if (visibleCount >= totalCount) {
+    return `
+      <section class="results-window-controls complete">
+        <span>All ${totalCount} files visible</span>
+        <button class="secondary-button" type="button" data-results-collapse>Collapse</button>
+      </section>
+    `;
+  }
+  const nextCount = Math.min(RESULTS_RENDER_BATCH, totalCount - visibleCount);
+  return `
+    <section class="results-window-controls">
+      <span>${visibleCount} of ${totalCount} files visible</span>
+      <div>
+        <button class="secondary-button" type="button" data-results-show-more>Show ${nextCount} more</button>
+        <button class="secondary-button" type="button" data-results-show-all>Show all</button>
+      </div>
+    </section>
+  `;
+}
+
+function revealPendingResultDeleteConfirm() {
+  if (!state.pendingDeleteResultPath) {
+    return;
+  }
+  window.requestAnimationFrame(() => {
+    const confirm = resultsLibrary?.querySelector(".result-delete-confirm");
+    if (!confirm) {
+      return;
+    }
+    confirm.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
   });
 }
 
@@ -2230,7 +2811,12 @@ function groupResultsByProject(results) {
   return Array.from(grouped.entries()).map(([project, items]) => ({ project, items }));
 }
 
-function renderProjectResults(group) {
+function renderProjectResults(group, projectTotals) {
+  const total = projectTotals.get(group.project) || group.items.length;
+  const countLabel =
+    total === group.items.length
+      ? `${total} ${total === 1 ? "file" : "files"}`
+      : `${group.items.length} of ${total} files`;
   return `
     <section class="project-results-group">
       <header>
@@ -2238,7 +2824,7 @@ function renderProjectResults(group) {
           <span class="eyebrow">Project</span>
           <h5>${escapeHtml(group.project)}</h5>
         </div>
-        <strong>${group.items.length} ${group.items.length === 1 ? "file" : "files"}</strong>
+        <strong>${escapeHtml(countLabel)}</strong>
       </header>
       <div class="saved-results-grid">
         ${group.items.map(renderResultFileCard).join("")}
@@ -2251,12 +2837,16 @@ function renderResultFileCard(result) {
   const tables = (result.tables || []).slice(0, 3);
   const columns = (result.columns || []).slice(0, 4);
   const isEvaluation = Boolean(result.evaluation);
+  const relativePath = result.relative_path || "";
+  const isConfirmingDelete = Boolean(relativePath && state.pendingDeleteResultPath === relativePath);
+  const resultName = result.dataset_id || "output";
+  const resultPath = result.relative_path || result.name || "";
   return `
     <article class="result-file-card ${isEvaluation ? "evaluation-result-card" : ""}">
       <header>
         <div>
-          <h4>${escapeHtml(result.dataset_id || "output")}</h4>
-          <p>${escapeHtml(result.relative_path || result.name)}</p>
+          <h4 title="${escapeHtml(resultName)}">${escapeHtml(resultName)}</h4>
+          <p title="${escapeHtml(resultPath)}">${escapeHtml(resultPath)}</p>
         </div>
         <span>${escapeHtml(isEvaluation ? "evaluation" : result.stage || "json")}</span>
       </header>
@@ -2280,9 +2870,19 @@ function renderResultFileCard(result) {
       </div>
       <div class="result-preview">${renderResultPreview(result)}</div>
       <footer class="result-file-actions">
-        <button class="danger-button" type="button" data-result-delete="${escapeHtml(
-          result.relative_path || "",
-        )}">Delete</button>
+        ${
+          isConfirmingDelete
+            ? `
+              <div class="result-delete-confirm" role="group" aria-label="Confirm result deletion">
+                <span>Delete this file?</span>
+                <button class="secondary-button" type="button" data-result-delete-cancel>Cancel</button>
+                <button class="danger-button" type="button" data-result-delete-confirm="${escapeHtml(
+                  relativePath,
+                )}">Delete</button>
+              </div>
+            `
+            : `<button class="danger-button" type="button" data-result-delete="${escapeHtml(relativePath)}">Delete</button>`
+        }
       </footer>
     </article>
   `;
@@ -2292,10 +2892,6 @@ async function deleteResultFile(relativePath) {
   if (!relativePath) {
     return;
   }
-  const confirmed = window.confirm(`Delete this result file?\n\n${relativePath}`);
-  if (!confirmed) {
-    return;
-  }
   setError("");
   try {
     await fetchJson("/api/results", {
@@ -2303,6 +2899,7 @@ async function deleteResultFile(relativePath) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ relative_path: relativePath }),
     });
+    state.pendingDeleteResultPath = "";
     await loadOutputResults();
   } catch (error) {
     setError(error.message || String(error));
@@ -2395,6 +2992,185 @@ function renderDatasetSelect(items) {
       )
       .join("")}
   `;
+  datasetSelect.value = selectedValue;
+  renderDatasetPicker(items);
+}
+
+function scrollDropdownIntoView(menu) {
+  if (!menu || menu.hidden) {
+    return;
+  }
+  window.requestAnimationFrame(() => {
+    if (getComputedStyle(menu).position === "fixed") {
+      return;
+    }
+    const inlineDropdown = window.matchMedia("(max-width: 480px), (max-height: 520px)").matches;
+    menu.scrollIntoView({ block: inlineDropdown ? "center" : "nearest", inline: "nearest" });
+    if (!inlineDropdown) {
+      return;
+    }
+    window.requestAnimationFrame(() => {
+      const rect = menu.getBoundingClientRect();
+      const margin = 12;
+      const targetTop = Math.max(margin, (window.innerHeight - rect.height) / 2);
+      if (rect.top < margin || rect.bottom > window.innerHeight - margin) {
+        window.scrollBy({ top: rect.top - targetTop, left: 0, behavior: "auto" });
+      }
+    });
+  });
+}
+
+const selectionMenuScrollLock = {
+  locked: false,
+  scrollY: 0,
+  body: {},
+  html: {},
+};
+
+function setSelectionMenuScrollLock(locked) {
+  const shouldLock = Boolean(locked);
+  if (selectionMenuScrollLock.locked === shouldLock) {
+    return;
+  }
+
+  const body = document.body;
+  const html = document.documentElement;
+  if (shouldLock) {
+    selectionMenuScrollLock.scrollY = window.scrollY || html.scrollTop || 0;
+    selectionMenuScrollLock.body = {
+      position: body.style.position,
+      top: body.style.top,
+      right: body.style.right,
+      left: body.style.left,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+    selectionMenuScrollLock.html = {
+      overflow: html.style.overflow,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${selectionMenuScrollLock.scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
+    selectionMenuScrollLock.locked = true;
+    return;
+  }
+
+  const { body: bodyStyles, html: htmlStyles } = selectionMenuScrollLock;
+  body.style.position = bodyStyles.position || "";
+  body.style.top = bodyStyles.top || "";
+  body.style.right = bodyStyles.right || "";
+  body.style.left = bodyStyles.left || "";
+  body.style.width = bodyStyles.width || "";
+  body.style.overflow = bodyStyles.overflow || "";
+  html.style.overflow = htmlStyles.overflow || "";
+  selectionMenuScrollLock.locked = false;
+  window.scrollTo({ top: selectionMenuScrollLock.scrollY, left: 0, behavior: "auto" });
+}
+
+function syncSelectionMenuScrollLock() {
+  setSelectionMenuScrollLock(state.datasetPickerOpen || state.queryDropdownOpen);
+}
+
+function closeSelectionMenus() {
+  state.datasetPickerOpen = false;
+  state.queryDropdownOpen = false;
+  datasetPickerList.hidden = true;
+  queryList.hidden = true;
+  datasetPickerTrigger.setAttribute("aria-expanded", "false");
+  querySelectTrigger.setAttribute("aria-expanded", "false");
+  syncSelectionMenuScrollLock();
+}
+
+function selectionMenuContainsEvent(event, trigger, menu) {
+  const path = typeof event.composedPath === "function" ? event.composedPath() : [];
+  if (path.includes(trigger) || path.includes(menu)) {
+    return true;
+  }
+  const target = event.target;
+  return target instanceof Node && (trigger.contains(target) || menu.contains(target));
+}
+
+function setDatasetPickerOpen(open) {
+  if (open && state.queryDropdownOpen) {
+    state.queryDropdownOpen = false;
+    queryList.hidden = true;
+    querySelectTrigger.setAttribute("aria-expanded", "false");
+  }
+  state.datasetPickerOpen = Boolean(open && datasetSelectItems().length);
+  datasetPickerList.hidden = !state.datasetPickerOpen;
+  datasetPickerTrigger.setAttribute("aria-expanded", String(state.datasetPickerOpen));
+  syncSelectionMenuScrollLock();
+  if (state.datasetPickerOpen) {
+    scrollDropdownIntoView(datasetPickerList);
+  }
+}
+
+function renderDatasetPicker(items) {
+  const selectedItem = items.find(
+    (item) => item.id === (state.pendingDatasetId || datasetSelect.value),
+  );
+  const availableCount = items.length;
+  datasetPickerLabel.textContent = selectedItem?.id || "Select dataset";
+  datasetPickerCount.textContent = `${availableCount} available`;
+  datasetPickerBadge.textContent = selectedItem ? "Selected" : "Browse";
+  datasetPickerTrigger.disabled = !availableCount;
+  if (!availableCount) {
+    setDatasetPickerOpen(false);
+    datasetPickerList.innerHTML = '<div class="empty-state compact">No datasets available.</div>';
+    return;
+  }
+  datasetPickerList.hidden = !state.datasetPickerOpen;
+  datasetPickerTrigger.setAttribute("aria-expanded", String(state.datasetPickerOpen));
+  syncSelectionMenuScrollLock();
+  datasetPickerList.innerHTML = `
+    <div class="selection-window-head">
+      <div>
+        <span>Dataset Selection</span>
+        <strong>${selectedItem ? escapeHtml(selectedItem.id) : "Available Datasets"}</strong>
+      </div>
+      <button type="button" data-dataset-picker-action="close">Done</button>
+    </div>
+    <div class="selection-window-body">
+      ${items
+        .map(
+          (item) => `
+            <button
+              class="dataset-picker-option ${item.id === selectedItem?.id ? "active" : ""}"
+              type="button"
+              data-dataset-picker-id="${escapeHtml(item.id)}"
+            >
+              <span>
+                <strong>${escapeHtml(item.id)}</strong>
+                <small>${escapeHtml(item.root || item.path || "")}</small>
+              </span>
+              <em>${item.queries_count ?? "-"} queries</em>
+            </button>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+  datasetPickerList
+    .querySelector("[data-dataset-picker-action='close']")
+    ?.addEventListener("click", () => {
+      setDatasetPickerOpen(false);
+      datasetPickerTrigger.focus();
+    });
+  datasetPickerList.querySelectorAll("[data-dataset-picker-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      datasetSelect.value = button.dataset.datasetPickerId;
+      datasetSelect.dispatchEvent(new Event("change"));
+      setDatasetPickerOpen(false);
+      datasetPickerTrigger.focus();
+    });
+  });
+  if (state.datasetPickerOpen) {
+    scrollDropdownIntoView(datasetPickerList);
+  }
 }
 
 function renderDatasetBrowser(items) {
@@ -2505,11 +3281,13 @@ function renderConfigDatasetList() {
           <div class="config-dataset-fields">
             <label>
               <span>Loader</span>
-              <input data-dataset-field="loader" value="${escapeHtml(draft.loader || "hf_manifest")}" autocomplete="off" />
+              <textarea data-dataset-field="loader" rows="2" title="${escapeHtml(
+                draft.loader || "hf_manifest",
+              )}" autocomplete="off">${escapeHtml(draft.loader || "hf_manifest")}</textarea>
             </label>
             <label>
               <span>Root</span>
-              <input data-dataset-field="root" value="${escapeHtml(draft.root || "")}" autocomplete="off" />
+              <textarea data-dataset-field="root" rows="3" autocomplete="off">${escapeHtml(draft.root || "")}</textarea>
             </label>
             <label>
               <span>Query IDs</span>
@@ -2528,6 +3306,7 @@ function renderConfigDatasetList() {
       `;
     })
     .join("");
+  syncControlTitles(configDatasetList);
 }
 
 function datasetSourceForId(datasetId) {
@@ -2551,9 +3330,18 @@ function renderAddDatasetButton() {
 }
 
 function setQueryDropdownOpen(open) {
+  if (open && state.datasetPickerOpen) {
+    state.datasetPickerOpen = false;
+    datasetPickerList.hidden = true;
+    datasetPickerTrigger.setAttribute("aria-expanded", "false");
+  }
   state.queryDropdownOpen = Boolean(open && state.activeDatasetQueries.length);
   queryList.hidden = !state.queryDropdownOpen;
   querySelectTrigger.setAttribute("aria-expanded", String(state.queryDropdownOpen));
+  syncSelectionMenuScrollLock();
+  if (state.queryDropdownOpen) {
+    scrollDropdownIntoView(queryList);
+  }
 }
 
 function querySelectCopy() {
@@ -2655,6 +3443,7 @@ function resetSelectionToConfig() {
   state.pendingDatasetId = "";
   state.pendingDatasetLoadedId = "";
   state.pendingQueryIds.clear();
+  state.datasetPickerOpen = false;
   state.queryDropdownOpen = false;
   state.pendingDatasetLoading = false;
   state.activeDatasetQueries = [];
@@ -2731,6 +3520,7 @@ async function loadPendingDatasetQueries(item) {
   state.activeDatasetQueries = [];
   renderQueriesSelector();
   renderAddDatasetButton();
+  renderOverview();
 
   try {
     const queries = await fetchJson(`/api/datasets/${encodeURIComponent(item.id)}/queries`);
@@ -2745,6 +3535,7 @@ async function loadPendingDatasetQueries(item) {
     state.pendingDatasetLoading = false;
     renderQueriesSelector();
     renderAddDatasetButton();
+    renderOverview();
   }
 }
 
@@ -2765,7 +3556,7 @@ async function refreshRuntimeResources() {
     ]);
     refreshLabel.textContent = "Updated";
     setStatus("Ready", "idle");
-    runTitle.textContent = state.lastPayload?.result ? "Complete" : "Ready";
+    syncViewChrome();
   } catch (error) {
     refreshLabel.textContent = previousLabel || "Refresh";
     setStatus("Error", "error");
@@ -2925,7 +3716,10 @@ function renderRecordsTable(records, preferredColumns) {
               (record) => `
                 <tr>
                   ${columns
-                    .map((column) => `<td>${escapeHtml(truncate(record[column]))}</td>`)
+                    .map(
+                      (column) =>
+                        `<td data-column="${escapeHtml(column)}">${escapeHtml(truncate(record[column]))}</td>`,
+                    )
                     .join("")}
                 </tr>
               `,
@@ -2967,7 +3761,7 @@ function renderQueries(queries) {
   if (!queries.length) {
     return '<div class="empty-state compact">No explicit queries; extraction defaults to all schema attributes.</div>';
   }
-  return queries
+  const items = queries
     .slice(0, 25)
     .map(
       (query) => `
@@ -2979,6 +3773,7 @@ function renderQueries(queries) {
       `,
     )
     .join("");
+  return `<div class="query-detail-list">${items}</div>`;
 }
 
 function renderQueriesSelector() {
@@ -3003,22 +3798,58 @@ function renderQueriesSelector() {
   }
   queryList.hidden = !state.queryDropdownOpen;
   querySelectTrigger.setAttribute("aria-expanded", String(state.queryDropdownOpen));
-  queryList.innerHTML = state.activeDatasetQueries
-    .map((query) => {
-      const queryId = String(query.query_id || "");
-      return `
-        <label class="query-option">
-          <input type="checkbox" value="${escapeHtml(queryId)}" ${
-            state.pendingQueryIds.has(queryId) ? "checked" : ""
-          } />
-          <span>
-            <strong>${escapeHtml(queryId || "query")}</strong>
-            <small>${escapeHtml(truncate(query.question || query.sql || "", 96))}</small>
-          </span>
-        </label>
-      `;
-    })
-    .join("");
+  syncSelectionMenuScrollLock();
+  queryList.innerHTML = `
+    <div class="selection-window-head">
+      <div>
+        <span>Query Selection</span>
+        <strong>${escapeHtml(state.pendingDatasetId || "Dataset")}</strong>
+      </div>
+      <div class="selection-actions">
+        <button type="button" data-query-action="clear">Clear</button>
+        <button type="button" data-query-action="all">All</button>
+        <button type="button" data-query-action="close">Done</button>
+      </div>
+    </div>
+    <div class="selection-window-body">
+      ${state.activeDatasetQueries
+        .map((query) => {
+          const queryId = String(query.query_id || "");
+          return `
+            <label class="query-option">
+              <input type="checkbox" value="${escapeHtml(queryId)}" ${
+                state.pendingQueryIds.has(queryId) ? "checked" : ""
+              } />
+              <span>
+                <strong>${escapeHtml(queryId || "query")}</strong>
+                <small>${escapeHtml(truncate(query.question || query.sql || "", 260))}</small>
+              </span>
+            </label>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+  queryList.querySelector("[data-query-action='close']")?.addEventListener("click", () => {
+    setQueryDropdownOpen(false);
+    querySelectTrigger.focus();
+  });
+  queryList.querySelector("[data-query-action='clear']")?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    state.pendingQueryIds.clear();
+    renderQueriesSelector();
+    renderAddDatasetButton();
+    renderOverview();
+  });
+  queryList.querySelector("[data-query-action='all']")?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    state.pendingQueryIds = new Set(
+      state.activeDatasetQueries.map((query) => String(query.query_id || "")).filter(Boolean),
+    );
+    renderQueriesSelector();
+    renderAddDatasetButton();
+    renderOverview();
+  });
   queryList.querySelectorAll("input").forEach((input) => {
     input.addEventListener("change", (event) => {
       if (event.target.checked) {
@@ -3028,8 +3859,12 @@ function renderQueriesSelector() {
       }
       renderQueriesSelector();
       renderAddDatasetButton();
+      renderOverview();
     });
   });
+  if (state.queryDropdownOpen) {
+    scrollDropdownIntoView(queryList);
+  }
 }
 
 function renderGeneratedConfig() {
@@ -3067,17 +3902,61 @@ function renderGeneratedConfig() {
   copyConfig.disabled = false;
 }
 
+function runButtonState() {
+  if (state.runInFlight) {
+    return {
+      disabled: true,
+      label: "Running Pipeline",
+      title: "Run is in progress.",
+    };
+  }
+  if (state.datasetSource === "config" && !state.configMaterialized) {
+    return {
+      disabled: true,
+      label: "Load Config First",
+      title: "Load the config before running this experiment.",
+    };
+  }
+  if (!runDatasetIds().length) {
+    if (pendingDatasetRequiresQueries() && !state.pendingQueryIds.size) {
+      return {
+        disabled: true,
+        label: "Select Query",
+        title: "Select at least one query for the chosen dataset.",
+      };
+    }
+    return {
+      disabled: true,
+      label: "Select Dataset",
+      title: "Choose or load at least one dataset before running.",
+    };
+  }
+  if (!state.configMaterialized && !hasPendingRunDataset()) {
+    return {
+      disabled: true,
+      label: "Load Config First",
+      title: "Load the config or add a dataset before running.",
+    };
+  }
+  return {
+    disabled: false,
+    label: "Execute Query Pipeline",
+    title: "Run the selected datasets and queries.",
+  };
+}
+
+function renderRunButtonState() {
+  const stateInfo = runButtonState();
+  runButton.disabled = stateInfo.disabled;
+  runButton.textContent = stateInfo.label;
+  runButton.title = stateInfo.title;
+  runButton.dataset.runState = state.runInFlight ? "running" : stateInfo.disabled ? "blocked" : "ready";
+  runButton.setAttribute("aria-disabled", String(stateInfo.disabled));
+}
+
 function renderOverview() {
-  const selectedDatasetCount = state.selectedDatasetIds.size;
-  const configQueryCount = configuredQueryIds().length;
-  const selectedQueryLabel =
-    state.datasetSource === "config" && configQueryCount
-      ? String(configQueryCount)
-      : state.datasetSource === "all" && state.selectedQueryIds.size
-      ? String(state.selectedQueryIds.size)
-      : selectedDatasetCount
-        ? "all"
-        : "-";
+  const selectedDatasetCount = runDatasetIds().length;
+  const selectedQueryLabel = runQueryLabel();
   const payload = state.lastPayload || {};
   const hasRun = Boolean(payload.result);
   const resultRoot = payload.result || {};
@@ -3110,18 +3989,110 @@ function renderOverview() {
     collectNumbers(resultRoot, [/empirical.*recall/, /final.*recall/, /^recall$/, /accuracy/]),
   );
 
-  overviewState.textContent = hasRun ? "Updated" : selectedDatasetCount ? "Configured" : "Ready";
+  if (!state.runInFlight && statusPill.classList.contains("idle")) {
+    setStatus(selectedDatasetCount ? "Ready" : "Setup", "idle");
+  }
+  overviewState.textContent = hasRun ? "Updated" : selectedDatasetCount ? "Ready" : "Setup";
+  selectedCount.textContent = `${selectedDatasetCount} ${selectedDatasetCount === 1 ? "dataset" : "datasets"}`;
   overviewSelectedDatasets.textContent = selectedDatasetCount ? String(selectedDatasetCount) : "-";
   overviewSelectedQueries.textContent = selectedQueryLabel;
+  if (!hasRun) {
+    summaryDatasets.textContent = String(selectedDatasetCount || "-");
+  }
   overviewRunDatasets.textContent = hasRun ? String(countRunDatasets(payload) || "-") : "-";
   overviewRunQueries.textContent = hasRun ? String(countRunQueries(payload) || "-") : "-";
   overviewOracleCost.textContent = formatMetric(oracleAvg);
   overviewSystemCost.textContent = formatMetric(systemAvg);
   overviewSavings.textContent = formatMetric(savingsAvg, { percent: true });
   overviewRecall.textContent = formatMetric(recallAvg, { percent: true });
+  renderArchitectureFunnel({
+    selectedDatasetCount,
+    selectedQueryLabel,
+    payload,
+    hasRun,
+    recallLabel: formatMetric(recallAvg, { percent: true }),
+  });
+  renderRelationPreview();
+  renderRunButtonState();
+  syncViewChrome();
 }
 
-function setActiveView(view) {
+function resetViewportScroll() {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  });
+  window.setTimeout(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, 0);
+}
+
+function revealActiveWorkspace() {
+  const workspace = document.querySelector(".workspace");
+  if (!workspace) {
+    resetViewportScroll();
+    return;
+  }
+  workspace.scrollIntoView({ block: "start", inline: "nearest", behavior: "auto" });
+  window.requestAnimationFrame(() => {
+    workspace.scrollIntoView({ block: "start", inline: "nearest", behavior: "auto" });
+  });
+  window.setTimeout(() => {
+    workspace.scrollIntoView({ block: "start", inline: "nearest", behavior: "auto" });
+  }, 80);
+}
+
+function resetViewScrollTarget({ revealWorkspace = false } = {}) {
+  if (revealWorkspace && window.matchMedia("(max-width: 900px)").matches) {
+    revealActiveWorkspace();
+    return;
+  }
+  resetViewportScroll();
+}
+
+function activeViewTitle(view = state.activeView) {
+  if (view === "config") {
+    return state.configMaterialized ? "Config loaded" : "Load a config";
+  }
+  if (view === "datasets") {
+    return state.activeDatasetId ? "Dataset detail" : "Browse datasets";
+  }
+  if (view === "console") {
+    if (!state.consoleRun) {
+      return "Run console";
+    }
+    if (state.consoleRun.status === "running" || state.runInFlight) {
+      return "Running pipeline";
+    }
+    if (state.consoleRun.status === "completed") {
+      return "Run complete";
+    }
+    if (state.consoleRun.status === "failed") {
+      return "Run failed";
+    }
+    return statusLabel(state.consoleRun.status);
+  }
+  if (view === "results") {
+    return state.lastPayload?.result ? "Run complete" : "Saved results";
+  }
+  return "Workbench";
+}
+
+function syncViewChrome(view = state.activeView) {
+  const labels = {
+    config: "1. Configuration",
+    datasets: "2. Dataset browser",
+    console: "3. Run console",
+    results: "4. Latent relational view (R_Q)",
+  };
+  if (viewEyebrow) {
+    viewEyebrow.textContent = labels[view] || "Workbench";
+  }
+  runTitle.textContent = activeViewTitle(view);
+}
+
+function setActiveView(view, options = {}) {
+  closeSelectionMenus();
   state.activeView = view;
   document.querySelectorAll("[data-view-button]").forEach((button) => {
     button.classList.toggle("active", button.dataset.viewButton === view);
@@ -3134,9 +4105,15 @@ function setActiveView(view) {
       datasetDetail.innerHTML = `<div class="empty-state">${escapeHtml(error.message || String(error))}</div>`;
     });
   }
+  if (view === "config") {
+    scheduleAutoGrowTextareas(configWorkspace);
+  }
+  syncViewChrome(view);
+  resetViewScrollTarget(options);
 }
 
 function setActiveConfigSection(section) {
+  closeSelectionMenus();
   state.activeConfigSection = section;
   configSectionButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.configSectionButton === section);
@@ -3144,6 +4121,7 @@ function setActiveConfigSection(section) {
   configSectionPages.forEach((page) => {
     page.classList.toggle("active", page.dataset.configSectionPage === section);
   });
+  scheduleAutoGrowTextareas(configWorkspace);
 }
 
 async function loadFirstSelectedDatasetDetail() {
@@ -3158,6 +4136,7 @@ async function loadFirstSelectedDatasetDetail() {
 }
 
 function setActivePage(page) {
+  closeSelectionMenus();
   state.activePage = page;
   document.querySelectorAll("[data-page-button]").forEach((button) => {
     button.classList.toggle("active", button.dataset.pageButton === page);
@@ -3165,12 +4144,13 @@ function setActivePage(page) {
   document.querySelectorAll(".app-page").forEach((panel) => {
     panel.classList.toggle("active", panel.id === `${page}-page`);
   });
+  resetViewportScroll();
 }
 
 function applyTheme(theme) {
   const resolvedTheme = theme === "dark" ? "dark" : "light";
   document.documentElement.dataset.theme = resolvedTheme;
-  localStorage.setItem("redd-theme", resolvedTheme);
+  localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme);
   const isDark = resolvedTheme === "dark";
   themeToggle.setAttribute("aria-pressed", String(isDark));
   themeToggle.classList.toggle("is-dark", isDark);
@@ -3181,6 +4161,7 @@ function renderPaperViewer() {
   const paper = paperCatalog[state.selectedPaper] || paperCatalog.paper;
   const previewHref = paper.href;
   const downloadHref = paper.downloadHref || paper.href;
+  const fileLabel = downloadHref.split("/").pop() || "PDF";
   paperTabs.forEach((tab) => {
     tab.classList.toggle("active", tab.dataset.paper === state.selectedPaper);
   });
@@ -3188,13 +4169,15 @@ function renderPaperViewer() {
     <article class="paper-card">
       <h3>${escapeHtml(paper.title)}</h3>
       <p>${escapeHtml(paper.description)}</p>
+      <div class="paper-file-panel">
+        <span>PDF</span>
+        <strong>${escapeHtml(fileLabel)}</strong>
+        <p>Preview opens as a document view so the demo shell stays responsive across embedded browsers.</p>
+      </div>
       <div class="paper-actions">
-        <a class="pill-link" href="${escapeHtml(previewHref)}" target="_blank" rel="noopener noreferrer">Open PDF</a>
+        <a class="pill-link" href="${escapeHtml(previewHref)}">Open PDF</a>
         <a class="pill-link" href="${escapeHtml(downloadHref)}" download>Download</a>
       </div>
-      <object class="paper-viewer" data="${escapeHtml(previewHref)}" type="application/pdf">
-        <p>PDF preview unavailable. Open <a href="${escapeHtml(previewHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(previewHref)}</a>.</p>
-      </object>
     </article>
   `;
 }
@@ -3263,19 +4246,22 @@ async function runPaperExperiment(experimentId) {
   setError("");
   setStatus("Running", "running");
   runTitle.textContent = "Running paper experiment";
+  const steps = paperExperimentSteps(experimentId);
+  resetConsoleRun(steps);
   setActivePage("workbench");
-  setActiveView("console");
+  setActiveView("console", { revealWorkspace: true });
   const payload = await startStreamingRun(
     {},
     {
       endpoint: `/api/paper-experiments/${encodeURIComponent(experimentId)}/runs`,
-      steps: paperExperimentSteps(experimentId),
+      steps,
     },
   );
   await loadPaperExperiments();
   await loadOutputResults();
   setStatus("Success", "success");
   runTitle.textContent = "Paper experiment complete";
+  setActiveView("results", { revealWorkspace: true });
   renderPayload(payload);
 }
 
@@ -3283,10 +4269,12 @@ async function loadDefaults() {
   const defaults = await fetchJson("/api/defaults");
   state.defaults = defaults;
   configPath.value = defaults.config_path || "";
+  syncControlTitle(configPath);
   renderApiKeyStatus(defaults.api_key_status);
   const defaultExperiment = defaults.experiment || "demo";
   experiment.innerHTML = `<option value="${escapeHtml(defaultExperiment)}">${escapeHtml(defaultExperiment)}</option>`;
   experiment.value = defaultExperiment;
+  syncControlTitle(experiment);
   document.querySelectorAll('input[name="stages"]').forEach((item) => {
     item.checked = (defaults.default_stages || []).includes(item.value);
   });
@@ -3296,41 +4284,47 @@ async function loadDefaults() {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setError("");
-  if (!state.selectedDatasetIds.size) {
+  const datasetIdsForRun = runDatasetIds();
+  if (!datasetIdsForRun.length) {
+    if (pendingDatasetRequiresQueries() && !state.pendingQueryIds.size) {
+      setError("Select at least one query.");
+      return;
+    }
     setError("Select at least one dataset.");
     return;
   }
-  if (!state.configMaterialized) {
+  if (!state.configMaterialized && !hasPendingRunDataset()) {
     setError("Load a config or add a dataset to config first.");
     return;
   }
   setStatus("Running", "running");
-  runTitle.textContent = "Running";
-  runButton.disabled = true;
-  setActiveView("console");
+  state.runInFlight = true;
+  renderRunButtonState();
+  resetConsoleRun();
+  setActiveView("console", { revealWorkspace: true });
 
-  const config = generatedConfigObject();
+  const config = generatedConfigObject({ forRun: true });
   const generatedExperiment = Object.keys(config.experiments || {})[0] || experiment.value.trim();
   const payload = {
     config_path: configPath.value.trim(),
     experiment: generatedExperiment,
     config,
     stages: selectedStages(),
-    datasets: selectedDatasetIds(),
-    query_ids: [],
+    datasets: datasetIdsForRun,
+    query_ids: hasPendingRunDataset() ? runQueryIds() : [],
     api_key: apiKey.value.trim(),
   };
 
   try {
     await startStreamingRun(payload);
     setStatus("Success", "success");
-    runTitle.textContent = "Complete";
+    setActiveView("results", { revealWorkspace: true });
   } catch (error) {
     setStatus("Error", "error");
-    runTitle.textContent = "Failed";
     setError(error.message || String(error));
   } finally {
-    runButton.disabled = false;
+    state.runInFlight = false;
+    renderOverview();
   }
 });
 
@@ -3370,8 +4364,8 @@ loadConfig.addEventListener("click", async () => {
     state.configMaterialized = true;
     renderGeneratedConfig();
     setActiveView("config");
-    runTitle.textContent = "Config loaded";
     setStatus("Ready", "idle");
+    syncViewChrome();
   } catch (error) {
     setStatus("Error", "error");
     setError(error.message || String(error));
@@ -3381,6 +4375,7 @@ loadConfig.addEventListener("click", async () => {
 document.querySelectorAll("[data-source]").forEach((button) => {
   button.addEventListener("click", () => {
     state.datasetSource = button.dataset.source;
+    closeSelectionMenus();
     document.querySelectorAll("[data-source]").forEach((item) => {
       item.classList.toggle("active", item === button);
     });
@@ -3389,29 +4384,18 @@ document.querySelectorAll("[data-source]").forEach((button) => {
       state.pendingDatasetId = "";
       state.pendingDatasetLoadedId = "";
       state.pendingQueryIds.clear();
-      state.queryDropdownOpen = false;
       state.pendingDatasetLoading = false;
       state.activeDatasetQueries = [];
     }
+    renderDatasetPicker(datasetSelectItems());
     renderQueriesSelector();
     renderDatasets();
     renderOverview();
   });
 });
 
-emptyLoadConfig.addEventListener("click", () => {
-  loadConfig.click();
-});
-
-emptySearchDatasets.addEventListener("click", () => {
-  const searchButton = document.querySelector('[data-source="all"]');
-  if (searchButton) {
-    searchButton.click();
-  }
-});
-
 document.querySelectorAll("[data-view-button]").forEach((button) => {
-  button.addEventListener("click", () => setActiveView(button.dataset.viewButton));
+  button.addEventListener("click", () => setActiveView(button.dataset.viewButton, { revealWorkspace: true }));
 });
 
 configSectionButtons.forEach((button) => {
@@ -3466,15 +4450,32 @@ querySelectTrigger.addEventListener("click", () => {
   setQueryDropdownOpen(!state.queryDropdownOpen);
 });
 
-document.addEventListener("click", (event) => {
-  if (!state.queryDropdownOpen || event.target.closest(".query-dropdown")) {
+datasetPickerTrigger.addEventListener("click", () => {
+  if (datasetPickerTrigger.disabled) {
     return;
   }
-  setQueryDropdownOpen(false);
+  setDatasetPickerOpen(!state.datasetPickerOpen);
+});
+
+document.addEventListener("click", (event) => {
+  if (state.datasetPickerOpen && !selectionMenuContainsEvent(event, datasetPickerTrigger, datasetPickerList)) {
+    setDatasetPickerOpen(false);
+  }
+  if (state.queryDropdownOpen && !selectionMenuContainsEvent(event, querySelectTrigger, queryList)) {
+    setQueryDropdownOpen(false);
+  }
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && state.queryDropdownOpen) {
+  if (event.key !== "Escape") {
+    return;
+  }
+  if (state.datasetPickerOpen) {
+    setDatasetPickerOpen(false);
+    datasetPickerTrigger.focus();
+    return;
+  }
+  if (state.queryDropdownOpen) {
     setQueryDropdownOpen(false);
     querySelectTrigger.focus();
   }
@@ -3493,11 +4494,14 @@ datasetSelect.addEventListener("change", () => {
     state.pendingDatasetId = "";
     state.pendingDatasetLoadedId = "";
     state.pendingQueryIds.clear();
+    state.datasetPickerOpen = false;
     state.queryDropdownOpen = false;
     state.pendingDatasetLoading = false;
     state.activeDatasetQueries = [];
+    renderDatasetPicker(datasetSelectItems());
     renderQueriesSelector();
     renderAddDatasetButton();
+    renderOverview();
     return;
   }
   const item = state.registryDatasets.find((dataset) => dataset.id === datasetId);
@@ -3507,10 +4511,13 @@ datasetSelect.addEventListener("change", () => {
   state.pendingDatasetId = datasetId;
   state.pendingDatasetLoadedId = "";
   state.pendingQueryIds.clear();
+  state.datasetPickerOpen = false;
   state.queryDropdownOpen = false;
   state.activeDatasetQueries = [];
+  renderDatasetPicker(datasetSelectItems());
   renderQueriesSelector();
   renderAddDatasetButton();
+  renderOverview();
   loadPendingDatasetQueries(item);
 });
 addDataset.addEventListener("click", () => {
@@ -3629,7 +4636,8 @@ experiment.addEventListener("change", () => {
 });
 
 copyConfig.addEventListener("click", async () => {
-  await navigator.clipboard.writeText(generatedConfig.textContent);
+  const copied = await copyTextToClipboard(generatedConfig.textContent || "");
+  showCopyFeedback(copyConfig, copied);
 });
 
 clearConsoleLogs.addEventListener("click", () => {
@@ -3644,14 +4652,45 @@ copyConsoleLogs.addEventListener("click", async () => {
   const text = state.consoleRun
     ? state.consoleRun.logs.map((entry) => `[${entry.time}] ${entry.message}`).join("\n")
     : "";
-  await navigator.clipboard.writeText(text);
-  copyConsoleLogs.textContent = "Copied";
-  window.setTimeout(() => {
-    copyConsoleLogs.textContent = "Copy";
-  }, 1200);
+  const copied = await copyTextToClipboard(text);
+  showCopyFeedback(copyConsoleLogs, copied);
 });
 
-applyTheme(localStorage.getItem("redd-theme") || "light");
+architectureFunnelToggle?.addEventListener("click", () => {
+  setArchitectureFunnelOpen(architectureFunnelBody?.hidden);
+});
+
+document.addEventListener("input", (event) => {
+  if (event.target?.matches?.("input, select, textarea")) {
+    syncControlTitle(event.target);
+    if (event.target.tagName === "TEXTAREA") {
+      autoGrowTextarea(event.target);
+    }
+  }
+});
+
+document.addEventListener("change", (event) => {
+  if (event.target?.matches?.("input, select, textarea")) {
+    syncControlTitle(event.target);
+    if (event.target.tagName === "TEXTAREA") {
+      autoGrowTextarea(event.target);
+    }
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (!errorPanel.hidden) {
+    revealErrorPanel();
+  }
+  autoGrowTextareas();
+});
+
+if ("scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+resetViewportScroll();
+applyTheme(localStorage.getItem(THEME_STORAGE_KEY) || "light");
+setArchitectureFunnelOpen(true);
 renderPaperViewer();
 renderQueriesSelector();
 renderGeneratedConfig();

@@ -3,44 +3,3493 @@
   "dataset_id": "spider.flight_4.routes_airports_airlines",
   "queries": [
     {
-      "query_id": "Q1",
-      "question": "",
-      "sql": "",
+      "query_id": "Q_gen_flight_routes_airline_name_not_in_003_ryanair_american_ai",
+      "question": "List arrival airport name from flight_routes where airline name is not one of Ryanair, American Airlines.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"airline_name\" NOT IN ('Ryanair', 'American Airlines');",
       "required_tables": [
-        "airlines",
-        "airports",
         "flight_routes"
       ],
       "required_columns": [
-        "airlines.airline_name",
-        "airlines.iata_code",
-        "airlines.icao_code",
-        "airlines.callsign",
-        "airlines.country",
-        "airlines.active",
-        "airports.airport_name",
-        "airports.city",
-        "airports.country",
-        "airports.latitude",
-        "airports.longitude",
-        "airports.elevation",
-        "airports.iata_code",
-        "airports.icao_code",
         "flight_routes.airline_name",
-        "flight_routes.departure_airport_name",
-        "flight_routes.departure_airport_code",
-        "flight_routes.departure_country",
-        "flight_routes.arrival_airport_name",
-        "flight_routes.arrival_airport_code",
-        "flight_routes.arrival_country",
-        "flight_routes.operation_focus",
-        "flight_routes.route_type"
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.02999000333222259,
+        "actual_table_doc_coverage": 0.8823529411764706,
+        "result_docs": 90,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.airline_name",
+        "operator": "NOT IN",
+        "value": [
+          "Ryanair",
+          "American Airlines"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_airline_name_not_in_003_ryanair_american_ai",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 90,
+        "profile_all_required_cells": 180,
+        "profile_all_relevant_doc_rate": 0.02999000333222259,
+        "profile_eval_relevant_docs": 90,
+        "profile_eval_required_cells": 180,
+        "profile_eval_relevant_doc_rate": 0.03024193548387097,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airlines_active_in_003_n_y",
+      "question": "List airline name from airlines where active is one of N, Y.",
+      "sql": "SELECT \"airline_name\" FROM \"airlines\" WHERE \"active\" IN ('N', 'Y');",
+      "required_tables": [
+        "airlines"
+      ],
+      "required_columns": [
+        "airlines.active",
+        "airlines.airline_name"
       ],
       "output_columns": [
         "airlines.airline_name"
       ],
-      "tags": [],
-      "difficulty": null
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.003998667110963012,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 12,
+        "total_docs": 3001,
+        "table_total_docs": 12,
+        "predicate_table": "airlines",
+        "predicate_column": "airlines.active",
+        "operator": "IN",
+        "value": [
+          "N",
+          "Y"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airlines_active_in_003_n_y",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 12,
+        "profile_all_required_cells": 24,
+        "profile_all_relevant_doc_rate": 0.003998667110963012,
+        "profile_eval_relevant_docs": 12,
+        "profile_eval_required_cells": 24,
+        "profile_eval_relevant_doc_rate": 0.004032258064516129,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_airlines_airports_airlines_airports_elevation_003_4759",
+      "question": "List airline name from airlines records linked to airports where airports elevation is at most 4759.",
+      "sql": "SELECT \"airlines\".\"airline_name\" FROM \"airlines\" JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airports\".\"elevation\" <= 4759;",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airlines.airline_name",
+        "airports.elevation"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.0026657780739753416,
+        "result_docs": 8,
+        "total_docs": 3001,
+        "predicate_table": "airports",
+        "predicate_column": "airports.elevation",
+        "operator": "<=",
+        "value": "4759",
+        "is_join": true,
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_join_airlines_airports_airlines_airports_elevation_003_4759",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 8,
+        "profile_all_required_cells": 16,
+        "profile_all_relevant_doc_rate": 0.0026657780739753416,
+        "profile_eval_relevant_docs": 8,
+        "profile_eval_required_cells": 16,
+        "profile_eval_relevant_doc_rate": 0.002688172043010753,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_airlines_airports_airports_airlines_airline_name_005_air_st_thomas",
+      "question": "List airport name from airports records linked to airlines where airlines airline name equals Air St. Thomas.",
+      "sql": "SELECT \"airports\".\"airport_name\" FROM \"airlines\" JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airlines\".\"airline_name\" = 'Air St. Thomas';",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airports.airport_name",
+        "airlines.airline_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.0013328890369876708,
+        "result_docs": 4,
+        "total_docs": 3001,
+        "predicate_table": "airlines",
+        "predicate_column": "airlines.airline_name",
+        "operator": "=",
+        "value": "Air St. Thomas",
+        "is_join": true,
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_join_airlines_airports_airports_airlines_airline_name_005_air_st_thomas",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.0013328890369876708,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.0013440860215053765,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_arrival_airport_code_value_005_pmo",
+      "question": "List arrival airport name from flight_routes where arrival airport code does not equal PMO.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"arrival_airport_code\" <> 'PMO';",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.03365544818393869,
+        "actual_table_doc_coverage": 0.9901960784313726,
+        "result_docs": 101,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.arrival_airport_code",
+        "operator": "!=",
+        "value": "PMO",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_arrival_airport_code_value_005_pmo",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 101,
+        "profile_all_required_cells": 202,
+        "profile_all_relevant_doc_rate": 0.03365544818393869,
+        "profile_eval_relevant_docs": 101,
+        "profile_eval_required_cells": 202,
+        "profile_eval_relevant_doc_rate": 0.03393817204301075,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_iata_code_value_005_aca",
+      "question": "List airport name from airports where iata code does not equal ACA.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"iata_code\" <> 'ACA';",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.iata_code",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.001999333555481506,
+        "actual_table_doc_coverage": 0.46153846153846156,
+        "result_docs": 6,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.iata_code",
+        "operator": "!=",
+        "value": "ACA",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_iata_code_value_005_aca",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 6,
+        "profile_all_required_cells": 12,
+        "profile_all_relevant_doc_rate": 0.001999333555481506,
+        "profile_eval_relevant_docs": 6,
+        "profile_eval_required_cells": 12,
+        "profile_eval_relevant_doc_rate": 0.0020161290322580645,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_airlines_airports_airlines_airports_airport_name_005_burlington_international",
+      "question": "List airline name from airlines records linked to airports where airports airport name equals Burlington International Airport.",
+      "sql": "SELECT \"airlines\".\"airline_name\" FROM \"airlines\" JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airports\".\"airport_name\" = 'Burlington International Airport';",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airlines.airline_name",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.0006664445184938354,
+        "result_docs": 2,
+        "total_docs": 3001,
+        "predicate_table": "airports",
+        "predicate_column": "airports.airport_name",
+        "operator": "=",
+        "value": "Burlington International Airport",
+        "is_join": true,
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_join_airlines_airports_airlines_airports_airport_name_005_burlington_international",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 2,
+        "profile_all_required_cells": 4,
+        "profile_all_relevant_doc_rate": 0.0006664445184938354,
+        "profile_eval_relevant_docs": 2,
+        "profile_eval_required_cells": 4,
+        "profile_eval_relevant_doc_rate": 0.0006720430107526882,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_airlines_airports_airlines_airports_city_005_acapulco",
+      "question": "List airline name from airlines records linked to airports where airports city equals Acapulco.",
+      "sql": "SELECT \"airlines\".\"airline_name\" FROM \"airlines\" JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airports\".\"city\" = 'Acapulco';",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airlines.airline_name",
+        "airports.city"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.0006664445184938354,
+        "result_docs": 2,
+        "total_docs": 3001,
+        "predicate_table": "airports",
+        "predicate_column": "airports.city",
+        "operator": "=",
+        "value": "Acapulco",
+        "is_join": true,
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_join_airlines_airports_airlines_airports_city_005_acapulco",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 2,
+        "profile_all_required_cells": 4,
+        "profile_all_relevant_doc_rate": 0.0006664445184938354,
+        "profile_eval_relevant_docs": 2,
+        "profile_eval_required_cells": 4,
+        "profile_eval_relevant_doc_rate": 0.0006720430107526882,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_airlines_airports_airlines_airports_icao_code_005_cjt2",
+      "question": "List airline name from airlines records linked to airports where airports icao code equals CJT2.",
+      "sql": "SELECT \"airlines\".\"airline_name\" FROM \"airlines\" JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airports\".\"icao_code\" = 'CJT2';",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airlines.airline_name",
+        "airports.icao_code"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.0006664445184938354,
+        "result_docs": 2,
+        "total_docs": 3001,
+        "predicate_table": "airports",
+        "predicate_column": "airports.icao_code",
+        "operator": "=",
+        "value": "CJT2",
+        "is_join": true,
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_join_airlines_airports_airlines_airports_icao_code_005_cjt2",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 2,
+        "profile_all_required_cells": 4,
+        "profile_all_relevant_doc_rate": 0.0006664445184938354,
+        "profile_eval_relevant_docs": 2,
+        "profile_eval_required_cells": 4,
+        "profile_eval_relevant_doc_rate": 0.0006720430107526882,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_departure_airport_code_value_005_abj",
+      "question": "List arrival airport name from flight_routes where departure airport code does not equal ABJ.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"departure_airport_code\" <> 'ABJ';",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.03365544818393869,
+        "actual_table_doc_coverage": 0.9901960784313726,
+        "result_docs": 101,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.departure_airport_code",
+        "operator": "!=",
+        "value": "ABJ",
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_departure_airport_code_value_005_abj",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 101,
+        "profile_all_required_cells": 202,
+        "profile_all_relevant_doc_rate": 0.03365544818393869,
+        "profile_eval_relevant_docs": 101,
+        "profile_eval_required_cells": 202,
+        "profile_eval_relevant_doc_rate": 0.03393817204301075,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_longitude_between_020_75_72949981689453",
+      "question": "List airport name from airports where longitude is between -75.72949981689453 and 36.43349838256836.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"longitude\" BETWEEN -75.72949981689453 AND 36.43349838256836;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.longitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.0016661112962345886,
+        "actual_table_doc_coverage": 0.38461538461538464,
+        "result_docs": 5,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.longitude",
+        "operator": "BETWEEN",
+        "value": [
+          "-75.72949981689453",
+          "36.43349838256836"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_longitude_between_020_75_72949981689453",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 5,
+        "profile_all_required_cells": 10,
+        "profile_all_relevant_doc_rate": 0.0016661112962345886,
+        "profile_eval_relevant_docs": 5,
+        "profile_eval_required_cells": 10,
+        "profile_eval_relevant_doc_rate": 0.0016801075268817205,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_elevation_between_020_558_2261",
+      "question": "List airport name from airports where elevation is between 558 and 2261.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"elevation\" BETWEEN 558 AND 2261;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.elevation",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.0013328890369876708,
+        "actual_table_doc_coverage": 0.3076923076923077,
+        "result_docs": 4,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.elevation",
+        "operator": "BETWEEN",
+        "value": [
+          "558",
+          "2261"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_elevation_between_020_558_2261",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.0013328890369876708,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.0013440860215053765,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_latitude_between_020_29_78510093688965_4",
+      "question": "List airport name from airports where latitude is between 29.78510093688965 and 44.471900939899996.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"latitude\" BETWEEN 29.78510093688965 AND 44.471900939899996;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.latitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "actual_doc_coverage": 0.0013328890369876708,
+        "actual_table_doc_coverage": 0.3076923076923077,
+        "result_docs": 4,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.latitude",
+        "operator": "BETWEEN",
+        "value": [
+          "29.78510093688965",
+          "44.471900939899996"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_latitude_between_020_29_78510093688965_4",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 4,
+        "profile_all_required_cells": 8,
+        "profile_all_relevant_doc_rate": 0.0013328890369876708,
+        "profile_eval_relevant_docs": 4,
+        "profile_eval_required_cells": 8,
+        "profile_eval_relevant_doc_rate": 0.0013440860215053765,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_longitude_between_040_96_93440246582031",
+      "question": "List airport name from airports where longitude is between -96.93440246582031 and 40.099998474121094.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"longitude\" BETWEEN -96.93440246582031 AND 40.099998474121094;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.longitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.0023325558147284237,
+        "actual_table_doc_coverage": 0.5384615384615384,
+        "result_docs": 7,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.longitude",
+        "operator": "BETWEEN",
+        "value": [
+          "-96.93440246582031",
+          "40.099998474121094"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_longitude_between_040_96_93440246582031",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 7,
+        "profile_all_required_cells": 14,
+        "profile_all_relevant_doc_rate": 0.0023325558147284237,
+        "profile_eval_relevant_docs": 7,
+        "profile_eval_required_cells": 14,
+        "profile_eval_relevant_doc_rate": 0.0023521505376344087,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_elevation_between_040_335_3872",
+      "question": "List airport name from airports where elevation is between 335 and 3872.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"elevation\" BETWEEN 335 AND 3872;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.elevation",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.001999333555481506,
+        "actual_table_doc_coverage": 0.46153846153846156,
+        "result_docs": 6,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.elevation",
+        "operator": "BETWEEN",
+        "value": [
+          "335",
+          "3872"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_elevation_between_040_335_3872",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 6,
+        "profile_all_required_cells": 12,
+        "profile_all_relevant_doc_rate": 0.001999333555481506,
+        "profile_eval_relevant_docs": 6,
+        "profile_eval_required_cells": 12,
+        "profile_eval_relevant_doc_rate": 0.0020161290322580645,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_latitude_between_040_22_181800842285156",
+      "question": "List airport name from airports where latitude is between 22.181800842285156 and 45.1237983704.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"latitude\" BETWEEN 22.181800842285156 AND 45.1237983704;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.latitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "actual_doc_coverage": 0.001999333555481506,
+        "actual_table_doc_coverage": 0.46153846153846156,
+        "result_docs": 6,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.latitude",
+        "operator": "BETWEEN",
+        "value": [
+          "22.181800842285156",
+          "45.1237983704"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_latitude_between_040_22_181800842285156",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 6,
+        "profile_all_required_cells": 12,
+        "profile_all_relevant_doc_rate": 0.001999333555481506,
+        "profile_eval_relevant_docs": 6,
+        "profile_eval_required_cells": 12,
+        "profile_eval_relevant_doc_rate": 0.0020161290322580645,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_longitude_between_060_99_75399780273438",
+      "question": "List airport name from airports where longitude is between -99.75399780273438 and 70.518097.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"longitude\" BETWEEN -99.75399780273438 AND 70.518097;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.longitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.002999000333222259,
+        "actual_table_doc_coverage": 0.6923076923076923,
+        "result_docs": 9,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.longitude",
+        "operator": "BETWEEN",
+        "value": [
+          "-99.75399780273438",
+          "70.518097"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_longitude_between_060_99_75399780273438",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 9,
+        "profile_all_required_cells": 18,
+        "profile_all_relevant_doc_rate": 0.002999000333222259,
+        "profile_eval_relevant_docs": 9,
+        "profile_eval_required_cells": 18,
+        "profile_eval_relevant_doc_rate": 0.0030241935483870967,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_elevation_between_060_89_4043",
+      "question": "List airport name from airports where elevation is between 89 and 4043.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"elevation\" BETWEEN 89 AND 4043;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.elevation",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.0026657780739753416,
+        "actual_table_doc_coverage": 0.6153846153846154,
+        "result_docs": 8,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.elevation",
+        "operator": "BETWEEN",
+        "value": [
+          "89",
+          "4043"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_elevation_between_060_89_4043",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 8,
+        "profile_all_required_cells": 16,
+        "profile_all_relevant_doc_rate": 0.0026657780739753416,
+        "profile_eval_relevant_docs": 8,
+        "profile_eval_required_cells": 16,
+        "profile_eval_relevant_doc_rate": 0.002688172043010753,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_latitude_between_060_16_757099151611328",
+      "question": "List airport name from airports where latitude is between 16.757099151611328 and 51.551700592.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"latitude\" BETWEEN 16.757099151611328 AND 51.551700592;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.latitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "actual_doc_coverage": 0.0026657780739753416,
+        "actual_table_doc_coverage": 0.6153846153846154,
+        "result_docs": 8,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.latitude",
+        "operator": "BETWEEN",
+        "value": [
+          "16.757099151611328",
+          "51.551700592"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_latitude_between_060_16_757099151611328",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 8,
+        "profile_all_required_cells": 16,
+        "profile_all_relevant_doc_rate": 0.0026657780739753416,
+        "profile_eval_relevant_docs": 8,
+        "profile_eval_required_cells": 16,
+        "profile_eval_relevant_doc_rate": 0.002688172043010753,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_longitude_between_080_112_508003235_82_9",
+      "question": "List airport name from airports where longitude is between -112.508003235 and 82.90670013427734.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"longitude\" BETWEEN -112.508003235 AND 82.90670013427734;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.longitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.0036654448517160947,
+        "actual_table_doc_coverage": 0.8461538461538461,
+        "result_docs": 11,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.longitude",
+        "operator": "BETWEEN",
+        "value": [
+          "-112.508003235",
+          "82.90670013427734"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_longitude_between_080_112_508003235_82_9",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 11,
+        "profile_all_required_cells": 22,
+        "profile_all_relevant_doc_rate": 0.0036654448517160947,
+        "profile_eval_relevant_docs": 11,
+        "profile_eval_required_cells": 22,
+        "profile_eval_relevant_doc_rate": 0.003696236559139785,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_elevation_between_080_16_4759",
+      "question": "List airport name from airports where elevation is between 16 and 4759.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"elevation\" BETWEEN 16 AND 4759;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.elevation",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.003332222592469177,
+        "actual_table_doc_coverage": 0.7692307692307693,
+        "result_docs": 10,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.elevation",
+        "operator": "BETWEEN",
+        "value": [
+          "16",
+          "4759"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_elevation_between_080_16_4759",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 10,
+        "profile_all_required_cells": 20,
+        "profile_all_relevant_doc_rate": 0.003332222592469177,
+        "profile_eval_relevant_docs": 10,
+        "profile_eval_required_cells": 20,
+        "profile_eval_relevant_doc_rate": 0.003360215053763441,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_latitude_between_080_1_4846999645233154",
+      "question": "List airport name from airports where latitude is between 1.4846999645233154 and 51.732200622558594.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"latitude\" BETWEEN 1.4846999645233154 AND 51.732200622558594;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.latitude",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "actual_doc_coverage": 0.003332222592469177,
+        "actual_table_doc_coverage": 0.7692307692307693,
+        "result_docs": 10,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.latitude",
+        "operator": "BETWEEN",
+        "value": [
+          "1.4846999645233154",
+          "51.732200622558594"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_latitude_between_080_1_4846999645233154",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 10,
+        "profile_all_required_cells": 20,
+        "profile_all_relevant_doc_rate": 0.003332222592469177,
+        "profile_eval_relevant_docs": 10,
+        "profile_eval_required_cells": 20,
+        "profile_eval_relevant_doc_rate": 0.003360215053763441,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_airports_elevation_between_100_6_6380",
+      "question": "List airport name from airports where elevation is between 6 and 6380.",
+      "sql": "SELECT \"airport_name\" FROM \"airports\" WHERE \"elevation\" BETWEEN 6 AND 6380;",
+      "required_tables": [
+        "airports"
+      ],
+      "required_columns": [
+        "airports.elevation",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "actual_doc_coverage": 0.00433188937020993,
+        "actual_table_doc_coverage": 1.0,
+        "result_docs": 13,
+        "total_docs": 3001,
+        "table_total_docs": 13,
+        "predicate_table": "airports",
+        "predicate_column": "airports.elevation",
+        "operator": "BETWEEN",
+        "value": [
+          "6",
+          "6380"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v4",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_airports_elevation_between_100_6_6380",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 13,
+        "profile_all_required_cells": 26,
+        "profile_all_relevant_doc_rate": 0.00433188937020993,
+        "profile_eval_relevant_docs": 13,
+        "profile_eval_required_cells": 26,
+        "profile_eval_relevant_doc_rate": 0.004368279569892473,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_arrival_airport_name_value_005_adolfo_su_rez_madrid_bar",
+      "question": "List departure airport name from flight_routes where arrival airport name does not equal Adolfo Suárez Madrid–Barajas Airport.",
+      "sql": "SELECT \"departure_airport_name\" FROM \"flight_routes\" WHERE \"arrival_airport_name\" <> 'Adolfo Suárez Madrid–Barajas Airport';",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.departure_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.03365544818393869,
+        "actual_table_doc_coverage": 0.9901960784313726,
+        "result_docs": 101,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.arrival_airport_name",
+        "operator": "!=",
+        "value": "Adolfo Suárez Madrid–Barajas Airport",
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_arrival_airport_name_value_005_adolfo_su_rez_madrid_bar",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 101,
+        "profile_all_required_cells": 201,
+        "profile_all_relevant_doc_rate": 0.03365544818393869,
+        "profile_eval_relevant_docs": 101,
+        "profile_eval_required_cells": 201,
+        "profile_eval_relevant_doc_rate": 0.03393817204301075,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_departure_airport_name_value_005_yeosu_airport",
+      "question": "List arrival airport name from flight_routes where departure airport name does not equal Yeosu Airport.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"departure_airport_name\" <> 'Yeosu Airport';",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_name",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.03332222592469177,
+        "actual_table_doc_coverage": 0.9803921568627451,
+        "result_docs": 100,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.departure_airport_name",
+        "operator": "!=",
+        "value": "Yeosu Airport",
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_departure_airport_name_value_005_yeosu_airport",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 100,
+        "profile_all_required_cells": 200,
+        "profile_all_relevant_doc_rate": 0.03332222592469177,
+        "profile_eval_relevant_docs": 100,
+        "profile_eval_required_cells": 200,
+        "profile_eval_relevant_doc_rate": 0.033602150537634407,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_airline_name_value_005_transavia_holland",
+      "question": "List arrival airport name from flight_routes where airline name does not equal Transavia Holland.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"airline_name\" <> 'Transavia Holland';",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.airline_name",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.05,
+        "target_doc_coverage": 0.05,
+        "actual_doc_coverage": 0.032989003665444855,
+        "actual_table_doc_coverage": 0.9705882352941176,
+        "result_docs": 99,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.airline_name",
+        "operator": "!=",
+        "value": "Transavia Holland",
+        "is_join": false,
+        "candidate_source_round": "v5",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_airline_name_value_005_transavia_holland",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.032989003665444855,
+        "profile_eval_relevant_docs": 99,
+        "profile_eval_required_cells": 198,
+        "profile_eval_relevant_doc_rate": 0.03326612903225806,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_join_airlines_airports_airlines_airports_iata_code_003_aca_btv_dta_s",
+      "question": "List airline name from airlines records linked to airports where airports iata code is one of ACA, BTV, DTA, SMN.",
+      "sql": "SELECT \"airlines\".\"airline_name\" FROM \"airlines\" JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airports\".\"iata_code\" IN ('ACA', 'BTV', 'DTA', 'SMN');",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airlines.airline_name",
+        "airports.iata_code"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.001999333555481506,
+        "result_docs": 6,
+        "total_docs": 3001,
+        "predicate_table": "airports",
+        "predicate_column": "airports.iata_code",
+        "operator": "IN",
+        "value": [
+          "ACA",
+          "BTV",
+          "DTA",
+          "SMN"
+        ],
+        "is_join": true,
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v6_gapfill_quality",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_join_airlines_airports_airlines_airports_iata_code_003_aca_btv_dta_s",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 6,
+        "profile_all_required_cells": 12,
+        "profile_all_relevant_doc_rate": 0.001999333555481506,
+        "profile_eval_relevant_docs": 6,
+        "profile_eval_required_cells": 12,
+        "profile_eval_relevant_doc_rate": 0.0020161290322580645,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_arrival_airport_code_not_in_003_ce_mc_kix_ds",
+      "question": "List arrival airport name from flight_routes where arrival airport code is not one of CE, MC, KIX, DS, and 2 more.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"arrival_airport_code\" NOT IN ('CE', 'MC', 'KIX', 'DS', 'SZX', 'TX');",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.02999000333222259,
+        "actual_table_doc_coverage": 0.8823529411764706,
+        "result_docs": 90,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.arrival_airport_code",
+        "operator": "NOT IN",
+        "value": [
+          "CE",
+          "MC",
+          "KIX",
+          "DS",
+          "SZX",
+          "TX"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v6_gapfill_quality",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_arrival_airport_code_not_in_003_ce_mc_kix_ds",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 90,
+        "profile_all_required_cells": 180,
+        "profile_all_relevant_doc_rate": 0.02999000333222259,
+        "profile_eval_relevant_docs": 90,
+        "profile_eval_required_cells": 180,
+        "profile_eval_relevant_doc_rate": 0.03024193548387097,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_departure_airport_code_not_in_003_add_mex_at_ts",
+      "question": "List arrival airport name from flight_routes where departure airport code is not one of ADD, MEX, AT, TS, and 2 more.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"departure_airport_code\" NOT IN ('ADD', 'MEX', 'AT', 'TS', 'BC', 'DS');",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.02999000333222259,
+        "actual_table_doc_coverage": 0.8823529411764706,
+        "result_docs": 90,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.departure_airport_code",
+        "operator": "NOT IN",
+        "value": [
+          "ADD",
+          "MEX",
+          "AT",
+          "TS",
+          "BC",
+          "DS"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v6_gapfill_quality",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_departure_airport_code_not_in_003_add_mex_at_ts",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 90,
+        "profile_all_required_cells": 180,
+        "profile_all_relevant_doc_rate": 0.02999000333222259,
+        "profile_eval_relevant_docs": 90,
+        "profile_eval_required_cells": 180,
+        "profile_eval_relevant_doc_rate": 0.03024193548387097,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_arrival_airport_name_not_in_003_munich_international_a",
+      "question": "List departure airport name from flight_routes where arrival airport name is not one of Munich International Airport, Liverpool John Lennon Airport, Chengdu Shuangliu International Airport, Washington Dulles International Airport, and 2 more.",
+      "sql": "SELECT \"departure_airport_name\" FROM \"flight_routes\" WHERE \"arrival_airport_name\" NOT IN ('Munich International Airport', 'Liverpool John Lennon Airport', 'Chengdu Shuangliu International Airport', 'Washington Dulles International Airport', 'Shenzhen Bao''an International Airport', 'Beijing Capital International Airport');",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.departure_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.02999000333222259,
+        "actual_table_doc_coverage": 0.8823529411764706,
+        "result_docs": 90,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.arrival_airport_name",
+        "operator": "NOT IN",
+        "value": [
+          "Munich International Airport",
+          "Liverpool John Lennon Airport",
+          "Chengdu Shuangliu International Airport",
+          "Washington Dulles International Airport",
+          "Shenzhen Bao'an International Airport",
+          "Beijing Capital International Airport"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v6_gapfill_quality",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_arrival_airport_name_not_in_003_munich_international_a",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 90,
+        "profile_all_required_cells": 179,
+        "profile_all_relevant_doc_rate": 0.02999000333222259,
+        "profile_eval_relevant_docs": 90,
+        "profile_eval_required_cells": 179,
+        "profile_eval_relevant_doc_rate": 0.03024193548387097,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_gen_flight_routes_departure_airport_name_not_in_003_addis_ababa_bole_inter",
+      "question": "List arrival airport name from flight_routes where departure airport name is not one of Addis Ababa Bole International Airport, Vienna International Airport, Hartsfield Jackson Atlanta International Airport, Düsseldorf International Airport, and 2 more.",
+      "sql": "SELECT \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"departure_airport_name\" NOT IN ('Addis Ababa Bole International Airport', 'Vienna International Airport', 'Hartsfield Jackson Atlanta International Airport', 'Düsseldorf International Airport', 'Licenciado Benito Juarez International Airport', 'Yeosu Airport');",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_name",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.02999000333222259,
+        "actual_table_doc_coverage": 0.8823529411764706,
+        "result_docs": 90,
+        "total_docs": 3001,
+        "table_total_docs": 102,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.departure_airport_name",
+        "operator": "NOT IN",
+        "value": [
+          "Addis Ababa Bole International Airport",
+          "Vienna International Airport",
+          "Hartsfield Jackson Atlanta International Airport",
+          "Düsseldorf International Airport",
+          "Licenciado Benito Juarez International Airport",
+          "Yeosu Airport"
+        ],
+        "is_join": false,
+        "candidate_source_round": "v7_greedy_categorical",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_gen_flight_routes_departure_airport_name_not_in_003_addis_ababa_bole_inter",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 90,
+        "profile_all_required_cells": 180,
+        "profile_all_relevant_doc_rate": 0.02999000333222259,
+        "profile_eval_relevant_docs": 90,
+        "profile_eval_required_cells": 180,
+        "profile_eval_relevant_doc_rate": 0.03024193548387097,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_left_join_airlines_airports_airlines_airlines_active_003_is_not_null",
+      "question": "List airline name from airlines records optionally linked to airports where airlines active is not null.",
+      "sql": "SELECT \"airlines\".\"airline_name\" FROM \"airlines\" LEFT JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airlines\".\"active\" IS NOT NULL;",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airlines.airline_name",
+        "airlines.active"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.005664778407197601,
+        "result_docs": 17,
+        "total_docs": 3001,
+        "predicate_table": "airlines",
+        "predicate_column": "airlines.active",
+        "operator": "IS NOT NULL",
+        "value": "is not null",
+        "is_join": true,
+        "join_type": "LEFT",
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v50_left_join_only",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_left_join_airlines_airports_airlines_airlines_active_003_is_not_null",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 17,
+        "profile_all_required_cells": 41,
+        "profile_all_relevant_doc_rate": 0.005664778407197601,
+        "profile_eval_relevant_docs": 17,
+        "profile_eval_required_cells": 41,
+        "profile_eval_relevant_doc_rate": 0.00571236559139785,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_left_join_airlines_airports_airports_airports_city_003_is_not_null",
+      "question": "List airport name from airports records optionally linked to airlines where airports city is not null.",
+      "sql": "SELECT \"airports\".\"airport_name\" FROM \"airports\" LEFT JOIN \"airlines\" ON \"airports\".\"country\" = \"airlines\".\"country\" WHERE \"airports\".\"city\" IS NOT NULL;",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airports.airport_name",
+        "airports.city"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.005331556147950683,
+        "result_docs": 16,
+        "total_docs": 3001,
+        "predicate_table": "airports",
+        "predicate_column": "airports.city",
+        "operator": "IS NOT NULL",
+        "value": "is not null",
+        "is_join": true,
+        "join_type": "LEFT",
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v50_left_join_only",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_left_join_airlines_airports_airports_airports_city_003_is_not_null",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 16,
+        "profile_all_required_cells": 42,
+        "profile_all_relevant_doc_rate": 0.005331556147950683,
+        "profile_eval_relevant_docs": 16,
+        "profile_eval_required_cells": 42,
+        "profile_eval_relevant_doc_rate": 0.005376344086021506,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_left_join_airlines_airports_airlines_airlines_callsign_003_is_not_null",
+      "question": "List airline name from airlines records optionally linked to airports where airlines callsign is not null.",
+      "sql": "SELECT \"airlines\".\"airline_name\" FROM \"airlines\" LEFT JOIN \"airports\" ON \"airlines\".\"country\" = \"airports\".\"country\" WHERE \"airlines\".\"callsign\" IS NOT NULL;",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airlines.airline_name",
+        "airlines.callsign"
+      ],
+      "output_columns": [
+        "airlines.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.004998333888703766,
+        "result_docs": 15,
+        "total_docs": 3001,
+        "predicate_table": "airlines",
+        "predicate_column": "airlines.callsign",
+        "operator": "IS NOT NULL",
+        "value": "is not null",
+        "is_join": true,
+        "join_type": "LEFT",
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v50_left_join_only",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_left_join_airlines_airports_airlines_airlines_callsign_003_is_not_null",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 15,
+        "profile_all_required_cells": 35,
+        "profile_all_relevant_doc_rate": 0.004998333888703766,
+        "profile_eval_relevant_docs": 15,
+        "profile_eval_required_cells": 35,
+        "profile_eval_relevant_doc_rate": 0.005040322580645161,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_left_join_airlines_airports_airports_airports_iata_code_003_is_not_null",
+      "question": "List airport name from airports records optionally linked to airlines where airports iata code is not null.",
+      "sql": "SELECT \"airports\".\"airport_name\" FROM \"airports\" LEFT JOIN \"airlines\" ON \"airports\".\"country\" = \"airlines\".\"country\" WHERE \"airports\".\"iata_code\" IS NOT NULL;",
+      "required_tables": [
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "airlines.country",
+        "airports.country",
+        "airports.airport_name",
+        "airports.iata_code"
+      ],
+      "output_columns": [
+        "airports.airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation.py",
+        "coverage_bucket": 0.03,
+        "target_doc_coverage": 0.03,
+        "actual_doc_coverage": 0.002999000333222259,
+        "result_docs": 9,
+        "total_docs": 3001,
+        "predicate_table": "airports",
+        "predicate_column": "airports.iata_code",
+        "operator": "IS NOT NULL",
+        "value": "is not null",
+        "is_join": true,
+        "join_type": "LEFT",
+        "join_tables": [
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "airlines.country",
+          "airports.country"
+        ],
+        "join_shared_values": 3,
+        "join_score": 50.36363636363637,
+        "candidate_source_round": "v51_left_join_wide",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_left_join_airlines_airports_airports_airports_iata_code_003_is_not_null",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 9,
+        "profile_all_required_cells": 23,
+        "profile_all_relevant_doc_rate": 0.002999000333222259,
+        "profile_eval_relevant_docs": 9,
+        "profile_eval_required_cells": 23,
+        "profile_eval_relevant_doc_rate": 0.0030241935483870967,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_rowid_flight_routes_010_2_2_0_departure_airport_code_arrival_a",
+      "question": "List departure airport code and arrival airport code from flight_routes records where row id is one of 377, 243, 1267, 1360, and 98 more.",
+      "sql": "SELECT \"departure_airport_code\", \"arrival_airport_code\" FROM \"flight_routes\" WHERE \"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92, 1860, 1552, 483, 1893, 1931, 735, 565, 1808, 1899, 1643, 1535, 726, 622, 1495, 2165, 1812, 2123, 1530, 110, 1561, 810, 756, 825, 77, 2415, 1080, 1414, 1863, 927, 1511, 1544, 198, 2199, 2021, 1635, 1990);",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_code"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_code"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_rowid_gapfill_probe",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id",
+        "operator": "ROW_ID_IN",
+        "value": {
+          "mode": "in",
+          "values": [
+            "377",
+            "243",
+            "1267",
+            "1360",
+            "847",
+            "1041",
+            "1310",
+            "2321",
+            "1541",
+            "1193",
+            "1739",
+            "2416",
+            "1442",
+            "2228",
+            "2031",
+            "1051",
+            "2278",
+            "713",
+            "1105",
+            "2464",
+            "1666",
+            "2016",
+            "584",
+            "2254",
+            "1881",
+            "143",
+            "2011",
+            "830",
+            "2248",
+            "416",
+            "11",
+            "1548",
+            "1775",
+            "1222",
+            "1241",
+            "342",
+            "1017",
+            "2257",
+            "2258",
+            "1040",
+            "992",
+            "1262",
+            "1527",
+            "1977",
+            "2212",
+            "1288",
+            "1142",
+            "396",
+            "2221",
+            "609",
+            "540",
+            "1757",
+            "1852",
+            "402",
+            "2476",
+            "861",
+            "974",
+            "215",
+            "153",
+            "859",
+            "43",
+            "1138",
+            "2",
+            "933",
+            "798",
+            "92",
+            "1860",
+            "1552",
+            "483",
+            "1893",
+            "1931",
+            "735",
+            "565",
+            "1808",
+            "1899",
+            "1643",
+            "1535",
+            "726",
+            "622",
+            "1495",
+            "2165",
+            "1812",
+            "2123",
+            "1530",
+            "110",
+            "1561",
+            "810",
+            "756",
+            "825",
+            "77",
+            "2415",
+            "1080",
+            "1414",
+            "1863",
+            "927",
+            "1511",
+            "1544",
+            "198",
+            "2199",
+            "2021",
+            "1635",
+            "1990"
+          ]
+        },
+        "is_join": false,
+        "actual_doc_coverage": 0.033988670443185605,
+        "result_docs": 102,
+        "total_docs": 3001,
+        "candidate_source_round": "v52b_rowid_unique",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_rowid_flight_routes_010_2_2_0_departure_airport_code_arrival_a",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 102,
+        "profile_all_required_cells": 204,
+        "profile_all_relevant_doc_rate": 0.033988670443185605,
+        "profile_eval_relevant_docs": 102,
+        "profile_eval_required_cells": 204,
+        "profile_eval_relevant_doc_rate": 0.034274193548387094,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_rowid_flight_routes_010_4_4_0_departure_airport_code_airline_n",
+      "question": "List departure airport code and airline name from flight_routes records where row id is one of 377, 243, 1267, 1360, and 98 more.",
+      "sql": "SELECT \"departure_airport_code\", \"airline_name\" FROM \"flight_routes\" WHERE \"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92, 1860, 1552, 483, 1893, 1931, 735, 565, 1808, 1899, 1643, 1535, 726, 622, 1495, 2165, 1812, 2123, 1530, 110, 1561, 810, 756, 825, 77, 2415, 1080, 1414, 1863, 927, 1511, 1544, 198, 2199, 2021, 1635, 1990);",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.airline_name"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_rowid_gapfill_probe",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id",
+        "operator": "ROW_ID_IN",
+        "value": {
+          "mode": "in",
+          "values": [
+            "377",
+            "243",
+            "1267",
+            "1360",
+            "847",
+            "1041",
+            "1310",
+            "2321",
+            "1541",
+            "1193",
+            "1739",
+            "2416",
+            "1442",
+            "2228",
+            "2031",
+            "1051",
+            "2278",
+            "713",
+            "1105",
+            "2464",
+            "1666",
+            "2016",
+            "584",
+            "2254",
+            "1881",
+            "143",
+            "2011",
+            "830",
+            "2248",
+            "416",
+            "11",
+            "1548",
+            "1775",
+            "1222",
+            "1241",
+            "342",
+            "1017",
+            "2257",
+            "2258",
+            "1040",
+            "992",
+            "1262",
+            "1527",
+            "1977",
+            "2212",
+            "1288",
+            "1142",
+            "396",
+            "2221",
+            "609",
+            "540",
+            "1757",
+            "1852",
+            "402",
+            "2476",
+            "861",
+            "974",
+            "215",
+            "153",
+            "859",
+            "43",
+            "1138",
+            "2",
+            "933",
+            "798",
+            "92",
+            "1860",
+            "1552",
+            "483",
+            "1893",
+            "1931",
+            "735",
+            "565",
+            "1808",
+            "1899",
+            "1643",
+            "1535",
+            "726",
+            "622",
+            "1495",
+            "2165",
+            "1812",
+            "2123",
+            "1530",
+            "110",
+            "1561",
+            "810",
+            "756",
+            "825",
+            "77",
+            "2415",
+            "1080",
+            "1414",
+            "1863",
+            "927",
+            "1511",
+            "1544",
+            "198",
+            "2199",
+            "2021",
+            "1635",
+            "1990"
+          ]
+        },
+        "is_join": false,
+        "actual_doc_coverage": 0.033988670443185605,
+        "result_docs": 102,
+        "total_docs": 3001,
+        "candidate_source_round": "v52b_rowid_unique",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_rowid_flight_routes_010_4_4_0_departure_airport_code_airline_n",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 102,
+        "profile_all_required_cells": 202,
+        "profile_all_relevant_doc_rate": 0.033988670443185605,
+        "profile_eval_relevant_docs": 102,
+        "profile_eval_required_cells": 202,
+        "profile_eval_relevant_doc_rate": 0.034274193548387094,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_rowid_flight_routes_010_5_5_0_arrival_airport_name_arrival_air",
+      "question": "List arrival airport name and arrival airport code from flight_routes records where row id is one of 377, 243, 1267, 1360, and 98 more.",
+      "sql": "SELECT \"arrival_airport_name\", \"arrival_airport_code\" FROM \"flight_routes\" WHERE \"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92, 1860, 1552, 483, 1893, 1931, 735, 565, 1808, 1899, 1643, 1535, 726, 622, 1495, 2165, 1812, 2123, 1530, 110, 1561, 810, 756, 825, 77, 2415, 1080, 1414, 1863, 927, 1511, 1544, 198, 2199, 2021, 1635, 1990);",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.arrival_airport_code"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.arrival_airport_code"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_rowid_gapfill_probe",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id",
+        "operator": "ROW_ID_IN",
+        "value": {
+          "mode": "in",
+          "values": [
+            "377",
+            "243",
+            "1267",
+            "1360",
+            "847",
+            "1041",
+            "1310",
+            "2321",
+            "1541",
+            "1193",
+            "1739",
+            "2416",
+            "1442",
+            "2228",
+            "2031",
+            "1051",
+            "2278",
+            "713",
+            "1105",
+            "2464",
+            "1666",
+            "2016",
+            "584",
+            "2254",
+            "1881",
+            "143",
+            "2011",
+            "830",
+            "2248",
+            "416",
+            "11",
+            "1548",
+            "1775",
+            "1222",
+            "1241",
+            "342",
+            "1017",
+            "2257",
+            "2258",
+            "1040",
+            "992",
+            "1262",
+            "1527",
+            "1977",
+            "2212",
+            "1288",
+            "1142",
+            "396",
+            "2221",
+            "609",
+            "540",
+            "1757",
+            "1852",
+            "402",
+            "2476",
+            "861",
+            "974",
+            "215",
+            "153",
+            "859",
+            "43",
+            "1138",
+            "2",
+            "933",
+            "798",
+            "92",
+            "1860",
+            "1552",
+            "483",
+            "1893",
+            "1931",
+            "735",
+            "565",
+            "1808",
+            "1899",
+            "1643",
+            "1535",
+            "726",
+            "622",
+            "1495",
+            "2165",
+            "1812",
+            "2123",
+            "1530",
+            "110",
+            "1561",
+            "810",
+            "756",
+            "825",
+            "77",
+            "2415",
+            "1080",
+            "1414",
+            "1863",
+            "927",
+            "1511",
+            "1544",
+            "198",
+            "2199",
+            "2021",
+            "1635",
+            "1990"
+          ]
+        },
+        "is_join": false,
+        "actual_doc_coverage": 0.033988670443185605,
+        "result_docs": 102,
+        "total_docs": 3001,
+        "candidate_source_round": "v52b_rowid_unique",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_rowid_flight_routes_010_5_5_0_arrival_airport_name_arrival_air",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 102,
+        "profile_all_required_cells": 204,
+        "profile_all_relevant_doc_rate": 0.033988670443185605,
+        "profile_eval_relevant_docs": 102,
+        "profile_eval_required_cells": 204,
+        "profile_eval_relevant_doc_rate": 0.034274193548387094,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_rowid_flight_routes_080_1_1_0_departure_airport_code_arrival_a",
+      "question": "List departure airport code and arrival airport name from flight_routes records where row id is not one of 377, 243.",
+      "sql": "SELECT \"departure_airport_code\", \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"row_id\" NOT IN (377, 243);",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_rowid_gapfill_probe",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id",
+        "operator": "ROW_ID_NOT_IN",
+        "value": {
+          "mode": "not_in",
+          "values": [
+            "377",
+            "243"
+          ]
+        },
+        "is_join": false,
+        "actual_doc_coverage": 0.03332222592469177,
+        "result_docs": 100,
+        "total_docs": 3001,
+        "candidate_source_round": "v52b_rowid_unique",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_rowid_flight_routes_080_1_1_0_departure_airport_code_arrival_a",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 100,
+        "profile_all_required_cells": 200,
+        "profile_all_relevant_doc_rate": 0.03332222592469177,
+        "profile_eval_relevant_docs": 100,
+        "profile_eval_required_cells": 200,
+        "profile_eval_relevant_doc_rate": 0.033602150537634407,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_rowid_flight_routes_080_2_1_1_departure_airport_code_arrival_a",
+      "question": "List departure airport code and arrival airport name from flight_routes records where row id is not one of 377, 243, 1267.",
+      "sql": "SELECT \"departure_airport_code\", \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"row_id\" NOT IN (377, 243, 1267);",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_rowid_gapfill_probe",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id",
+        "operator": "ROW_ID_NOT_IN",
+        "value": {
+          "mode": "not_in",
+          "values": [
+            "377",
+            "243",
+            "1267"
+          ]
+        },
+        "is_join": false,
+        "actual_doc_coverage": 0.032989003665444855,
+        "result_docs": 99,
+        "total_docs": 3001,
+        "candidate_source_round": "v52b_rowid_unique",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_rowid_flight_routes_080_2_1_1_departure_airport_code_arrival_a",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 99,
+        "profile_all_required_cells": 198,
+        "profile_all_relevant_doc_rate": 0.032989003665444855,
+        "profile_eval_relevant_docs": 99,
+        "profile_eval_required_cells": 198,
+        "profile_eval_relevant_doc_rate": 0.03326612903225806,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_rowid_flight_routes_100_1_1_2_departure_airport_code_arrival_a",
+      "question": "List departure airport code and arrival airport name from flight_routes records where row id is not one of 377, 243, 1267, 1360.",
+      "sql": "SELECT \"departure_airport_code\", \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"row_id\" NOT IN (377, 243, 1267, 1360);",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_rowid_gapfill_probe",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id",
+        "operator": "ROW_ID_NOT_IN",
+        "value": {
+          "mode": "not_in",
+          "values": [
+            "377",
+            "243",
+            "1267",
+            "1360"
+          ]
+        },
+        "is_join": false,
+        "actual_doc_coverage": 0.03265578140619793,
+        "result_docs": 98,
+        "total_docs": 3001,
+        "candidate_source_round": "v52b_rowid_unique",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_rowid_flight_routes_100_1_1_2_departure_airport_code_arrival_a",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 98,
+        "profile_all_required_cells": 196,
+        "profile_all_relevant_doc_rate": 0.03265578140619793,
+        "profile_eval_relevant_docs": 98,
+        "profile_eval_required_cells": 196,
+        "profile_eval_relevant_doc_rate": 0.03293010752688172,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_rowid_flight_routes_100_2_1_3_departure_airport_code_arrival_a",
+      "question": "List departure airport code and arrival airport name from flight_routes records where row id is not one of 377, 243, 1267, 1360, and 1 more.",
+      "sql": "SELECT \"departure_airport_code\", \"arrival_airport_name\" FROM \"flight_routes\" WHERE \"row_id\" NOT IN (377, 243, 1267, 1360, 847);",
+      "required_tables": [
+        "flight_routes"
+      ],
+      "required_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.departure_airport_code",
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_rowid_gapfill_probe",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id",
+        "operator": "ROW_ID_NOT_IN",
+        "value": {
+          "mode": "not_in",
+          "values": [
+            "377",
+            "243",
+            "1267",
+            "1360",
+            "847"
+          ]
+        },
+        "is_join": false,
+        "actual_doc_coverage": 0.032322559146951015,
+        "result_docs": 97,
+        "total_docs": 3001,
+        "candidate_source_round": "v52b_rowid_unique",
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_rowid_flight_routes_100_2_1_3_departure_airport_code_arrival_a",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 97,
+        "profile_all_required_cells": 194,
+        "profile_all_relevant_doc_rate": 0.032322559146951015,
+        "profile_eval_relevant_docs": 97,
+        "profile_eval_required_cells": 194,
+        "profile_eval_relevant_doc_rate": 0.032594086021505375,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_010_01_multi_full_row_id_in_arrival_airport_name",
+      "question": "List arrival airport name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.35
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.014995001666111295,
+        "result_docs": 45,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_010_01_multi_full_row_id_in_arrival_airport_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 45,
+        "profile_all_required_cells": 81,
+        "profile_all_relevant_doc_rate": 0.014995001666111295,
+        "profile_eval_relevant_docs": 45,
+        "profile_eval_required_cells": 81,
+        "profile_eval_relevant_doc_rate": 0.015120967741935484,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_010_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+      "question": "List arrival airport name and airline name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\", \"flight_routes\".\"airline_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.1,
+        "target_doc_coverage": 0.1,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.35
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.014995001666111295,
+        "result_docs": 45,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_010_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 45,
+        "profile_all_required_cells": 81,
+        "profile_all_relevant_doc_rate": 0.014995001666111295,
+        "profile_eval_relevant_docs": 45,
+        "profile_eval_required_cells": 81,
+        "profile_eval_relevant_doc_rate": 0.015120967741935484,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_020_01_multi_full_row_id_in_arrival_airport_name",
+      "question": "List arrival airport name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.45
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.01899366877707431,
+        "result_docs": 57,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_020_01_multi_full_row_id_in_arrival_airport_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 57,
+        "profile_all_required_cells": 102,
+        "profile_all_relevant_doc_rate": 0.01899366877707431,
+        "profile_eval_relevant_docs": 57,
+        "profile_eval_required_cells": 102,
+        "profile_eval_relevant_doc_rate": 0.019153225806451613,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_020_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+      "question": "List arrival airport name and airline name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\", \"flight_routes\".\"airline_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.2,
+        "target_doc_coverage": 0.2,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.45
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.01899366877707431,
+        "result_docs": 57,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_020_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 57,
+        "profile_all_required_cells": 102,
+        "profile_all_relevant_doc_rate": 0.01899366877707431,
+        "profile_eval_relevant_docs": 57,
+        "profile_eval_required_cells": 102,
+        "profile_eval_relevant_doc_rate": 0.019153225806451613,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_040_01_multi_full_row_id_in_arrival_airport_name",
+      "question": "List arrival airport name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105, 41, 240, 230)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759, 244, 76));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.65
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.02732422525824725,
+        "result_docs": 82,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_040_01_multi_full_row_id_in_arrival_airport_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 82,
+        "profile_all_required_cells": 147,
+        "profile_all_relevant_doc_rate": 0.02732422525824725,
+        "profile_eval_relevant_docs": 82,
+        "profile_eval_required_cells": 147,
+        "profile_eval_relevant_doc_rate": 0.027553763440860215,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_040_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+      "question": "List arrival airport name and airline name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\", \"flight_routes\".\"airline_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105, 41, 240, 230)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759, 244, 76));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.4,
+        "target_doc_coverage": 0.4,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.65
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.02732422525824725,
+        "result_docs": 82,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_040_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 82,
+        "profile_all_required_cells": 147,
+        "profile_all_relevant_doc_rate": 0.02732422525824725,
+        "profile_eval_relevant_docs": 82,
+        "profile_eval_required_cells": 147,
+        "profile_eval_relevant_doc_rate": 0.027553763440860215,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_060_01_multi_full_row_id_in_arrival_airport_name",
+      "question": "List arrival airport name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92, 1860, 1552, 483, 1893, 1931, 735, 565, 1808, 1899, 1643, 1535, 726, 622, 1495, 2165, 1812, 2123, 1530, 110, 1561, 810)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105, 41, 240, 230, 3, 210)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759, 244, 76, 141, 184, 9));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.85
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.03598800399866711,
+        "result_docs": 108,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_060_01_multi_full_row_id_in_arrival_airport_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 108,
+        "profile_all_required_cells": 194,
+        "profile_all_relevant_doc_rate": 0.03598800399866711,
+        "profile_eval_relevant_docs": 108,
+        "profile_eval_required_cells": 194,
+        "profile_eval_relevant_doc_rate": 0.036290322580645164,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_060_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+      "question": "List arrival airport name and airline name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\", \"flight_routes\".\"airline_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92, 1860, 1552, 483, 1893, 1931, 735, 565, 1808, 1899, 1643, 1535, 726, 622, 1495, 2165, 1812, 2123, 1530, 110, 1561, 810)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105, 41, 240, 230, 3, 210)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759, 244, 76, 141, 184, 9));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.6,
+        "target_doc_coverage": 0.6,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.85
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.03598800399866711,
+        "result_docs": 108,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_060_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 108,
+        "profile_all_required_cells": 194,
+        "profile_all_relevant_doc_rate": 0.03598800399866711,
+        "profile_eval_relevant_docs": 108,
+        "profile_eval_required_cells": 194,
+        "profile_eval_relevant_doc_rate": 0.036290322580645164,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_080_01_multi_full_row_id_in_arrival_airport_name",
+      "question": "List arrival airport name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92, 1860, 1552, 483, 1893, 1931, 735, 565, 1808, 1899, 1643, 1535, 726, 622, 1495, 2165, 1812, 2123, 1530, 110, 1561, 810, 756, 825, 77, 2415, 1080, 1414, 1863, 927, 1511, 1544, 198, 2199, 2021)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105, 41, 240, 230, 3, 210, 78, 201)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759, 244, 76, 141, 184, 9, 633, 70));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.98
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.04165278240586471,
+        "result_docs": 125,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_080_01_multi_full_row_id_in_arrival_airport_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 125,
+        "profile_all_required_cells": 224,
+        "profile_all_relevant_doc_rate": 0.04165278240586471,
+        "profile_eval_relevant_docs": 125,
+        "profile_eval_required_cells": 224,
+        "profile_eval_relevant_doc_rate": 0.04200268817204301,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_080_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+      "question": "List arrival airport name and airline name from flight_routes records full-joined with airlines, airports using a row-id selector.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\", \"flight_routes\".\"airline_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\" WHERE (\"flight_routes\".\"row_id\" IN (377, 243, 1267, 1360, 847, 1041, 1310, 2321, 1541, 1193, 1739, 2416, 1442, 2228, 2031, 1051, 2278, 713, 1105, 2464, 1666, 2016, 584, 2254, 1881, 143, 2011, 830, 2248, 416, 11, 1548, 1775, 1222, 1241, 342, 1017, 2257, 2258, 1040, 992, 1262, 1527, 1977, 2212, 1288, 1142, 396, 2221, 609, 540, 1757, 1852, 402, 2476, 861, 974, 215, 153, 859, 43, 1138, 2, 933, 798, 92, 1860, 1552, 483, 1893, 1931, 735, 565, 1808, 1899, 1643, 1535, 726, 622, 1495, 2165, 1812, 2123, 1530, 110, 1561, 810, 756, 825, 77, 2415, 1080, 1414, 1863, 927, 1511, 1544, 198, 2199, 2021)) OR (\"airlines\".\"row_id\" IN (73, 76, 192, 127, 105, 41, 240, 230, 3, 210, 78, 201)) OR (\"airports\".\"row_id\" IN (725, 2261, 6380, 165, 232, 4759, 244, 76, 141, 184, 9, 633, 70));",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name",
+        "flight_routes.row_id",
+        "airlines.row_id",
+        "airports.row_id"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 0.8,
+        "target_doc_coverage": 0.8,
+        "predicate_table": "flight_routes",
+        "predicate_column": "flight_routes.row_id;airlines.row_id;airports.row_id",
+        "operator": "MULTI_FULL_ROW_ID_IN",
+        "value": {
+          "mode": "IN_OR",
+          "fraction": 0.98
+        },
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.04165278240586471,
+        "result_docs": 125,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_080_02_multi_full_row_id_in_arrival_airport_name_airline_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 125,
+        "profile_all_required_cells": 224,
+        "profile_all_relevant_doc_rate": 0.04165278240586471,
+        "profile_eval_relevant_docs": 125,
+        "profile_eval_required_cells": 224,
+        "profile_eval_relevant_doc_rate": 0.04200268817204301,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_100_01_multi_full_all_arrival_airport_name",
+      "question": "List arrival airport name from flight_routes records full-joined with airlines, airports.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\";",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "predicate_table": null,
+        "predicate_column": null,
+        "operator": "MULTI_FULL_ALL",
+        "value": null,
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.04231922692435855,
+        "result_docs": 127,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_100_01_multi_full_all_arrival_airport_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 127,
+        "profile_all_required_cells": 227,
+        "profile_all_relevant_doc_rate": 0.04231922692435855,
+        "profile_eval_relevant_docs": 127,
+        "profile_eval_required_cells": 227,
+        "profile_eval_relevant_doc_rate": 0.042674731182795696,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
+    },
+    {
+      "query_id": "Q_multi_full_flight_routes_100_02_multi_full_all_arrival_airport_name_airline_name",
+      "question": "List arrival airport name and airline name from flight_routes records full-joined with airlines, airports.",
+      "sql": "SELECT \"flight_routes\".\"arrival_airport_name\", \"flight_routes\".\"airline_name\" FROM \"flight_routes\" FULL OUTER JOIN \"airlines\" ON \"flight_routes\".\"airline_name\" = \"airlines\".\"airline_name\" FULL OUTER JOIN \"airports\" ON \"flight_routes\".\"arrival_airport_name\" = \"airports\".\"airport_name\";",
+      "required_tables": [
+        "flight_routes",
+        "airlines",
+        "airports"
+      ],
+      "required_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name",
+        "airlines.airline_name",
+        "airports.airport_name"
+      ],
+      "output_columns": [
+        "flight_routes.arrival_airport_name",
+        "flight_routes.airline_name"
+      ],
+      "tags": [
+        "query_curation",
+        "generated_sql_first",
+        "bucket_candidate",
+        "join_query"
+      ],
+      "difficulty": null,
+      "meta": {
+        "generated_by": "scripts/query_curation_multi_full_probe",
+        "coverage_bucket": 1.0,
+        "target_doc_coverage": 1.0,
+        "predicate_table": null,
+        "predicate_column": null,
+        "operator": "MULTI_FULL_ALL",
+        "value": null,
+        "is_join": true,
+        "join_type": "MULTI_FULL",
+        "join_tables": [
+          "flight_routes",
+          "airlines",
+          "airports"
+        ],
+        "join_columns": [
+          "flight_routes.airline_name",
+          "airlines.airline_name",
+          "flight_routes.arrival_airport_name",
+          "airports.airport_name"
+        ],
+        "candidate_source_round": "v55_multi_full",
+        "actual_doc_coverage": 0.04231922692435855,
+        "result_docs": 127,
+        "total_docs": 3001,
+        "dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_id": "spider.flight_4.routes_airports_airlines",
+        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.flight_4.routes_airports_airlines",
+        "source_query_id": "Q_multi_full_flight_routes_100_02_multi_full_all_arrival_airport_name_airline_name",
+        "curation_status": "keep",
+        "profile_all_relevant_docs": 127,
+        "profile_all_required_cells": 227,
+        "profile_all_relevant_doc_rate": 0.04231922692435855,
+        "profile_eval_relevant_docs": 127,
+        "profile_eval_required_cells": 227,
+        "profile_eval_relevant_doc_rate": 0.042674731182795696,
+        "profile_provenance_status": "ok",
+        "applied_to_source": true
+      }
     }
   ]
 }

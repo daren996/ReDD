@@ -290,7 +290,7 @@ def _make_variant_config(
             "source_table_metadata": bool(table_assignment_cache_source_table_metadata),
         }
     if use_doc_filter:
-        stage["document_filtering"] = {
+        stage["doc_filter"] = {
             "enabled": True,
             "filter_type": "schema_relevance",
             "target_recall": 0.95,
@@ -300,11 +300,11 @@ def _make_variant_config(
             "threshold": float(doc_threshold if doc_threshold is not None else 0.58),
         }
         if doc_filter_use_source_table_metadata:
-            stage["document_filtering"]["use_source_table_metadata"] = True
-            stage["document_filtering"]["source_table_metadata_only"] = bool(
+            stage["doc_filter"]["use_source_table_metadata"] = True
+            stage["doc_filter"]["source_table_metadata_only"] = bool(
                 doc_filter_source_table_metadata_only
             )
-            stage["document_filtering"]["source_table_keep_unknown"] = True
+            stage["doc_filter"]["source_table_keep_unknown"] = True
     if use_proxy:
         stage["proxy_runtime"] = {
             "enabled": True,

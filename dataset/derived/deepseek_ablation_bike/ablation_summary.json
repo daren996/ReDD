@@ -1,0 +1,157 @@
+{
+  "dataset_id": "deepseek_ablation.spider.bike_1",
+  "ordered_doc_ids": [
+    "1-0",
+    "10-0",
+    "100-0",
+    "1000-0",
+    "1001-0",
+    "1160-0",
+    "1026-0",
+    "1080-0",
+    "1377-0",
+    "1473-0",
+    "195-0",
+    "293-0",
+    "307-0",
+    "548-0",
+    "649-0",
+    "1002-0",
+    "1004-0",
+    "1005-0",
+    "1008-0",
+    "1011-0",
+    "1012-0",
+    "1013-0",
+    "1014-0",
+    "1015-0",
+    "1017-0",
+    "1018-0",
+    "1019-0",
+    "102-0",
+    "1022-0",
+    "1023-0"
+  ],
+  "train_doc_ids": [
+    "1-0",
+    "10-0",
+    "100-0",
+    "1000-0",
+    "1001-0"
+  ],
+  "test_trip_doc_ids": [
+    "1160-0",
+    "1026-0",
+    "1080-0",
+    "1377-0",
+    "1473-0",
+    "195-0",
+    "293-0",
+    "307-0",
+    "548-0",
+    "649-0"
+  ],
+  "test_nontrip_doc_ids": [
+    "1002-0",
+    "1004-0",
+    "1005-0",
+    "1008-0",
+    "1011-0",
+    "1012-0",
+    "1013-0",
+    "1014-0",
+    "1015-0",
+    "1017-0",
+    "1018-0",
+    "1019-0",
+    "102-0",
+    "1022-0",
+    "1023-0"
+  ],
+  "variants": [
+    {
+      "variant": "baseline",
+      "config": "configs/examples/deepseek_ablation_bike_baseline.yaml",
+      "artifact": "deepseek-ablation-baseline-v1",
+      "features": []
+    },
+    {
+      "variant": "table_metadata_cache",
+      "config": "configs/examples/deepseek_ablation_bike_table_metadata_cache.yaml",
+      "artifact": "deepseek-ablation-table_metadata_cache-v1",
+      "features": [
+        "table_assignment_cache"
+      ]
+    },
+    {
+      "variant": "doc_filter_metadata",
+      "config": "configs/examples/deepseek_ablation_bike_doc_filter_metadata.yaml",
+      "artifact": "deepseek-ablation-doc_filter_metadata-v1",
+      "features": [
+        "document_filtering"
+      ]
+    },
+    {
+      "variant": "predicate_proxy",
+      "config": "configs/examples/deepseek_ablation_bike_predicate_proxy.yaml",
+      "artifact": "deepseek-ablation-predicate_proxy-v1",
+      "features": [
+        "proxy_runtime",
+        "alpha_allocation"
+      ]
+    },
+    {
+      "variant": "doc_filter_plus_proxy",
+      "config": "configs/examples/deepseek_ablation_bike_doc_filter_plus_proxy.yaml",
+      "artifact": "deepseek-ablation-doc_filter_plus_proxy-v1",
+      "features": [
+        "document_filtering",
+        "proxy_runtime",
+        "alpha_allocation"
+      ]
+    },
+    {
+      "variant": "table_cache_plus_proxy",
+      "config": "configs/examples/deepseek_ablation_bike_table_cache_plus_proxy.yaml",
+      "artifact": "deepseek-ablation-table_cache_plus_proxy-v1",
+      "features": [
+        "table_assignment_cache",
+        "proxy_runtime",
+        "alpha_allocation"
+      ]
+    },
+    {
+      "variant": "full_stack",
+      "config": "configs/examples/deepseek_ablation_bike_full_stack.yaml",
+      "artifact": "deepseek-ablation-full_stack-v1",
+      "features": [
+        "document_filtering",
+        "table_assignment_cache",
+        "proxy_runtime",
+        "alpha_allocation"
+      ]
+    },
+    {
+      "variant": "full_stack_alpha",
+      "config": "configs/examples/deepseek_ablation_bike_full_stack_alpha.yaml",
+      "artifact": "deepseek-ablation-full_stack_alpha-v1",
+      "features": [
+        "document_filtering",
+        "table_assignment_cache",
+        "proxy_runtime",
+        "alpha_allocation"
+      ]
+    },
+    {
+      "variant": "full_stack_extraction_cache",
+      "config": "configs/examples/deepseek_ablation_bike_full_stack_extraction_cache.yaml",
+      "artifact": "deepseek-ablation-full_stack_extraction_cache-v1",
+      "features": [
+        "document_filtering",
+        "table_assignment_cache",
+        "proxy_runtime",
+        "cross_query_extraction_cache"
+      ]
+    }
+  ]
+}

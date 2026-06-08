@@ -22,8 +22,11 @@ from redd.core.data_loader import DataLoaderBase, create_data_loader
 from redd.core.utils import constants
 from redd.core.utils.constants import (
     ATTRIBUTE_NAME_KEY,
+    ATTRIBUTE_VALUE_KEY,
     ATTRIBUTES_KEY,
+    GROUND_TRUTH_KEY,
     PATH_TEMPLATES,
+    PREDICTION_KEY,
     RESULT_DATA_KEY,
     RESULT_TABLE_KEY,
     SCHEMA_NAME_KEY,
@@ -266,7 +269,7 @@ class EvalBasic(ABC):
 
 @dataclass
 class EvaluationMetrics:
-    """Container for data-population evaluation metrics."""
+    """Container for data-extraction evaluation metrics."""
 
     true_positives: int = 0
     false_positives: int = 0
@@ -308,9 +311,10 @@ class QueryAwareEvaluation:
     doc_details: Dict[str, Any]
     missing_cells: List[Dict[str, Any]]
     extra_cells: List[Dict[str, Any]]
+    semantic_cell_accuracy: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        payload = {
             "query_id": self.query_id,
             "summary": self.summary,
             "table_assignment": self.table_assignment,
@@ -320,10 +324,13 @@ class QueryAwareEvaluation:
             "missing_cells": self.missing_cells,
             "extra_cells": self.extra_cells,
         }
+        if self.semantic_cell_accuracy is not None:
+            payload["semantic_cell_accuracy"] = self.semantic_cell_accuracy
+        return payload
 
 
 class EvalDataExtraction(EvalBasic):
-    """Data-population evaluation with optional LLM-based semantic comparison."""
+    """Data-extraction evaluation with optional LLM-based semantic comparison."""
 
     def __init__(
         self,
@@ -341,6 +348,9 @@ class EvalDataExtraction(EvalBasic):
         self.name_map: Optional[Dict[str, Any]] = None
         self.committee_prompts: List[Dict[str, Any]] = []
         self.prompts: Dict[str, Any] = {}
+        self.eval_mode = ""
+        self.eval_api_key: Optional[str] = None
+        self.eval_llm_model = ""
 
         if "committee" in eval_config:
             self._initialize_committee(eval_config, api_key)
@@ -369,6 +379,7 @@ class EvalDataExtraction(EvalBasic):
                 eval_config["prompts"],
                 llm_model=self.eval_llm_model,
                 api_key=self.eval_api_key,
+                config=eval_config,
             )
         except Exception as exc:
             logging.warning(
@@ -395,6 +406,7 @@ class EvalDataExtraction(EvalBasic):
                 prompt_paths,
                 llm_model=llm_model,
                 api_key=member_api_key,
+                config=member_config,
             )
             self.committee_prompts.append(
                 {
@@ -538,7 +550,7 @@ class EvalDataExtraction(EvalBasic):
         query_info: Dict[str, Any],
     ) -> None:
         query = query_info.get("query", "")
-        result_path = self.out_root / PATH_TEMPLATES.data_population_result(query_id, self.res_param_str)
+        result_path = self.out_root / PATH_TEMPLATES.data_extraction_result(query_id, self.res_param_str)
 
         try:
             result_dict = self.load_json(result_path)
@@ -576,6 +588,20 @@ class EvalDataExtraction(EvalBasic):
             stats = (0, 0, 0, 0, 0, 0, {}, {})
 
         tp, fp, fn, tn, correct, total, doc_stats, attr_stats = stats
+        if query_aware_eval.semantic_cell_accuracy is not None:
+            query_semantic_match_path = self._save_query_aware_semantic_match_results(
+                query_id,
+                query_aware_eval.semantic_cell_accuracy,
+            )
+            query_aware_eval.semantic_cell_accuracy["match_result_path"] = str(query_semantic_match_path)
+
+        full_table_semantic_stats = self.compute_semantic_statistics() if self._semantic_eval_enabled() else None
+        if full_table_semantic_stats is not None:
+            semantic_match_path = self._save_full_table_semantic_match_results(
+                query_id,
+                full_table_semantic_stats,
+            )
+            full_table_semantic_stats["match_result_path"] = str(semantic_match_path)
         self._display_results(dataset_name, query_id, tp, fp, fn, tn, correct, total, attr_stats)
         self._display_query_aware_results(query_aware_eval)
 
@@ -583,6 +609,14 @@ class EvalDataExtraction(EvalBasic):
             "query_aware": query_aware_eval.to_dict(),
             "legacy": {"doc_stats": doc_stats, "attr_stats": attr_stats},
         }
+        if full_table_semantic_stats is not None:
+            eval_results["full_table_semantic"] = full_table_semantic_stats
+            eval_results["semantic"] = {
+                "scope": "full_table_all_gt_attributes",
+                "deprecated_alias_for": "full_table_semantic",
+                "summary": full_table_semantic_stats.get("summary", {}),
+                "match_result_path": full_table_semantic_stats.get("match_result_path"),
+            }
         eval_path = self.out_root / PATH_TEMPLATES.eval_result(query_id, self.res_param_str)
         self.save_results(eval_path, eval_results)
         logging.info("[%s:_evaluate_query] Evaluation results saved to %s", self.__class__.__name__, eval_path)
@@ -658,6 +692,10 @@ class EvalDataExtraction(EvalBasic):
         missing_cells: List[Dict[str, Any]] = []
         doc_details: Dict[str, Any] = {}
         relevant_doc_ids: set[str] = set()
+        semantic_eval_enabled = self._semantic_eval_enabled()
+        semantic_total = semantic_correct = semantic_missing = semantic_mismatched = 0
+        semantic_table_mismatched = semantic_llm_judged = 0
+        semantic_cells: List[Dict[str, Any]] = []
 
         for doc_id in eval_doc_ids:
             gt_records = self._query_required_gt_records(
@@ -709,6 +747,46 @@ class EvalDataExtraction(EvalBasic):
                     doc_detail["cells_total"] += 1
                     pred_value = pred_data.get(attr) if table_ok else None
                     cell_ok = table_ok and self._compare_attribute_values(pred_value, gt_value)
+                    if semantic_eval_enabled:
+                        semantic_total += 1
+                        if not table_ok:
+                            semantic_comparison = {
+                                "result": False,
+                                "method": "table_mismatch",
+                                "reasoning": "The predicted row is not assigned to the required table.",
+                                "cached": False,
+                            }
+                        else:
+                            semantic_comparison = self._semantic_match_attribute(
+                                pred_attr=str(attr),
+                                pred_value=pred_value,
+                                gt_attr=str(attr),
+                                gt_value=gt_value,
+                            )
+                        semantic_ok = bool(semantic_comparison.get("result"))
+                        if semantic_ok:
+                            semantic_correct += 1
+                        else:
+                            semantic_method = str(semantic_comparison.get("method") or "")
+                            if semantic_method == "table_mismatch":
+                                semantic_table_mismatched += 1
+                            elif is_null(pred_value):
+                                semantic_missing += 1
+                            else:
+                                semantic_mismatched += 1
+                        if semantic_comparison.get("method") in {"llm", "committee_llm"}:
+                            semantic_llm_judged += 1
+                        semantic_cells.append(
+                            {
+                                "doc_id": doc_id,
+                                "table": gt_table,
+                                "attr": attr,
+                                "gt": gt_value,
+                                "pred_table": pred_table,
+                                "pred": pred_value,
+                                **semantic_comparison,
+                            }
+                        )
                     if cell_ok:
                         cell_covered += 1
                         doc_detail["cells_covered"] += 1
@@ -769,6 +847,20 @@ class EvalDataExtraction(EvalBasic):
         )
         cell_recall_value = cell_covered / cell_total if cell_total else 1.0
         table_recall_value = table_covered / table_total if table_total else 1.0
+        semantic_cell_accuracy = None
+        if semantic_eval_enabled:
+            semantic_cell_accuracy = {
+                "scope": "query_required_answer_cells",
+                "correct": semantic_correct,
+                "total": semantic_total,
+                "missing": semantic_missing,
+                "mismatched": semantic_mismatched,
+                "table_mismatched": semantic_table_mismatched,
+                "null_gt_skipped": null_gt_cells_skipped,
+                "llm_judged": semantic_llm_judged,
+                "accuracy": semantic_correct / semantic_total if semantic_total else 1.0,
+                "cells": semantic_cells,
+            }
         answer_recall_value = answer_recall.get("recall")
         answer_recall_ok = bool(answer_recall.get("executable", False)) and answer_recall_value == 1.0
         if answer_recall.get("reason") == "query_has_no_sql":
@@ -812,6 +904,7 @@ class EvalDataExtraction(EvalBasic):
             doc_details=doc_details,
             missing_cells=missing_cells,
             extra_cells=extra_cells,
+            semantic_cell_accuracy=semantic_cell_accuracy,
         )
 
     def _display_results(
@@ -881,6 +974,7 @@ class EvalDataExtraction(EvalBasic):
         summary = payload["summary"]
         table = payload["table_assignment"]
         cells = payload["cell_recall"]
+        semantic_cells = payload.get("semantic_cell_accuracy")
         answer = payload["answer_recall"]
 
         print("\n" + "=" * width)
@@ -898,6 +992,13 @@ class EvalDataExtraction(EvalBasic):
             f"{cells['covered']}/{cells['total']} = {cells['recall']:.2%} "
             f"(missing={cells['missing']}, mismatched={cells['mismatched']})"
         )
+        if semantic_cells is not None:
+            print(
+                f"{'Query semantic cells':<24}"
+                f"{semantic_cells['correct']}/{semantic_cells['total']} = {semantic_cells['accuracy']:.2%} "
+                f"(missing={semantic_cells['missing']}, mismatched={semantic_cells['mismatched']}, "
+                f"table_mismatched={semantic_cells['table_mismatched']}, llm={semantic_cells['llm_judged']})"
+            )
         if answer.get("executable"):
             print(
                 f"{'SQL answer recall':<24}"
@@ -1029,6 +1130,357 @@ class EvalDataExtraction(EvalBasic):
         if pred_number is not None and gt_number is not None:
             return pred_number == gt_number
         return self._normalize_text_value(pred_val) == self._normalize_text_value(gt_val)
+
+    def _semantic_eval_enabled(self) -> bool:
+        return bool(self.committee_prompts or self.prompts)
+
+    def compute_semantic_statistics(self) -> Dict[str, Any]:
+        """Compute attribute correctness with an LLM semantic judge.
+
+        Strict/canonical matches are accepted without an LLM call. The LLM is
+        only used for non-null value pairs that fail strict comparison.
+        """
+
+        if not self.prediction_data or not self.gt_data:
+            return {
+                "summary": {
+                    "scope": "full_table_all_gt_attributes",
+                    "attr_correct": 0,
+                    "attr_total": 0,
+                    "attr_accuracy": None,
+                    "doc_final_true": 0,
+                    "doc_total": 0,
+                    "doc_final_accuracy": None,
+                    "llm_judged": 0,
+                },
+                "doc_stats": {},
+                "attr_stats": {},
+                "matches": [],
+            }
+
+        doc_stats: Dict[str, Dict[str, Any]] = {}
+        attr_stats: Dict[str, Dict[str, Any]] = {}
+        matches: List[Dict[str, Any]] = []
+        attr_correct_total = 0
+        attr_total = 0
+        final_true = 0
+        llm_judged = 0
+
+        for pred, gt in zip(self.prediction_data, self.gt_data):
+            doc_id = str(pred.get("doc_id"))
+            gt_table = gt.get("table")
+            pred_table = pred.get("table")
+            table_correct = pred_table == gt_table
+            gt_data = gt.get("data") if isinstance(gt.get("data"), dict) else {}
+            pred_data = pred.get("data") if isinstance(pred.get("data"), dict) else {}
+            attr_map_dict = self.name_map.get("attribute", {}).get(gt_table, {}) if isinstance(self.name_map, dict) else {}
+            if not isinstance(attr_map_dict, dict):
+                attr_map_dict = {}
+
+            doc_attr_results: Dict[str, bool] = {}
+            doc_all_attrs_correct = True
+
+            if is_null(gt_table):
+                doc_stats[doc_id] = {
+                    "table": is_null(pred_table),
+                    "attr": {},
+                    "final": is_null(pred_table),
+                }
+                if is_null(pred_table):
+                    final_true += 1
+                continue
+
+            for gt_attr, gt_value in gt_data.items():
+                pred_attr = attr_map_dict.get(gt_attr, gt_attr)
+                pred_value = pred_data.get(pred_attr)
+                attr_key = f"{gt_table}.{gt_attr}"
+                if attr_key not in attr_stats:
+                    attr_stats[attr_key] = {
+                        "correct": 0,
+                        "total": 0,
+                        "table": gt_table,
+                        "attr": gt_attr,
+                    }
+
+                comparison = self._semantic_match_attribute(
+                    pred_attr=str(pred_attr),
+                    pred_value=pred_value,
+                    gt_attr=str(gt_attr),
+                    gt_value=gt_value,
+                )
+                attr_correct = bool(comparison["result"])
+                doc_attr_results[str(gt_attr)] = attr_correct
+                attr_stats[attr_key]["total"] += 1
+                attr_total += 1
+                if attr_correct:
+                    attr_stats[attr_key]["correct"] += 1
+                    attr_correct_total += 1
+                else:
+                    doc_all_attrs_correct = False
+                if comparison.get("method") == "llm":
+                    llm_judged += 1
+
+                matches.append(
+                    {
+                        "doc_id": doc_id,
+                        "table": gt_table,
+                        "pred_table": pred_table,
+                        "table_correct": table_correct,
+                        "attribute": gt_attr,
+                        "pred_attribute": pred_attr,
+                        "gt_value": gt_value,
+                        "pred_value": pred_value,
+                        **comparison,
+                    }
+                )
+
+            doc_final = table_correct and doc_all_attrs_correct
+            if doc_final:
+                final_true += 1
+            doc_stats[doc_id] = {
+                "table": table_correct,
+                "attr": doc_attr_results,
+                "final": doc_final,
+            }
+
+        doc_total = len(doc_stats)
+        return {
+            "summary": {
+                "scope": "full_table_all_gt_attributes",
+                "attr_correct": attr_correct_total,
+                "attr_total": attr_total,
+                "attr_accuracy": attr_correct_total / attr_total if attr_total else None,
+                "doc_final_true": final_true,
+                "doc_total": doc_total,
+                "doc_final_accuracy": final_true / doc_total if doc_total else None,
+                "llm_judged": llm_judged,
+            },
+            "doc_stats": doc_stats,
+            "attr_stats": attr_stats,
+            "matches": matches,
+        }
+
+    def _semantic_match_attribute(
+        self,
+        *,
+        pred_attr: str,
+        pred_value: Any,
+        gt_attr: str,
+        gt_value: Any,
+    ) -> Dict[str, Any]:
+        if self._compare_attribute_values(pred_value, gt_value):
+            return {
+                "result": True,
+                "method": "strict",
+                "reasoning": "Values match under strict numeric/text normalization.",
+                "cached": False,
+            }
+        if is_null(pred_value) or is_null(gt_value):
+            return {
+                "result": False,
+                "method": "null_mismatch",
+                "reasoning": "One side is null or missing, so semantic comparison is not applicable.",
+                "cached": False,
+            }
+
+        cache_path = self.out_root / PATH_TEMPLATES.eval_comparison_cache()
+        cache = self.load_json(cache_path) if cache_path.exists() else {}
+        cache_key = self._semantic_cache_key(pred_attr, pred_value, gt_attr, gt_value)
+        cached = cache.get(cache_key)
+        if isinstance(cached, dict):
+            return {
+                "result": bool(cached.get("result")),
+                "method": cached.get("method", "llm"),
+                "reasoning": cached.get("reasoning", ""),
+                "cached": True,
+                "llm_model": cached.get("llm_model"),
+            }
+
+        comparison = self._call_semantic_judge(pred_attr, pred_value, gt_attr, gt_value)
+        cache[cache_key] = {
+            **comparison,
+            "pred_attr": pred_attr,
+            "pred_value": pred_value,
+            "gt_attr": gt_attr,
+            "gt_value": gt_value,
+            "llm_model": self.eval_llm_model,
+        }
+        self.save_results(cache_path, cache)
+        return comparison
+
+    @staticmethod
+    def _semantic_cache_key(pred_attr: str, pred_value: Any, gt_attr: str, gt_value: Any) -> str:
+        return json.dumps(
+            {
+                "pred_attr": pred_attr,
+                "pred_value": "" if is_null(pred_value) else str(pred_value),
+                "gt_attr": gt_attr,
+                "gt_value": "" if is_null(gt_value) else str(gt_value),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+
+    def _call_semantic_judge(
+        self,
+        pred_attr: str,
+        pred_value: Any,
+        gt_attr: str,
+        gt_value: Any,
+    ) -> Dict[str, Any]:
+        cmp_input = {
+            PREDICTION_KEY: {
+                ATTRIBUTE_NAME_KEY: pred_attr,
+                ATTRIBUTE_VALUE_KEY: str(pred_value),
+            },
+            GROUND_TRUTH_KEY: {
+                ATTRIBUTE_NAME_KEY: gt_attr,
+                ATTRIBUTE_VALUE_KEY: str(gt_value),
+            },
+        }
+        message = json.dumps(cmp_input, ensure_ascii=False)
+        if self.committee_prompts:
+            return self._committee_semantic_judge(message)
+        return self._single_semantic_judge(message)
+
+    def _single_semantic_judge(self, message: str) -> Dict[str, Any]:
+        prompt = self._semantic_prompt()
+        if prompt is None:
+            return {
+                "result": False,
+                "method": "semantic_disabled",
+                "reasoning": "No semantic comparison prompt is configured.",
+                "cached": False,
+            }
+        for attempt in range(3):
+            try:
+                parsed = self._parse_semantic_response(prompt(msg=message, max_tokens=256, temperature=0))
+                if parsed is not None:
+                    return {
+                        "result": bool(parsed.get("Result")),
+                        "method": "llm",
+                        "reasoning": str(parsed.get("Reasoning") or ""),
+                        "cached": False,
+                        "llm_model": self.eval_llm_model,
+                    }
+            except Exception as exc:
+                logging.warning(
+                    "[%s:_single_semantic_judge] Attempt %s failed: %s",
+                    self.__class__.__name__,
+                    attempt + 1,
+                    exc,
+                )
+        return {
+            "result": False,
+            "method": "llm_error",
+            "reasoning": "Semantic judge failed after retries.",
+            "cached": False,
+            "llm_model": self.eval_llm_model,
+        }
+
+    def _committee_semantic_judge(self, message: str) -> Dict[str, Any]:
+        votes: List[bool] = []
+        results: List[Dict[str, Any]] = []
+        for member in self.committee_prompts:
+            prompt = self._semantic_prompt(member.get("prompts", {}))
+            if prompt is None:
+                continue
+            try:
+                parsed = self._parse_semantic_response(prompt(msg=message, max_tokens=256, temperature=0))
+                if parsed is None:
+                    continue
+                vote = bool(parsed.get("Result"))
+                votes.append(vote)
+                results.append(
+                    {
+                        "llm_model": member.get("llm_model"),
+                        "vote": vote,
+                        "reasoning": str(parsed.get("Reasoning") or ""),
+                    }
+                )
+            except Exception as exc:
+                logging.warning(
+                    "[%s:_committee_semantic_judge] %s failed: %s",
+                    self.__class__.__name__,
+                    member.get("llm_model"),
+                    exc,
+                )
+        true_count = sum(1 for vote in votes if vote)
+        false_count = len(votes) - true_count
+        result = true_count >= false_count if votes else False
+        return {
+            "result": result,
+            "method": "committee_llm",
+            "reasoning": f"Committee votes: {true_count} true, {false_count} false.",
+            "cached": False,
+            "votes": results,
+            "llm_model": ",".join(str(member.get("llm_model")) for member in self.committee_prompts),
+        }
+
+    def _semantic_prompt(self, prompts: Optional[Dict[str, Any]] = None) -> Any | None:
+        prompt_map = prompts if prompts is not None else self.prompts
+        for prompt_name in ("data_extraction_cmp_str", "cmp_str"):
+            if prompt_name in prompt_map:
+                return prompt_map[prompt_name]
+        if prompt_map:
+            return next(iter(prompt_map.values()))
+        return None
+
+    @staticmethod
+    def _parse_semantic_response(response: str) -> Dict[str, Any] | None:
+        text = str(response or "").strip()
+        candidates = [text]
+        fenced = re.findall(r"```(?:json)?\s*(.*?)\s*```", text, flags=re.DOTALL | re.IGNORECASE)
+        candidates.extend(match.strip() for match in fenced)
+        object_match = re.search(r"\{.*\}", text, flags=re.DOTALL)
+        if object_match:
+            candidates.append(object_match.group(0))
+        for candidate in candidates:
+            try:
+                parsed = json.loads(candidate)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(parsed, dict) and isinstance(parsed.get("Result"), bool):
+                return parsed
+            if isinstance(parsed, dict) and isinstance(parsed.get("result"), bool):
+                return {
+                    "Result": parsed["result"],
+                    "Reasoning": parsed.get("reasoning") or parsed.get("Reasoning") or "",
+                }
+        return None
+
+    def _save_query_aware_semantic_match_results(
+        self,
+        query_id: str,
+        semantic_cell_accuracy: Dict[str, Any],
+    ) -> Path:
+        path = self.out_root / f"query_aware_semantic_matches_{query_id}_{self.res_param_str}.json"
+        summary = {
+            key: value
+            for key, value in semantic_cell_accuracy.items()
+            if key != "cells"
+        }
+        payload = {
+            "query_id": query_id,
+            "artifact": self.res_param_str,
+            "scope": "query_required_answer_cells",
+            "summary": summary,
+            "matches": semantic_cell_accuracy.get("cells", []),
+        }
+        self.save_results(path, payload)
+        return path
+
+    def _save_full_table_semantic_match_results(self, query_id: str, semantic_stats: Dict[str, Any]) -> Path:
+        path = self.out_root / f"full_table_semantic_matches_{query_id}_{self.res_param_str}.json"
+        payload = {
+            "query_id": query_id,
+            "artifact": self.res_param_str,
+            "scope": "full_table_all_gt_attributes",
+            "summary": semantic_stats.get("summary", {}),
+            "matches": semantic_stats.get("matches", []),
+        }
+        self.save_results(path, payload)
+        return path
 
     @staticmethod
     def _decimal_value(value: Any) -> Decimal | None:
@@ -1285,7 +1737,7 @@ class EvalDataExtraction(EvalBasic):
     ) -> List[Tuple[Any, ...]]:
         conn = sqlite3.connect(":memory:")
         try:
-            self._populate_query_connection(conn, records_by_table, required_by_table)
+            self._load_query_connection(conn, records_by_table, required_by_table)
             cursor = conn.execute(sql)
             return [tuple(row) for row in cursor.fetchall()]
         finally:
@@ -1318,7 +1770,7 @@ class EvalDataExtraction(EvalBasic):
         conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
         try:
-            self._populate_query_connection(conn, records_by_table, required_by_table)
+            self._load_query_connection(conn, records_by_table, required_by_table)
             cursor = conn.execute(provenance_sql)
             result = []
             for row in cursor.fetchall():
@@ -1327,7 +1779,7 @@ class EvalDataExtraction(EvalBasic):
         finally:
             conn.close()
 
-    def _populate_query_connection(
+    def _load_query_connection(
         self,
         conn: sqlite3.Connection,
         records_by_table: Dict[str, List[Dict[str, Any]]],
@@ -1365,7 +1817,8 @@ class EvalDataExtraction(EvalBasic):
             return []
 
         refs: List[Tuple[str, str]] = []
-        parts = re.split(r"\bJOIN\b", from_match.group(1).strip(), flags=re.IGNORECASE)
+        join_split_pattern = r"\b(?:(?:LEFT|RIGHT|FULL)(?:\s+OUTER)?\s+|INNER\s+|CROSS\s+)?JOIN\b"
+        parts = re.split(join_split_pattern, from_match.group(1).strip(), flags=re.IGNORECASE)
         for part in parts:
             segment = re.split(r"\bON\b|\bUSING\s*\(", part.strip(), maxsplit=1, flags=re.IGNORECASE)[0].strip()
             match = re.match(

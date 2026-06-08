@@ -244,7 +244,7 @@ def _paper_claims(output_root: Path, counts: dict[str, int], env: dict[str, Any]
         Claim(
             "paper.table2_tdp_accuracy",
             "Tech report Table 2",
-            "SCAPE/SCAPE-Hyb reduce data population errors from up to 30% to below 1% across datasets.",
+            "SCAPE/SCAPE-Hyb reduce data extraction errors from up to 30% to below 1% across datasets.",
             "blocked",
             artifact_evidence,
             "Run real LLM extraction, generate hidden states, train classifiers, and summarize ACCpop for No Correction, SCAPE, and SCAPE-Hyb.",
@@ -316,10 +316,10 @@ def _paper_claims(output_root: Path, counts: dict[str, int], env: dict[str, Any]
         Claim(
             "paper.sec641_one_to_many",
             "Tech report Sec. 6.4.1",
-            "One-to-many chunk-to-table setting leaves schema discovery unchanged and drops data population accuracy by only 0.13%.",
+            "One-to-many chunk-to-table setting leaves schema discovery unchanged and drops data extraction accuracy by only 0.13%.",
             "missing",
             "No one-to-many/density-specific result files detected in current output.",
-            "Add one-to-many dataset transform or preset and compare schema/data-population metrics.",
+            "Add one-to-many dataset transform or preset and compare schema/data-extraction metrics.",
             "Needs the real paper pipeline metrics, not only oracle optimizer recall.",
         ),
         Claim(

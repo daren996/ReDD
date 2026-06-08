@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.cuad.cuad",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List license_grant from cuad_contract.",
+      "sql": "SELECT license_grant FROM cuad_contract;",
+      "required_tables": [
+        "cuad_contract"
+      ],
+      "required_columns": [
+        "cuad_contract.license_grant"
+      ],
+      "output_columns": [
+        "cuad_contract.license_grant"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "cuad.cuad",
+      "dataset_id": "deepseek_aligned.cuad.cuad"
+    }
+  ]
+}

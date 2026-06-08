@@ -2,20 +2,21 @@ from __future__ import annotations
 
 import argparse
 
+from .common import add_experiment_args, add_output_args, add_selection_args, run_and_print
+
 
 def build_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(add_help=add_help)
-    parser.add_argument("--config", type=str, default="configs/examples/ground_truth_demo.yaml")
-    parser.add_argument("--experiment", type=str, required=True)
-    parser.add_argument("--api-key", type=str, default=None)
+    add_experiment_args(parser)
+    add_selection_args(parser)
+    add_output_args(parser)
     return parser
 
 
 def run(args: argparse.Namespace) -> int:
     from redd.runners import run_extract
 
-    run_extract(args.config, args.experiment, api_key=args.api_key)
-    return 0
+    return run_and_print(args, run_extract)
 
 
 def main(argv: list[str] | None = None) -> int:

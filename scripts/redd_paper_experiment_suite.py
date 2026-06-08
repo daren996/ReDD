@@ -325,7 +325,7 @@ def _table2_surrogate_result(output_root: Path, sweep_rows: list[dict[str, Any]]
         next_action = "Run real LLM extraction, hidden-state generation, classifier training, and SCAPE/SCAPE-Hyb correction evaluation."
         comparison = "Current oracle extraction recall is not Table 2 evidence because Table 2 measures real extraction errors and correction."
     return ExperimentResult(
-        "table2_data_population_accuracy",
+        "table2_data_extraction_accuracy",
         "Table 2",
         status,
         f"Paper ACCpop targets: {PAPER_TABLE2}",
@@ -650,10 +650,10 @@ def _one_to_many_result(output_root: Path, dataset_root: Path, sweep_rows: list[
         "one_to_many_chunk_to_table",
         "Figure 7 / Sec. 6.4.1",
         status,
-        "Paper claim: one-to-many chunk-to-table keeps schema discovery unchanged and drops data population accuracy by only 0.13%.",
+        "Paper claim: one-to-many chunk-to-table keeps schema discovery unchanged and drops data extraction accuracy by only 0.13%.",
         f"current canonical inputs: multi_table_docs={total_multi}, chunked_docs={total_chunked}, output_root={output_root}",
         "Current output does not contain a controlled one-to-many variant comparison.",
-        "Create/run a one-to-many chunk dataset preset and compare schema/data-population metrics against the default preset.",
+        "Create/run a one-to-many chunk dataset preset and compare schema/data-extraction metrics against the default preset.",
     )
 
 

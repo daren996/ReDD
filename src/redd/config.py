@@ -133,7 +133,7 @@ class StageConfig(StrictModel):
     embedding: StrategyConfig | None = None
     retrieval: StrategyConfig | None = None
     adaptive_sampling: StrategyConfig | None = None
-    document_filtering: StrategyConfig | None = None
+    doc_filter: StrategyConfig | None = None
     table_assignment_cache: StrategyConfig | None = None
     proxy_runtime: StrategyConfig | None = None
     alpha_allocation: StrategyConfig | None = None
@@ -337,13 +337,12 @@ def _schema_stage_runtime(
         config["general_param_str"] = experiment.stage_artifact_id(source_stage)
     if stage_config.adaptive_sampling:
         config["adaptive_sampling"] = stage_config.adaptive_sampling.as_internal_dict()
-    if stage_config.document_filtering:
+    if stage_config.doc_filter:
         doc_filter = {
             "enable_calibrate": DEFAULT_DOC_FILTER_ENABLE_CALIBRATE,
             "threshold": DEFAULT_DOC_FILTER_THRESHOLD,
-            **stage_config.document_filtering.as_internal_dict(),
+            **stage_config.doc_filter.as_internal_dict(),
         }
-        config["document_filtering"] = doc_filter
         config["doc_filter"] = doc_filter
     if stage_config.schema_tailoring:
         config["schema_tailor"] = stage_config.schema_tailoring.as_internal_dict()
@@ -383,8 +382,8 @@ def _data_extraction_stage_runtime(
         "schema_source_stage": source_stage,
         "prompts": stage_config.prompts
         or {
-            "prompt_table": "datapop_table_json.txt",
-            "prompt_attr": "datapop_attr_json.txt",
+            "prompt_table": "data_extraction_table_json.txt",
+            "prompt_attr": "data_extraction_attr_json.txt",
         },
         "in_fields": stage_config.input_fields
         or {
@@ -403,13 +402,12 @@ def _data_extraction_stage_runtime(
         config["disable_llm"] = True
         config["use_ground_truth"] = True
         config["mode"] = "ground_truth"
-    if stage_config.document_filtering:
+    if stage_config.doc_filter:
         doc_filter = {
             "enable_calibrate": DEFAULT_DOC_FILTER_ENABLE_CALIBRATE,
             "threshold": DEFAULT_DOC_FILTER_THRESHOLD,
-            **stage_config.document_filtering.as_internal_dict(),
+            **stage_config.doc_filter.as_internal_dict(),
         }
-        config["document_filtering"] = doc_filter
         config["doc_filter"] = doc_filter
     if stage_config.table_assignment_cache:
         config["table_assignment_cache"] = stage_config.table_assignment_cache.as_internal_dict()

@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.bird.california_schools",
+  "queries": [
+    {
+      "query_id": "Q1",
+      "question": "List EILName, row_id, AdmEmail1 from schools where EILName contains 'middle'.",
+      "sql": "SELECT eil_name, row_id, adm_email1 FROM schools WHERE eil_name LIKE '%middle%';",
+      "required_tables": [
+        "schools"
+      ],
+      "required_columns": [
+        "schools.eil_name",
+        "schools.adm_email1"
+      ],
+      "output_columns": [
+        "schools.eil_name"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "bird.california_schools",
+      "dataset_id": "deepseek_smoke.bird.california_schools"
+    }
+  ]
+}

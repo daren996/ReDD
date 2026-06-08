@@ -12,7 +12,7 @@ from typing import Any
 EXPECTED_EXPERIMENTS = [
     ("fig1_pipeline_overview", "Figure 1", "Pipeline implementation/documentation exists."),
     ("table1_dataset_setup", "Table 1 / Sec. 6.1", "Exact dataset/query setup is available."),
-    ("table2_data_population_accuracy", "Table 2", "Data-population accuracy can be measured."),
+    ("table2_data_extraction_accuracy", "Table 2", "Data-extraction accuracy can be measured."),
     ("table2_cuad_chunk_merge", "Table 2 / Sec. 6.2.1", "CUAD chunk merge result exists."),
     ("table3_false_positive_overhead", "Table 3", "False-positive correction overhead is measured."),
     ("sec623_alpha_threshold_effect", "Sec. 6.2.3 / Figure 2", "Alpha threshold effect is measured."),

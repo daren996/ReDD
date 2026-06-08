@@ -1,0 +1,67 @@
+config_version: 2.1.1
+project:
+  name: deepseek-ablation-multi-bird_california_schools-table_metadata_cache
+  seed: 42
+runtime:
+  output_dir: outputs/deepseek_ablation_multi
+  log_dir: logs
+  output_layout: dataset_stage
+  artifact_id: deepseek-ablation-multi-bird_california_schools-table_metadata_cache-v1
+  console_log_level: WARNING
+  force_rerun: true
+models:
+  llm:
+    provider: deepseek
+    model: deepseek-chat
+    api_key_env: DEEPSEEK_API_KEY
+    structured_backend: json
+    max_retries: 2
+    wait_time: 1
+    temperature: 0
+    max_tokens: 256
+  embedding:
+    provider: none
+    model: none
+    enabled: false
+    api_key_env: null
+datasets:
+  deepseek_ablation_multi.bird_california_schools:
+    loader: hf_manifest
+    root: dataset/derived/deepseek_ablation_multi/bird_california_schools
+    query_ids:
+    - Q_bird_california_schools_1
+    - Q_bird_california_schools_2
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 3
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: llm
+    prompts:
+      prompt_table: prompts/data_extraction_table_json.txt
+      prompt_attr: prompts/data_extraction_attr_json.txt
+    options:
+      force_rerun: true
+      result_save_interval: 1
+      eval:
+        mode: deepseek
+        llm_model: deepseek-chat
+        structured_backend: json
+        max_retries: 2
+        wait_time: 1
+        prompts:
+          data_extraction_cmp_str: prompts/eval_data_extraction_cmp_str.txt
+    table_assignment_cache:
+      enabled: true
+      source_table_metadata: true
+      general_schema: false
+experiments:
+  demo:
+    datasets:
+    - deepseek_ablation_multi.bird_california_schools
+    stages:
+    - data_extraction
+    artifact_id: deepseek-ablation-multi-bird_california_schools-table_metadata_cache-v1

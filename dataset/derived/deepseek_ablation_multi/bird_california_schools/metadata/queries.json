@@ -1,0 +1,48 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_ablation_multi.bird_california_schools",
+  "queries": [
+    {
+      "query_id": "Q_bird_california_schools_1",
+      "question": "Which district type is recorded for the Alternative School of Choice row?",
+      "sql": "SELECT district_type FROM frpm WHERE educational_option_type = 'Alternative School of Choice';",
+      "required_tables": [
+        "frpm"
+      ],
+      "required_columns": [
+        "frpm.educational_option_type",
+        "frpm.district_type"
+      ],
+      "output_columns": [
+        "frpm.district_type"
+      ],
+      "tags": [
+        "ablation",
+        "predicate",
+        "multi_dataset"
+      ],
+      "difficulty": "controlled"
+    },
+    {
+      "query_id": "Q_bird_california_schools_2",
+      "question": "Which academic year is recorded for the Alternative School of Choice row?",
+      "sql": "SELECT academic_year FROM frpm WHERE educational_option_type = 'Alternative School of Choice';",
+      "required_tables": [
+        "frpm"
+      ],
+      "required_columns": [
+        "frpm.educational_option_type",
+        "frpm.academic_year"
+      ],
+      "output_columns": [
+        "frpm.academic_year"
+      ],
+      "tags": [
+        "ablation",
+        "predicate",
+        "multi_dataset"
+      ],
+      "difficulty": "controlled"
+    }
+  ]
+}

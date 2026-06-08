@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.fda.fda",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List conclusion from fda_510k_device_submission.",
+      "sql": "SELECT conclusion FROM fda_510k_device_submission;",
+      "required_tables": [
+        "fda_510k_device_submission"
+      ],
+      "required_columns": [
+        "fda_510k_device_submission.conclusion"
+      ],
+      "output_columns": [
+        "fda_510k_device_submission.conclusion"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "fda.fda",
+      "dataset_id": "deepseek_aligned.fda.fda"
+    }
+  ]
+}

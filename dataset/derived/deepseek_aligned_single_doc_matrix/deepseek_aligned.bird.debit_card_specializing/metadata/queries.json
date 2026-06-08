@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.bird.debit_card_specializing",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List segment from gasstations.",
+      "sql": "SELECT segment FROM gasstations;",
+      "required_tables": [
+        "gasstations"
+      ],
+      "required_columns": [
+        "gasstations.segment"
+      ],
+      "output_columns": [
+        "gasstations.segment"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "bird.debit_card_specializing",
+      "dataset_id": "deepseek_aligned.bird.debit_card_specializing"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_aligned.bird.student_club",
+  "queries": [
+    {
+      "query_id": "Q_aligned",
+      "question": "List department from major.",
+      "sql": "SELECT department FROM major;",
+      "required_tables": [
+        "major"
+      ],
+      "required_columns": [
+        "major.department"
+      ],
+      "output_columns": [
+        "major.department"
+      ],
+      "tags": [
+        "deepseek_aligned_smoke"
+      ],
+      "difficulty": "smoke",
+      "source_dataset_id": "bird.student_club",
+      "dataset_id": "deepseek_aligned.bird.student_club"
+    }
+  ]
+}

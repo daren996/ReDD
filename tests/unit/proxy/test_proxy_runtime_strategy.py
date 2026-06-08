@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from redd.core.data_population.strategies.proxy_runtime import (
+from redd.core.data_extraction.strategies.proxy_runtime import (
     GTTextConsistencyProxy,
     OraclePredicateProxy,
     ProxyRuntimeExtractionStrategy,

@@ -1,0 +1,25 @@
+{
+  "schema_version": "redd.queries.v1",
+  "dataset_id": "deepseek_smoke.spider.soccer_1",
+  "queries": [
+    {
+      "query_id": "Q8",
+      "question": "List the player names and their heights, showing only those players whose names start with 'A' and whose height is greater than 182cm.",
+      "sql": "SELECT p.player_name, p.height FROM player p WHERE p.player_name LIKE 'A%' AND p.height > '182';",
+      "required_tables": [
+        "player"
+      ],
+      "required_columns": [
+        "player.player_name",
+        "player.height"
+      ],
+      "output_columns": [
+        "player.player_name"
+      ],
+      "tags": [],
+      "difficulty": null,
+      "source_dataset_id": "spider.soccer_1",
+      "dataset_id": "deepseek_smoke.spider.soccer_1"
+    }
+  ]
+}
