@@ -126,3 +126,6 @@ tmp/
 # Local dataset indexes / generated databases
 dataset/**/*.sqlite3
 dataset/**/*.db
+
+# Local external datasets
+dataset/external/
