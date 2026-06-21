@@ -24,8 +24,9 @@ class FactoryAndProviderTests(unittest.TestCase):
         notes = get_loader_profile_notes()
 
         self.assertEqual(set(registry), set(notes))
-        self.assertEqual(set(registry), {"hf_manifest"})
+        self.assertEqual(set(registry), {"hf_manifest", "memory"})
         self.assertIn("manifest/parquet", notes["hf_manifest"].lower())
+        self.assertIn("in-memory", notes["memory"].lower())
 
     def test_normalize_provider_name_uses_canonical_provider_names(self) -> None:
         self.assertEqual(normalize_provider_name("openai"), "openai")

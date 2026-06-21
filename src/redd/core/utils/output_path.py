@@ -5,7 +5,7 @@ Output path helpers for task-based modules.
 from pathlib import Path
 from typing import Any, Dict
 
-from redd.runtime import resolve_stage_output_root
+from redd.orchestration.runtime import resolve_stage_output_root
 
 
 def build_task_output_root(

@@ -17,7 +17,7 @@ from redd.cli import evaluate, extract, preprocessing, schema_refinement, web
 from redd.cli import run as run_cli
 from redd.cli.main import build_parser
 from redd.config import resolve_repo_path
-from redd.runtime import resolve_dataset_roots
+from redd.orchestration.runtime import resolve_dataset_roots
 
 
 class PackageSmokeTests(unittest.TestCase):
@@ -33,6 +33,7 @@ class PackageSmokeTests(unittest.TestCase):
         embedding = import_module("redd.embedding")
         llm = import_module("redd.llm")
         optimizations = import_module("redd.optimizations")
+        orchestration = import_module("redd.orchestration")
         proxy = import_module("redd.proxy")
         correction = import_module("redd.correction")
         exp = import_module("redd.exp")
@@ -46,6 +47,7 @@ class PackageSmokeTests(unittest.TestCase):
         self.assertTrue(callable(embedding.DocumentClustering))
         self.assertTrue(callable(llm.normalize_provider_name))
         self.assertTrue(callable(optimizations.create_doc_filter))
+        self.assertTrue(callable(orchestration.select_runtime))
         self.assertTrue(callable(proxy.create_join_resolver))
         self.assertEqual(correction.__name__, "redd.correction")
         self.assertEqual(exp.EvalDataExtraction.__name__, "EvalDataExtraction")
@@ -163,7 +165,7 @@ class PackageSmokeTests(unittest.TestCase):
             parser.parse_args(["preprocessing", "--config", "configs/examples/ground_truth_demo.yaml"])
 
     def test_stage_cli_modules_route_to_stage_runners(self) -> None:
-        with patch("redd.runners.run_preprocessing") as mocked_preprocessing:
+        with patch("redd.orchestration.runners.run_preprocessing") as mocked_preprocessing:
             preprocessing.main(["--config", "configs/examples/ground_truth_demo.yaml", "--experiment", "demo"])
             mocked_preprocessing.assert_called_once_with(
                 "configs/examples/ground_truth_demo.yaml",
@@ -173,7 +175,7 @@ class PackageSmokeTests(unittest.TestCase):
                 query_ids=None,
             )
 
-        with patch("redd.runners.run_schema_refinement") as mocked_refinement:
+        with patch("redd.orchestration.runners.run_schema_refinement") as mocked_refinement:
             schema_refinement.main(["--config", "configs/examples/ground_truth_demo.yaml", "--experiment", "demo"])
             mocked_refinement.assert_called_once_with(
                 "configs/examples/ground_truth_demo.yaml",
@@ -183,7 +185,7 @@ class PackageSmokeTests(unittest.TestCase):
                 query_ids=None,
             )
 
-        with patch("redd.runners.run_extract") as mocked_extract:
+        with patch("redd.orchestration.runners.run_extract") as mocked_extract:
             extract.main(
                 [
                     "--config",
@@ -204,7 +206,7 @@ class PackageSmokeTests(unittest.TestCase):
                 query_ids=["Q1"],
             )
 
-        with patch("redd.runners.run_experiment") as mocked_run:
+        with patch("redd.orchestration.runners.run_experiment") as mocked_run:
             run_cli.main(["--config", "configs/examples/ground_truth_demo.yaml", "--experiment", "demo"])
             mocked_run.assert_called_once_with(
                 "configs/examples/ground_truth_demo.yaml",
@@ -215,7 +217,7 @@ class PackageSmokeTests(unittest.TestCase):
                 stages=None,
             )
 
-        with patch("redd.runners.run_evaluation") as mocked_evaluate:
+        with patch("redd.orchestration.runners.run_evaluation") as mocked_evaluate:
             evaluate.main(["--config", "configs/examples/ground_truth_demo.yaml", "--exp", "demo"])
             mocked_evaluate.assert_called_once_with(
                 "configs/examples/ground_truth_demo.yaml",
@@ -310,6 +312,15 @@ class PackageSmokeTests(unittest.TestCase):
         self.assertIn("ReDD", web_resources.joinpath("index.html").read_text(encoding="utf-8"))
         self.assertIn("/api/run", web_resources.joinpath("app.js").read_text(encoding="utf-8"))
         self.assertIn(".app-shell", web_resources.joinpath("styles.css").read_text(encoding="utf-8"))
+
+    def test_web_demo_config_and_demo_data_frame_are_packaged(self) -> None:
+        config_resources = resources.files("redd.resources.configs")
+        demo_data_resources = resources.files("redd.resources.demo_data")
+
+        config_text = config_resources.joinpath("demo_datasets.yaml").read_text(encoding="utf-8")
+        self.assertIn("redd-web-demo", config_text)
+        self.assertIn("spider.college_demo", config_text)
+        self.assertIn("Packaged Demo Data", demo_data_resources.joinpath("README.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

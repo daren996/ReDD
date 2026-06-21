@@ -17,10 +17,12 @@ from fastapi.testclient import TestClient
 
 from redd.core.utils.progress import emit_progress_event, progress_event_sink, tqdm
 from redd.web_demo import (
+    DEFAULT_WEB_DEMO_CONFIG,
     collect_web_evaluation_summary,
     collect_web_optimization_metrics,
     create_web_demo_app,
     delete_output_result,
+    inspect_web_config,
 )
 from redd.web_demo import (
     list_output_results as summarize_output_results,
@@ -159,6 +161,23 @@ class WebDemoTests(unittest.TestCase):
         self.assertEqual(payload["experiment"], "demo")
         self.assertEqual(payload["dataset_ids"], ["spider.college_demo", "bird.schools_demo"])
         self.assertEqual([item["id"] for item in payload["experiments"]], ["demo"])
+
+    def test_default_config_inspect_falls_back_to_packaged_resource(self) -> None:
+        from redd import web_demo as web_demo_module
+
+        original_resolver = web_demo_module.resolve_repo_path
+
+        def resolve_with_missing_default(path: str | Path) -> Path:
+            if str(path) == DEFAULT_WEB_DEMO_CONFIG:
+                return Path("/tmp/redd-missing-demo-config.yaml")
+            return original_resolver(path)
+
+        with patch("redd.web_demo.resolve_repo_path", side_effect=resolve_with_missing_default):
+            payload = inspect_web_config(DEFAULT_WEB_DEMO_CONFIG, "demo")
+
+        self.assertEqual(payload["resolved_config_path"], "package:redd.resources.configs/demo_datasets.yaml")
+        self.assertEqual(payload["experiment"], "demo")
+        self.assertEqual(payload["dataset_ids"], ["spider.college_demo", "bird.schools_demo"])
 
     def test_config_inspect_masks_inline_api_key(self) -> None:
         config_text = textwrap.dedent(

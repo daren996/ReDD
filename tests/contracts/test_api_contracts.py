@@ -22,9 +22,9 @@ from redd.config import load_experiment_runtime
 from redd.core.data_loader.data_loader_hf_manifest import DataLoaderHFManifest
 from redd.core.utils.constants import PATH_TEMPLATES
 from redd.dataset_contract import validate_dataset_manifest
-from redd.experiment import select_runtime
-from redd.runners import run_experiment
-from redd.runtime import resolve_schema_artifact_source
+from redd.orchestration.experiment import select_runtime
+from redd.orchestration.runners import run_experiment
+from redd.orchestration.runtime import resolve_schema_artifact_source
 
 
 class ApiContractTests(unittest.TestCase):
@@ -252,7 +252,7 @@ class ApiContractTests(unittest.TestCase):
         self.assertEqual(context["query_ids"], ["Q1"])
 
     def test_runner_api_accepts_runtime_selection(self) -> None:
-        with patch("redd.runners.run_pipeline", return_value={"data_extraction": []}) as mocked:
+        with patch("redd.orchestration.runners.run_pipeline", return_value={"data_extraction": []}) as mocked:
             payload = run_experiment(
                 "configs/examples/ground_truth_demo.yaml",
                 "demo",

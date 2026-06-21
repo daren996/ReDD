@@ -6,7 +6,7 @@ import argparse
 import json
 from typing import Any, Callable
 
-from redd.experiment import normalize_selection
+from redd.orchestration.experiment import normalize_selection
 
 DEFAULT_CONFIG = "configs/examples/ground_truth_demo.yaml"
 

@@ -14,7 +14,7 @@ def build_parser(*, add_help: bool = True) -> argparse.ArgumentParser:
 
 
 def run(args: argparse.Namespace) -> int:
-    from redd.runners import run_extract
+    from redd.orchestration.runners import run_extract
 
     return run_and_print(args, run_extract)
 

@@ -7,6 +7,7 @@ choices stay behind one internal factory boundary.
 
 from .data_loader_basic import DataLoaderBase
 from .data_loader_hf_manifest import DataLoaderHFManifest
+from .data_loader_memory import InMemoryDataLoader
 from .registry import (
     LoaderProfile,
     create_data_loader,
@@ -18,6 +19,7 @@ from .registry import (
 __all__ = [
     "DataLoaderBase",
     "DataLoaderHFManifest",
+    "InMemoryDataLoader",
     "LoaderProfile",
     "create_data_loader",
     "get_loader_profile_notes",

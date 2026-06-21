@@ -8,6 +8,7 @@ from typing import Any, Dict
 
 from .data_loader_basic import DataLoaderBase
 from .data_loader_hf_manifest import DataLoaderHFManifest
+from .data_loader_memory import InMemoryDataLoader
 
 __all__ = [
     "LoaderProfile",
@@ -32,6 +33,11 @@ LOADER_PROFILES: dict[str, LoaderProfile] = {
         name="hf_manifest",
         loader_class=DataLoaderHFManifest,
         note="HuggingFace-style manifest/parquet dataset contract.",
+    ),
+    "memory": LoaderProfile(
+        name="memory",
+        loader_class=InMemoryDataLoader,
+        note="In-memory documents for programmatic extraction requests.",
     ),
 }
 

@@ -16,6 +16,8 @@ _LAZY_EXPORTS = {
     "DataExtractor": ".api",
     "PipelineStage": ".api",
     "SchemaGenerator": ".api",
+    "ExtractionRequest": ".engine",
+    "ExtractionResult": ".engine",
     "AlphaAllocationConfig": ".parameter_optimization",
     "AlphaAllocationResult": ".parameter_optimization",
     "ConformalProxy": ".predicate_proxy",
@@ -59,6 +61,12 @@ def run_pipeline(*args, **kwargs):
     return _run_pipeline(*args, **kwargs)
 
 
+def run_extraction(*args, **kwargs):
+    from .engine import run_extraction as _run_extraction
+
+    return _run_extraction(*args, **kwargs)
+
+
 def preprocessing(*args, **kwargs):
     from .preprocessing import preprocessing as _preprocessing
 
@@ -84,38 +92,38 @@ def schema_refinement(*args, **kwargs):
 
 
 def run_experiment(*args, **kwargs):
-    from .runners import run_experiment as _run_experiment
+    from .orchestration.runners import run_experiment as _run_experiment
 
     return _run_experiment(*args, **kwargs)
 
 
 def run_extract(*args, **kwargs):
-    from .runners import run_extract as _run_extract
+    from .orchestration.runners import run_extract as _run_extract
 
     return _run_extract(*args, **kwargs)
 
 
 def run_evaluation(*args, **kwargs):
     """Wrapper for experiment-side evaluation workflows."""
-    from .runners import run_evaluation as _run_evaluation
+    from .orchestration.runners import run_evaluation as _run_evaluation
 
     return _run_evaluation(*args, **kwargs)
 
 
 def run_preprocessing(*args, **kwargs):
-    from .runners import run_preprocessing as _run_preprocessing
+    from .orchestration.runners import run_preprocessing as _run_preprocessing
 
     return _run_preprocessing(*args, **kwargs)
 
 
 def run_schema_refinement(*args, **kwargs):
-    from .runners import run_schema_refinement as _run_schema_refinement
+    from .orchestration.runners import run_schema_refinement as _run_schema_refinement
 
     return _run_schema_refinement(*args, **kwargs)
 
 
 def select_runtime(*args, **kwargs):
-    from .experiment import select_runtime as _select_runtime
+    from .orchestration.experiment import select_runtime as _select_runtime
 
     return _select_runtime(*args, **kwargs)
 
@@ -134,6 +142,8 @@ __all__ = [
     "SCHEMA_REFINEMENT",
     "DataLoaderBase",
     "DataExtractor",
+    "ExtractionRequest",
+    "ExtractionResult",
     "PipelineStage",
     "SchemaGenerator",
     "AlphaAllocationConfig",
@@ -165,6 +175,7 @@ __all__ = [
     "create_data_loader",
     "run_evaluation",
     "run_experiment",
+    "run_extraction",
     "run_extract",
     "run_pipeline",
     "run_preprocessing",

@@ -33,7 +33,6 @@ from .config import (
     ExperimentRuntime,
     ReDDConfig,
     StageName,
-    load_experiment_runtime,
     load_redd_config,
     resolve_repo_path,
     select_experiment,
@@ -44,11 +43,13 @@ from .diagnostics.dataset_consistency import (
     build_dataset_consistency_audit,
     write_dataset_consistency_audit,
 )
-from .experiment import select_runtime_datasets
 from .model_catalog import get_model_catalog
+from .orchestration.experiment import select_runtime_datasets
 
 DEFAULT_WEB_DEMO_CONFIG = "configs/demo/demo_datasets.yaml"
 DEFAULT_WEB_DEMO_EXPERIMENT = "demo"
+PACKAGED_WEB_DEMO_CONFIG_PACKAGE = "redd.resources.configs"
+PACKAGED_WEB_DEMO_CONFIG_NAME = "demo_datasets.yaml"
 DEFAULT_DATASET_REGISTRY = "dataset/manifest.yaml"
 DEFAULT_OUTPUTS_DIR = "outputs"
 DATASET_SEARCH_GROUP_ORDER = (
@@ -177,7 +178,8 @@ def run_web_demo(
     """
     _emit_web_run_event(event_sink, "step_started", "materialize_config", "Loading runtime configuration.")
     if config is None:
-        runtime, _ = load_experiment_runtime(config_path, experiment)
+        redd_config, _ = _load_web_redd_config(config_path)
+        runtime = select_experiment(redd_config, experiment)
     else:
         runtime = select_experiment(ReDDConfig.model_validate(config), experiment)
     force_rerun = force_rerun or bool(getattr(runtime.runtime, "force_rerun", False))
@@ -361,7 +363,7 @@ def inspect_web_config(
     experiment: str,
 ) -> dict[str, Any]:
     """Return config and selected experiment details for the web UI."""
-    config, resolved_path = load_redd_config(config_path)
+    config, resolved_path = _load_web_redd_config(config_path)
     experiment_id = _resolve_web_experiment_id(config, experiment)
     runtime = select_experiment(config, experiment_id)
     experiments = [
@@ -402,6 +404,28 @@ def inspect_web_config(
         "default_stages": list(runtime.stage_order),
         "model_catalog": get_model_catalog(),
     }
+
+
+def _load_web_redd_config(config_path: str | Path) -> tuple[ReDDConfig, Path | str]:
+    """Load web-demo config, falling back to packaged defaults for installed use."""
+    config_text = str(config_path)
+    if config_text == DEFAULT_WEB_DEMO_CONFIG:
+        repo_path = resolve_repo_path(config_text)
+        if not repo_path.exists():
+            return _load_packaged_web_demo_config()
+    return load_redd_config(config_path)
+
+
+def _load_packaged_web_demo_config() -> tuple[ReDDConfig, str]:
+    config_resource = resources.files(PACKAGED_WEB_DEMO_CONFIG_PACKAGE).joinpath(
+        PACKAGED_WEB_DEMO_CONFIG_NAME
+    )
+    with config_resource.open("r", encoding="utf-8") as file:
+        config = yaml.safe_load(file) or {}
+    if not isinstance(config, dict):
+        raise TypeError(f"Config root must be a mapping, got {type(config).__name__}")
+    resource_label = f"package:{PACKAGED_WEB_DEMO_CONFIG_PACKAGE}/{PACKAGED_WEB_DEMO_CONFIG_NAME}"
+    return ReDDConfig.model_validate(config), resource_label
 
 
 def _resolve_web_experiment_id(config: ReDDConfig, experiment: str) -> str:
@@ -762,7 +786,7 @@ def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
                 "qwen3_extract",
                 "Run Qwen3 extraction",
                 _python_command(
-                    "from redd.runners import run_extract; "
+                    "from redd.orchestration.runners import run_extract; "
                     "run_extract('configs/examples/fastredd_qwen3_partial_single_doc.yaml', 'demo')"
                 ),
                 env={
@@ -775,7 +799,7 @@ def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
                 "qwen3_evaluation",
                 "Evaluate Qwen3 extraction",
                 _python_command(
-                    "from redd.runners import run_evaluation; "
+                    "from redd.orchestration.runners import run_evaluation; "
                     "run_evaluation('configs/examples/fastredd_qwen3_partial_single_doc.yaml', 'demo')"
                 ),
             ),
@@ -807,7 +831,7 @@ def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
                 "gpt5_schema",
                 "Attempt GPT-5 schema discovery",
                 _python_command(
-                    "from redd.runners import run_experiment; "
+                    "from redd.orchestration.runners import run_experiment; "
                     "run_experiment('configs/examples/fastredd_gpt5_schema_partial_single_doc.yaml', 'demo')"
                 ),
                 env={
@@ -826,7 +850,7 @@ def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
                 "qwen3_schema",
                 "Run Qwen3 schema analogous",
                 _python_command(
-                    "from redd.runners import run_experiment; "
+                    "from redd.orchestration.runners import run_experiment; "
                     "run_experiment('configs/examples/qwen3_schema_analogous_single_doc_v1.yaml', 'demo')"
                 ),
                 env={
@@ -854,7 +878,7 @@ def _paper_experiment_steps(experiment_id: str) -> list[dict[str, Any]]:
                 "deepseek_schema",
                 "Run DeepSeek schema analogous",
                 _python_command(
-                    "from redd.runners import run_experiment; "
+                    "from redd.orchestration.runners import run_experiment; "
                     "run_experiment('configs/examples/deepseek_schema_analogous_single_doc_v2.yaml', 'demo')"
                 ),
                 env={
@@ -1269,7 +1293,8 @@ def _run_web_evaluation(
 
     config_payload = run_kwargs.get("config")
     if config_payload is None:
-        runtime, _ = load_experiment_runtime(config_path, experiment)
+        redd_config, _ = _load_web_redd_config(config_path)
+        runtime = select_experiment(redd_config, experiment)
     else:
         runtime = select_experiment(ReDDConfig.model_validate(config_payload), experiment)
 

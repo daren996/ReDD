@@ -20,7 +20,7 @@ def build_evaluation_parser(*, add_help: bool = True) -> argparse.ArgumentParser
 
 
 def run_evaluation(args: argparse.Namespace) -> int:
-    from redd.runners import run_evaluation
+    from redd.orchestration.runners import run_evaluation
 
     args.experiment = args.exp
     return run_and_print(args, run_evaluation)

@@ -111,6 +111,12 @@ python -m pip install -e ".[structured]"
 
 # FAISS-backed retrieval
 python -m pip install -e ".[retrieval]"
+
+# Local transformer LLM workflows
+python -m pip install -e ".[local]"
+
+# Learned predicate-proxy workflows backed by GLiClass/Transformers
+python -m pip install -e ".[predicate-proxy]"
 ```
 
 With `uv`:
@@ -169,8 +175,10 @@ http://127.0.0.1:8000
 ```
 
 By default, the web demo uses `configs/demo/demo_datasets.yaml` and the `demo`
-experiment. The server reads API keys from the environment or a local `.env`
-file and only reports masked key status in the browser.
+experiment. Installed packages fall back to the bundled copy under
+`redd.resources.configs` when the repository-level config is not present. The
+server reads API keys from the environment or a local `.env` file and only
+reports masked key status in the browser.
 
 ## CLI Usage
 
@@ -303,7 +311,6 @@ ReDD/
 |-- dataset/                 # local dataset registry assets
 |-- docs/                    # API, config, dataset, and workflow docs
 |-- papers/                  # papers and reports
-|-- prompts/                 # source prompt templates
 |-- scripts/                 # repository workflow wrappers
 |-- src/redd/                # installable Python package
 |   |-- cli/                 # CLI entry points
@@ -311,8 +318,9 @@ ReDD/
 |   |-- correction/          # research correction workflows
 |   |-- exp/                 # experiment and evaluation workflows
 |   |-- optimizations/       # optional efficiency modules
+|   |-- orchestration/       # stage runtime, experiment selection, and runner helpers
 |   |-- proxy/               # predicate proxy and proxy runtime modules
-|   |-- resources/           # packaged prompts, model catalog, web assets
+|   |-- resources/           # packaged prompts, configs, demo-data frame, model catalog, web assets
 |   |-- stages/              # stage orchestration
 |   `-- *.py                 # public module surfaces
 |-- tests/                   # unit, contract, integration, smoke tests

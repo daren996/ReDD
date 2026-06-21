@@ -33,6 +33,10 @@ These adapter-style public modules are also stable package surfaces for the firs
 - `src/redd/retrieval.py`
 - `src/redd/text_to_sql.py`
 
+`src/redd/runtime.py`, `src/redd/experiment.py`, and `src/redd/runners.py`
+remain compatibility shims for existing callers. New internal imports should
+use `src/redd/orchestration/` directly.
+
 Execution-side optimization surfaces such as doc filtering, predicate proxies, join resolution,
 and alpha allocation are intentionally consumed through the `data_extraction` stage contract,
 even though they also have standalone adapter-style exports listed above.
@@ -44,6 +48,7 @@ The preferred internal direction is to use the future-facing namespace packages
 below:
 
 - `src/redd/optimizations/`
+- `src/redd/orchestration/`
 - `src/redd/proxy/`
 - `src/redd/correction/`
 - `src/redd/exp/`
@@ -52,7 +57,6 @@ Current implementation-heavy internals still live under:
 
 - `src/redd/cli/`
 - `src/redd/stages/`
-- `src/redd/runtime.py`
 - `src/redd/config.py`
 - `src/redd/llm/`
 - `src/redd/core/data_loader/`
@@ -77,6 +81,8 @@ In particular:
   schema-focused preprocessing and refinement
 - `src/redd/optimizations/` is the runtime home for optional efficiency modules such
   as doc filtering, adaptive sampling, and alpha allocation
+- `src/redd/orchestration/` is the runtime home for shared stage runtime helpers,
+  experiment selection, and CLI/API runner coordination
 - `src/redd/proxy/` is the runtime home for `predicate_proxy`, `join_resolution`,
   and `proxy_runtime`
 - `src/redd/correction/` and `src/redd/exp/` keep correction, evaluation, and experiment
@@ -92,7 +98,7 @@ These areas are useful for research workflows but should not be treated as stabl
 - proxy pretraining and classifier-training helpers
 - `dataset/`
 - `papers/`
-- `prompts/` source prompt templates used to produce packaged prompt resources
+- `src/redd/resources/prompts/` packaged prompt templates and prompt metadata
 
 ## Incubator Boundary
 
