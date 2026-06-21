@@ -7,7 +7,6 @@ import argparse
 import json
 from pathlib import Path
 
-
 EXPERIMENT_IDS = [
     "table1_dataset_setup",
     "table2_data_extraction_accuracy",

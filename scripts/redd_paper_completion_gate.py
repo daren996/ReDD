@@ -9,7 +9,6 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-
 EXACT_PASSING_STATUSES = {"supported", "not_experimental"}
 ANALOGOUS_PASSING_STATUSES = {"supported", "not_experimental", "analogous_supported"}
 NON_PASSING_STATUSES = {"partial", "surrogate_only", "blocked", "missing", "unsupported", "implemented_needs_aggregation"}

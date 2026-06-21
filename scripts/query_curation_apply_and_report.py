@@ -3,20 +3,20 @@
 from __future__ import annotations
 
 import argparse
-import json
 import re
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
-
-from query_curation import DEFAULT_BUCKETS
-from query_curation import _discover_datasets
-from query_curation import _read_json
-from query_curation import _records_by_table
-from query_curation import _repo_root
-from query_curation import _write_json
-from query_curation import infer_join_pairs
+from query_curation import (
+    DEFAULT_BUCKETS,
+    _discover_datasets,
+    _read_json,
+    _records_by_table,
+    _repo_root,
+    _write_json,
+    infer_join_pairs,
+)
 
 
 def _bucket_label(value: Any) -> str:

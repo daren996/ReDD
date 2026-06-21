@@ -24,7 +24,6 @@ from redd.core.utils.data_split import split_doc_ids
 from redd.core.utils.utils import is_null
 from redd.exp.evaluation import EvalDataExtraction
 
-
 DEFAULT_BUCKETS = (0.03, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80, 1.00)
 
 

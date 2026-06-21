@@ -26,7 +26,7 @@ class FixedSizeChunker(BaseChunker):
     - overlap: Number of overlapping characters between chunks (default: 200)
     
     Example:
-        >>> from redd.core.doc_chunking import create_chunker
+        >>> from redd.core.chunk import create_chunker
         >>> config = {
         ...     "data_main": "dataset/fda_sqlite/",
         ...     "exp_dataset_task_list": ["no_chunk"],
@@ -169,7 +169,7 @@ class FixedSizeTokenChunker(BaseChunker):
     - tokenizer_name: Name of the tiktoken encoding (default: "cl100k_base")
     
     Example:
-        >>> from redd.core.doc_chunking import create_chunker
+        >>> from redd.core.chunk import create_chunker
         >>> config = {
         ...     "data_main": "dataset/fda_sqlite/",
         ...     "exp_dataset_task_list": ["no_chunk"],

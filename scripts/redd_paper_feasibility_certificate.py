@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-
 CORRECTION_REQUIREMENTS = {
     "table2_cuad_chunk_merge",
     "table3_false_positive_overhead",

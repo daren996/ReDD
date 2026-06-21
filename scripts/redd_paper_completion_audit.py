@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-
 EXPECTED_EXPERIMENTS = [
     ("fig1_pipeline_overview", "Figure 1", "Pipeline implementation/documentation exists."),
     ("table1_dataset_setup", "Table 1 / Sec. 6.1", "Exact dataset/query setup is available."),

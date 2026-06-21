@@ -11,7 +11,6 @@ from typing import Any
 
 from redd.llm import CompletionRequest, LLMRuntime
 
-
 DEFAULT_PROVIDERS = [
     ("deepseek", "deepseek-chat"),
     ("openai", "gpt-4o-mini"),

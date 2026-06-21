@@ -101,9 +101,36 @@ def _run_controlled() -> dict[str, Any]:
         "SCAPE-Hyb": {"accpop": 0.987, "fprpop": 0.062},
     }
     lambda_sweeps = {
-        "30": [{"lambda": l, "accpop": round(0.955 + 0.035 * math.exp(-((l - 0.9) ** 2) / 0.08), 4)} for l in [0, 0.3, 0.5, 0.7, 0.9, 1.0]],
-        "150": [{"lambda": l, "accpop": round(0.965 + 0.030 * math.exp(-((l - 0.5) ** 2) / 0.08), 4)} for l in [0, 0.3, 0.5, 0.7, 0.9, 1.0]],
-        "300": [{"lambda": l, "accpop": round(0.970 + 0.025 * math.exp(-((l - 0.35) ** 2) / 0.08), 4)} for l in [0, 0.3, 0.5, 0.7, 0.9, 1.0]],
+        "30": [
+            {
+                "lambda": lambda_value,
+                "accpop": round(
+                    0.955 + 0.035 * math.exp(-((lambda_value - 0.9) ** 2) / 0.08),
+                    4,
+                ),
+            }
+            for lambda_value in [0, 0.3, 0.5, 0.7, 0.9, 1.0]
+        ],
+        "150": [
+            {
+                "lambda": lambda_value,
+                "accpop": round(
+                    0.965 + 0.030 * math.exp(-((lambda_value - 0.5) ** 2) / 0.08),
+                    4,
+                ),
+            }
+            for lambda_value in [0, 0.3, 0.5, 0.7, 0.9, 1.0]
+        ],
+        "300": [
+            {
+                "lambda": lambda_value,
+                "accpop": round(
+                    0.970 + 0.025 * math.exp(-((lambda_value - 0.35) ** 2) / 0.08),
+                    4,
+                ),
+            }
+            for lambda_value in [0, 0.3, 0.5, 0.7, 0.9, 1.0]
+        ],
     }
     calibration = [
         {"ncal": n, "scape": round(0.940 + 0.050 * (1 - math.exp(-n / 100)), 4), "scape_hyb": round(0.955 + 0.040 * (1 - math.exp(-n / 80)), 4)}

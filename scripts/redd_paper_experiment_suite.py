@@ -19,7 +19,6 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, Iterable
 
-
 PAPER_TABLE2 = {
     "spider": {"no_correction": 0.938, "scape": 0.991, "scape_hyb": 0.993},
     "bird": {"no_correction": 0.949, "scape": 0.992, "scape_hyb": 0.994},
