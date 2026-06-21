@@ -158,7 +158,9 @@ JOIN_SPLIT_PATTERN = r'\b(?:(?:LEFT|RIGHT|FULL)(?:\s+OUTER)?\s+|INNER\s+|CROSS\s
 __all__ = [
     "SQLFilterParser",
     "AttributePredicate",
+    "PredicateSafetyAnalysis",
     "PredicateOperator",
+    "analyze_sql_predicates",
     "create_predicate_function",
     "predicates_to_filter_dict",
     "parse_alias_mapping",
@@ -241,6 +243,31 @@ class AttributePredicate:
     
     def __str__(self) -> str:
         return f"{self.full_attribute_name} {self.operator} {repr(self.value)}"
+
+
+@dataclass
+class PredicateSafetyAnalysis:
+    """Safe/unsafe split for row-level predicate proxying."""
+
+    safe_predicates_by_table: Dict[str, List[AttributePredicate]]
+    unsafe_predicates: List[Dict[str, Any]]
+    requires_full_join_reasoning: bool = False
+    has_set_operation: bool = False
+    has_subquery_predicate: bool = False
+    has_column_comparison: bool = False
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "safe_predicates": {
+                table: [predicate.to_dict() for predicate in predicates]
+                for table, predicates in self.safe_predicates_by_table.items()
+            },
+            "unsafe_predicates": self.unsafe_predicates,
+            "requires_full_join_reasoning": self.requires_full_join_reasoning,
+            "has_set_operation": self.has_set_operation,
+            "has_subquery_predicate": self.has_subquery_predicate,
+            "has_column_comparison": self.has_column_comparison,
+        }
 
 
 class SQLFilterParser:
@@ -903,6 +930,114 @@ def group_predicates_by_table(
         result.setdefault(table_name, []).append(pred)
     
     return result
+
+
+_SET_OPERATION_RE = re.compile(r"\b(?:EXCEPT|INTERSECT|UNION)\b", re.IGNORECASE)
+
+
+def _has_set_operation(sql: str) -> bool:
+    return bool(_SET_OPERATION_RE.search(str(sql or "")))
+
+
+def _predicate_has_subquery(predicate: AttributePredicate) -> bool:
+    if re.search(r"\bSELECT\b", str(predicate.original_sql or ""), re.IGNORECASE):
+        return True
+    value = predicate.value
+    if isinstance(value, list):
+        return any(re.search(r"\bSELECT\b", str(item), re.IGNORECASE) for item in value)
+    return re.search(r"\bSELECT\b", str(value), re.IGNORECASE) is not None
+
+
+def _rhs_is_quoted_literal(predicate: AttributePredicate) -> bool:
+    original = str(predicate.original_sql or "")
+    operator = re.escape(str(predicate.operator or ""))
+    match = re.search(rf"{operator}\s*(.+?)\s*$", original, re.IGNORECASE | re.DOTALL)
+    if not match:
+        return False
+    rhs = match.group(1).strip()
+    return len(rhs) >= 2 and rhs[0] == rhs[-1] and rhs[0] in {"'", '"', "`"}
+
+
+def _predicate_has_column_comparison(predicate: AttributePredicate) -> bool:
+    if not isinstance(predicate.value, str):
+        return False
+    if _rhs_is_quoted_literal(predicate):
+        return False
+    return _split_qualified_identifier(str(predicate.value)) is not None
+
+
+def _predicate_unsafe_reasons(predicate: AttributePredicate, *, has_set_operation: bool) -> List[str]:
+    reasons: List[str] = []
+    if has_set_operation:
+        reasons.append("set_operation_query")
+    if _predicate_has_subquery(predicate):
+        reasons.append("subquery_predicate")
+    if _predicate_has_column_comparison(predicate):
+        reasons.append("column_comparison")
+    return reasons
+
+
+def analyze_sql_predicates(
+    sql: str,
+    schema: List[Dict[str, Any]],
+    query_tables: Optional[List[str]] = None,
+    query_info: Optional[Dict[str, Any]] = None,
+) -> PredicateSafetyAnalysis:
+    """Split SQL predicates into row-proxy-safe and unsafe groups.
+
+    Explicit query metadata can force a conservative split by setting
+    ``requires_full_join_reasoning`` or ``safe_predicates`` to an empty list.
+    Otherwise, row-level predicate proxies are disabled for set-operation
+    queries and for predicates involving subqueries or column-column
+    comparisons.
+    """
+
+    query_info = query_info or {}
+    metadata_requires_full = bool(query_info.get("requires_full_join_reasoning", False))
+    explicit_safe_predicates = query_info.get("safe_predicates")
+    force_no_safe_predicates = isinstance(explicit_safe_predicates, list) and not explicit_safe_predicates
+
+    has_set_operation = _has_set_operation(sql)
+    grouped = group_predicates_by_table(sql, schema, query_tables=query_tables)
+    safe_by_table: Dict[str, List[AttributePredicate]] = {}
+    unsafe: List[Dict[str, Any]] = []
+    has_subquery = False
+    has_column_comparison = False
+
+    for table, predicates in grouped.items():
+        for predicate in predicates:
+            reasons = _predicate_unsafe_reasons(predicate, has_set_operation=has_set_operation)
+            if "subquery_predicate" in reasons:
+                has_subquery = True
+            if "column_comparison" in reasons:
+                has_column_comparison = True
+            if metadata_requires_full or force_no_safe_predicates:
+                reasons.append("query_metadata_requires_full_join_reasoning")
+            if reasons:
+                unsafe.append(
+                    {
+                        "table": table,
+                        "predicate": predicate.to_dict(),
+                        "reasons": sorted(set(reasons)),
+                    }
+                )
+            else:
+                safe_by_table.setdefault(table, []).append(predicate)
+
+    return PredicateSafetyAnalysis(
+        safe_predicates_by_table=safe_by_table,
+        unsafe_predicates=unsafe,
+        requires_full_join_reasoning=bool(
+            metadata_requires_full
+            or force_no_safe_predicates
+            or has_set_operation
+            or has_subquery
+            or has_column_comparison
+        ),
+        has_set_operation=has_set_operation,
+        has_subquery_predicate=has_subquery,
+        has_column_comparison=has_column_comparison,
+    )
 
 
 # =============================================================================

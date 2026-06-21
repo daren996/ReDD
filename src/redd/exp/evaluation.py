@@ -37,6 +37,7 @@ from redd.core.utils.data_split import (
     resolve_training_data_split_seed,
     split_doc_ids,
 )
+from redd.core.utils.sql_filter_parser import analyze_sql_predicates, get_join_graph
 from redd.core.utils.utils import is_null
 
 __all__ = [
@@ -311,6 +312,7 @@ class QueryAwareEvaluation:
     doc_details: Dict[str, Any]
     missing_cells: List[Dict[str, Any]]
     extra_cells: List[Dict[str, Any]]
+    required_cell_layers: Optional[Dict[str, Any]] = None
     semantic_cell_accuracy: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -324,6 +326,8 @@ class QueryAwareEvaluation:
             "missing_cells": self.missing_cells,
             "extra_cells": self.extra_cells,
         }
+        if self.required_cell_layers is not None:
+            payload["required_cell_layers"] = self.required_cell_layers
         if self.semantic_cell_accuracy is not None:
             payload["semantic_cell_accuracy"] = self.semantic_cell_accuracy
         return payload
@@ -351,6 +355,7 @@ class EvalDataExtraction(EvalBasic):
         self.eval_mode = ""
         self.eval_api_key: Optional[str] = None
         self.eval_llm_model = ""
+        self.full_table_semantic_enabled = bool(eval_config.get("full_table_semantic", True))
 
         if "committee" in eval_config:
             self._initialize_committee(eval_config, api_key)
@@ -595,7 +600,11 @@ class EvalDataExtraction(EvalBasic):
             )
             query_aware_eval.semantic_cell_accuracy["match_result_path"] = str(query_semantic_match_path)
 
-        full_table_semantic_stats = self.compute_semantic_statistics() if self._semantic_eval_enabled() else None
+        full_table_semantic_stats = (
+            self.compute_semantic_statistics()
+            if self._semantic_eval_enabled() and self.full_table_semantic_enabled
+            else None
+        )
         if full_table_semantic_stats is not None:
             semantic_match_path = self._save_full_table_semantic_match_results(
                 query_id,
@@ -671,6 +680,13 @@ class EvalDataExtraction(EvalBasic):
         """
 
         required_by_table = self._required_attrs_by_table(loader, query_id, query_info)
+        cell_role_by_table, layer_metadata = self._required_cell_roles(
+            loader=loader,
+            query_id=query_id,
+            query_info=query_info,
+            required_by_table=required_by_table,
+        )
+        layer_stats = self._init_required_cell_layer_stats()
         required_tables = set(required_by_table)
         _, eval_doc_ids = split_doc_ids(
             loader.doc_ids,
@@ -743,12 +759,16 @@ class EvalDataExtraction(EvalBasic):
                         null_gt_cells_skipped += 1
                         continue
 
+                    role = cell_role_by_table.get(gt_table, {}).get(attr, "other_required")
+                    layer_stat = layer_stats.setdefault(role, self._empty_required_cell_layer_stats())
                     cell_total += 1
+                    layer_stat["total"] += 1
                     doc_detail["cells_total"] += 1
                     pred_value = pred_data.get(attr) if table_ok else None
                     cell_ok = table_ok and self._compare_attribute_values(pred_value, gt_value)
                     if semantic_eval_enabled:
                         semantic_total += 1
+                        layer_stat["semantic_total"] += 1
                         if not table_ok:
                             semantic_comparison = {
                                 "result": False,
@@ -766,21 +786,27 @@ class EvalDataExtraction(EvalBasic):
                         semantic_ok = bool(semantic_comparison.get("result"))
                         if semantic_ok:
                             semantic_correct += 1
+                            layer_stat["semantic_correct"] += 1
                         else:
                             semantic_method = str(semantic_comparison.get("method") or "")
                             if semantic_method == "table_mismatch":
                                 semantic_table_mismatched += 1
+                                layer_stat["semantic_table_mismatched"] += 1
                             elif is_null(pred_value):
                                 semantic_missing += 1
+                                layer_stat["semantic_missing"] += 1
                             else:
                                 semantic_mismatched += 1
+                                layer_stat["semantic_mismatched"] += 1
                         if semantic_comparison.get("method") in {"llm", "committee_llm"}:
                             semantic_llm_judged += 1
+                            layer_stat["semantic_llm_judged"] += 1
                         semantic_cells.append(
                             {
                                 "doc_id": doc_id,
                                 "table": gt_table,
                                 "attr": attr,
+                                "cell_role": role,
                                 "gt": gt_value,
                                 "pred_table": pred_table,
                                 "pred": pred_value,
@@ -789,6 +815,7 @@ class EvalDataExtraction(EvalBasic):
                         )
                     if cell_ok:
                         cell_covered += 1
+                        layer_stat["covered"] += 1
                         doc_detail["cells_covered"] += 1
                         continue
 
@@ -804,9 +831,11 @@ class EvalDataExtraction(EvalBasic):
                     missing_cells.append(miss)
                     if is_null(pred_value):
                         cell_missing += 1
+                        layer_stat["missing"] += 1
                         doc_detail["missing"].append(miss)
                     else:
                         cell_mismatched += 1
+                        layer_stat["mismatched"] += 1
                         doc_detail["mismatched"].append(miss)
 
             if not gt_records and not is_null(pred_table):
@@ -847,6 +876,11 @@ class EvalDataExtraction(EvalBasic):
         )
         cell_recall_value = cell_covered / cell_total if cell_total else 1.0
         table_recall_value = table_covered / table_total if table_total else 1.0
+        required_cell_layers = self._finalize_required_cell_layers(
+            layer_stats=layer_stats,
+            metadata=layer_metadata,
+            semantic_eval_enabled=semantic_eval_enabled,
+        )
         semantic_cell_accuracy = None
         if semantic_eval_enabled:
             semantic_cell_accuracy = {
@@ -904,8 +938,137 @@ class EvalDataExtraction(EvalBasic):
             doc_details=doc_details,
             missing_cells=missing_cells,
             extra_cells=extra_cells,
+            required_cell_layers=required_cell_layers,
             semantic_cell_accuracy=semantic_cell_accuracy,
         )
+
+    @staticmethod
+    def _empty_required_cell_layer_stats() -> Dict[str, Any]:
+        return {
+            "covered": 0,
+            "total": 0,
+            "missing": 0,
+            "mismatched": 0,
+            "semantic_correct": 0,
+            "semantic_total": 0,
+            "semantic_missing": 0,
+            "semantic_mismatched": 0,
+            "semantic_table_mismatched": 0,
+            "semantic_llm_judged": 0,
+        }
+
+    def _init_required_cell_layer_stats(self) -> Dict[str, Dict[str, Any]]:
+        return {
+            role: self._empty_required_cell_layer_stats()
+            for role in ("answer", "predicate", "join", "other_required")
+        }
+
+    def _required_cell_roles(
+        self,
+        *,
+        loader: DataLoaderBase,
+        query_id: str,
+        query_info: Dict[str, Any],
+        required_by_table: Dict[str, List[str]],
+    ) -> Tuple[Dict[str, Dict[str, str]], Dict[str, Any]]:
+        roles: Dict[str, Dict[str, str]] = {
+            table: {attr: "other_required" for attr in attrs}
+            for table, attrs in required_by_table.items()
+        }
+        role_sources: Dict[str, Dict[str, List[str]]] = {
+            role: {} for role in ("answer", "predicate", "join", "other_required")
+        }
+
+        def mark(table: str, attr: str, role: str) -> None:
+            if table not in roles or attr not in roles[table]:
+                return
+            priority = {"other_required": 0, "join": 1, "predicate": 2, "answer": 3}
+            if priority[role] >= priority.get(roles[table][attr], 0):
+                roles[table][attr] = role
+            role_sources.setdefault(role, {}).setdefault(table, [])
+            if attr not in role_sources[role][table]:
+                role_sources[role][table].append(attr)
+
+        for column_id in query_info.get("output_columns") or []:
+            table, attr = self._split_attr_ref(str(column_id))
+            if table and attr:
+                mark(table, attr, "answer")
+
+        sql = str(query_info.get("sql") or "")
+        predicate_safety = None
+        if sql:
+            try:
+                schema_query = loader.load_schema_query(query_id)
+                predicate_safety = analyze_sql_predicates(
+                    sql,
+                    schema_query,
+                    query_tables=query_info.get("tables") or list(required_by_table),
+                    query_info=query_info,
+                )
+                for table, predicates in predicate_safety.safe_predicates_by_table.items():
+                    for predicate in predicates:
+                        mark(table, predicate.attribute, "predicate")
+                for item in predicate_safety.unsafe_predicates:
+                    predicate = item.get("predicate", {})
+                    table = str(item.get("table") or "")
+                    attr = str(predicate.get("attribute") or "")
+                    if table and attr:
+                        mark(table, attr, "predicate")
+
+                join_graph = get_join_graph(
+                    sql,
+                    schema_query,
+                    query_tables=query_info.get("tables") or list(required_by_table),
+                )
+                if join_graph:
+                    for condition in join_graph.conditions:
+                        mark(condition.table_parent, condition.attr_parent, "join")
+                        mark(condition.table_child, condition.attr_child, "join")
+            except Exception as exc:
+                logging.debug(
+                    "[%s:_required_cell_roles] Could not derive cell roles for query %s: %s",
+                    self.__class__.__name__,
+                    query_id,
+                    exc,
+                )
+
+        for table, attrs in roles.items():
+            for attr, role in attrs.items():
+                role_sources.setdefault(role, {}).setdefault(table, [])
+                if attr not in role_sources[role][table]:
+                    role_sources[role][table].append(attr)
+
+        return roles, {
+            "role_priority": ["answer", "predicate", "join", "other_required"],
+            "columns_by_role": role_sources,
+            "predicate_safety": predicate_safety.to_dict() if predicate_safety is not None else None,
+        }
+
+    @staticmethod
+    def _finalize_required_cell_layers(
+        *,
+        layer_stats: Dict[str, Dict[str, Any]],
+        metadata: Dict[str, Any],
+        semantic_eval_enabled: bool,
+    ) -> Dict[str, Any]:
+        finalized: Dict[str, Any] = {"metadata": metadata, "layers": {}}
+        for role, stats in layer_stats.items():
+            role_stats = dict(stats)
+            total = int(role_stats.get("total") or 0)
+            role_stats["recall"] = (role_stats["covered"] / total) if total else 1.0
+            if semantic_eval_enabled:
+                semantic_total = int(role_stats.get("semantic_total") or 0)
+                role_stats["semantic_accuracy"] = (
+                    role_stats["semantic_correct"] / semantic_total
+                    if semantic_total
+                    else 1.0
+                )
+            else:
+                for key in list(role_stats):
+                    if key.startswith("semantic_"):
+                        role_stats.pop(key)
+            finalized["layers"][role] = role_stats
+        return finalized
 
     def _display_results(
         self,

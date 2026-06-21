@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
 from redd.core.data_extraction import create_data_extractor
-from redd.runtime import (
+from redd.orchestration.runtime import (
     build_data_loader_config,
     resolve_dataset_roots,
     resolve_schema_artifact_source,

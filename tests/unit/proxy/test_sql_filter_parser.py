@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from redd.core.utils.sql_filter_parser import (
     SQLFilterParser,
+    analyze_sql_predicates,
     group_predicates_by_table,
     parse_alias_mapping,
     parse_join_conditions,
@@ -126,3 +127,78 @@ def test_full_outer_join_alias_mapping_and_join_conditions() -> None:
     assert len(joins) == 2
     assert str(joins[0]) == "schools.school = frpm.school_name"
     assert str(joins[1]) == "schools.school = satscores.sname"
+
+
+def test_set_operation_predicates_are_unsafe_for_row_proxy() -> None:
+    schema = [
+        {
+            "Schema Name": "routes",
+            "Attributes": [
+                {"Attribute Name": "airline_name"},
+                {"Attribute Name": "codeshare"},
+            ],
+        }
+    ]
+    sql = (
+        "SELECT DISTINCT airline_name FROM routes "
+        "EXCEPT SELECT DISTINCT airline_name FROM routes WHERE codeshare = 'None';"
+    )
+
+    analysis = analyze_sql_predicates(sql, schema, query_tables=["routes"])
+
+    assert analysis.has_set_operation is True
+    assert analysis.requires_full_join_reasoning is True
+    assert analysis.safe_predicates_by_table == {}
+    assert analysis.unsafe_predicates[0]["table"] == "routes"
+    assert "set_operation_query" in analysis.unsafe_predicates[0]["reasons"]
+
+
+def test_subquery_and_column_comparison_predicates_are_unsafe() -> None:
+    schema = [
+        {"Schema Name": "airports", "Attributes": [{"Attribute Name": "country"}]},
+        {
+            "Schema Name": "routes",
+            "Attributes": [
+                {"Attribute Name": "dst_ap_country"},
+                {"Attribute Name": "src_ap_country"},
+            ],
+        },
+    ]
+
+    subquery = analyze_sql_predicates(
+        "SELECT a.country FROM airports a "
+        "WHERE a.country IN (SELECT al.country FROM airlines al WHERE al.active = 'Y');",
+        schema,
+        query_tables=["airports"],
+    )
+    column_compare = analyze_sql_predicates(
+        "SELECT airline_name FROM routes WHERE dst_ap_country != src_ap_country;",
+        schema,
+        query_tables=["routes"],
+    )
+
+    assert subquery.safe_predicates_by_table == {}
+    assert subquery.has_subquery_predicate is True
+    assert "subquery_predicate" in subquery.unsafe_predicates[0]["reasons"]
+    assert column_compare.safe_predicates_by_table == {}
+    assert column_compare.has_column_comparison is True
+    assert "column_comparison" in column_compare.unsafe_predicates[0]["reasons"]
+
+
+def test_literal_predicate_remains_safe() -> None:
+    schema = [
+        {
+            "Schema Name": "apartment_bookings",
+            "Attributes": [{"Attribute Name": "booking_status_code"}],
+        }
+    ]
+
+    analysis = analyze_sql_predicates(
+        "SELECT * FROM apartment_bookings WHERE booking_status_code = 'Confirmed';",
+        schema,
+        query_tables=["apartment_bookings"],
+    )
+
+    assert list(analysis.safe_predicates_by_table) == ["apartment_bookings"]
+    assert analysis.safe_predicates_by_table["apartment_bookings"][0].attribute == "booking_status_code"
+    assert analysis.unsafe_predicates == []

@@ -48,7 +48,11 @@ from redd.core.utils.sql_filter_parser import (
     SQLFilterParser,
     predicates_to_filter_dict,
 )
-from redd.embedding import EmbeddingManager
+from redd.embedding import (
+    EmbeddingManager,
+    embedding_manager_kwargs,
+    resolve_embedding_storage_path,
+)
 from redd.proxy.predicate_proxy.factory import PredicateProxyFactory
 from redd.proxy.predicate_proxy.heuristic_proxy import UNKNOWN_EVIDENCE_SCORE
 from redd.proxy.proxy_runtime.oracle import DataExtractionOracle, GoldenOracle
@@ -153,18 +157,27 @@ class ProxyPipeline:
     def embedding_manager(self) -> EmbeddingManager:
         """Get or create embedding manager."""
         if self._embedding_manager is None:
-            storage_path = None
-            if self.config.embeddings_cache_dir:
-                cache_path = Path(self.config.embeddings_cache_dir).expanduser()
-                if cache_path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
-                    storage_path = cache_path
-                else:
-                    storage_path = cache_path / f"{self.data_loader.data_root.name}.embeddings.sqlite3"
+            embedding_config = {
+                "embedding_model": self.config.embedding_model,
+                "embedding_api_key": self.config.embedding_api_key,
+                "embedding_provider": self.config.embedding_provider,
+                "embedding_base_url": self.config.embedding_base_url,
+                "embedding_storage_path": self.config.embedding_storage_path,
+                "embedding_cache_dir": self.config.embedding_cache_dir,
+                "embedding_cache_file": self.config.embedding_cache_file,
+                "embeddings_cache_dir": self.config.embeddings_cache_dir,
+            }
+            storage_path = resolve_embedding_storage_path(
+                config=embedding_config,
+                loader=self.data_loader,
+            )
             self._embedding_manager = EmbeddingManager(
                 storage_path=storage_path,
                 loader=self.data_loader,
-                model=self.config.embedding_model,
-                api_key=self.config.embedding_api_key,
+                **embedding_manager_kwargs(
+                    embedding_config,
+                    default_model="gemini-embedding-001",
+                ),
             )
         return self._embedding_manager
 

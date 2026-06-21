@@ -11,7 +11,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from redd.core.utils.constants import RESULT_DATA_KEY, RESULT_TABLE_KEY, SCHEMA_NAME_KEY
 from redd.core.utils.sql_filter_parser import group_predicates_by_table
-from redd.embedding import EmbeddingManager
+from redd.embedding import (
+    EmbeddingManager,
+    embedding_manager_kwargs,
+    resolve_embedding_storage_path,
+)
 from redd.exp.evaluation import EvalDataExtraction
 from redd.optimizations.doc_filtering import create_doc_filter
 from redd.optimizations.doc_filtering.runtime import normalize_doc_filter_config
@@ -725,23 +729,27 @@ class DataExtractionAlphaAllocator:
         cfg["target_recall"] = self._clip_target_recall(1.0 - alpha_doc)
         doc_filter = create_doc_filter(cfg)
 
-        emb_model = str(cfg.get("embedding_model", "text-embedding-3-small"))
-        emb_api_key = str(cfg.get("embedding_api_key") or self.api_key or "")
-        embeddings_cache_dir = cfg.get("embeddings_cache_dir")
-        manager_key = (emb_model, emb_api_key, str(embeddings_cache_dir or ""))
+        storage_path = resolve_embedding_storage_path(
+            config=cfg,
+            loader=self.loader,
+        )
+        manager_kwargs = embedding_manager_kwargs(
+            cfg,
+            default_model="text-embedding-3-small",
+            fallback_api_key=self.api_key,
+        )
+        manager_key = (
+            str(manager_kwargs["model"]),
+            str(manager_kwargs.get("api_key") or ""),
+            str(manager_kwargs.get("provider") or ""),
+            str(manager_kwargs.get("base_url") or ""),
+            str(storage_path or ""),
+        )
         if manager_key not in self._embedding_managers:
-            storage_path = None
-            if embeddings_cache_dir:
-                cache_path = Path(embeddings_cache_dir).expanduser()
-                if cache_path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
-                    storage_path = cache_path
-                else:
-                    storage_path = cache_path / f"{self.loader.data_root.name}.embeddings.sqlite3"
             self._embedding_managers[manager_key] = EmbeddingManager(
                 storage_path=storage_path,
                 loader=self.loader,
-                model=emb_model,
-                api_key=(emb_api_key or None),
+                **manager_kwargs,
             )
         embedding_manager = self._embedding_managers[manager_key]
 
@@ -831,6 +839,13 @@ class DataExtractionAlphaAllocator:
             llm_model=proxy_cfg.get("llm_model", self.extraction_config.get("llm_model", "gemini-2.5-flash-lite")),
             api_key=self.api_key,
             embedding_model=proxy_cfg.get("embedding_model", "gemini-embedding-001"),
+            embedding_api_key=proxy_cfg.get("embedding_api_key") or self.api_key,
+            embedding_provider=proxy_cfg.get("embedding_provider"),
+            embedding_base_url=proxy_cfg.get("embedding_base_url"),
+            embedding_storage_path=proxy_cfg.get("embedding_storage_path"),
+            embedding_cache_dir=proxy_cfg.get("embedding_cache_dir"),
+            embedding_cache_file=proxy_cfg.get("embedding_cache_file"),
+            embeddings_cache_dir=proxy_cfg.get("embeddings_cache_dir"),
             use_embedding_proxies=resolve_proxy_flag(proxy_cfg, "use_embedding_proxies", True),
             use_learned_proxies=resolve_proxy_flag(proxy_cfg, "use_learned_proxies", True),
             use_finetuned_learned_proxies=resolve_proxy_flag(

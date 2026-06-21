@@ -17,7 +17,7 @@ from redd.core.utils.data_split import (
     split_doc_ids,
 )
 from redd.loader import create_data_loader
-from redd.runtime import resolve_dataset_roots
+from redd.orchestration.runtime import resolve_dataset_roots
 
 if TYPE_CHECKING:
     from redd.api import SchemaGenerator
@@ -75,7 +75,12 @@ def run_schema_preprocessing(
     generator: SchemaGenerator,
     datasets: Sequence[str] | None = None,
 ) -> list[dict[str, Any]]:
-    from redd.embedding import EmbeddingManager
+    from redd.embedding import (
+        EmbeddingManager,
+        embedding_config_value,
+        embedding_manager_kwargs,
+        resolve_embedding_storage_path,
+    )
     from redd.retrieval import build_retrieval_index
     from redd.schema_global import discover_global_schema
 
@@ -111,17 +116,30 @@ def run_schema_preprocessing(
 
         embedding_config = config.get("embedding") or {}
         if embedding_config.get("enabled"):
-            embedding_path = out_root / str(embedding_config.get("storage_file", "embeddings.sqlite3"))
+            embedding_path = resolve_embedding_storage_path(
+                config=embedding_config,
+                out_root=out_root,
+                loader=impl.loader,
+                dataset_name=dataset,
+            )
             manager = EmbeddingManager(
                 embedding_path,
-                model=str(embedding_config.get("model", "text-embedding-3-small")),
-                api_key=embedding_config.get("api_key") or generator.api_key,
-                provider=embedding_config.get("provider"),
-                base_url=embedding_config.get("base_url"),
+                **embedding_manager_kwargs(
+                    embedding_config,
+                    default_model="text-embedding-3-small",
+                    fallback_api_key=generator.api_key,
+                ),
             )
             doc_embeddings = manager.get_doc_embeddings(
                 impl.loader,
-                batch_size=int(embedding_config.get("batch_size", 100)),
+                batch_size=int(
+                    embedding_config_value(
+                        embedding_config,
+                        "batch_size",
+                        "embedding_batch_size",
+                        default=100,
+                    )
+                ),
             )
 
             retrieval_config = config.get("retrieval") or {}

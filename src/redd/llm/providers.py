@@ -223,6 +223,10 @@ def build_llm_config(
 ) -> LLMConfig:
     spec = get_provider_spec(mode)
     resolved_api_key = get_api_key(config, spec.canonical_name, api_key)
+    provider_kwargs = dict(overrides.get("provider_kwargs") or (config or {}).get("provider_kwargs") or {})
+    request_timeout = overrides.get("request_timeout", (config or {}).get("request_timeout"))
+    if request_timeout is not None:
+        provider_kwargs.setdefault("timeout", float(request_timeout))
     return LLMConfig(
         mode=spec.canonical_name,
         model=model,
@@ -234,7 +238,7 @@ def build_llm_config(
         structured_backend=str(
             overrides.get("structured_backend", (config or {}).get("structured_backend", "auto"))
         ),
-        provider_kwargs=dict(overrides.get("provider_kwargs") or {}),
+        provider_kwargs=provider_kwargs,
     )
 
 

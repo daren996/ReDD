@@ -125,6 +125,7 @@ def test_query_aware_recall_uses_answer_row_provenance_for_cell_denominator() ->
             "teaches.semester",
             "teaches.year",
         ],
+        "output_columns": ["course.title"],
     }
     result = {
         "course-1": {"res": "course", "data": {"title": "Databases", "credits": "4", "dept_name": "CS"}},
@@ -145,6 +146,11 @@ def test_query_aware_recall_uses_answer_row_provenance_for_cell_denominator() ->
     assert stats["summary"]["redundant_cells"] == 3
     assert stats["answer_recall"]["recall"] == 1.0
     assert stats["summary"]["can_answer_query"] is True
+    layers = stats["required_cell_layers"]["layers"]
+    assert layers["answer"]["total"] == 1
+    assert layers["predicate"]["total"] == 3
+    assert layers["join"]["total"] == 1
+    assert layers["other_required"]["total"] == 0
 
 
 def test_query_aware_metadata_only_query_treats_nil_as_null() -> None:
@@ -199,3 +205,18 @@ def test_query_aware_semantic_cell_accuracy_uses_required_attrvalue_cells() -> N
     assert stats["semantic_cell_accuracy"]["llm_judged"] == 1
     assert stats["semantic_cell_accuracy"]["accuracy"] == 1.0
     assert {cell["attr"] for cell in stats["semantic_cell_accuracy"]["cells"]} == {"title", "credits"}
+
+
+def test_full_table_semantic_can_be_disabled_independently() -> None:
+    default_evaluator = EvalDataExtraction({"res_param_str": "unit", "training_data_count": 0})
+    disabled_evaluator = EvalDataExtraction(
+        {
+            "res_param_str": "unit",
+            "training_data_count": 0,
+            "eval": {"full_table_semantic": False},
+        },
+        api_key="test-key",
+    )
+
+    assert default_evaluator.full_table_semantic_enabled is True
+    assert disabled_evaluator.full_table_semantic_enabled is False

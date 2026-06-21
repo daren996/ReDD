@@ -61,7 +61,12 @@ class ProxyPipelineConfig:
     # Embeddings (uses Gemini embedding API by default)
     embedding_model: str = "gemini-embedding-001"
     embedding_api_key: Optional[str] = None
-    embeddings_cache_dir: Optional[str] = None  # Directory to cache embeddings
+    embedding_provider: Optional[str] = None
+    embedding_base_url: Optional[str] = None
+    embedding_storage_path: Optional[str] = None
+    embedding_cache_dir: Optional[str] = None
+    embedding_cache_file: Optional[str] = None
+    embeddings_cache_dir: Optional[str] = None  # Legacy alias for embedding_cache_dir
     
     # Predicate proxies
     use_embedding_proxies: bool = True

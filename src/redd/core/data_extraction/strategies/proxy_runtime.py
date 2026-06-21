@@ -37,9 +37,9 @@ from ...utils.data_split import (
 )
 from ...utils.progress import emit_progress_event
 from ...utils.sql_filter_parser import (
+    analyze_sql_predicates,
     compute_table_processing_order,
     get_join_graph,
-    group_predicates_by_table,
     predicates_to_filter_dict,
 )
 from ...utils.utils import is_none_value
@@ -213,6 +213,12 @@ class ProxyRuntimeExtractionStrategy:
             llm_model=proxy_cfg.get("llm_model", extraction_config.get("llm_model", "gemini-2.5-flash-lite")),
             api_key=self.api_key,
             embedding_model=proxy_cfg.get("embedding_model", "gemini-embedding-001"),
+            embedding_api_key=proxy_cfg.get("embedding_api_key") or self.api_key,
+            embedding_provider=proxy_cfg.get("embedding_provider"),
+            embedding_base_url=proxy_cfg.get("embedding_base_url"),
+            embedding_storage_path=proxy_cfg.get("embedding_storage_path"),
+            embedding_cache_dir=proxy_cfg.get("embedding_cache_dir"),
+            embedding_cache_file=proxy_cfg.get("embedding_cache_file"),
             embeddings_cache_dir=proxy_cfg.get("embeddings_cache_dir"),
             use_embedding_proxies=resolve_proxy_flag(proxy_cfg, "use_embedding_proxies", True),
             use_learned_proxies=resolve_proxy_flag(proxy_cfg, "use_learned_proxies", True),
@@ -400,14 +406,24 @@ class ProxyRuntimeExtractionStrategy:
         sql = query_info.get("sql", "")
         query_tables = query_info.get("tables", all_tables)
         
+        predicate_analysis = None
         if sql:
-            predicates_by_table = group_predicates_by_table(
-                sql, schema_query, query_tables=query_tables
+            predicate_analysis = analyze_sql_predicates(
+                sql,
+                schema_query,
+                query_tables=query_tables,
+                query_info=query_info,
             )
+            predicates_by_table = predicate_analysis.safe_predicates_by_table
             logging.info(
-                f"[{self.__class__.__name__}] Predicates by table: "
+                f"[{self.__class__.__name__}] Safe predicates by table: "
                 f"{ {t: [str(p) for p in preds] for t, preds in predicates_by_table.items()} }"
             )
+            if predicate_analysis.unsafe_predicates:
+                logging.info(
+                    f"[{self.__class__.__name__}] Unsafe predicates skipped for row proxy: "
+                    f"{predicate_analysis.to_dict()}"
+                )
         else:
             predicates_by_table = {t: [] for t in all_tables}
             logging.warning(f"[{self.__class__.__name__}] No golden SQL found; no predicates")
@@ -425,9 +441,14 @@ class ProxyRuntimeExtractionStrategy:
         # 4. Join-aware processing order
         join_graph = get_join_graph(sql, schema_query, query_tables=query_tables) if sql else None
         table_order = compute_table_processing_order(join_graph, all_tables)
+        join_resolution_safe = not (
+            predicate_analysis is not None
+            and predicate_analysis.requires_full_join_reasoning
+        )
         if (
             join_graph
             and self.proxy_runtime_config.use_join_resolution
+            and join_resolution_safe
             and self.proxy_runtime_config.bidirectional_join_resolution
             and self.proxy_runtime_config.join_order_strategy == "selective_first"
         ):
@@ -435,8 +456,13 @@ class ProxyRuntimeExtractionStrategy:
                 table_order,
                 key=lambda table: (-len(predicates_by_table.get(table, [])), table_order.index(table)),
             )
-        if join_graph and self.proxy_runtime_config.use_join_resolution:
+        if join_graph and self.proxy_runtime_config.use_join_resolution and join_resolution_safe:
             logging.info(f"[{self.__class__.__name__}] Join detected: processing order {table_order}")
+        elif join_graph and self.proxy_runtime_config.use_join_resolution and not join_resolution_safe:
+            logging.info(
+                f"[{self.__class__.__name__}] Join detected but join resolver proxies are disabled "
+                "because predicate safety analysis requires full join reasoning"
+            )
 
         # 5. Run the proxy runtime per table. This explicit shortcut bypasses
         # proxies and is only for tests/offline full-GT extraction.
@@ -583,7 +609,12 @@ class ProxyRuntimeExtractionStrategy:
                         predicates=predicates,
                     )
                 )
-            if join_graph and self.proxy_runtime_config.use_join_resolution and table_name in join_graph.child_to_parent:
+            if (
+                join_graph
+                and self.proxy_runtime_config.use_join_resolution
+                and join_resolution_safe
+                and table_name in join_graph.child_to_parent
+            ):
                 for parent_table, attr_parent, attr_child in join_graph.child_to_parent[table_name]:
                     key = (parent_table, attr_parent)
                     allowed_set = join_key_values.get(key, set())
@@ -613,6 +644,7 @@ class ProxyRuntimeExtractionStrategy:
             if (
                 join_graph
                 and self.proxy_runtime_config.use_join_resolution
+                and join_resolution_safe
                 and self.proxy_runtime_config.bidirectional_join_resolution
             ):
                 for jc in join_graph.conditions:
@@ -684,6 +716,11 @@ class ProxyRuntimeExtractionStrategy:
                     "extracted_doc_ids": list(results.extracted_doc_ids),
                     "cache_hit_doc_ids": list(results.cache_hit_doc_ids),
                     "proxy_recalls": proxy_recalls,
+                    "predicate_safety": (
+                        predicate_analysis.to_dict()
+                        if predicate_analysis is not None
+                        else None
+                    ),
                 }
                 self._emit_proxy_optimization_update(
                     qid=qid,
@@ -699,7 +736,7 @@ class ProxyRuntimeExtractionStrategy:
                     )
 
             # Collect join key values from this table's extractions (for child tables)
-            if join_graph and table_name in join_graph.parent_to_children:
+            if join_graph and join_resolution_safe and table_name in join_graph.parent_to_children:
                 for jc in join_graph.conditions:
                     if jc.table_parent == table_name:
                         key = (jc.table_parent, jc.attr_parent)
@@ -716,6 +753,7 @@ class ProxyRuntimeExtractionStrategy:
             if (
                 join_graph
                 and self.proxy_runtime_config.use_join_resolution
+                and join_resolution_safe
                 and self.proxy_runtime_config.bidirectional_join_resolution
             ):
                 for jc in join_graph.conditions:
@@ -744,6 +782,7 @@ class ProxyRuntimeExtractionStrategy:
             if (
                 join_graph
                 and self.proxy_runtime_config.use_join_resolution
+                and join_resolution_safe
                 and self.proxy_runtime_config.bidirectional_join_resolution
                 and self.proxy_runtime_config.join_empty_short_circuit
                 and results.documents_passed_proxies == 0

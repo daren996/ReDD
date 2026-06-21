@@ -1,8 +1,11 @@
 """Predicate proxy creation and training helpers."""
 
+from __future__ import annotations
+
 import logging
+from importlib import util as importlib_util
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import numpy as np
 
@@ -25,15 +28,19 @@ from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
 
 from .heuristic_proxy import HeuristicPredicateProxy, _predicate_value
 
-try:
-    from .finetuned_proxy import (
-        GLiClassProxy,
-        _format_predicate_context,
-        train_finetuned_proxy,
-    )
-    FINETUNED_AVAILABLE = True
-except ImportError:
-    FINETUNED_AVAILABLE = False
+if TYPE_CHECKING:
+    from .finetuned_proxy import GLiClassProxy
+
+FINETUNED_AVAILABLE = all(
+    importlib_util.find_spec(package) is not None
+    for package in ("torch", "transformers", "gliclass")
+)
+
+
+def _load_finetuned_proxy_helpers():
+    from .finetuned_proxy import _format_predicate_context, train_finetuned_proxy
+
+    return _format_predicate_context, train_finetuned_proxy
 
 
 def _threshold_for_target_recall(
@@ -379,6 +386,7 @@ class PredicateProxyFactory:
         if not FINETUNED_AVAILABLE:
             logging.warning("[PredicateProxyFactory] Fine-tuned proxies not available. Install transformers and torch.")
             return []
+        _format_predicate_context, train_finetuned_proxy = _load_finetuned_proxy_helpers()
 
         predicate_fns = predicates_to_filter_dict(predicates)
         proxies = []
@@ -495,6 +503,7 @@ class PredicateProxyFactory:
                 "Install gliclass/transformers/torch or configure classifier_paths."
             )
             return []
+        _format_predicate_context, train_finetuned_proxy = _load_finetuned_proxy_helpers()
 
         proxies = []
         for pred in predicates:

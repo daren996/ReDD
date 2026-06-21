@@ -12,6 +12,12 @@ from .clustering import (
     Vectorizer,
     llm_embeddings,
 )
+from .config import (
+    DEFAULT_EMBEDDING_STORAGE_FILE,
+    embedding_config_value,
+    embedding_manager_kwargs,
+    resolve_embedding_storage_path,
+)
 from .manager import EmbeddingManager
 from .providers import (
     PROVIDER_CONFIGS,
@@ -29,9 +35,13 @@ __all__ = [
     "EmbeddingManager",
     "EmbeddingProvider",
     "EmbeddingProviderBase",
+    "DEFAULT_EMBEDDING_STORAGE_FILE",
     "PROVIDER_CONFIGS",
     "Vectorizer",
     "detect_provider",
+    "embedding_config_value",
+    "embedding_manager_kwargs",
     "get_embedding_provider",
     "llm_embeddings",
+    "resolve_embedding_storage_path",
 ]

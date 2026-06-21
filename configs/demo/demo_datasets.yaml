@@ -20,6 +20,7 @@ models:
     provider: local
     model: local-hash-embedding
     api_key_env: null
+    cache_dir: outputs/doc_filter_predicate_proxy_eval/_embedding_cache
     storage_file: embeddings.sqlite3
 
 datasets:
@@ -66,7 +67,6 @@ stages:
       join_empty_short_circuit: true
       cross_query_extraction_cache: true
       cache_extract_full_table: true
-      embeddings_cache_dir: outputs/doc_filter_predicate_proxy_eval/_embedding_cache
       finetuned_model: heuristic
       finetuned_epochs: 0
       proxy_threshold: 0.505

@@ -24,6 +24,12 @@ from redd.optimizations.alpha_allocation.types import (
     STAGE_PREDICATE_PROXY,
     AlphaAllocationConfig,
 )
+from redd.orchestration.runtime import (
+    build_data_loader_config,
+    ensure_shared_output_root,
+    normalize_stage_config,
+    resolve_schema_artifact_source,
+)
 from redd.proxy.predicate_proxy.heuristic_proxy import HeuristicPredicateProxy
 from redd.proxy.proxy_runtime.config import (
     is_proxy_runtime_enabled,
@@ -31,12 +37,6 @@ from redd.proxy.proxy_runtime.config import (
 )
 from redd.proxy.proxy_runtime.pipeline import ProxyPipeline
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
-from redd.runtime import (
-    build_data_loader_config,
-    ensure_shared_output_root,
-    normalize_stage_config,
-    resolve_schema_artifact_source,
-)
 
 
 class RuntimeBoundaryTests(unittest.TestCase):
@@ -541,7 +541,9 @@ class RuntimeBoundaryTests(unittest.TestCase):
             self.assertIs(pipeline.embedding_manager, sentinel)
 
             embedding_manager_mock.assert_called_once_with(
-                storage_path=Path(tmp_dir) / "spider.college_demo.embeddings.sqlite3",
+                storage_path=(
+                    Path(tmp_dir) / "spider.college_demo.embeddings.sqlite3"
+                ).resolve(),
                 loader=fake_loader,
                 model="local-hash-embedding",
                 api_key=None,

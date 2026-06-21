@@ -14,7 +14,11 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, Set
 
 from redd.core.utils.constants import PATH_TEMPLATES
-from redd.embedding import EmbeddingManager
+from redd.embedding import (
+    EmbeddingManager,
+    embedding_manager_kwargs,
+    resolve_embedding_storage_path,
+)
 
 from .base import DocFilterBase, NoOpFilter
 
@@ -173,24 +177,18 @@ def run_query_doc_filter(
     }
 
     if not isinstance(doc_filter, NoOpFilter):
-        emb_model = doc_filter_config.get(
-            "embedding_model",
-            "text-embedding-3-small",
+        storage_path = resolve_embedding_storage_path(
+            config=doc_filter_config,
+            loader=loader,
         )
-        emb_api_key = doc_filter_config.get("embedding_api_key") or api_key
-        embeddings_cache_dir = doc_filter_config.get("embeddings_cache_dir")
-        storage_path = None
-        if embeddings_cache_dir:
-            cache_path = Path(embeddings_cache_dir).expanduser()
-            if cache_path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
-                storage_path = cache_path
-            else:
-                storage_path = cache_path / f"{loader.data_root.name}.embeddings.sqlite3"
         emb_manager = EmbeddingManager(
             storage_path=storage_path,
             loader=loader,
-            model=emb_model,
-            api_key=emb_api_key,
+            **embedding_manager_kwargs(
+                doc_filter_config,
+                default_model="text-embedding-3-small",
+                fallback_api_key=api_key,
+            ),
         )
         filter_kwargs["embedding_manager"] = emb_manager
 

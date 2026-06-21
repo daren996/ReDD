@@ -63,11 +63,6 @@ from ..utils.sql_filter_parser import SQLFilterParser, create_predicate_function
 from ..utils.structured_outputs import AttributeExtractionOutput, TableAssignmentOutput
 from ..utils.utils import is_none_value
 from .base import DataExtractor
-from .strategies import (
-    AlphaAllocationStrategy,
-    DocFilteringStrategy,
-    ProxyRuntimeExtractionStrategy,
-)
 
 __all__ = ["DataExtraction"]
 
@@ -212,10 +207,24 @@ class DataExtraction(DataExtractor):
             # Doc filter (optional): filter irrelevant docs before table assignment
             self.proxy_runtime_config = normalize_proxy_runtime_config(config)
             self.use_proxy_runtime = is_proxy_runtime_enabled(config)
-            self.doc_filter_strategy = DocFilteringStrategy(config)
-            self.doc_filter_config = dict(self.doc_filter_strategy.config)
-            self.doc_filter_enabled = self.doc_filter_strategy.enabled
-            self.doc_filter_only = self.doc_filter_strategy.only
+            self.doc_filter_strategy = None
+            self.doc_filter_config = {}
+            self.doc_filter_enabled = False
+            self.doc_filter_only = False
+            doc_filter_config = config.get("doc_filter")
+            doc_filter_requested = False
+            if isinstance(doc_filter_config, dict) and doc_filter_config:
+                raw_enabled = doc_filter_config.get("enabled")
+                enabled = True if raw_enabled is None else bool(raw_enabled)
+                doc_filter_requested = enabled or bool(doc_filter_config.get("only", False))
+            should_load_doc_filter = bool(config.get("upstream_doc_filter_root")) or doc_filter_requested
+            if should_load_doc_filter:
+                from .strategies.doc_filtering import DocFilteringStrategy
+
+                self.doc_filter_strategy = DocFilteringStrategy(config)
+                self.doc_filter_config = dict(self.doc_filter_strategy.config)
+                self.doc_filter_enabled = self.doc_filter_strategy.enabled
+                self.doc_filter_only = self.doc_filter_strategy.only
             self.result_save_interval = max(
                 1,
                 int(config.get("result_save_interval", 1) or 1),
@@ -346,23 +355,30 @@ class DataExtraction(DataExtractor):
             f"{len(selected_query_ids)} selected queries: {selected_query_ids}"
         )
 
-        alpha_strategy = AlphaAllocationStrategy(
-            config=self.config,
-            data_path=self.data_path,
-            loader=self.loader,
-            api_key=self.api_key,
-            train_doc_ids=self.train_doc_ids,
-            proxy_runtime_enabled=self.use_proxy_runtime,
-        )
         schema_by_query: Dict[str, List[Dict[str, Any]]] = {}
         for qid in selected_query_ids:
             schema_query = self.loader.load_schema_query(qid)
             if not schema_query:
                 schema_query = self.schema_general
             schema_by_query[qid] = schema_query
-        allocation_results_by_query = alpha_strategy.allocate_for_queries(
-            query_schemas=schema_by_query,
-        )
+
+        alpha_strategy = None
+        allocation_results_by_query = {}
+        alpha_config = self.config.get("alpha_allocation", {})
+        if isinstance(alpha_config, dict) and alpha_config.get("enabled", False):
+            from .strategies.alpha_allocation import AlphaAllocationStrategy
+
+            alpha_strategy = AlphaAllocationStrategy(
+                config=self.config,
+                data_path=self.data_path,
+                loader=self.loader,
+                api_key=self.api_key,
+                train_doc_ids=self.train_doc_ids,
+                proxy_runtime_enabled=self.use_proxy_runtime,
+            )
+            allocation_results_by_query = alpha_strategy.allocate_for_queries(
+                query_schemas=schema_by_query,
+            )
 
         for qid in selected_query_ids:
             self._wait_if_paused(f"query-{qid}")
@@ -377,7 +393,7 @@ class DataExtraction(DataExtractor):
             doc_target_recall_override = None
             proxy_target_recall_override = None
             allocation_result = allocation_results_by_query.get(qid)
-            if allocation_result is None:
+            if allocation_result is None and alpha_strategy is not None:
                 allocation_result = alpha_strategy.allocate_for_query(
                     query_id=qid,
                     schema_query=schema_query,
@@ -483,7 +499,7 @@ class DataExtraction(DataExtractor):
         target_recall_override: Optional[float],
     ) -> Set[str]:
         upstream_root = self.config.get("upstream_doc_filter_root")
-        if upstream_root:
+        if upstream_root and self.doc_filter_strategy is not None:
             reused = self.doc_filter_strategy.reused_excluded_doc_ids_for_query(
                 query_id=query_id,
                 upstream_root=Path(upstream_root),
@@ -499,6 +515,9 @@ class DataExtraction(DataExtractor):
                 f"No reusable upstream doc filter artifact for query-{query_id} in {upstream_root}; "
                 "falling back to local data_extraction filtering if enabled."
             )
+
+        if self.doc_filter_strategy is None:
+            return set()
 
         return self.doc_filter_strategy.excluded_doc_ids_for_query(
             query_id=query_id,
@@ -980,6 +999,8 @@ class DataExtraction(DataExtractor):
                 f"[{self.__class__.__name__}:_process_proxy_runtime_per_table] Query {qid} override: "
                 f"proxy_runtime.target_recall={predicate_target_recall:.4f}"
             )
+
+        from .strategies.proxy_runtime import ProxyRuntimeExtractionStrategy
 
         orchestrator = ProxyRuntimeExtractionStrategy(
             extraction_config=extraction_config,

@@ -8,45 +8,69 @@ from __future__ import annotations
 
 import logging
 import random
+from importlib import import_module
+from importlib import util as importlib_util
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
-try:
-    import torch
-    TORCH_AVAILABLE = True
-except ImportError:
-    TORCH_AVAILABLE = False
-
-try:
-    from transformers import AutoTokenizer
-    from transformers import set_seed as hf_set_seed
-    TRANSFORMERS_AVAILABLE = True
-except ImportError:
-    TRANSFORMERS_AVAILABLE = False
-    hf_set_seed = None
-
-GLICLASS_AVAILABLE = False
-GLICLASS_TRAINING_AVAILABLE = False
-try:
-    from gliclass import GLiClassModel, ZeroShotClassificationPipeline
-    GLICLASS_AVAILABLE = True
-    try:
-        from gliclass.data_processing import (
-            AugmentationConfig,
-            DataCollatorWithPadding,
-            GLiClassDataset,
-        )
-        from gliclass.training import Trainer, TrainingArguments
-        GLICLASS_TRAINING_AVAILABLE = True
-    except ImportError:
-        pass
-except ImportError:
-    pass
+TORCH_AVAILABLE = importlib_util.find_spec("torch") is not None
+TRANSFORMERS_AVAILABLE = importlib_util.find_spec("transformers") is not None
+GLICLASS_AVAILABLE = importlib_util.find_spec("gliclass") is not None
+GLICLASS_TRAINING_AVAILABLE = GLICLASS_AVAILABLE
 
 # Default model: GLiClass
 DEFAULT_MODEL = "knowledgator/gliclass-small-v1.0"
+
+
+def _require_torch() -> Any:
+    if not TORCH_AVAILABLE:
+        raise ImportError("PyTorch required for fine-tuned proxies")
+    return import_module("torch")
+
+
+def _require_auto_tokenizer() -> Any:
+    if not TRANSFORMERS_AVAILABLE:
+        raise ImportError("transformers required for fine-tuned proxies")
+    return getattr(import_module("transformers"), "AutoTokenizer")
+
+
+def _hf_set_seed(seed: int) -> None:
+    if not TRANSFORMERS_AVAILABLE:
+        return
+    set_seed = getattr(import_module("transformers"), "set_seed", None)
+    if callable(set_seed):
+        set_seed(seed)
+
+
+def _require_gliclass_runtime() -> tuple[Any, Any]:
+    if not GLICLASS_AVAILABLE:
+        raise ImportError(
+            "gliclass package required for learned proxies. Install with: pip install gliclass"
+        )
+    gliclass = import_module("gliclass")
+    return (
+        getattr(gliclass, "GLiClassModel"),
+        getattr(gliclass, "ZeroShotClassificationPipeline"),
+    )
+
+
+def _load_gliclass_training() -> tuple[Any, Any, Any, Any, Any] | None:
+    if not GLICLASS_AVAILABLE:
+        return None
+    try:
+        data_processing = import_module("gliclass.data_processing")
+        training = import_module("gliclass.training")
+    except ImportError:
+        return None
+    return (
+        getattr(data_processing, "AugmentationConfig"),
+        getattr(data_processing, "DataCollatorWithPadding"),
+        getattr(data_processing, "GLiClassDataset"),
+        getattr(training, "Trainer"),
+        getattr(training, "TrainingArguments"),
+    )
 
 
 def _threshold_for_target_recall(
@@ -89,11 +113,11 @@ def _set_reproducible_seed(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
     if TORCH_AVAILABLE:
-        torch.manual_seed(seed)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed_all(seed)
-    if hf_set_seed is not None:
-        hf_set_seed(seed)
+        torch_module = _require_torch()
+        torch_module.manual_seed(seed)
+        if torch_module.cuda.is_available():
+            torch_module.cuda.manual_seed_all(seed)
+    _hf_set_seed(seed)
 
 
 def _load_tokenizer(model_path: str, load_kw: Dict[str, Any]) -> Any:
@@ -104,15 +128,16 @@ def _load_tokenizer(model_path: str, load_kw: Dict[str, Any]) -> Any:
     """
     tokenizer_kw = dict(load_kw)
     tokenizer_kw["fix_mistral_regex"] = True
+    auto_tokenizer = _require_auto_tokenizer()
     try:
-        return AutoTokenizer.from_pretrained(model_path, **tokenizer_kw)
+        return auto_tokenizer.from_pretrained(model_path, **tokenizer_kw)
     except TypeError:
         tokenizer_kw.pop("fix_mistral_regex", None)
         logging.warning(
             "[GLiClassProxy:_load_tokenizer] `fix_mistral_regex` not supported by "
             "current transformers version; loading tokenizer without the fix."
         )
-        return AutoTokenizer.from_pretrained(model_path, **tokenizer_kw)
+        return auto_tokenizer.from_pretrained(model_path, **tokenizer_kw)
 
 
 def _format_predicate_context(predicate: Any, query_text: str = "") -> str:
@@ -162,7 +187,8 @@ class FineTunedTextProxy:
         self.predicate_context = predicate_context
 
         if device is None:
-            device = "cuda" if TORCH_AVAILABLE and torch.cuda.is_available() else "cpu"
+            torch_module = _require_torch()
+            device = "cuda" if torch_module.cuda.is_available() else "cpu"
         self.device = device
         self.model = self.model.to(device)
         self.model.eval()
@@ -225,7 +251,8 @@ class FineTunedTextProxy:
             (doc, self.predicate_context) for doc in docs_truncated
         ]
 
-        with torch.no_grad():
+        torch_module = _require_torch()
+        with torch_module.no_grad():
             encoding = self.tokenizer(
                 [p[0] for p in inputs],
                 [p[1] for p in inputs],
@@ -237,7 +264,7 @@ class FineTunedTextProxy:
 
             outputs = self.model(**encoding)
             logits = outputs.logits
-            probs = torch.softmax(logits, dim=-1)[:, 1].cpu().numpy()
+            probs = torch_module.softmax(logits, dim=-1)[:, 1].cpu().numpy()
 
         passed_mask = probs >= self._threshold
 
@@ -384,10 +411,13 @@ def _train_gliclass_proxy(
     Create a GLiClass proxy. Fine-tunes when epochs > 0 and training is available;
     otherwise uses zero-shot. When use_icl=True, adds few-shot examples for in-context learning.
     """
-    device = "cuda:0" if TORCH_AVAILABLE and torch.cuda.is_available() else "cpu"
-    if device.startswith("cuda") and TORCH_AVAILABLE:
+    torch_module = _require_torch()
+    GLiClassModel, ZeroShotClassificationPipeline = _require_gliclass_runtime()
+    training_runtime = _load_gliclass_training()
+    device = "cuda:0" if torch_module.cuda.is_available() else "cpu"
+    if device.startswith("cuda"):
         logging.info(
-            f"[GLiClassProxy] Using GPU: {torch.cuda.get_device_name(0)}"
+            f"[GLiClassProxy] Using GPU: {torch_module.cuda.get_device_name(0)}"
         )
     else:
         logging.info("[GLiClassProxy] Using CPU (no GPU available)")
@@ -398,8 +428,15 @@ def _train_gliclass_proxy(
     tokenizer = _load_tokenizer(model_path, load_kw)
 
     # Fine-tune when epochs > 0 and gliclass.training is available
-    if epochs > 0 and GLICLASS_TRAINING_AVAILABLE and len(documents) >= 4:
+    if epochs > 0 and training_runtime is not None and len(documents) >= 4:
         try:
+            (
+                AugmentationConfig,
+                DataCollatorWithPadding,
+                GLiClassDataset,
+                Trainer,
+                TrainingArguments,
+            ) = training_runtime
             _set_reproducible_seed(seed)
             train_data = []
             labels_gliclass = ["satisfies", "does not satisfy"]
@@ -465,7 +502,7 @@ def _train_gliclass_proxy(
             logging.warning(
                 f"[GLiClassProxy] Fine-tuning failed: {e}. Using zero-shot."
             )
-    elif epochs > 0 and not GLICLASS_TRAINING_AVAILABLE:
+    elif epochs > 0 and training_runtime is None:
         logging.warning(
             "[GLiClassProxy] gliclass.training not available. Using zero-shot. "
             "Install from source for fine-tuning."
