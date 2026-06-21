@@ -7,6 +7,7 @@ import logging
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from redd.core.utils.prompt_registry import DATA_EXTRACTION_ATTR_PROMPT_ID
 from redd.core.utils.structured_outputs import AttributeExtractionOutput
 
 
@@ -88,7 +89,7 @@ class DataExtractionOracle:
         mode: str = "gemini",
         llm_model: str = "gemini-2.5-flash-lite",
         api_key: Optional[str] = None,
-        prompt_attr_path: str = "prompts/data_extraction_attr_json.txt"
+        prompt_attr_path: str = DATA_EXTRACTION_ATTR_PROMPT_ID
     ):
         """
         Initialize data-extraction oracle.

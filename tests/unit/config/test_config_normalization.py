@@ -46,7 +46,7 @@ datasets:
 stages:
   preprocessing:
     enabled: true
-    prompt: schemagen_5_0
+    prompt: schemagen
   schema_refinement:
     enabled: true
     source_stage: preprocessing
@@ -95,7 +95,7 @@ class ConfigV2Tests(unittest.TestCase):
         self.assertEqual(stage_config["training_data_count"], 16)
         self.assertEqual(stage_config["training_data_split"], "prefix")
         self.assertEqual(stage_config["training_data_split_seed"], 42)
-        self.assertEqual(stage_config["prompt"]["prompt_path"], "schemagen_5_0.txt")
+        self.assertEqual(stage_config["prompt"]["prompt_id"], "schemagen")
         self.assertEqual(
             stage_config["_runtime_contexts"][0]["out_root"],
             str(resolve_repo_path("outputs/demo") / "wine" / "preprocessing" / "run-v1"),
@@ -133,6 +133,55 @@ class ConfigV2Tests(unittest.TestCase):
         self.assertFalse(extraction_config["doc_filter"]["enable_calibrate"])
         self.assertEqual(extraction_config["proxy_runtime"]["predicate_proxy_mode"], "pretrained")
         self.assertEqual(extraction_config["proxy_runtime"]["proxy_threshold"], 0.51)
+
+    def test_global_embedding_cache_dir_flows_to_schema_and_extraction(self) -> None:
+        config_text = textwrap.dedent(VALID_CONFIG).replace(
+            "  embedding:\n"
+            "    provider: openai\n"
+            "    model: text-embedding-3-small\n",
+            "  embedding:\n"
+            "    provider: openai\n"
+            "    model: text-embedding-3-small\n"
+            "    cache_dir: outputs/demo/_embedding_cache\n",
+        ).replace(
+            "  data_extraction:\n"
+            "    enabled: true\n"
+            "    schema_source: schema_refinement\n"
+            "    oracle: llm\n",
+            "  data_extraction:\n"
+            "    enabled: true\n"
+            "    schema_source: schema_refinement\n"
+            "    oracle: llm\n"
+            "    doc_filter:\n"
+            "      enabled: true\n"
+            "    proxy_runtime:\n"
+            "      enabled: true\n",
+        )
+
+        with TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "config.yaml"
+            config_path.write_text(config_text.strip(), encoding="utf-8")
+
+            runtime, _ = load_experiment_runtime(config_path, "demo")
+            preprocessing_config = runtime.stage_runtime_dict("preprocessing")
+            extraction_config = runtime.stage_runtime_dict("data_extraction")
+
+        self.assertEqual(
+            preprocessing_config["embedding"]["cache_dir"],
+            "outputs/demo/_embedding_cache",
+        )
+        self.assertEqual(
+            extraction_config["doc_filter"]["embedding_cache_dir"],
+            "outputs/demo/_embedding_cache",
+        )
+        self.assertEqual(
+            extraction_config["proxy_runtime"]["embedding_cache_dir"],
+            "outputs/demo/_embedding_cache",
+        )
+        self.assertEqual(
+            extraction_config["proxy_runtime"]["embedding_model"],
+            "text-embedding-3-small",
+        )
 
     def test_dataset_query_ids_are_preserved_for_stage_runtime(self) -> None:
         config_text = textwrap.dedent(VALID_CONFIG).replace(

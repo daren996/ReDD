@@ -1,0 +1,12 @@
+id: data_extraction_attr
+purpose: Extract one target attribute value from a document under a selected schema.
+input_fields:
+  - Document
+  - Schema
+  - Target Attribute
+output_schema: redd.core.utils.structured_outputs.AttributeExtractionOutput
+used_by:
+  - data_extraction.attribute_extraction
+  - proxy_runtime.oracle
+owner: redd.data_extraction
+template_variables: []

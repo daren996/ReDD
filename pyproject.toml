@@ -32,9 +32,6 @@ dependencies = [
   "litellm",
   "pydantic>=2",
   "tenacity",
-  "transformers>=4.57.0,<5",
-  "accelerate>=0.26.0",
-  "gliclass>=0.1.16",
 ]
 
 [project.urls]
@@ -47,6 +44,17 @@ structured = [
 ]
 retrieval = [
   "faiss-cpu",
+]
+local = [
+  "torch",
+  "transformers>=4.57.0,<5",
+  "accelerate>=0.26.0",
+]
+predicate-proxy = [
+  "torch",
+  "transformers>=4.57.0,<5",
+  "accelerate>=0.26.0",
+  "gliclass>=0.1.16",
 ]
 web = [
   "fastapi>=0.115.0",
@@ -77,7 +85,23 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-redd = ["resources/*.json", "resources/prompts/*.txt", "resources/web_demo/*"]
+redd = [
+  "resources/*.json",
+  "resources/configs/*.yaml",
+  "resources/demo_data/*.md",
+  "resources/demo_data/*.yaml",
+  "resources/demo_data/*.json",
+  "resources/demo_data/*.csv",
+  "resources/demo_data/*.parquet",
+  "resources/demo_data/**/*.md",
+  "resources/demo_data/**/*.yaml",
+  "resources/demo_data/**/*.json",
+  "resources/demo_data/**/*.csv",
+  "resources/demo_data/**/*.parquet",
+  "resources/prompts/*.txt",
+  "resources/prompts/*.yaml",
+  "resources/web_demo/*",
+]
 
 [tool.ruff]
 target-version = "py310"

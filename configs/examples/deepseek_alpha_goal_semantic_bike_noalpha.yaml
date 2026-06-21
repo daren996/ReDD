@@ -37,8 +37,8 @@ stages:
     schema_source: ground_truth
     oracle: llm
     prompts:
-      prompt_table: prompts/data_extraction_table_json.txt
-      prompt_attr: prompts/data_extraction_attr_json.txt
+      prompt_table: data_extraction_table
+      prompt_attr: data_extraction_attr
     options:
       force_rerun: true
       result_save_interval: 1
@@ -49,7 +49,7 @@ stages:
         max_retries: 2
         wait_time: 1
         prompts:
-          data_extraction_cmp_str: prompts/eval_data_extraction_cmp_str.txt
+          data_extraction_cmp_str: data_extraction_cmp_str
     doc_filter:
       enabled: true
       filter_type: schema_relevance

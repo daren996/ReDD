@@ -28,6 +28,7 @@ from redd.optimizations.adaptive_sampling.entropy.sampler import AdaptiveSampler
 
 from ..utils.constants import PATH_TEMPLATES
 from ..utils.progress import tqdm
+from ..utils.prompt_registry import SCHEMA_TAILOR_PROMPT_ID
 from ..utils.prompt_utils import create_prompt
 from ..utils.structured_outputs import SchemaUpdateOutput
 
@@ -223,7 +224,7 @@ class SchemaTailor:
         self.param_str = config.get("res_param_str", "schema_tailor")
         
         # Initialize prompt for tailoring
-        tailor_prompt_path = config.get("tailor_prompt_path", "prompts/schema_tailor_1_0.txt")
+        tailor_prompt_path = config.get("tailor_prompt_path", SCHEMA_TAILOR_PROMPT_ID)
         self.tailor_prompt = create_prompt(
             self.mode,
             tailor_prompt_path,

@@ -8,6 +8,7 @@ from typing import Any, Mapping, TypeVar
 from pydantic import BaseModel
 
 from redd.config import resolve_repo_path
+from redd.core.utils.prompt_registry import get_prompt_spec
 from redd.llm import CompletionRequest, LLMRuntime, get_api_key, normalize_provider_name
 
 ModelT = TypeVar("ModelT", bound=BaseModel)
@@ -20,14 +21,22 @@ def _get_package_prompt_root():
     return prompt_root
 
 
+def _get_package_prompt_resource(filename: str):
+    resource_candidate = _get_package_prompt_root()
+    for part in Path(filename).parts:
+        resource_candidate = resource_candidate.joinpath(part)
+    return resource_candidate
+
+
 def resolve_prompt_reference(prompt_path: str | Path):
     """
     Resolve a prompt reference without relying on the current working directory.
 
     Resolution order:
     1. Absolute filesystem path
-    2. Repository-root relative path
-    3. Packaged resource under ``redd/resources/prompts``
+    2. Repository-root relative path for custom prompts
+    3. Registered packaged prompt id or alias
+    4. Packaged resource under ``redd/resources/prompts``
     """
     candidate = Path(prompt_path)
 
@@ -40,13 +49,17 @@ def resolve_prompt_reference(prompt_path: str | Path):
     if repo_candidate.is_file():
         return repo_candidate
 
+    spec = get_prompt_spec(prompt_path)
+    if spec is not None:
+        resource_candidate = _get_package_prompt_resource(spec.filename)
+        if resource_candidate.is_file():
+            return resource_candidate
+
     package_relative = candidate
     if candidate.parts and candidate.parts[0] == "prompts":
         package_relative = Path(*candidate.parts[1:])
 
-    resource_candidate = _get_package_prompt_root()
-    for part in package_relative.parts:
-        resource_candidate = resource_candidate.joinpath(part)
+    resource_candidate = _get_package_prompt_resource(str(package_relative))
     if resource_candidate.is_file():
         return resource_candidate
 

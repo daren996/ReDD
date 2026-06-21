@@ -2441,8 +2441,6 @@ name = "redd"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "accelerate" },
-    { name = "gliclass" },
     { name = "litellm" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -2457,7 +2455,6 @@ dependencies = [
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "tenacity" },
     { name = "tqdm" },
-    { name = "transformers" },
 ]
 
 [package.optional-dependencies]
@@ -2467,6 +2464,17 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
     { name = "types-pyyaml" },
+]
+local = [
+    { name = "accelerate" },
+    { name = "torch" },
+    { name = "transformers" },
+]
+predicate-proxy = [
+    { name = "accelerate" },
+    { name = "gliclass" },
+    { name = "torch" },
+    { name = "transformers" },
 ]
 retrieval = [
     { name = "faiss-cpu" },
@@ -2482,11 +2490,12 @@ web = [
 
 [package.metadata]
 requires-dist = [
-    { name = "accelerate", specifier = ">=0.26.0" },
+    { name = "accelerate", marker = "extra == 'local'", specifier = ">=0.26.0" },
+    { name = "accelerate", marker = "extra == 'predicate-proxy'", specifier = ">=0.26.0" },
     { name = "build", marker = "extra == 'dev'", specifier = ">=1.2.2" },
     { name = "faiss-cpu", marker = "extra == 'retrieval'" },
     { name = "fastapi", marker = "extra == 'web'", specifier = ">=0.115.0" },
-    { name = "gliclass", specifier = ">=0.1.16" },
+    { name = "gliclass", marker = "extra == 'predicate-proxy'", specifier = ">=0.1.16" },
     { name = "instructor", extras = ["litellm"], marker = "extra == 'structured'" },
     { name = "litellm" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11.2" },
@@ -2501,12 +2510,15 @@ requires-dist = [
     { name = "scikit-learn" },
     { name = "scipy" },
     { name = "tenacity" },
+    { name = "torch", marker = "extra == 'local'" },
+    { name = "torch", marker = "extra == 'predicate-proxy'" },
     { name = "tqdm" },
-    { name = "transformers", specifier = ">=4.57.0,<5" },
+    { name = "transformers", marker = "extra == 'local'", specifier = ">=4.57.0,<5" },
+    { name = "transformers", marker = "extra == 'predicate-proxy'", specifier = ">=4.57.0,<5" },
     { name = "types-pyyaml", marker = "extra == 'dev'", specifier = ">=6.0.12" },
     { name = "uvicorn", marker = "extra == 'web'", specifier = ">=0.30.0" },
 ]
-provides-extras = ["structured", "retrieval", "web", "dev"]
+provides-extras = ["structured", "retrieval", "local", "predicate-proxy", "web", "dev"]
 
 [[package]]
 name = "referencing"

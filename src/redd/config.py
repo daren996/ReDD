@@ -7,6 +7,11 @@ from typing import Any, Literal, Mapping
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from redd.core.utils.prompt_registry import (
+    DEFAULT_DATA_EXTRACTION_PROMPTS,
+    DEFAULT_SCHEMA_PROMPT_ID,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_DIR = PROJECT_ROOT / "configs"
 DEFAULT_LOG_DIR = PROJECT_ROOT / "logs"
@@ -72,6 +77,7 @@ class LLMConfigModel(StrictModel):
     structured_backend: Literal["auto", "instructor", "json"] = "auto"
     max_retries: int = 5
     wait_time: float = 10.0
+    request_timeout: float | None = None
     temperature: float | None = None
     top_p: float | None = None
     max_tokens: int | None = None
@@ -86,6 +92,9 @@ class EmbeddingConfigModel(StrictModel):
     api_key: str | None = None
     base_url: str | None = None
     batch_size: int = 100
+    cache_dir: str | Path | None = None
+    cache_file: str | Path | None = None
+    storage_path: str | Path | None = None
     storage_file: str = "embeddings.sqlite3"
 
 
@@ -281,6 +290,8 @@ class ExperimentRuntime(StrictModel):
                 config["api_key"] = os.getenv(llm.api_key_env)
             if llm.base_url:
                 config["base_url"] = llm.base_url
+            if llm.request_timeout is not None:
+                config["request_timeout"] = llm.request_timeout
             if llm.local_model_path:
                 config["llm_model_path"] = llm.local_model_path
             for key in ("temperature", "top_p", "max_tokens"):
@@ -303,12 +314,13 @@ class ExperimentRuntime(StrictModel):
 
 def _prompt_reference(prompt: str | dict[str, Any] | None, default_id: str) -> dict[str, Any]:
     if isinstance(prompt, dict):
-        if "prompt_path" not in prompt:
-            raise ValueError("Prompt mappings must include `prompt_path`.")
+        if "prompt_id" not in prompt and "prompt_path" not in prompt:
+            raise ValueError("Prompt mappings must include `prompt_id` or `prompt_path`.")
         return deepcopy(prompt)
-    prompt_id = prompt or default_id
-    prompt_path = prompt_id if str(prompt_id).endswith(".txt") else f"{prompt_id}.txt"
-    return {"prompt_path": prompt_path}
+    prompt_id = str(prompt or default_id)
+    if prompt_id.endswith(".txt") or "/" in prompt_id or "\\" in prompt_id:
+        return {"prompt_path": prompt_id}
+    return {"prompt_id": prompt_id}
 
 
 def _schema_stage_runtime(
@@ -318,7 +330,7 @@ def _schema_stage_runtime(
 ) -> dict[str, Any]:
     is_refinement = stage == "schema_refinement"
     config: dict[str, Any] = {
-        "prompt": _prompt_reference(stage_config.prompt, "schemagen_5_0"),
+        "prompt": _prompt_reference(stage_config.prompt, DEFAULT_SCHEMA_PROMPT_ID),
         "in_fields": stage_config.input_fields
         or (
             {"document": "Document", "query": "Query"}
@@ -347,17 +359,7 @@ def _schema_stage_runtime(
     if stage_config.schema_tailoring:
         config["schema_tailor"] = stage_config.schema_tailoring.as_internal_dict()
     if experiment.models.embedding and experiment.models.embedding.enabled:
-        embedding = experiment.models.embedding
-        config["embedding"] = {
-            "enabled": True,
-            "provider": embedding.provider,
-            "model": embedding.model,
-            "api_key": embedding.api_key
-            or (os.getenv(embedding.api_key_env) if embedding.api_key_env else None),
-            "base_url": embedding.base_url,
-            "batch_size": embedding.batch_size,
-            "storage_file": embedding.storage_file,
-        }
+        config["embedding"] = _embedding_stage_runtime(experiment)
     if stage_config.embedding:
         config["embedding"] = {
             **config.get("embedding", {}),
@@ -380,11 +382,7 @@ def _data_extraction_stage_runtime(
     config: dict[str, Any] = {
         "schema_source": "generated" if generated_schema_source else "ground_truth",
         "schema_source_stage": source_stage,
-        "prompts": stage_config.prompts
-        or {
-            "prompt_table": "data_extraction_table_json.txt",
-            "prompt_attr": "data_extraction_attr_json.txt",
-        },
+        "prompts": stage_config.prompts or dict(DEFAULT_DATA_EXTRACTION_PROMPTS),
         "in_fields": stage_config.input_fields
         or {
             "document": "Document",
@@ -402,10 +400,12 @@ def _data_extraction_stage_runtime(
         config["disable_llm"] = True
         config["use_ground_truth"] = True
         config["mode"] = "ground_truth"
+    embedding_defaults = _data_extraction_embedding_defaults(experiment)
     if stage_config.doc_filter:
         doc_filter = {
             "enable_calibrate": DEFAULT_DOC_FILTER_ENABLE_CALIBRATE,
             "threshold": DEFAULT_DOC_FILTER_THRESHOLD,
+            **embedding_defaults,
             **stage_config.doc_filter.as_internal_dict(),
         }
         config["doc_filter"] = doc_filter
@@ -415,10 +415,56 @@ def _data_extraction_stage_runtime(
         config["proxy_runtime"] = {
             "predicate_proxy_mode": DEFAULT_PROXY_RUNTIME_MODE,
             "proxy_threshold": DEFAULT_PROXY_THRESHOLD,
+            **embedding_defaults,
             **stage_config.proxy_runtime.as_internal_dict(),
         }
     if stage_config.alpha_allocation:
         config["alpha_allocation"] = stage_config.alpha_allocation.as_internal_dict()
+    return config
+
+
+def _embedding_stage_runtime(experiment: ExperimentRuntime) -> dict[str, Any]:
+    embedding = experiment.models.embedding
+    if embedding is None:
+        return {}
+    config: dict[str, Any] = {
+        "enabled": True,
+        "provider": embedding.provider,
+        "model": embedding.model,
+        "api_key": embedding.api_key
+        or (os.getenv(embedding.api_key_env) if embedding.api_key_env else None),
+        "base_url": embedding.base_url,
+        "batch_size": embedding.batch_size,
+        "storage_file": embedding.storage_file,
+    }
+    if embedding.cache_dir is not None:
+        config["cache_dir"] = str(embedding.cache_dir)
+    if embedding.cache_file is not None:
+        config["cache_file"] = str(embedding.cache_file)
+    if embedding.storage_path is not None:
+        config["storage_path"] = str(embedding.storage_path)
+    return config
+
+
+def _data_extraction_embedding_defaults(experiment: ExperimentRuntime) -> dict[str, Any]:
+    embedding = experiment.models.embedding
+    if embedding is None or not embedding.enabled:
+        return {}
+    config: dict[str, Any] = {
+        "embedding_provider": embedding.provider,
+        "embedding_model": embedding.model,
+        "embedding_api_key": embedding.api_key
+        or (os.getenv(embedding.api_key_env) if embedding.api_key_env else None),
+        "embedding_base_url": embedding.base_url,
+        "embedding_batch_size": embedding.batch_size,
+        "embedding_storage_file": embedding.storage_file,
+    }
+    if embedding.cache_dir is not None:
+        config["embedding_cache_dir"] = str(embedding.cache_dir)
+    if embedding.cache_file is not None:
+        config["embedding_cache_file"] = str(embedding.cache_file)
+    if embedding.storage_path is not None:
+        config["embedding_storage_path"] = str(embedding.storage_path)
     return config
 
 

@@ -118,14 +118,14 @@ The supported primary stages are `preprocessing`, `schema_refinement`, and
 stages:
   preprocessing:
     enabled: true
-    prompt: schemagen_4_1
+    prompt: schemagen
     adaptive_sampling:
       enabled: false
 
   schema_refinement:
     enabled: true
     source_stage: preprocessing
-    prompt: schemagen_4_1
+    prompt: schemagen
     schema_tailoring:
       enabled: false
 

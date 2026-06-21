@@ -16,7 +16,6 @@ from typing import Any
 import pandas as pd
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DERIVED_ROOT = ROOT / "dataset" / "derived" / "deepseek_ablation_multi"
 CONFIG_ROOT = ROOT / "configs" / "examples"
@@ -485,8 +484,8 @@ def _base_config(dataset: dict[str, Any], variant: str) -> dict[str, Any]:
                 "schema_source": "ground_truth",
                 "oracle": "llm",
                 "prompts": {
-                    "prompt_table": "prompts/data_extraction_table_json.txt",
-                    "prompt_attr": "prompts/data_extraction_attr_json.txt",
+                    "prompt_table": "data_extraction_table",
+                    "prompt_attr": "data_extraction_attr",
                 },
                 "options": {
                     "force_rerun": True,
@@ -498,7 +497,7 @@ def _base_config(dataset: dict[str, Any], variant: str) -> dict[str, Any]:
                         "max_retries": 2,
                         "wait_time": 1,
                         "prompts": {
-                            "data_extraction_cmp_str": "prompts/eval_data_extraction_cmp_str.txt"
+                            "data_extraction_cmp_str": "data_extraction_cmp_str"
                         },
                     },
                 },
@@ -680,7 +679,6 @@ def run_semantic_evaluations(*, variants: set[str] | None = None, datasets: set[
     if not os.environ.get("DEEPSEEK_API_KEY"):
         raise RuntimeError("DEEPSEEK_API_KEY is not set")
     sys.path.insert(0, str(ROOT / "src"))
-    from redd.runners import run_evaluation
 
     manifest = _load_manifest()
     status_path = REPORT_ROOT / "ablation_multi_semantic_eval_status.json"

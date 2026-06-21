@@ -37,9 +37,12 @@ class SchemaGen(AdaptiveSamplingMixin):
         self.disable_llm = bool(config.get("disable_llm") or config.get("use_ground_truth"))
         self.prompt = None
         if not self.disable_llm:
+            prompt_reference = prompt_config.get("prompt_id") or prompt_config.get("prompt_path")
+            if prompt_reference is None:
+                raise ValueError("Schema prompt config must include `prompt_id` or `prompt_path`.")
             self.prompt = create_prompt(
                 self.mode,
-                prompt_config["prompt_path"],
+                prompt_reference,
                 llm_model=config["llm_model"],
                 api_key=api_key,
                 config=config,

@@ -17,7 +17,6 @@ from typing import Any
 import pandas as pd
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
 CANDIDATE_JSON = ROOT / "outputs" / "query_curation_expanded_v4" / "generated_query_candidates.json"
 CONFIG_ROOT = ROOT / "configs" / "examples"
@@ -212,8 +211,8 @@ def _base_config(prepared: list[PreparedDataset], variant: str) -> dict[str, Any
                 "schema_source": "ground_truth",
                 "oracle": "llm",
                 "prompts": {
-                    "prompt_table": "prompts/data_extraction_table_json.txt",
-                    "prompt_attr": "prompts/data_extraction_attr_json.txt",
+                    "prompt_table": "data_extraction_table",
+                    "prompt_attr": "data_extraction_attr",
                 },
                 "options": {
                     "force_rerun": True,
@@ -225,7 +224,7 @@ def _base_config(prepared: list[PreparedDataset], variant: str) -> dict[str, Any
                         "max_retries": 2,
                         "wait_time": 1,
                         "prompts": {
-                            "data_extraction_cmp_str": "prompts/eval_data_extraction_cmp_str.txt"
+                            "data_extraction_cmp_str": "data_extraction_cmp_str"
                         },
                     },
                 },

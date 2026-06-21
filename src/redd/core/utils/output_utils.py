@@ -6,6 +6,7 @@ from pathlib import Path
 from redd.exceptions import ArtifactNotFoundError, PromptExecutionError
 
 from .constants import ASSIGN_THRESHOLD, PATH_TEMPLATES
+from .prompt_registry import GENERAL_SCHEMA_REVISE_PROMPT_ID, SCHEMA_TAILOR_PROMPT_ID
 from .prompt_utils import create_prompt
 from .structured_outputs import SchemaUpdateOutput
 
@@ -114,7 +115,7 @@ def create_general_schema(config, res_dict, doc_dict, out_dn, param_str, qid=Non
         return
     schema_revise_prompt = create_prompt(
         config.get("mode", "openai"),
-        "prompts/general_schema_revise_1_0.txt",
+        GENERAL_SCHEMA_REVISE_PROMPT_ID,
         llm_model=config.get("llm_model", "gpt-4o"),
         api_key=config.get("api_key"),
     )
@@ -166,7 +167,7 @@ def create_tailored_schema(config, res_dict, doc_dict, out_dn, param_str, qid, q
         return
     schema_tailor_prompt = create_prompt(
         config.get("mode", "openai"),
-        "prompts/schema_tailor_1_0.txt",
+        SCHEMA_TAILOR_PROMPT_ID,
         llm_model=config.get("llm_model", "gpt-4o"),
         api_key=config.get("api_key"),
     )

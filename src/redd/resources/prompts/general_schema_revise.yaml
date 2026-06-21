@@ -1,0 +1,10 @@
+id: general_schema_revise
+purpose: Revise generated general schema names and attributes using example documents.
+input_fields:
+  - Schema
+  - Example Query
+output_schema: redd.core.utils.structured_outputs.SchemaUpdateOutput
+used_by:
+  - schema_generation.general_schema_revise
+owner: redd.schema
+template_variables: []

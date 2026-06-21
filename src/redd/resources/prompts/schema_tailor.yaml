@@ -1,0 +1,11 @@
+id: schema_tailor
+purpose: Remove query-irrelevant attributes from generated schemas.
+input_fields:
+  - Schema
+  - Query
+output_schema: redd.core.utils.structured_outputs.SchemaUpdateOutput
+used_by:
+  - schema_generation.schema_tailor
+  - schema_tailor.engine
+owner: redd.schema
+template_variables: []

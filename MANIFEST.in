@@ -6,3 +6,9 @@ include CITATION.cff
 include .env.example
 recursive-include docs *.md
 recursive-include configs *.yaml
+recursive-include src/redd/resources *.json
+recursive-include src/redd/resources/configs *.yaml
+recursive-include src/redd/resources/demo_data *
+recursive-include src/redd/resources/prompts *.txt *.yaml
+recursive-include src/redd/resources/web_demo *.html *.css *.js *.webp
+global-exclude __pycache__ *.py[cod]

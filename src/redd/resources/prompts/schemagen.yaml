@@ -1,0 +1,13 @@
+id: schemagen
+purpose: Iteratively generate or refine relational schemas from natural-language documents.
+input_fields:
+  - Document
+  - Query
+  - Record of Schema
+  - General Schema
+output_schema: redd.core.utils.structured_outputs.SchemaGenDocumentOutput
+used_by:
+  - schema_generation
+  - schema_refinement
+owner: redd.schema
+template_variables: []

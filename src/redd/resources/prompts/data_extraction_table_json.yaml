@@ -1,0 +1,10 @@
+id: data_extraction_table
+purpose: Assign a document to the best matching table in a provided schema.
+input_fields:
+  - Document
+  - Schema
+output_schema: redd.core.utils.structured_outputs.TableAssignmentOutput
+used_by:
+  - data_extraction.table_assignment
+owner: redd.data_extraction
+template_variables: []

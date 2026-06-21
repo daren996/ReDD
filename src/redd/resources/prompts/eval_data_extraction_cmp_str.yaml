@@ -1,0 +1,10 @@
+id: data_extraction_cmp_str
+purpose: Judge whether a predicted attribute value semantically matches ground truth.
+input_fields:
+  - Prediction
+  - Ground Truth
+output_schema: json_object[Reasoning,result]
+used_by:
+  - evaluation.semantic_comparison
+owner: redd.evaluation
+template_variables: []
