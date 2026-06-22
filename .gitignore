@@ -123,6 +123,9 @@ outputs/
 fig/
 tmp/
 
+# Legacy configs
+configs/legacy/
+
 # Local dataset indexes / generated databases
 dataset/**/*.sqlite3
 dataset/**/*.db
