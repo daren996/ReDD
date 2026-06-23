@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import sqlite3
 from abc import ABC, abstractmethod
@@ -28,6 +29,7 @@ from redd.core.utils.constants import (
     PATH_TEMPLATES,
     PREDICTION_KEY,
     RESULT_DATA_KEY,
+    RESULT_RECORD_ID_KEY,
     RESULT_TABLE_KEY,
     SCHEMA_NAME_KEY,
 )
@@ -37,6 +39,7 @@ from redd.core.utils.data_split import (
     resolve_training_data_split_seed,
     split_doc_ids,
 )
+from redd.core.utils.extraction_records import active_result_records
 from redd.core.utils.sql_filter_parser import analyze_sql_predicates, get_join_graph
 from redd.core.utils.utils import is_null
 
@@ -356,6 +359,7 @@ class EvalDataExtraction(EvalBasic):
         self.eval_api_key: Optional[str] = None
         self.eval_llm_model = ""
         self.full_table_semantic_enabled = bool(eval_config.get("full_table_semantic", True))
+        self._current_eval_query_id: Optional[str] = None
 
         if "committee" in eval_config:
             self._initialize_committee(eval_config, api_key)
@@ -569,6 +573,7 @@ class EvalDataExtraction(EvalBasic):
             return
 
         logging.info("[%s:_evaluate_query] Start evaluating query %s: %s", self.__class__.__name__, query_id, query)
+        self._current_eval_query_id = query_id
         self.name_map = self._load_or_generate_mapping(query_id, loader)
         self.prediction_data, self.gt_data = self._prepare_evaluation_data(loader, result_dict)
         query_aware_eval = self.compute_query_aware_statistics(loader, result_dict, query_id, query_info)
@@ -611,12 +616,15 @@ class EvalDataExtraction(EvalBasic):
                 full_table_semantic_stats,
             )
             full_table_semantic_stats["match_result_path"] = str(semantic_match_path)
+        optimization_summary = self._collect_query_optimization_summary(query_id)
         self._display_results(dataset_name, query_id, tp, fp, fn, tn, correct, total, attr_stats)
         self._display_query_aware_results(query_aware_eval)
+        self._display_optimization_summary(optimization_summary)
 
         eval_results = {
             "query_aware": query_aware_eval.to_dict(),
             "legacy": {"doc_stats": doc_stats, "attr_stats": attr_stats},
+            "optimization_summary": optimization_summary,
         }
         if full_table_semantic_stats is not None:
             eval_results["full_table_semantic"] = full_table_semantic_stats
@@ -648,20 +656,77 @@ class EvalDataExtraction(EvalBasic):
                 )
                 continue
 
-            prediction_data.append(
-                {
-                    "doc_id": doc_id,
-                    "table": result_dict[doc_id].get("res"),
-                    "data": result_dict[doc_id].get("data", {}),
-                }
-            )
-            ground_truth_data.append(
-                {
-                    "doc_id": doc_id,
-                    "table": loader.get_doc_table(doc_id),
-                    "data": loader.get_doc_data(doc_id),
-                }
-            )
+            pred_records = active_result_records(result_dict.get(doc_id))
+            gt_records = cur_info.get("data_records") or []
+            if not gt_records and cur_info.get("table"):
+                gt_records = [{"table_name": cur_info.get("table"), "data": cur_info.get("data", {})}]
+
+            used_pred_indices: set[int] = set()
+            for gt_index, gt_record in enumerate(gt_records):
+                if not isinstance(gt_record, dict):
+                    continue
+                gt_table = gt_record.get("table_name") or gt_record.get("table")
+                gt_data = gt_record.get("data", {})
+                if not isinstance(gt_data, dict):
+                    gt_data = {}
+
+                candidate_indices = [
+                    index
+                    for index, record in enumerate(pred_records)
+                    if index not in used_pred_indices and record.get("table") == gt_table
+                ]
+                pred_record: Dict[str, Any] = {}
+                if candidate_indices:
+                    pred_index = max(
+                        candidate_indices,
+                        key=lambda index: sum(
+                            1
+                            for attr, value in gt_data.items()
+                            if self._compare_attribute_values(
+                                pred_records[index].get(RESULT_DATA_KEY, {}).get(attr)
+                                if isinstance(pred_records[index].get(RESULT_DATA_KEY, {}), dict)
+                                else None,
+                                value,
+                            )
+                        ),
+                    )
+                    used_pred_indices.add(pred_index)
+                    pred_record = pred_records[pred_index]
+
+                prediction_data.append(
+                    {
+                        "doc_id": doc_id,
+                        "record_id": pred_record.get(RESULT_RECORD_ID_KEY),
+                        "table": pred_record.get("table"),
+                        "data": pred_record.get(RESULT_DATA_KEY, {}),
+                    }
+                )
+                ground_truth_data.append(
+                    {
+                        "doc_id": doc_id,
+                        "record_id": (
+                            gt_record.get(RESULT_RECORD_ID_KEY)
+                            or gt_record.get("record_id")
+                            or gt_record.get("row_id")
+                            or gt_record.get("source_row_id")
+                            or gt_index
+                        ),
+                        "table": gt_table,
+                        "data": gt_data,
+                    }
+                )
+
+            if not gt_records and pred_records:
+                for pred_record in pred_records:
+                    prediction_data.append(
+                        {
+                            "doc_id": doc_id,
+                            "record_id": pred_record.get(RESULT_RECORD_ID_KEY),
+                            "table": pred_record.get("table"),
+                            "data": pred_record.get(RESULT_DATA_KEY, {}),
+                        }
+                    )
+                    ground_truth_data.append({"doc_id": doc_id, "table": None, "data": {}})
 
         return prediction_data, ground_truth_data
 
@@ -720,14 +785,14 @@ class EvalDataExtraction(EvalBasic):
                 required_by_table,
                 answer_doc_ids_by_table=answer_doc_ids_by_table,
             )
-            pred_record = result_dict.get(doc_id) if isinstance(result_dict.get(doc_id), dict) else {}
-            pred_table = pred_record.get(RESULT_TABLE_KEY)
-            pred_data = pred_record.get(RESULT_DATA_KEY, {})
-            if not isinstance(pred_data, dict):
-                pred_data = {}
+            pred_entry = result_dict.get(doc_id) if isinstance(result_dict.get(doc_id), dict) else {}
+            pred_records = active_result_records(pred_entry)
+            pred_tables = [record.get("table") for record in pred_records]
+            used_pred_indices: set[int] = set()
 
             doc_detail = {
-                "pred_table": pred_table,
+                "pred_table": pred_tables[0] if pred_tables else None,
+                "pred_tables": pred_tables,
                 "required_tables": [],
                 "table_ok": True,
                 "cells_total": 0,
@@ -743,7 +808,41 @@ class EvalDataExtraction(EvalBasic):
                 doc_detail["required_tables"].append(gt_table)
                 table_total += 1
 
-                table_ok = pred_table == gt_table
+                candidate_indices = [
+                    index
+                    for index, record in enumerate(pred_records)
+                    if index not in used_pred_indices and record.get("table") == gt_table
+                ]
+                pred_index = None
+                pred_data: Dict[str, Any] = {}
+                if candidate_indices:
+                    attrs_for_table = required_by_table.get(gt_table, [])
+
+                    def score_candidate(index: int) -> tuple[int, int]:
+                        data = pred_records[index].get(RESULT_DATA_KEY, {})
+                        if not isinstance(data, dict):
+                            data = {}
+                        strict_matches = sum(
+                            1
+                            for attr in attrs_for_table
+                            if self._compare_attribute_values(data.get(attr), gt_data.get(attr))
+                        )
+                        non_null_values = sum(
+                            1 for attr in attrs_for_table if not is_null(data.get(attr))
+                        )
+                        return strict_matches, non_null_values
+
+                    pred_index = max(candidate_indices, key=score_candidate)
+                    used_pred_indices.add(pred_index)
+                    raw_pred_data = pred_records[pred_index].get(RESULT_DATA_KEY, {})
+                    pred_data = raw_pred_data if isinstance(raw_pred_data, dict) else {}
+
+                pred_table = (
+                    pred_records[pred_index].get("table")
+                    if pred_index is not None
+                    else (pred_tables[0] if pred_tables else None)
+                )
+                table_ok = pred_index is not None
                 if table_ok:
                     table_covered += 1
                 else:
@@ -838,33 +937,58 @@ class EvalDataExtraction(EvalBasic):
                         layer_stat["mismatched"] += 1
                         doc_detail["mismatched"].append(miss)
 
-            if not gt_records and not is_null(pred_table):
-                for attr, pred_value in pred_data.items():
-                    if not is_null(pred_value):
-                        extra_cells.append(
-                            {
-                                "doc_id": doc_id,
-                                "table": pred_table,
-                                "attr": attr,
-                                "pred": pred_value,
-                                "reason": "doc_not_required_for_query",
-                            }
-                        )
-            elif pred_table in required_tables:
-                expected_attrs = set(required_by_table.get(str(pred_table), []))
-                for attr, pred_value in pred_data.items():
-                    if attr not in expected_attrs and not is_null(pred_value):
-                        extra_cells.append(
-                            {
-                                "doc_id": doc_id,
-                                "table": pred_table,
-                                "attr": attr,
-                                "pred": pred_value,
-                                "reason": "attr_not_required_for_query",
-                            }
-                        )
+            if not gt_records:
+                for record in pred_records:
+                    pred_table = record.get("table")
+                    pred_data = record.get(RESULT_DATA_KEY, {})
+                    if not isinstance(pred_data, dict) or is_null(pred_table):
+                        continue
+                    for attr, pred_value in pred_data.items():
+                        if not is_null(pred_value):
+                            extra_cells.append(
+                                {
+                                    "doc_id": doc_id,
+                                    "table": pred_table,
+                                    "attr": attr,
+                                    "pred": pred_value,
+                                    "reason": "doc_not_required_for_query",
+                                }
+                            )
+            else:
+                for index, record in enumerate(pred_records):
+                    pred_table = record.get("table")
+                    if pred_table not in required_tables:
+                        continue
+                    pred_data = record.get(RESULT_DATA_KEY, {})
+                    if not isinstance(pred_data, dict):
+                        continue
+                    expected_attrs = set(required_by_table.get(str(pred_table), []))
+                    if index not in used_pred_indices:
+                        for attr, pred_value in pred_data.items():
+                            if not is_null(pred_value):
+                                extra_cells.append(
+                                    {
+                                        "doc_id": doc_id,
+                                        "table": pred_table,
+                                        "attr": attr,
+                                        "pred": pred_value,
+                                        "reason": "extra_record_for_query",
+                                    }
+                                )
+                        continue
+                    for attr, pred_value in pred_data.items():
+                        if attr not in expected_attrs and not is_null(pred_value):
+                            extra_cells.append(
+                                {
+                                    "doc_id": doc_id,
+                                    "table": pred_table,
+                                    "attr": attr,
+                                    "pred": pred_value,
+                                    "reason": "attr_not_required_for_query",
+                                }
+                            )
 
-            if gt_records or not is_null(pred_table):
+            if gt_records or pred_records:
                 doc_details[doc_id] = doc_detail
 
         answer_recall = self._evaluate_answer_recall(
@@ -1171,6 +1295,701 @@ class EvalDataExtraction(EvalBasic):
         else:
             print(f"{'SQL answer recall':<24}not executable: {answer.get('reason')}")
         print("=" * width)
+
+    def _display_optimization_summary(self, summary: Dict[str, Any], width: int = 80) -> None:
+        if not summary.get("has_metrics"):
+            return
+        llm_usage = summary.get("llm_usage", {})
+        doc_call = summary.get("doc_call_optimization", {})
+        token_opt = summary.get("token_optimization", {})
+
+        print("\n" + "=" * width)
+        print("Optimization Summary")
+        print("-" * width)
+        print(
+            f"{'Actual LLM calls':<24}"
+            f"{llm_usage.get('calls', 0)} "
+            f"(tokens={llm_usage.get('total_tokens', 0)})"
+        )
+        if doc_call.get("calls_before") is not None:
+            print(
+                f"{'Doc-call savings':<24}"
+                f"{doc_call.get('calls_saved', 0)}/{doc_call.get('calls_before', 0)} = "
+                f"{(doc_call.get('call_reduction') or 0):.2%}"
+            )
+        if token_opt.get("estimated_tokens_saved") is not None:
+            print(
+                f"{'Estimated tokens saved':<24}"
+                f"{token_opt['estimated_tokens_saved']} "
+                f"({(token_opt.get('estimated_token_reduction') or 0):.2%})"
+            )
+        print("=" * width)
+
+    def _collect_query_optimization_summary(self, query_id: str) -> Dict[str, Any]:
+        llm_usage = self._collect_query_llm_usage(query_id)
+        doc_call_optimization = self._collect_query_doc_call_optimization(query_id)
+        token_optimization = self._estimate_query_token_optimization(
+            llm_usage=llm_usage,
+            doc_call_optimization=doc_call_optimization,
+        )
+        enabled_optimizations = self._describe_enabled_query_optimizations(
+            llm_usage=llm_usage,
+            doc_call_optimization=doc_call_optimization,
+            token_optimization=token_optimization,
+        )
+        has_metrics = bool(
+            llm_usage.get("calls")
+            or doc_call_optimization.get("by_stage")
+        )
+        return {
+            "scope": "query",
+            "query_id": query_id,
+            "has_metrics": has_metrics,
+            "enabled_optimizations": enabled_optimizations,
+            "llm_usage": llm_usage,
+            "doc_call_optimization": doc_call_optimization,
+            "token_optimization": token_optimization,
+            "notes": [
+                "llm_usage is actual provider/runtime accounting when REDD_LLM_USAGE_LOG is available.",
+                "doc_call_optimization is derived from optimization artifacts and uses document-call equivalents.",
+                "token_optimization is estimated from observed tokens per call when exact skipped-call tokens are unavailable.",
+            ],
+        }
+
+    @staticmethod
+    def _optimization_description(stage_id: str) -> Dict[str, str]:
+        descriptions = {
+            "doc_filter": {
+                "name": "Document Filter",
+                "optimized_part": "Phase 0: query-specific document filtering before extraction",
+                "optimized_what": (
+                    "Reduces documents that continue into expensive table assignment and "
+                    "attribute/oracle extraction."
+                ),
+                "usage_stage_basis": "",
+            },
+            "table_assignment_cache": {
+                "name": "Table Assignment Cache",
+                "optimized_part": "Phase 1: table assignment",
+                "optimized_what": (
+                    "Reuses cached or metadata-derived table assignments so fewer documents "
+                    "need table-assignment LLM calls."
+                ),
+                "usage_stage_basis": "table_assignment",
+            },
+            "schema_adaptive": {
+                "name": "Schema Adaptive Sampling",
+                "optimized_part": "Schema refinement / schema sampling",
+                "optimized_what": (
+                    "Stops schema-related document processing once the adaptive sampler has "
+                    "enough evidence."
+                ),
+                "usage_stage_basis": "schema_refinement",
+            },
+            "proxy_runtime": {
+                "name": "Proxy Runtime",
+                "optimized_part": "Phase 2: predicate proxy before oracle/attribute extraction",
+                "optimized_what": (
+                    "Filters documents with lightweight proxies so fewer documents reach the "
+                    "expensive oracle/LLM extraction path."
+                ),
+                "usage_stage_basis": "proxy_runtime_oracle",
+            },
+        }
+        return descriptions.get(
+            stage_id,
+            {
+                "name": stage_id,
+                "optimized_part": stage_id,
+                "optimized_what": "Reduces document-call work in this stage.",
+                "usage_stage_basis": stage_id,
+            },
+        )
+
+    def _describe_enabled_query_optimizations(
+        self,
+        *,
+        llm_usage: Dict[str, Any],
+        doc_call_optimization: Dict[str, Any],
+        token_optimization: Dict[str, Any],
+    ) -> List[Dict[str, Any]]:
+        stages = doc_call_optimization.get("by_stage")
+        if not isinstance(stages, dict):
+            return []
+        token_by_stage = token_optimization.get("by_stage")
+        if not isinstance(token_by_stage, dict):
+            token_by_stage = {}
+        usage_by_stage = llm_usage.get("by_stage")
+        if not isinstance(usage_by_stage, dict):
+            usage_by_stage = {}
+
+        order = ["doc_filter", "table_assignment_cache", "schema_adaptive", "proxy_runtime"]
+        stage_ids = [stage_id for stage_id in order if stage_id in stages]
+        stage_ids.extend(sorted(stage_id for stage_id in stages if stage_id not in set(stage_ids)))
+        enabled: List[Dict[str, Any]] = []
+        for index, stage_id in enumerate(stage_ids, start=1):
+            stage = stages.get(stage_id)
+            if not isinstance(stage, dict):
+                continue
+            desc = self._optimization_description(stage_id)
+            token_stage = token_by_stage.get(stage_id)
+            if not isinstance(token_stage, dict):
+                token_stage = {}
+            usage_stage_id = str(token_stage.get("usage_stage_basis") or desc.get("usage_stage_basis") or "")
+            actual_usage = usage_by_stage.get(usage_stage_id) if usage_stage_id else None
+            if not isinstance(actual_usage, dict):
+                actual_usage = {}
+            details = stage.get("details") if isinstance(stage.get("details"), list) else []
+            artifacts = sorted(
+                {
+                    str(detail.get("artifact"))
+                    for detail in details
+                    if isinstance(detail, dict) and detail.get("artifact")
+                }
+            )
+            calls_before = self._metric_int(stage.get("calls_before")) or 0
+            calls_after = self._metric_int(stage.get("calls_after")) or 0
+            calls_saved = self._metric_int(stage.get("calls_saved")) or 0
+            reduction = self._metric_float(stage.get("call_reduction"))
+            token_saved = self._metric_int(token_stage.get("estimated_tokens_saved"))
+            summary = (
+                f"{desc['name']} optimized {desc['optimized_part']}; "
+                f"saved {calls_saved}/{calls_before} document-call equivalents"
+            )
+            if reduction is not None:
+                summary += f" ({reduction:.2%})"
+            if token_saved is not None:
+                summary += f", estimated {token_saved} tokens saved"
+            summary += "."
+            enabled.append(
+                {
+                    "index": index,
+                    "id": stage_id,
+                    "name": desc["name"],
+                    "enabled": True,
+                    "optimized_part": desc["optimized_part"],
+                    "optimized_what": desc["optimized_what"],
+                    "summary": summary,
+                    "doc_call_savings": {
+                        "unit": stage.get("unit", "doc_call"),
+                        "calls_before": calls_before,
+                        "calls_after": calls_after,
+                        "calls_saved": calls_saved,
+                        "call_reduction": reduction,
+                    },
+                    "token_savings": {
+                        "status": token_optimization.get("status"),
+                        "estimated_tokens_saved": token_saved,
+                        "tokens_per_call_basis": token_stage.get("tokens_per_call_basis"),
+                        "usage_stage_basis": usage_stage_id or None,
+                    },
+                    "actual_llm_usage_after": {
+                        "calls": actual_usage.get("calls", 0),
+                        "prompt_tokens": actual_usage.get("prompt_tokens", 0),
+                        "completion_tokens": actual_usage.get("completion_tokens", 0),
+                        "total_tokens": actual_usage.get("total_tokens", 0),
+                    },
+                    "evidence_artifacts": artifacts,
+                    "details": details,
+                }
+            )
+        return enabled
+
+    @staticmethod
+    def _empty_llm_usage_totals() -> Dict[str, Any]:
+        return {
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "entries_with_token_usage": 0,
+            "tokens_missing_calls": 0,
+        }
+
+    @staticmethod
+    def _metric_int(value: Any) -> Optional[int]:
+        try:
+            if value is None:
+                return None
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
+    @staticmethod
+    def _metric_float(value: Any) -> Optional[float]:
+        try:
+            if value is None:
+                return None
+            return float(value)
+        except (TypeError, ValueError):
+            return None
+
+    def _add_llm_usage(self, totals: Dict[str, Any], item: Dict[str, Any]) -> None:
+        usage = item.get("usage") if isinstance(item.get("usage"), dict) else {}
+        totals["calls"] += 1
+        has_token_usage = False
+        for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+            value = self._metric_int(usage.get(key))
+            if value is not None:
+                has_token_usage = True
+                totals[key] += value
+        if has_token_usage:
+            totals["entries_with_token_usage"] += 1
+        else:
+            totals["tokens_missing_calls"] += 1
+
+    @staticmethod
+    def _usage_context(item: Dict[str, Any]) -> Dict[str, Any]:
+        context = item.get("context")
+        if not isinstance(context, dict):
+            context = {}
+        result = dict(context)
+        for key in ("query_id", "stage"):
+            if key not in result and key in item:
+                result[key] = item.get(key)
+        return result
+
+    def _collect_query_llm_usage(self, query_id: str) -> Dict[str, Any]:
+        totals = self._empty_llm_usage_totals()
+        unattributed = self._empty_llm_usage_totals()
+        by_stage: Dict[str, Dict[str, Any]] = {}
+        unattributed_by_stage: Dict[str, Dict[str, Any]] = {}
+        source_files: set[str] = set()
+        matching_source_files: set[str] = set()
+
+        for path in self._llm_usage_log_candidates():
+            if not path.exists() or not path.is_file():
+                continue
+            source_files.add(str(path))
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except OSError:
+                continue
+            for line in lines:
+                if not line.strip():
+                    continue
+                try:
+                    item = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if not isinstance(item, dict):
+                    continue
+                context = self._usage_context(item)
+                stage = str(context.get("stage") or "unattributed")
+                item_query_id = context.get("query_id")
+                if item_query_id is not None and str(item_query_id) == str(query_id):
+                    matching_source_files.add(str(path))
+                    self._add_llm_usage(totals, item)
+                    stage_totals = by_stage.setdefault(stage, self._empty_llm_usage_totals())
+                    self._add_llm_usage(stage_totals, item)
+                elif item_query_id in (None, ""):
+                    self._add_llm_usage(unattributed, item)
+                    stage_totals = unattributed_by_stage.setdefault(
+                        stage,
+                        self._empty_llm_usage_totals(),
+                    )
+                    self._add_llm_usage(stage_totals, item)
+
+        return {
+            **totals,
+            "source_files": sorted(matching_source_files),
+            "candidate_source_files": sorted(source_files),
+            "by_stage": by_stage,
+            "unattributed": {
+                **unattributed,
+                "by_stage": unattributed_by_stage,
+            },
+            "token_accounting_complete": (
+                totals["calls"] > 0 and totals["tokens_missing_calls"] == 0
+            ),
+        }
+
+    def _llm_usage_log_candidates(self) -> List[Path]:
+        candidates: List[Path] = []
+
+        def add(value: Any) -> None:
+            if not value:
+                return
+            if isinstance(value, (list, tuple, set)):
+                for item in value:
+                    add(item)
+                return
+            try:
+                candidates.append(Path(str(value)).expanduser())
+            except TypeError:
+                return
+
+        add(os.getenv("REDD_LLM_USAGE_LOG"))
+        for container in (
+            self.config,
+            self.config.get("eval", {}) if isinstance(self.config.get("eval"), dict) else {},
+            self.config.get("runtime", {}) if isinstance(self.config.get("runtime"), dict) else {},
+        ):
+            if not isinstance(container, dict):
+                continue
+            for key in ("llm_usage_log", "usage_log", "llm_usage_logs", "usage_logs"):
+                add(container.get(key))
+
+        roots = [
+            self.out_root,
+            self.out_root / "reports",
+            self.out_root.parent,
+            self.out_root.parent / "reports",
+            self.out_root.parent.parent,
+            self.out_root.parent.parent / "reports",
+        ]
+        for root in roots:
+            if not root.exists() or not root.is_dir():
+                continue
+            for pattern in ("*llm_usage*.jsonl", "usage*.jsonl"):
+                candidates.extend(root.glob(pattern))
+
+        unique: Dict[str, Path] = {}
+        for path in candidates:
+            try:
+                key = str(path.resolve())
+            except OSError:
+                key = str(path)
+            unique[key] = path
+        return list(unique.values())
+
+    @staticmethod
+    def _safe_read_json(path: Path) -> Dict[str, Any]:
+        try:
+            with path.open("r", encoding="utf-8") as file:
+                payload = json.load(file)
+            return payload if isinstance(payload, dict) else {}
+        except Exception:
+            return {}
+
+    @staticmethod
+    def _query_id_from_filter_name(name: str) -> Optional[str]:
+        match = re.match(r"(?:doc|chunk)_filter_(?P<query>.+?)(?:_.+)?\.json$", name)
+        return match.group("query") if match else None
+
+    def _query_id_from_result_name(self, name: str) -> Optional[str]:
+        prefix = "res_tabular_data_"
+        suffix = f"_{self.res_param_str}.json"
+        if not name.startswith(prefix) or not name.endswith(suffix):
+            return None
+        return name[len(prefix) : -len(suffix)]
+
+    def _stage_call_summary(
+        self,
+        *,
+        stage_id: str,
+        title: str,
+        before: int,
+        after: int,
+        details: List[Dict[str, Any]],
+        unit: str = "doc_call",
+    ) -> Dict[str, Any]:
+        before = max(int(before), 0)
+        after = max(int(after), 0)
+        saved = max(before - after, 0)
+        return {
+            "id": stage_id,
+            "title": title,
+            "unit": unit,
+            "calls_before": before,
+            "calls_after": after,
+            "calls_saved": saved,
+            "call_reduction": saved / before if before else None,
+            "llm_doc_calls_before": before,
+            "llm_doc_calls_after": after,
+            "llm_doc_calls_saved": saved,
+            "llm_doc_call_reduction": saved / before if before else None,
+            "details": details,
+        }
+
+    def _collect_query_doc_call_optimization(self, query_id: str) -> Dict[str, Any]:
+        stages: Dict[str, Dict[str, Any]] = {}
+        for stage in (
+            self._doc_filter_doc_call_stage(query_id),
+            self._table_assignment_cache_doc_call_stage(query_id),
+            self._schema_adaptive_doc_call_stage(query_id),
+            self._proxy_runtime_doc_call_stage(query_id),
+        ):
+            if stage is not None:
+                stages[stage["id"]] = stage
+
+        calls_before = sum(stage["calls_before"] for stage in stages.values())
+        calls_after = sum(stage["calls_after"] for stage in stages.values())
+        calls_saved = sum(stage["calls_saved"] for stage in stages.values())
+        return {
+            "status": "measured" if stages else "no_metrics",
+            "unit": "doc_call",
+            "calls_before": calls_before if stages else None,
+            "calls_after": calls_after if stages else None,
+            "calls_saved": calls_saved if stages else None,
+            "call_reduction": calls_saved / calls_before if calls_before else None,
+            "by_stage": stages,
+        }
+
+    def _doc_filter_doc_call_stage(self, query_id: str) -> Optional[Dict[str, Any]]:
+        details: List[Dict[str, Any]] = []
+        before = after = 0
+        for path in sorted((self.out_root / "doc_filter").glob("*.json")):
+            content = self._safe_read_json(path)
+            path_query_id = str(content.get("query_id") or self._query_id_from_filter_name(path.name) or "")
+            if path_query_id != str(query_id):
+                continue
+            metadata = content.get("metadata") if isinstance(content.get("metadata"), dict) else {}
+            input_docs = self._metric_int(metadata.get("num_docs_input"))
+            kept_docs = self._metric_int(metadata.get("num_docs_kept"))
+            excluded_docs = self._metric_int(metadata.get("num_docs_excluded"))
+            if kept_docs is None:
+                kept_docs = len(content.get("kept_doc_ids") or [])
+            if excluded_docs is None:
+                excluded_docs = len(content.get("excluded_doc_ids") or [])
+            if input_docs is None:
+                input_docs = kept_docs + excluded_docs
+            before += input_docs
+            after += kept_docs
+            details.append(
+                {
+                    "artifact": str(path),
+                    "query_id": path_query_id,
+                    "input_docs": input_docs,
+                    "kept_docs": kept_docs,
+                    "excluded_docs": excluded_docs,
+                }
+            )
+        if not details:
+            return None
+        return self._stage_call_summary(
+            stage_id="doc_filter",
+            title="Document Filter",
+            before=before,
+            after=after,
+            details=details,
+        )
+
+    def _table_assignment_cache_doc_call_stage(self, query_id: str) -> Optional[Dict[str, Any]]:
+        path = self.out_root / "table_assignment_cache.json"
+        content = self._safe_read_json(path)
+        events = content.get("events")
+        if not isinstance(events, list):
+            return None
+        before = after = 0
+        details: List[Dict[str, Any]] = []
+        for event in events:
+            if not isinstance(event, dict) or str(event.get("query_id") or "") != str(query_id):
+                continue
+            input_docs = self._metric_int(event.get("input_docs")) or 0
+            excluded = self._metric_int(event.get("excluded")) or 0
+            cache_misses = self._metric_int(event.get("cache_misses")) or 0
+            calls_before = max(input_docs - excluded, 0)
+            calls_after = cache_misses
+            before += calls_before
+            after += calls_after
+            details.append(
+                {
+                    "artifact": str(path),
+                    "query_id": str(query_id),
+                    "input_docs": input_docs,
+                    "excluded": excluded,
+                    "cache_hits": self._metric_int(event.get("cache_hits")) or 0,
+                    "cache_misses": cache_misses,
+                    "source_table_metadata_hits": self._metric_int(
+                        event.get("source_table_metadata_hits")
+                    )
+                    or 0,
+                    "source_table_metadata_misses": self._metric_int(
+                        event.get("source_table_metadata_misses")
+                    )
+                    or 0,
+                }
+            )
+        if not details:
+            return None
+        return self._stage_call_summary(
+            stage_id="table_assignment_cache",
+            title="Table Assignment Cache",
+            before=before,
+            after=after,
+            details=details,
+        )
+
+    def _schema_adaptive_doc_call_stage(self, query_id: str) -> Optional[Dict[str, Any]]:
+        before = after = 0
+        details: List[Dict[str, Any]] = []
+        for path in sorted(self.out_root.rglob("*_adaptive_stats.json")):
+            path_query_id = self._query_id_from_adaptive_stats_name(path.name)
+            if path_query_id is not None and str(path_query_id) != str(query_id):
+                continue
+            content = self._safe_read_json(path)
+            total = self._metric_int(content.get("filtered_documents"))
+            if total is None:
+                total = self._metric_int(content.get("total_documents")) or 0
+            processed = self._metric_int(content.get("documents_processed"))
+            if processed is None:
+                processed = self._metric_int(content.get("n_processed")) or 0
+            saved = self._metric_int(content.get("documents_saved"))
+            if saved is not None and total is None:
+                total = processed + saved
+            before += total or 0
+            after += processed or 0
+            details.append(
+                {
+                    "artifact": str(path),
+                    "query_id": path_query_id or query_id,
+                    "documents_before": total or 0,
+                    "documents_processed": processed or 0,
+                    "documents_saved": max((total or 0) - (processed or 0), 0),
+                }
+            )
+        if not details:
+            return None
+        return self._stage_call_summary(
+            stage_id="schema_adaptive",
+            title="Schema Adaptive Sampling",
+            before=before,
+            after=after,
+            details=details,
+        )
+
+    @staticmethod
+    def _query_id_from_adaptive_stats_name(name: str) -> Optional[str]:
+        match = re.match(r".*?(?P<query>q\d+|Q\d+).*_adaptive_stats\.json$", name)
+        return match.group("query") if match else None
+
+    def _proxy_runtime_doc_call_stage(self, query_id: str) -> Optional[Dict[str, Any]]:
+        expected = self.out_root / (
+            Path(PATH_TEMPLATES.data_extraction_result(query_id, self.res_param_str)).stem
+            + "_proxy_decisions.json"
+        )
+        files = [expected] if expected.exists() else []
+        if not files:
+            files = [
+                path
+                for path in self.out_root.rglob("*_proxy_decisions.json")
+                if self._query_id_from_proxy_decision_name(path.name) == str(query_id)
+            ]
+        before = after = 0
+        details: List[Dict[str, Any]] = []
+        for path in sorted(set(files)):
+            content = self._safe_read_json(path)
+            for table_name, table_decision in content.items():
+                if not isinstance(table_decision, dict):
+                    continue
+                stage_before, stage_after = self._proxy_llm_doc_call_counts(table_decision)
+                before += stage_before
+                after += stage_after
+                details.append(
+                    {
+                        "artifact": str(path),
+                        "query_id": query_id,
+                        "table": table_name,
+                        "llm_doc_calls_before": stage_before,
+                        "llm_doc_calls_after": stage_after,
+                        "llm_doc_calls_saved": max(stage_before - stage_after, 0),
+                    }
+                )
+        if not details:
+            return None
+        return self._stage_call_summary(
+            stage_id="proxy_runtime",
+            title="Proxy Runtime",
+            before=before,
+            after=after,
+            details=details,
+        )
+
+    def _query_id_from_proxy_decision_name(self, name: str) -> Optional[str]:
+        prefix = "res_tabular_data_"
+        suffix = f"_{self.res_param_str}_proxy_decisions.json"
+        if not name.startswith(prefix) or not name.endswith(suffix):
+            return None
+        return name[len(prefix) : -len(suffix)]
+
+    def _proxy_llm_doc_call_counts(self, table_decision: Dict[str, Any]) -> Tuple[int, int]:
+        all_doc_ids = table_decision.get("all_doc_ids")
+        passed_doc_ids = table_decision.get("passed_doc_ids")
+        extracted_doc_ids = table_decision.get("extracted_doc_ids")
+        if isinstance(all_doc_ids, list) and isinstance(passed_doc_ids, list):
+            after_ids = extracted_doc_ids if isinstance(extracted_doc_ids, list) else passed_doc_ids
+            return len(set(map(str, all_doc_ids))), len(set(map(str, after_ids)))
+
+        proxy_stats = table_decision.get("proxy_stats")
+        if not isinstance(proxy_stats, dict):
+            return 0, 0
+        evaluated_counts: List[int] = []
+        passed_counts: List[int] = []
+        for stat in proxy_stats.values():
+            if not isinstance(stat, dict):
+                continue
+            evaluated = self._metric_int(stat.get("evaluated"))
+            passed = self._metric_int(stat.get("passed"))
+            if evaluated is not None:
+                evaluated_counts.append(evaluated)
+            if passed is not None:
+                passed_counts.append(passed)
+        before = max(evaluated_counts) if evaluated_counts else 0
+        after = min(passed_counts) if passed_counts else before
+        return before, after
+
+    def _estimate_query_token_optimization(
+        self,
+        *,
+        llm_usage: Dict[str, Any],
+        doc_call_optimization: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        observed_tokens = int(llm_usage.get("total_tokens") or 0)
+        observed_calls = int(llm_usage.get("calls") or 0)
+        calls_saved = doc_call_optimization.get("calls_saved")
+        if not observed_tokens or not observed_calls or not calls_saved:
+            return {
+                "status": "unavailable",
+                "reason": "Token savings require token-bearing usage logs and doc-call savings.",
+                "observed_tokens_after": observed_tokens,
+                "estimated_tokens_before": None,
+                "estimated_tokens_saved": None,
+                "estimated_token_reduction": None,
+                "by_stage": {},
+            }
+
+        overall_avg = observed_tokens / observed_calls
+        by_stage_usage = llm_usage.get("by_stage", {})
+        stage_usage_map = {
+            "table_assignment_cache": "table_assignment",
+            "proxy_runtime": "proxy_runtime_oracle",
+            "schema_adaptive": "schema_refinement",
+            "doc_filter": None,
+        }
+        estimated_by_stage: Dict[str, Dict[str, Any]] = {}
+        estimated_saved_total = 0.0
+        for stage_id, stage in (doc_call_optimization.get("by_stage") or {}).items():
+            saved = int(stage.get("calls_saved") or 0)
+            usage_stage_id = stage_usage_map.get(stage_id, stage_id)
+            stage_avg = overall_avg
+            if usage_stage_id and isinstance(by_stage_usage.get(usage_stage_id), dict):
+                usage_stage = by_stage_usage[usage_stage_id]
+                stage_calls = int(usage_stage.get("calls") or 0)
+                stage_tokens = int(usage_stage.get("total_tokens") or 0)
+                if stage_calls and stage_tokens:
+                    stage_avg = stage_tokens / stage_calls
+            estimated_saved = saved * stage_avg
+            estimated_saved_total += estimated_saved
+            estimated_by_stage[stage_id] = {
+                "calls_saved": saved,
+                "estimated_tokens_saved": round(estimated_saved),
+                "tokens_per_call_basis": stage_avg,
+                "usage_stage_basis": usage_stage_id or "overall_query_average",
+            }
+
+        estimated_before = observed_tokens + estimated_saved_total
+        return {
+            "status": "estimated",
+            "estimation_method": "observed_tokens_per_call_times_doc_calls_saved",
+            "observed_tokens_after": observed_tokens,
+            "estimated_tokens_before": round(estimated_before),
+            "estimated_tokens_saved": round(estimated_saved_total),
+            "estimated_token_reduction": (
+                estimated_saved_total / estimated_before if estimated_before else None
+            ),
+            "by_stage": estimated_by_stage,
+        }
 
     def compute_statistics(self) -> Optional[Tuple[int, int, int, int, int, int, Dict[str, Any], Dict[str, Dict[str, int]]]]:
         if not self._validate_data():
@@ -1517,7 +2336,18 @@ class EvalDataExtraction(EvalBasic):
             }
         for attempt in range(3):
             try:
-                parsed = self._parse_semantic_response(prompt(msg=message, max_tokens=256, temperature=0))
+                parsed = self._parse_semantic_response(
+                    prompt(
+                        msg=message,
+                        max_tokens=256,
+                        temperature=0,
+                        usage_context={
+                            "stage": "semantic_evaluation",
+                            "query_id": self._current_eval_query_id,
+                            "semantic_judge": "single",
+                        },
+                    )
+                )
                 if parsed is not None:
                     return {
                         "result": bool(parsed.get("Result")),
@@ -1549,7 +2379,19 @@ class EvalDataExtraction(EvalBasic):
             if prompt is None:
                 continue
             try:
-                parsed = self._parse_semantic_response(prompt(msg=message, max_tokens=256, temperature=0))
+                parsed = self._parse_semantic_response(
+                    prompt(
+                        msg=message,
+                        max_tokens=256,
+                        temperature=0,
+                        usage_context={
+                            "stage": "semantic_evaluation",
+                            "query_id": self._current_eval_query_id,
+                            "semantic_judge": "committee",
+                            "llm_model": member.get("llm_model"),
+                        },
+                    )
+                )
                 if parsed is None:
                     continue
                 vote = bool(parsed.get("Result"))
@@ -1715,7 +2557,7 @@ class EvalDataExtraction(EvalBasic):
         loader: DataLoaderBase,
         doc_id: str,
         required_by_table: Dict[str, List[str]],
-        answer_doc_ids_by_table: Optional[Dict[str, set[str]]] = None,
+        answer_doc_ids_by_table: Optional[Dict[str, set[Any]]] = None,
     ) -> List[Dict[str, Any]]:
         info = loader.get_doc_info(doc_id)
         if not info:
@@ -1726,24 +2568,31 @@ class EvalDataExtraction(EvalBasic):
 
         required_tables = set(required_by_table)
         result = []
-        for record in records:
+        for index, record in enumerate(records):
             if not isinstance(record, dict):
                 continue
             table = record.get("table_name") or record.get("table")
             if table not in required_tables:
                 continue
             table_name = str(table)
-            if answer_doc_ids_by_table is not None and doc_id not in answer_doc_ids_by_table.get(table_name, set()):
-                continue
             data = record.get("data") or {}
             if not isinstance(data, dict):
                 data = {}
             row_id = (
-                record.get("source_row_id")
+                record.get(RESULT_RECORD_ID_KEY)
+                or record.get("record_id")
+                or record.get("source_row_id")
                 or record.get("row_id")
                 or data.get("row_id")
                 or info.get("source_row_id")
             )
+            if row_id is None and len(records) > 1:
+                row_id = f"{doc_id}#{index}"
+            if answer_doc_ids_by_table is not None:
+                refs = answer_doc_ids_by_table.get(table_name, set())
+                row_ref = (str(doc_id), "" if is_null(row_id) else str(row_id))
+                if row_ref not in refs and str(doc_id) not in refs:
+                    continue
             result.append({"table": table_name, "data": data, "row_id": row_id})
         return result
 
@@ -1754,12 +2603,12 @@ class EvalDataExtraction(EvalBasic):
         query_info: Dict[str, Any],
         eval_doc_ids: List[str],
         required_by_table: Dict[str, List[str]],
-    ) -> Optional[Dict[str, set[str]]]:
-        """Return GT docs that participate in the SQL answer rows.
+    ) -> Optional[Dict[str, set[Any]]]:
+        """Return GT record refs that participate in the SQL answer rows.
 
         Query-aware table/cell recall should measure the rows needed to answer
         the SQL query, not every row from every table referenced by the query.
-        The temporary SQL tables include ``__doc_id`` specifically so we can
+        The temporary SQL tables include ``__doc_id`` and ``row_id`` so we can
         derive this provenance for selections and joins.
         """
 
@@ -1781,11 +2630,27 @@ class EvalDataExtraction(EvalBasic):
             )
             return None
 
-        result: Dict[str, set[str]] = {table: set() for table in required_by_table}
+        result: Dict[str, set[Any]] = {table: set() for table in required_by_table}
         for row in provenance_rows:
-            for table, doc_id in row.items():
-                if table in result and not is_null(doc_id):
-                    result[table].add(str(doc_id))
+            for table, refs in row.items():
+                if table not in result:
+                    continue
+                if not isinstance(refs, list):
+                    refs = [refs]
+                for ref in refs:
+                    if isinstance(ref, dict):
+                        doc_id = ref.get("doc_id")
+                        row_id = ref.get("row_id")
+                    else:
+                        doc_id = ref
+                        row_id = None
+                    if not is_null(doc_id):
+                        result[table].add(
+                            (
+                                str(doc_id),
+                                "" if is_null(row_id) else str(row_id),
+                            )
+                        )
         return result
 
     def _evaluate_answer_recall(
@@ -1876,19 +2741,24 @@ class EvalDataExtraction(EvalBasic):
     ) -> Dict[str, List[Dict[str, Any]]]:
         records_by_table: Dict[str, List[Dict[str, Any]]] = {table: [] for table in required_by_table}
         for doc_id in eval_doc_ids:
-            record = result_dict.get(doc_id)
-            if not isinstance(record, dict):
+            entry = result_dict.get(doc_id)
+            if not isinstance(entry, dict):
                 continue
-            table = record.get(RESULT_TABLE_KEY)
-            if table not in required_by_table:
-                continue
-            data = record.get(RESULT_DATA_KEY, {})
-            if not isinstance(data, dict):
-                data = {}
-            row = {attr: data.get(attr) for attr in required_by_table[str(table)]}
-            row["__doc_id"] = doc_id
-            row["row_id"] = self._doc_row_id(loader, doc_id)
-            records_by_table[str(table)].append(row)
+            for index, record in enumerate(active_result_records(entry)):
+                table = record.get("table")
+                if table not in required_by_table:
+                    continue
+                data = record.get(RESULT_DATA_KEY, {})
+                if not isinstance(data, dict):
+                    data = {}
+                row = {attr: data.get(attr) for attr in required_by_table[str(table)]}
+                row["__doc_id"] = doc_id
+                row["row_id"] = (
+                    record.get(RESULT_RECORD_ID_KEY)
+                    or self._doc_row_id(loader, doc_id)
+                    or f"{doc_id}#{index}"
+                )
+                records_by_table[str(table)].append(row)
         return records_by_table
 
     def _execute_query_over_records(
@@ -1921,11 +2791,19 @@ class EvalDataExtraction(EvalBasic):
         if not from_match:
             return []
 
-        select_parts = [
-            f'"{ref}"."__doc_id" AS "__doc_id__{table}"'
-            for ref, table in table_refs
+        selected_refs = [
+            (index, ref, table)
+            for index, (ref, table) in enumerate(table_refs)
             if table in required_by_table
         ]
+        select_parts = []
+        for index, ref, _table in selected_refs:
+            select_parts.extend(
+                [
+                    f'"{ref}"."__doc_id" AS "__doc_id__{index}"',
+                    f'"{ref}"."row_id" AS "__row_id__{index}"',
+                ]
+            )
         if not select_parts:
             return []
 
@@ -1937,7 +2815,15 @@ class EvalDataExtraction(EvalBasic):
             cursor = conn.execute(provenance_sql)
             result = []
             for row in cursor.fetchall():
-                result.append({table: row[f"__doc_id__{table}"] for _, table in table_refs if table in required_by_table})
+                item: Dict[str, List[Dict[str, Any]]] = {}
+                for index, _ref, table in selected_refs:
+                    item.setdefault(table, []).append(
+                        {
+                            "doc_id": row[f"__doc_id__{index}"],
+                            "row_id": row[f"__row_id__{index}"],
+                        }
+                    )
+                result.append(item)
             return result
         finally:
             conn.close()

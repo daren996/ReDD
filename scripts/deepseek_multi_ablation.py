@@ -445,7 +445,7 @@ def _base_config(dataset: dict[str, Any], variant: str) -> dict[str, Any]:
         "project": {"name": f"deepseek-ablation-multi-{dataset['slug']}-{variant}", "seed": 42},
         "runtime": {
             "output_dir": "outputs/deepseek_ablation_multi",
-            "log_dir": "logs",
+            "log_dir": "outputs/logs",
             "output_layout": "dataset_stage",
             "artifact_id": artifact_id,
             "console_log_level": "WARNING",

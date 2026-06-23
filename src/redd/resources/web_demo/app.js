@@ -456,7 +456,7 @@ function defaultConfigDraft(info = null) {
     project: clonePlain(info?.project, { name: "redd-web-demo", seed: 42 }),
     runtime: clonePlain(info?.runtime, {
       output_dir: "outputs/demo",
-      log_dir: "logs",
+      log_dir: "outputs/logs",
       output_layout: "dataset_stage",
       artifact_id: "web-demo-v1",
       console_log_level: "WARNING",
@@ -770,7 +770,7 @@ function readConfigDraftFromEditor() {
     },
     runtime: {
       output_dir: configOutputDir.value.trim() || "outputs/demo",
-      log_dir: configLogDir.value.trim() || "logs",
+      log_dir: configLogDir.value.trim() || "outputs/logs",
       output_layout: configOutputLayout.value || "dataset_stage",
       artifact_id: configArtifactId.value.trim() || "web-demo-v1",
       console_log_level: configConsoleLogLevel.value || "WARNING",

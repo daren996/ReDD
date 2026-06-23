@@ -14,9 +14,10 @@ project:
 
 runtime:
   output_dir: outputs/demo
-  log_dir: logs
+  log_dir: outputs/logs
   output_layout: dataset_stage
   artifact_id: run-v1
+  multi_record_extraction: false
 
 models:
   llm:
@@ -52,10 +53,28 @@ experiments: {}
 ```
 
 `project.name` identifies the project namespace for runtime metadata, API/CLI
-result payloads, and log file prefixes. Output paths remain controlled by
+result payloads, and log grouping. Output paths remain controlled by
 `runtime.output_dir`, dataset id, stage, and artifact id so runs can be moved or
 grouped explicitly. `project.seed` is exposed to the internal runtime contract as
 `project_seed` for deterministic components.
+
+`runtime.multi_record_extraction` defaults to `false`, preserving the legacy
+one-document-to-one-output-row result shape for ordinary datasets. Set it to
+`true` when a document may express multiple table rows; extraction will persist
+an additional `records` list while keeping legacy `res`/`data` fields pointed at
+the primary record for backward compatibility. Query-aware evaluation and SQL
+answer recall use record ids when available so one-to-many results can be scored
+at row granularity.
+
+Package and CLI logs use `runtime.log_dir` as a root directory. Each configured
+run writes to a timestamped log file:
+
+```text
+<log_dir>/runs/<project-name>.<experiment-id>/<YYYY-MM-DD>/<HH-MM-SS>.log
+```
+
+If multiple runs for the same experiment start within the same second, the log
+file receives a numeric suffix such as `12-34-56-02.log`.
 
 ## Models
 

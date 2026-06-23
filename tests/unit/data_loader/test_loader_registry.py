@@ -132,6 +132,134 @@ class LoaderRegistryTests(unittest.TestCase):
                 ["winery", "score"],
             )
 
+    def test_hf_manifest_get_doc_hides_label_metadata_by_default(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_manifest_dataset(root)
+
+            loader = DataLoaderHFManifest(root)
+            doc_text, resolved_doc_id, metadata = loader.get_doc("doc-1")
+
+            self.assertEqual(doc_text, "Mount Demo Winery scored 95.")
+            self.assertEqual(resolved_doc_id, "doc-1")
+            self.assertEqual(metadata, {})
+            for leaked_key in (
+                "source_file",
+                "source_table",
+                "table_name",
+                "source_row_id",
+                "schema_table",
+                "schema_tables",
+            ):
+                self.assertNotIn(leaked_key, metadata)
+
+            doc_info = loader.get_doc_info("doc-1")
+            assert doc_info is not None
+            self.assertEqual(doc_info["source_row_id"], "0")
+            self.assertEqual(doc_info["data_records"][0]["table_name"], "wine")
+            self.assertEqual(doc_info["data_records"][0]["data"], {"Winery": "Mount Demo"})
+
+    def test_hf_manifest_get_doc_can_explicitly_expose_provenance_metadata(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write_manifest_dataset(root)
+
+            loader = DataLoaderHFManifest(root, expose_document_metadata=True)
+            _doc_text, _resolved_doc_id, metadata = loader.get_doc("doc-1")
+
+            self.assertEqual(metadata["source_file"], "demo-source")
+            self.assertEqual(metadata["table_name"], "wine")
+            self.assertEqual(metadata["source_row_id"], "0")
+            self.assertEqual(metadata["schema_table"], "wine")
+            self.assertEqual(metadata["schema_tables"], ["wine"])
+
+    @staticmethod
+    def _write_manifest_dataset(root: Path) -> None:
+        (root / "data").mkdir()
+        (root / "metadata").mkdir()
+        pd.DataFrame(
+            [
+                {
+                    "dataset_id": "example",
+                    "doc_id": "doc-1",
+                    "doc_text": "Mount Demo Winery scored 95.",
+                    "source_id": "demo-source",
+                    "source_table": "wine",
+                    "source_row_id": "0",
+                    "parent_doc_id": None,
+                    "chunk_index": 0,
+                    "is_chunked": False,
+                    "split": "test",
+                }
+            ]
+        ).to_parquet(root / "data" / "documents.parquet", index=False)
+        pd.DataFrame(
+            [
+                {
+                    "dataset_id": "example",
+                    "doc_id": "doc-1",
+                    "record_id": "0",
+                    "table_id": "wine",
+                    "column_id": "wine.winery",
+                    "column_name": "Winery",
+                    "value": "Mount Demo",
+                    "value_type": "string",
+                    "source_row_id": "0",
+                }
+            ]
+        ).to_parquet(root / "data" / "ground_truth.parquet", index=False)
+        (root / "metadata" / "queries.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "redd.queries.v1",
+                    "dataset_id": "example",
+                    "queries": [
+                        {
+                            "query_id": "Q1",
+                            "question": "Which winery scored 95?",
+                            "required_tables": ["wine"],
+                            "required_columns": ["wine.winery"],
+                            "output_columns": ["wine.winery"],
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        (root / "metadata" / "schema.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "redd.schema.v1",
+                    "dataset_id": "example",
+                    "tables": [
+                        {
+                            "table_id": "wine",
+                            "name": "wine",
+                            "columns": [
+                                {"column_id": "wine.winery", "name": "Winery"},
+                            ],
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        (root / "manifest.yaml").write_text(
+            yaml.safe_dump(
+                {
+                    "schema_version": "redd.manifest.v1",
+                    "dataset_id": "example",
+                    "paths": {
+                        "documents": "data/documents.parquet",
+                        "ground_truth": "data/ground_truth.parquet",
+                        "schema": "metadata/schema.json",
+                        "queries": "metadata/queries.json",
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

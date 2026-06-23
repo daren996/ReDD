@@ -187,7 +187,7 @@ class WebDemoTests(unittest.TestCase):
               name: secret-demo
             runtime:
               output_dir: outputs/demo
-              log_dir: logs
+              log_dir: outputs/logs
               output_layout: dataset_stage
               artifact_id: secret-run
             models:
@@ -405,7 +405,7 @@ class WebDemoTests(unittest.TestCase):
             "project": {"name": "edited-project", "seed": 42},
             "runtime": {
                 "output_dir": "outputs/demo",
-                "log_dir": "logs",
+                "log_dir": "outputs/logs",
                 "output_layout": "dataset_stage",
                 "artifact_id": "edited-artifact",
             },

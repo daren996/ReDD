@@ -10,6 +10,10 @@ Structure:
     <doc_id>: {
         "res": <table_name>,
         "data": {<attribute_name>: <value>, ...},
+        "records": [
+            {"table": <table_name>, "record_id": "...", "data": {...}},
+            ...
+        ],  # Optional; present when one document yields multiple rows.
         "reason": "...",  # Optional reasoning
     },
     ...
@@ -20,11 +24,13 @@ from __future__ import annotations
 
 import ast
 import copy
+import hashlib
 import json
 import logging
 import os
 import re
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -35,8 +41,10 @@ from redd.proxy.proxy_runtime.config import (
 
 from ..data_loader import create_data_loader
 from ..utils.constants import (
+    ATTRIBUTE_DESC_KEY,
     ATTRIBUTE_NAME_KEY,
     ATTRIBUTES_KEY,
+    DATA_EXTRACTED_KEY,
     DEFAULT_MAX_ATTR_RETRIES,
     DEFAULT_MAX_TABLE_RETRIES,
     DOCUMENT_KEY,
@@ -45,9 +53,11 @@ from ..utils.constants import (
     NULL_VALUE,
     PATH_TEMPLATES,
     RESULT_DATA_KEY,
+    RESULT_RECORD_ID_KEY,
     RESULT_TABLE_KEY,
     SCHEMA_KEY,
     SCHEMA_NAME_KEY,
+    TABLE_ASSIGNMENT_KEY,
     TARGET_ATTRIBUTE_KEY,
 )
 from ..utils.data_split import (
@@ -56,11 +66,23 @@ from ..utils.data_split import (
     resolve_training_data_split_seed,
     split_doc_ids,
 )
+from ..utils.extraction_records import (
+    active_result_records,
+    make_legacy_result_entry,
+    make_result_entry,
+    make_result_record,
+    update_result_record_data,
+)
 from ..utils.output_path import build_task_output_root
 from ..utils.progress import emit_progress_event, tqdm
 from ..utils.prompt_utils import create_prompt, get_api_key
 from ..utils.sql_filter_parser import SQLFilterParser, create_predicate_function
-from ..utils.structured_outputs import AttributeExtractionOutput, TableAssignmentOutput
+from ..utils.structured_outputs import (
+    AttributeExtractionOutput,
+    FullDocumentExtractionBatchOutput,
+    FullDocumentExtractionOutput,
+    TableAssignmentOutput,
+)
 from ..utils.utils import is_none_value
 from .base import DataExtractor
 
@@ -107,6 +129,12 @@ class DataExtraction(DataExtractor):
         # Initialize base class
         super().__init__(config)
         config = self.config
+        self.multi_record_extraction = bool(
+            config.get("multi_record_extraction", False)
+            or config.get("one_to_many_extraction", False)
+            or config.get("multi_record_output", False)
+        )
+        self.config["multi_record_extraction"] = self.multi_record_extraction
         self.training_data_count = resolve_training_data_count(config)
         self.training_data_split = resolve_training_data_split(config)
         self.training_data_split_seed = resolve_training_data_split_seed(config)
@@ -229,6 +257,29 @@ class DataExtraction(DataExtractor):
                 1,
                 int(config.get("result_save_interval", 1) or 1),
             )
+            self.materialized_full_extraction_only = bool(
+                config.get("materialized_full_extraction_only", False)
+            )
+            self.materialized_full_extraction_enabled = bool(
+                config.get("materialized_full_extraction", False)
+                or self.materialized_full_extraction_only
+            )
+            self.materialized_full_extraction_batch_size = max(
+                1,
+                int(config.get("materialized_full_extraction_batch_size", 16) or 16),
+            )
+            self.materialized_full_extraction_batch_max_chars = max(
+                1,
+                int(config.get("materialized_full_extraction_batch_max_chars", 24000) or 24000),
+            )
+            self.materialized_full_extraction_concurrency = max(
+                1,
+                int(config.get("materialized_full_extraction_concurrency", 1) or 1),
+            )
+            self._materialized_full_extraction_data: Dict[str, Any] | None = None
+            self._materialized_full_extraction_path: Path | None = None
+            self._materialized_full_extraction_lookup_source: Dict[str, Any] | None = None
+            self._materialized_full_extraction_lookup_index: Dict[str, Any] | None = None
             table_cache_config = config.get("table_assignment_cache", {})
             self.table_assignment_cache_general_schema = bool(
                 isinstance(table_cache_config, dict)
@@ -337,6 +388,16 @@ class DataExtraction(DataExtractor):
 
         query_dict = self.loader.load_query_dict()
         self.schema_general = self.loader.load_schema_general()
+
+        if self.materialized_full_extraction_enabled:
+            materialized_full_data = self._ensure_materialized_full_extraction()
+            self._materialized_full_extraction_data = materialized_full_data
+            if self.materialized_full_extraction_only:
+                logging.info(
+                    f"[{self.__class__.__name__}:_process_dataset] "
+                    "materialized_full_extraction_only=True; skip per-query execution."
+                )
+                return
 
         if not query_dict:
             logging.warning(f"[{self.__class__.__name__}:_process_dataset] No queries found in dataset {self.data_path}")
@@ -454,15 +515,25 @@ class DataExtraction(DataExtractor):
 
             # Phase 1: Table assignment (save to same file after each doc)
             logging.info(f"[{self.__class__.__name__}:_process_dataset] Phase 1: Table assignment for query-{qid} -> {res_path}")
-            self._process_table_assignment(
-                schema_query=schema_query,
-                res_data=res_data,
-                res_path=res_path,
-                pgbar_name=pgbar_name,
-                excluded_doc_ids=excluded_doc_ids,
-                query_id=qid,
-                target_doc_ids=self.test_doc_ids,
-            )
+            if self.materialized_full_extraction_enabled:
+                self._process_materialized_table_assignment(
+                    schema_query=schema_query,
+                    res_data=res_data,
+                    res_path=res_path,
+                    pgbar_name=pgbar_name,
+                    excluded_doc_ids=excluded_doc_ids,
+                    target_doc_ids=self.test_doc_ids,
+                )
+            else:
+                self._process_table_assignment(
+                    schema_query=schema_query,
+                    res_data=res_data,
+                    res_path=res_path,
+                    pgbar_name=pgbar_name,
+                    excluded_doc_ids=excluded_doc_ids,
+                    query_id=qid,
+                    target_doc_ids=self.test_doc_ids,
+                )
 
             # Reload results (may have been updated during phase 1)
             res_data = self.load_processed_res(res_path)
@@ -638,6 +709,1410 @@ class DataExtraction(DataExtractor):
         )
         return res_data
 
+    def _ensure_materialized_full_extraction(self) -> Dict[str, Any]:
+        """
+        Ensure the query-independent full extraction artifact exists.
+
+        This is an experiment-run mode, not an algorithmic cache: the artifact is
+        materialized before per-query execution and then used as the offline
+        oracle for query runs.
+        """
+        res_path = self.out_root / PATH_TEMPLATES.materialized_full_extraction(self.param_str)
+        meta_path = self.out_root / PATH_TEMPLATES.materialized_full_extraction_meta(self.param_str)
+        self._materialized_full_extraction_path = res_path
+        self.config["materialized_full_extraction_path"] = str(res_path)
+
+        if bool(self.config.get("force_rerun", False)):
+            for path in (res_path, meta_path):
+                if path.exists() and path.is_file():
+                    path.unlink()
+
+        metadata = self._materialized_full_extraction_metadata()
+        if res_path.exists() and meta_path.exists():
+            try:
+                existing_meta = self.load_json(str(meta_path))
+            except json.JSONDecodeError:
+                existing_meta = {}
+            if not self._materialized_full_extraction_metadata_matches(existing_meta, metadata):
+                logging.warning(
+                    f"[{self.__class__.__name__}:_ensure_materialized_full_extraction] "
+                    f"Existing materialized full extraction metadata does not match current "
+                    f"config/schema; recomputing {res_path}"
+                )
+                res_path.unlink(missing_ok=True)
+                meta_path.unlink(missing_ok=True)
+
+        target_doc_ids = list(self.loader.doc_ids)
+        res_data = self.load_processed_res(res_path)
+        if self._materialized_full_extraction_complete(res_data, target_doc_ids):
+            logging.info(
+                f"[{self.__class__.__name__}:_ensure_materialized_full_extraction] "
+                f"Using existing materialized full extraction: {res_path}"
+            )
+            postprocessed_count = self._postprocess_materialized_full_extraction(
+                schema_query=self.schema_general,
+                res_data=res_data,
+                target_doc_ids=target_doc_ids,
+            )
+            if postprocessed_count:
+                self.save_results(str(res_path), res_data)
+                logging.info(
+                    f"[{self.__class__.__name__}:_ensure_materialized_full_extraction] "
+                    f"Postprocessed {postprocessed_count} materialized full extraction cells."
+                )
+            self._write_materialized_full_extraction_metadata(
+                meta_path=meta_path,
+                metadata=metadata,
+                res_data=res_data,
+                target_doc_ids=target_doc_ids,
+            )
+            return res_data
+
+        logging.info(
+            f"[{self.__class__.__name__}:_ensure_materialized_full_extraction] "
+            f"Materializing query-independent full extraction for {len(target_doc_ids)} docs -> {res_path}"
+        )
+
+        previous_materialized_data = self._materialized_full_extraction_data
+        self._materialized_full_extraction_data = None
+        try:
+            self._process_materialized_full_doc_extraction(
+                schema_query=self.schema_general,
+                res_data=res_data,
+                res_path=res_path,
+                pgbar_name=f"{self.data_path.name}-materialized-full",
+                query_id=None,
+                target_doc_ids=target_doc_ids,
+            )
+            res_data = self.load_processed_res(res_path)
+        finally:
+            self._materialized_full_extraction_data = previous_materialized_data
+
+        postprocessed_count = self._postprocess_materialized_full_extraction(
+            schema_query=self.schema_general,
+            res_data=res_data,
+            target_doc_ids=target_doc_ids,
+        )
+        if postprocessed_count:
+            self.save_results(str(res_path), res_data)
+            logging.info(
+                f"[{self.__class__.__name__}:_ensure_materialized_full_extraction] "
+                f"Postprocessed {postprocessed_count} materialized full extraction cells."
+            )
+
+        self._write_materialized_full_extraction_metadata(
+            meta_path=meta_path,
+            metadata=metadata,
+            res_data=res_data,
+            target_doc_ids=target_doc_ids,
+        )
+        return res_data
+
+    def _materialized_full_extraction_metadata(self) -> Dict[str, Any]:
+        schema_hash = hashlib.sha256(
+            json.dumps(self.schema_general, sort_keys=True, ensure_ascii=False, default=str).encode(
+                "utf-8"
+            )
+        ).hexdigest()
+        runtime_payload = {
+            "mode": self.mode,
+            "llm_model": self.config.get("llm_model"),
+            "disable_llm": self.disable_llm,
+            "multi_record_extraction": self.multi_record_extraction,
+            "prompts": self.config.get("prompts"),
+            "structured_backend": self.config.get("structured_backend"),
+            "schema_hash": schema_hash,
+        }
+        runtime_hash = hashlib.sha256(
+            json.dumps(runtime_payload, sort_keys=True, ensure_ascii=False, default=str).encode(
+                "utf-8"
+            )
+        ).hexdigest()
+        return {
+            "artifact_type": "materialized_full_extraction",
+            "schema_hash": schema_hash,
+            "runtime_hash": runtime_hash,
+            "mode": self.mode,
+            "llm_model": self.config.get("llm_model"),
+            "disable_llm": self.disable_llm,
+            "multi_record_extraction": self.multi_record_extraction,
+        }
+
+    @staticmethod
+    def _materialized_full_extraction_metadata_matches(
+        existing: Dict[str, Any],
+        current: Dict[str, Any],
+    ) -> bool:
+        if not existing:
+            return True
+        return (
+            existing.get("artifact_type") == current.get("artifact_type")
+            and existing.get("schema_hash") == current.get("schema_hash")
+            and existing.get("runtime_hash") == current.get("runtime_hash")
+        )
+
+    def _write_materialized_full_extraction_metadata(
+        self,
+        *,
+        meta_path: Path,
+        metadata: Dict[str, Any],
+        res_data: Dict[str, Any],
+        target_doc_ids: List[str],
+    ) -> None:
+        assigned_doc_count = 0
+        record_count = 0
+        attr_count = 0
+        for doc_id in target_doc_ids:
+            entry = res_data.get(doc_id)
+            if not isinstance(entry, dict):
+                continue
+            records = active_result_records(entry)
+            if not records:
+                continue
+            assigned_doc_count += 1
+            record_count += len(records)
+            for record in records:
+                data = record.get(RESULT_DATA_KEY, {})
+                if isinstance(data, dict):
+                    attr_count += len(data)
+        self.save_results(
+            str(meta_path),
+            {
+                **metadata,
+                "doc_count": len(target_doc_ids),
+                "assigned_doc_count": assigned_doc_count,
+                "assigned_record_count": record_count,
+                "materialized_attr_count": attr_count,
+            },
+        )
+
+    def _postprocess_materialized_full_extraction(
+        self,
+        *,
+        schema_query: List[Dict[str, Any]],
+        res_data: Dict[str, Any],
+        target_doc_ids: List[str],
+    ) -> int:
+        table2attrs = self._materialized_full_postprocess_attrs(schema_query)
+        if not table2attrs:
+            return 0
+
+        updated_count = 0
+        doc_text_cache: Dict[str, str] = {}
+        for doc_id in target_doc_ids:
+            entry = res_data.get(doc_id)
+            if not isinstance(entry, dict):
+                continue
+
+            for record in active_result_records(entry):
+                table_name = str(record.get(RESULT_TABLE_KEY, record.get("table")) or "")
+                attrs = table2attrs.get(table_name)
+                if not attrs:
+                    continue
+                data = record.get(RESULT_DATA_KEY, {})
+                if not isinstance(data, dict):
+                    continue
+                record_index = int(record.get("_record_index", 0) or 0)
+
+                doc_text = doc_text_cache.get(str(doc_id))
+                if doc_text is None:
+                    try:
+                        doc_text = self.loader.get_doc_text(doc_id)
+                    except Exception:
+                        doc_text = ""
+                    doc_text_cache[str(doc_id)] = doc_text
+
+                for attr in attrs:
+                    if not is_none_value(data.get(attr)):
+                        continue
+                    imputed_value = self._impute_materialized_full_attr(
+                        attr=attr,
+                        data=data,
+                        doc_text=doc_text,
+                    )
+                    if imputed_value is None:
+                        continue
+                    update_result_record_data(entry, record_index, attr, imputed_value)
+                    data[attr] = imputed_value
+                    updated_count += 1
+
+        if updated_count:
+            self._materialized_full_extraction_lookup_source = None
+            self._materialized_full_extraction_lookup_index = None
+        return updated_count
+
+    @classmethod
+    def _materialized_full_postprocess_attrs(
+        cls,
+        schema_query: List[Dict[str, Any]],
+    ) -> Dict[str, List[str]]:
+        table2attrs: Dict[str, List[str]] = {}
+        for table_schema in schema_query or []:
+            if not isinstance(table_schema, dict):
+                continue
+            table_name = table_schema.get(SCHEMA_NAME_KEY) or table_schema.get("name")
+            if not table_name:
+                continue
+            attrs = []
+            for attr_schema in table_schema.get(ATTRIBUTES_KEY, []) or []:
+                if not isinstance(attr_schema, dict):
+                    continue
+                attr_name = attr_schema.get(ATTRIBUTE_NAME_KEY) or attr_schema.get("name")
+                if not attr_name:
+                    continue
+                desc = str(
+                    attr_schema.get(ATTRIBUTE_DESC_KEY)
+                    or attr_schema.get("description")
+                    or ""
+                )
+                attr_name_str = str(attr_name)
+                if cls._is_closed_world_boolean_description(desc) or attr_name_str in {
+                    "market_cap_updated_m",
+                    "ticker",
+                }:
+                    attrs.append(attr_name_str)
+            if attrs:
+                table2attrs[str(table_name)] = attrs
+        return table2attrs
+
+    @staticmethod
+    def _is_closed_world_boolean_description(description: str) -> bool:
+        desc = description.lower()
+        return (
+            "closed-world boolean" in desc
+            or "closed world boolean" in desc
+            or "closed-world bool" in desc
+            or "closed world bool" in desc
+        )
+
+    def _impute_materialized_full_attr(
+        self,
+        *,
+        attr: str,
+        data: Dict[str, Any],
+        doc_text: str,
+    ) -> Optional[str]:
+        attr_key = str(attr)
+        if attr_key == "market_cap_updated_m":
+            return self._impute_market_cap_updated_m(doc_text)
+        if attr_key == "ticker":
+            return self._impute_ticker(doc_text)
+        return self._impute_closed_world_boolean(attr_key, data, doc_text)
+
+    @classmethod
+    def _impute_closed_world_boolean(
+        cls,
+        attr: str,
+        data: Dict[str, Any],
+        doc_text: str,
+    ) -> str:
+        attr_key = attr.lower()
+        if attr_key == "dropped_in_rank":
+            change = cls._coerce_number(data.get("change_in_rank"))
+            if change is not None:
+                return "1" if change < 0 else "0"
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bdropped in rank\b",
+                    r"\bdrop in rank\b",
+                    r"\bdecline(?:d)? (?:of \d+ places? )?in (?:its )?rank\b",
+                    r"\bmoved down\b",
+                ],
+            ) else "0"
+        if attr_key == "gained_in_rank":
+            change = cls._coerce_number(data.get("change_in_rank"))
+            if change is not None:
+                return "1" if change > 0 else "0"
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bgain(?:ed)? in rank\b",
+                    r"\bimproved (?:its )?rank\b",
+                    r"\bmoved up\b",
+                    r"\brise in (?:the )?rank(?:ing)?\b",
+                    r"\bupward trajectory\b",
+                ],
+            ) else "0"
+        if attr_key == "is_profitable":
+            profits = cls._coerce_number(data.get("profits_m"))
+            if profits is not None:
+                return "1" if profits > 0 else "0"
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [r"\bprofitable\b", r"\bprofitability\b", r"\bposted (?:a )?profit\b"],
+            ) else "0"
+        if attr_key == "growth_in_jobs":
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bgrowth in jobs\b",
+                    r"\bjob growth\b",
+                    r"\bemployment growth\b",
+                    r"\bworkforce growth\b",
+                    r"\bjob creation\b",
+                    r"\bcreated jobs?\b",
+                    r"\badding jobs?\b",
+                    r"\bincrease[sd]? in (?:employment|jobs|headcount|workforce)\b",
+                    r"\bexpanded (?:its )?(?:workforce|employee base|headcount)\b",
+                    r"\bexpanding (?:its )?(?:workforce|employee base|headcount)\b",
+                    r"\bgrowing workforce\b",
+                    r"\bworkforce expansion\b",
+                    r"\bemployment opportunities\b",
+                    r"\binvesting in human capital\b",
+                ],
+            ) else "0"
+        if attr_key == "best_companies_to_work_for":
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bbest companies to work for\b",
+                    r"\bbest workplaces?\b",
+                ],
+            ) else "0"
+        if attr_key == "global500":
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bfortune global 500\b",
+                    r"\bglobal fortune 500\b",
+                    r"\bglobal 500\b",
+                ],
+            ) else "0"
+        if attr_key == "founder_is_ceo":
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bfounder and (?:the )?ceo\b",
+                    r"\bco-founder and (?:the )?ceo\b",
+                    r"\bceo and (?:co-)?founder\b",
+                    r"\bfounder[^.]{0,120}\b(?:serves as|is|as|currently serves as)[^.]{0,60}\bceo\b",
+                    r"\bfounded by [^.]{0,120}\b(?:serves as|is|as|currently serves as)[^.]{0,60}\bceo\b",
+                    r"\bchief executive[^.]{0,80}\b(?:founder|co-founder)\b",
+                ],
+            ) else "0"
+        if attr_key == "is_female_ceo":
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bfemale ceo\b",
+                    r"\bwoman ceo\b",
+                    r"\bwoman-led\b",
+                    r"\bled by [^.]{0,80}\bfemale\b",
+                ],
+            ) else "0"
+        if attr_key == "newcomer_to_the_fortune500":
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bnewcomer to (?:the )?fortune\s*500\b",
+                    r"\bnew entrant (?:to|in) (?:the )?fortune\s*500\b",
+                    r"\bnewly entered (?:the )?fortune\s*500\b",
+                    r"\bmade (?:its )?debut (?:on|in) (?:the )?fortune\s*500\b",
+                    r"\bdebuted (?:on|in) (?:the )?fortune\s*500\b",
+                ],
+            ) else "0"
+        if attr_key == "worlds_most_admired_companies":
+            return "1" if cls._has_positive_phrase(
+                doc_text,
+                [
+                    r"\bworld'?s most admired companies\b",
+                    r"\bworlds most admired companies\b",
+                    r"\bmost admired companies\b",
+                ],
+            ) else "0"
+        return "0"
+
+    @staticmethod
+    def _coerce_number(value: Any) -> Optional[float]:
+        if is_none_value(value):
+            return None
+        text = str(value).strip().replace(",", "")
+        if not text:
+            return None
+        text = re.sub(r"^\$", "", text)
+        try:
+            return float(text)
+        except ValueError:
+            return None
+
+    @classmethod
+    def _has_positive_phrase(cls, doc_text: str, patterns: List[str]) -> bool:
+        text = str(doc_text or "")
+        for pattern in patterns:
+            for match in re.finditer(pattern, text, flags=re.IGNORECASE):
+                if not cls._is_negated_match(text, match.start(), match.end()):
+                    return True
+        return False
+
+    @staticmethod
+    def _is_negated_match(text: str, start: int, end: int) -> bool:
+        prefix = text[max(0, start - 80):start].lower()
+        suffix = text[end:min(len(text), end + 50)].lower()
+        negation = (
+            r"(?:\bno\b|\bnot\b|\bnever\b|\bwithout\b|\black of\b|"
+            r"\bdoes not\b|\bdid not\b|\bis not\b|\bwas not\b|"
+            r"\bnot one of\b|\bmay not\b|\bnot a\b|\bnot an\b)"
+        )
+        return bool(re.search(negation, prefix) or re.search(r"^\s*(?:status|membership)?\s*[:=-]?\s*(?:no|false|0)\b", suffix))
+
+    @classmethod
+    def _impute_market_cap_updated_m(cls, doc_text: str) -> Optional[str]:
+        text = str(doc_text or "")
+        patterns = [
+            r"(?:updated figures? of|updated (?:market )?(?:cap(?:italization)?|value) of)\s*(?:approximately\s*)?\$?([\d,]+(?:\.\d+)?)\s*(billion|million|m|bn)?",
+            r"(?:market (?:cap(?:italization)?|value)[^.]{0,120}?as of June 4, 2024[^$0-9]{0,40})\$?([\d,]+(?:\.\d+)?)\s*(billion|million|m|bn)?",
+            r"\$?([\d,]+(?:\.\d+)?)\s*(billion|million|m|bn)?[^.]{0,80}as of June 4, 2024",
+            r"(?:minor increase|slight adjustment|adjustment|increase|update)\s+to\s+\$?([\d,]+(?:\.\d+)?)\s*(billion|million|m|bn)?[^.]{0,80}\bupdated figures?\b",
+            r"\$?([\d,]+(?:\.\d+)?)\s*(billion|million|m|bn)?[^.]{0,80}\bupdated figures?\b",
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, text, flags=re.IGNORECASE)
+            if not match:
+                continue
+            value = match.group(1)
+            unit = match.group(2) if match.lastindex and match.lastindex >= 2 else None
+            amount = cls._coerce_number(value)
+            if amount is None:
+                continue
+            if unit and unit.lower() in {"billion", "bn"}:
+                amount *= 1000
+            if amount.is_integer():
+                return str(int(amount))
+            return str(amount)
+        return None
+
+    @staticmethod
+    def _impute_ticker(doc_text: str) -> Optional[str]:
+        text = str(doc_text or "")
+        patterns = [
+            r"\bticker symbol\s*(?:of|is|:)?\s*[\"']?([A-Z][A-Z0-9.\-]{0,9})[\"']?\b",
+            r"\b(?:NYSE|Nasdaq|NASDAQ)\s+ticker\s*[:=-]?\s*([A-Z][A-Z0-9.\-]{0,9})\b",
+            r"\b(?:listed|operates|traded) under (?:the )?ticker(?: symbol)?\s*[\"']?([A-Z][A-Z0-9.\-]{0,9})[\"']?\b",
+            r"\btraded under (?:the )?symbol\s*[\"']?([A-Z][A-Z0-9.\-]{0,9})[\"']?\b",
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, text)
+            if match:
+                return match.group(1).strip(".,;:)")
+        return None
+
+    def _materialized_full_extraction_complete(
+        self,
+        res_data: Dict[str, Any],
+        target_doc_ids: List[str],
+    ) -> bool:
+        if not res_data:
+            return False
+        table2attr: Dict[str, List[str]] = {
+            s[SCHEMA_NAME_KEY]: [a[ATTRIBUTE_NAME_KEY] for a in s.get(ATTRIBUTES_KEY, [])]
+            for s in self.schema_general
+            if s.get(SCHEMA_NAME_KEY)
+        }
+        for doc_id in target_doc_ids:
+            entry = res_data.get(doc_id)
+            if not isinstance(entry, dict):
+                return False
+            records = active_result_records(entry)
+            if not records:
+                if RESULT_TABLE_KEY in entry or "records" in entry:
+                    continue
+                return False
+            for record in records:
+                table_assigned = record.get("table")
+                if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
+                    continue
+                attrs_needed = table2attr.get(str(table_assigned))
+                if attrs_needed is None:
+                    return False
+                data = record.get(RESULT_DATA_KEY, {})
+                if not isinstance(data, dict):
+                    return False
+                for attr in attrs_needed:
+                    if attr not in data:
+                        return False
+                continue
+        return True
+
+    def _process_materialized_table_assignment(
+        self,
+        *,
+        schema_query: List[Dict[str, Any]],
+        res_data: Dict[str, Any],
+        res_path: Path,
+        pgbar_name: str,
+        excluded_doc_ids: Optional[set] = None,
+        target_doc_ids: Optional[List[str]] = None,
+    ) -> None:
+        full_data = self._materialized_full_extraction_data or {}
+        all_tables = [s[SCHEMA_NAME_KEY] for s in schema_query] if schema_query else [
+            s[SCHEMA_NAME_KEY] for s in self.schema_general
+        ]
+        excluded_doc_ids = excluded_doc_ids or set()
+        target_doc_ids = list(self.loader.doc_ids) if target_doc_ids is None else target_doc_ids
+        updated_count = 0
+        progress_bar = tqdm(
+            total=len(target_doc_ids),
+            initial=0,
+            desc=f"Materialized Table Assignment {pgbar_name}",
+        )
+        try:
+            for doc_id in target_doc_ids:
+                self._wait_if_paused(f"materialized-table-assignment:{doc_id}")
+                if doc_id in excluded_doc_ids:
+                    progress_bar.update(1)
+                    continue
+                full_entry = full_data.get(doc_id, {})
+                existing_entry = res_data.get(doc_id, {})
+
+                existing_by_key: Dict[tuple[str, str], Dict[str, Any]] = {}
+                if isinstance(existing_entry, dict):
+                    for record in active_result_records(existing_entry):
+                        table = str(record.get("table"))
+                        record_id = str(record.get(RESULT_RECORD_ID_KEY) or record.get("_record_index") or "")
+                        data = record.get(RESULT_DATA_KEY, {})
+                        existing_by_key[(table, record_id)] = data if isinstance(data, dict) else {}
+
+                records = []
+                full_records = active_result_records(full_entry)
+                for index, record in enumerate(full_records):
+                    table = record.get("table")
+                    if table not in all_tables:
+                        continue
+                    record_id = record.get(RESULT_RECORD_ID_KEY)
+                    if record_id is None and len(full_records) > 1:
+                        record_id = f"{doc_id}#{index}"
+                    key = (str(table), str(record_id or index if len(full_records) > 1 else ""))
+                    existing_data = existing_by_key.get(key, {})
+                    records.append(
+                        make_result_record(
+                            table,
+                            existing_data,
+                            record_id=record_id,
+                        )
+                    )
+                if not self.multi_record_extraction:
+                    records = records[:1]
+
+                new_entry = make_result_entry(
+                    records,
+                    include_records_for_single=True,
+                )
+                if not isinstance(existing_entry, dict) or existing_entry != new_entry:
+                    res_data[doc_id] = new_entry
+                    updated_count += 1
+                    self._save_results_progress(res_path, res_data, updated_count)
+                progress_bar.update(1)
+        finally:
+            progress_bar.close()
+        if updated_count or not res_path.exists():
+            self._save_results_progress(res_path, res_data, updated_count, force=True)
+        logging.info(
+            f"[{self.__class__.__name__}:_process_materialized_table_assignment] "
+            f"Done materialized table assignment -> {res_path}"
+        )
+
+    def _lookup_materialized_attribute(
+        self,
+        doc_id: str,
+        attr: str,
+        *,
+        record_index: int = 0,
+        table: Optional[str] = None,
+        record_id: Optional[str] = None,
+    ) -> Any:
+        doc_index = self._materialized_full_lookup_index().get(str(doc_id))
+        if not isinstance(doc_index, dict):
+            return None
+
+        if "records" in doc_index:
+            candidates = doc_index.get("records", [])
+            if table is not None:
+                candidates = doc_index.get("by_table", {}).get(str(table), [])
+            if record_id is not None:
+                by_id_key = (str(table), str(record_id)) if table is not None else str(record_id)
+                by_id = doc_index.get("by_id", {}).get(by_id_key)
+                if by_id is not None:
+                    candidates = [by_id]
+            record_payload = (
+                candidates[record_index]
+                if 0 <= record_index < len(candidates)
+                else (candidates[0] if candidates else {})
+            )
+            data = record_payload.get(RESULT_DATA_KEY, {})
+            if not isinstance(data, dict):
+                return None
+            return data.get(attr)
+
+        data = doc_index.get(RESULT_DATA_KEY, {})
+        if not isinstance(data, dict):
+            return None
+        return data.get(attr)
+
+    def _materialized_full_lookup_index(self) -> Dict[str, Any]:
+        full_data = self._materialized_full_extraction_data or {}
+        if (
+            getattr(self, "_materialized_full_extraction_lookup_source", None) is full_data
+            and getattr(self, "_materialized_full_extraction_lookup_index", None) is not None
+        ):
+            return self._materialized_full_extraction_lookup_index
+
+        lookup_index: Dict[str, Any] = {}
+        for doc_id, entry in full_data.items():
+            if not isinstance(entry, dict):
+                continue
+            records = active_result_records(entry)
+            if records:
+                doc_payload: Dict[str, Any] = {
+                    "records": [],
+                    "by_table": {},
+                    "by_id": {},
+                }
+                for record in records:
+                    data = record.get(RESULT_DATA_KEY, {})
+                    record_payload = {
+                        RESULT_DATA_KEY: data if isinstance(data, dict) else {},
+                    }
+                    table = record.get("table")
+                    table_key = str(table)
+                    doc_payload["records"].append(record_payload)
+                    doc_payload["by_table"].setdefault(table_key, []).append(record_payload)
+                    record_id = record.get(RESULT_RECORD_ID_KEY)
+                    if record_id is not None:
+                        doc_payload["by_id"][(table_key, str(record_id))] = record_payload
+                        doc_payload["by_id"].setdefault(str(record_id), record_payload)
+                lookup_index[str(doc_id)] = doc_payload
+                continue
+
+            data = entry.get(RESULT_DATA_KEY, {})
+            lookup_index[str(doc_id)] = {
+                RESULT_DATA_KEY: data if isinstance(data, dict) else {},
+            }
+
+        self._materialized_full_extraction_lookup_source = full_data
+        self._materialized_full_extraction_lookup_index = lookup_index
+        return lookup_index
+
+    def _process_materialized_full_doc_extraction(
+        self,
+        schema_query: List[Dict[str, Any]],
+        res_data: Dict[str, Any],
+        res_path: Path,
+        pgbar_name: str,
+        excluded_doc_ids: Optional[set] = None,
+        query_id: Optional[str] = None,
+        target_doc_ids: Optional[List[str]] = None,
+        **kwargs,
+    ) -> None:
+        """
+        Materialize full doc/table/attr extraction with one LLM call per document.
+        """
+        del query_id, kwargs
+        runtime = getattr(self.prompt_attr, "runtime", None) or getattr(self.prompt_table, "runtime", None)
+        if runtime is None or self.disable_llm or self.config.get("use_gt_attr_extraction"):
+            self._process_table_assignment(
+                schema_query=schema_query,
+                res_data=res_data,
+                res_path=res_path,
+                pgbar_name=pgbar_name,
+                query_id=None,
+                target_doc_ids=target_doc_ids,
+                excluded_doc_ids=excluded_doc_ids,
+            )
+            reloaded = self.load_processed_res(res_path)
+            res_data.clear()
+            res_data.update(reloaded)
+            self._process_materialized_full_attr_extraction(
+                schema_query=schema_query,
+                res_data=res_data,
+                res_path=res_path,
+                pgbar_name=pgbar_name,
+                query_id=None,
+                target_doc_ids=target_doc_ids,
+                excluded_doc_ids=excluded_doc_ids,
+            )
+            return
+
+        table2attr: Dict[str, List[str]] = {
+            s[SCHEMA_NAME_KEY]: [a[ATTRIBUTE_NAME_KEY] for a in s.get(ATTRIBUTES_KEY, [])]
+            for s in schema_query
+            if s.get(SCHEMA_NAME_KEY)
+        }
+        all_tables = set(table2attr)
+        excluded_doc_ids = excluded_doc_ids or set()
+        target_doc_ids = list(self.loader.doc_ids) if target_doc_ids is None else target_doc_ids
+
+        pending_doc_ids: List[str] = []
+        for doc_id in target_doc_ids:
+            if doc_id in excluded_doc_ids:
+                continue
+            entry = res_data.get(doc_id)
+            if not isinstance(entry, dict):
+                pending_doc_ids.append(doc_id)
+                continue
+            records = active_result_records(entry)
+            if not records:
+                if RESULT_TABLE_KEY in entry or "records" in entry:
+                    continue
+                pending_doc_ids.append(doc_id)
+                continue
+            for record in records:
+                table = record.get("table")
+                attrs_needed = table2attr.get(str(table))
+                data = record.get(RESULT_DATA_KEY, {})
+                if attrs_needed is None or not isinstance(data, dict):
+                    pending_doc_ids.append(doc_id)
+                    break
+                if any(attr not in data for attr in attrs_needed):
+                    pending_doc_ids.append(doc_id)
+                    break
+
+        progress_bar = tqdm(
+            total=len(target_doc_ids),
+            initial=len(target_doc_ids) - len(pending_doc_ids),
+            desc=f"Materialized Full Extraction {pgbar_name}",
+        )
+        if not pending_doc_ids:
+            progress_bar.close()
+            return
+
+        batch_size = max(
+            1,
+            int(
+                getattr(
+                    self,
+                    "materialized_full_extraction_batch_size",
+                    self.config.get("materialized_full_extraction_batch_size", 16),
+                )
+                or 16
+            ),
+        )
+        batch_max_chars = max(
+            1,
+            int(
+                getattr(
+                    self,
+                    "materialized_full_extraction_batch_max_chars",
+                    self.config.get("materialized_full_extraction_batch_max_chars", 24000),
+                )
+                or 24000
+            ),
+        )
+        concurrency = max(
+            1,
+            int(
+                getattr(
+                    self,
+                    "materialized_full_extraction_concurrency",
+                    self.config.get("materialized_full_extraction_concurrency", 1),
+                )
+                or 1
+            ),
+        )
+
+        updated_count = 0
+        batches = list(self._iter_materialized_doc_batches(
+            pending_doc_ids,
+            batch_size=batch_size,
+            batch_max_chars=batch_max_chars,
+        ))
+
+        if concurrency <= 1:
+            for batch in batches:
+                for doc_id, _doc_text in batch:
+                    self._wait_if_paused(f"materialized-full-extraction:{doc_id}")
+
+                batch_results = self._extract_full_doc_batch(
+                    batch_docs=batch,
+                    schema=schema_query,
+                    runtime=runtime,
+                )
+                self._record_materialized_full_doc_batch(
+                    batch=batch,
+                    batch_results=batch_results,
+                    res_data=res_data,
+                    table2attr=table2attr,
+                    all_tables=all_tables,
+                )
+                updated_count += len(batch)
+                self._save_results_progress(res_path, res_data, updated_count)
+                progress_bar.update(len(batch))
+        else:
+            with ThreadPoolExecutor(max_workers=concurrency) as executor:
+                future_to_batch = {}
+                for batch in batches:
+                    for doc_id, _doc_text in batch:
+                        self._wait_if_paused(f"materialized-full-extraction:{doc_id}")
+                    future = executor.submit(
+                        self._extract_full_doc_batch,
+                        batch_docs=batch,
+                        schema=schema_query,
+                        runtime=runtime,
+                    )
+                    future_to_batch[future] = batch
+
+                for future in as_completed(future_to_batch):
+                    batch = future_to_batch[future]
+                    try:
+                        batch_results = future.result()
+                    except Exception as error:
+                        logging.warning(
+                            f"[{self.__class__.__name__}:_process_materialized_full_doc_extraction] "
+                            f"Concurrent batch failed for {len(batch)} docs: {error}; "
+                            "retrying this batch synchronously."
+                        )
+                        batch_results = self._extract_full_doc_batch(
+                            batch_docs=batch,
+                            schema=schema_query,
+                            runtime=runtime,
+                        )
+                    self._record_materialized_full_doc_batch(
+                        batch=batch,
+                        batch_results=batch_results,
+                        res_data=res_data,
+                        table2attr=table2attr,
+                        all_tables=all_tables,
+                    )
+                    updated_count += len(batch)
+                    self._save_results_progress(res_path, res_data, updated_count)
+                    progress_bar.update(len(batch))
+
+        progress_bar.close()
+        self._save_results_progress(res_path, res_data, updated_count, force=True)
+
+    def _record_materialized_full_doc_batch(
+        self,
+        *,
+        batch: List[tuple[str, str]],
+        batch_results: Dict[str, List[Dict[str, Any]]],
+        res_data: Dict[str, Any],
+        table2attr: Dict[str, List[str]],
+        all_tables: set,
+    ) -> None:
+        for doc_id, _doc_text in batch:
+            extracted_records = []
+            raw_records = batch_results.get(doc_id, [])
+            if not self.multi_record_extraction:
+                raw_records = raw_records[:1]
+            for index, record in enumerate(raw_records):
+                table_assigned = record.get("table")
+                extracted = record.get(RESULT_DATA_KEY, {})
+                if table_assigned not in all_tables or is_none_value(table_assigned):
+                    continue
+                if not isinstance(extracted, dict):
+                    extracted = {}
+                attrs_needed = table2attr[str(table_assigned)]
+                data = {}
+                for attr in attrs_needed:
+                    value = extracted.get(attr)
+                    data[attr] = NULL_VALUE if is_none_value(value) else value
+                record_id = record.get(RESULT_RECORD_ID_KEY)
+                if record_id is None and len(raw_records) > 1:
+                    record_id = f"{doc_id}#{index}"
+                extracted_records.append(
+                    make_result_record(table_assigned, data, record_id=record_id)
+                )
+            res_data[doc_id] = make_result_entry(
+                extracted_records,
+                include_records_for_single=True,
+            )
+
+    def _iter_materialized_doc_batches(
+        self,
+        doc_ids: List[str],
+        *,
+        batch_size: int,
+        batch_max_chars: int,
+    ):
+        batch: List[tuple[str, str]] = []
+        batch_chars = 0
+        for doc_id in doc_ids:
+            doc_text = self.loader.get_doc_text(doc_id)
+            doc_chars = len(doc_text)
+            if batch and (
+                len(batch) >= batch_size
+                or batch_chars + doc_chars > batch_max_chars
+            ):
+                yield batch
+                batch = []
+                batch_chars = 0
+            batch.append((doc_id, doc_text))
+            batch_chars += doc_chars
+        if batch:
+            yield batch
+
+    def _extract_full_doc_batch(
+        self,
+        *,
+        batch_docs: List[tuple[str, str]],
+        schema: List[Dict[str, Any]],
+        runtime: Any,
+    ) -> Dict[str, List[Dict[str, Any]]]:
+        if not batch_docs:
+            return {}
+        if len(batch_docs) == 1:
+            doc_id, doc_text = batch_docs[0]
+            return {
+                doc_id: self._extract_full_doc_single_doc(
+                    doc_id=doc_id,
+                    doc_text=doc_text,
+                    schema=schema,
+                    runtime=runtime,
+                )
+            }
+
+        from redd.llm import CompletionRequest
+
+        if self.multi_record_extraction:
+            output_instruction = (
+                "For each document, identify every table record expressed by the document. "
+                "A document may contain zero, one, or multiple records, possibly across different tables.\n"
+                "For each record, choose the matching table and extract values for every attribute in that table.\n"
+                "Return only one JSON object keyed by doc_id. Each value must have exactly these keys:\n"
+                "- \"Records\": a list of record objects\n"
+                "Each record object must have exactly these keys:\n"
+                "- \"Table Assignment\": the selected table name\n"
+                "- \"Data Extracted\": an object mapping attribute names to values for that table\n"
+                "- \"Record ID\": a short stable identifier if the document contains multiple records; otherwise null\n"
+            )
+        else:
+            output_instruction = (
+                "For each document, choose the single best matching table record expressed by the document.\n"
+                "Extract values for every attribute in that table.\n"
+                "Return only one JSON object keyed by doc_id. Each value must have exactly these keys:\n"
+                "- \"Table Assignment\": the selected table name\n"
+                "- \"Data Extracted\": an object mapping attribute names to values for that table\n"
+            )
+
+        prompt = (
+            "You are a database expert.\n"
+            "Analyze each document against the provided table schemas.\n"
+            f"{output_instruction}"
+            "Use null for missing attribute values. Include every input doc_id. Do not include explanations.\n\n"
+            "Input:\n"
+            + json.dumps(
+                {
+                    "Documents": [
+                        {"doc_id": doc_id, DOCUMENT_KEY: doc_text}
+                        for doc_id, doc_text in batch_docs
+                    ],
+                    SCHEMA_KEY: schema,
+                },
+                ensure_ascii=False,
+            )
+        )
+        try:
+            result = runtime.complete_model(
+                CompletionRequest(
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format="json_object",
+                    context={
+                        "stage": "materialized_full_extraction",
+                        "doc_ids": [doc_id for doc_id, _doc_text in batch_docs],
+                    },
+                ),
+                FullDocumentExtractionBatchOutput,
+            )
+        except Exception as error:
+            logging.warning(
+                f"[{self.__class__.__name__}:_extract_full_doc_batch] "
+                f"Batch full extraction failed for {len(batch_docs)} docs: {error}; "
+                "splitting the batch."
+            )
+            midpoint = len(batch_docs) // 2
+            return {
+                **self._extract_full_doc_batch(
+                    batch_docs=batch_docs[:midpoint],
+                    schema=schema,
+                    runtime=runtime,
+                ),
+                **self._extract_full_doc_batch(
+                    batch_docs=batch_docs[midpoint:],
+                    schema=schema,
+                    runtime=runtime,
+                ),
+            }
+
+        raw_results = getattr(result, "root", result)
+        if not isinstance(raw_results, dict):
+            raw_results = {}
+
+        coerced: Dict[str, List[Dict[str, Any]]] = {}
+        for doc_id, doc_text in batch_docs:
+            value = raw_results.get(doc_id)
+            if value is None:
+                logging.warning(
+                    f"[{self.__class__.__name__}:_extract_full_doc_batch] "
+                    f"Batch result missing doc {doc_id}; falling back to single-doc extraction."
+                )
+                coerced[doc_id] = self._extract_full_doc_single_doc(
+                    doc_id=doc_id,
+                    doc_text=doc_text,
+                    schema=schema,
+                    runtime=runtime,
+                )
+            else:
+                coerced[doc_id] = self._coerce_full_doc_extraction_result(
+                    value,
+                    allow_multiple=self.multi_record_extraction,
+                )
+        return coerced
+
+    @staticmethod
+    def _coerce_full_doc_extraction_result(
+        value: Any,
+        *,
+        allow_multiple: bool = True,
+    ) -> List[Dict[str, Any]]:
+        if isinstance(value, FullDocumentExtractionOutput):
+            if value.records:
+                records = [
+                    make_result_record(
+                        record.table_assignment,
+                        record.data_extracted or {},
+                        record_id=record.record_id,
+                    )
+                    for record in value.records
+                ]
+                return records if allow_multiple else records[:1]
+            return [make_result_record(value.table_assignment, value.data_extracted or {})]
+        if not isinstance(value, dict):
+            return []
+        raw_records = value.get("Records")
+        if raw_records is None:
+            raw_records = value.get("records")
+        if isinstance(raw_records, list):
+            records = []
+            for raw_record in raw_records:
+                if not isinstance(raw_record, dict):
+                    continue
+                table = raw_record.get(TABLE_ASSIGNMENT_KEY)
+                if table is None:
+                    table = raw_record.get("table_assignment")
+                if table is None:
+                    table = raw_record.get("table")
+                if table is None:
+                    table = raw_record.get(RESULT_TABLE_KEY)
+                data = raw_record.get(DATA_EXTRACTED_KEY)
+                if data is None:
+                    data = raw_record.get("data_extracted")
+                if data is None:
+                    data = raw_record.get(RESULT_DATA_KEY)
+                records.append(
+                    make_result_record(
+                        table,
+                        data if isinstance(data, dict) else {},
+                        record_id=raw_record.get("Record ID", raw_record.get(RESULT_RECORD_ID_KEY)),
+                    )
+                )
+            return records if allow_multiple else records[:1]
+        table_assignment = value.get(TABLE_ASSIGNMENT_KEY)
+        if table_assignment is None:
+            table_assignment = value.get("table_assignment")
+        if table_assignment is None:
+            table_assignment = value.get("table")
+        if table_assignment is None:
+            table_assignment = value.get(RESULT_TABLE_KEY)
+        data_extracted = value.get(DATA_EXTRACTED_KEY)
+        if data_extracted is None:
+            data_extracted = value.get("data_extracted")
+        if data_extracted is None:
+            data_extracted = value.get(RESULT_DATA_KEY)
+        if not isinstance(data_extracted, dict):
+            data_extracted = {}
+        return [make_result_record(table_assignment, data_extracted)]
+
+    def _extract_full_doc_single_doc(
+        self,
+        *,
+        doc_id: str,
+        doc_text: str,
+        schema: List[Dict[str, Any]],
+        runtime: Any,
+    ) -> List[Dict[str, Any]]:
+        from redd.llm import CompletionRequest
+
+        if self.multi_record_extraction:
+            output_instruction = (
+                "Identify every table record expressed by the document. "
+                "A document may contain zero, one, or multiple records, possibly across different tables.\n"
+                "For each record, choose the matching table and extract values for every attribute in that table.\n"
+                "Return only JSON with exactly these keys:\n"
+                "- \"Records\": a list of record objects\n"
+                "Each record object must have exactly these keys:\n"
+                "- \"Table Assignment\": the selected table name\n"
+                "- \"Data Extracted\": an object mapping attribute names to values for that table\n"
+                "- \"Record ID\": a short stable identifier if the document contains multiple records; otherwise null\n"
+            )
+        else:
+            output_instruction = (
+                "Choose the single best matching table record expressed by the document.\n"
+                "Extract values for every attribute in that table.\n"
+                "Return only JSON with exactly these keys:\n"
+                "- \"Table Assignment\": the selected table name\n"
+                "- \"Data Extracted\": an object mapping attribute names to values for that table\n"
+            )
+        prompt = (
+            "You are a database expert.\n"
+            "Analyze the document against the provided table schemas.\n"
+            f"{output_instruction}"
+            "Use null for missing attribute values. Do not include explanations.\n\n"
+            "Input:\n"
+            + json.dumps(
+                {
+                    DOCUMENT_KEY: doc_text,
+                    SCHEMA_KEY: schema,
+                },
+                ensure_ascii=False,
+            )
+        )
+        try:
+            result = runtime.complete_model(
+                CompletionRequest(
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format="json_object",
+                    context={
+                        "stage": "materialized_full_extraction",
+                        "doc_id": doc_id,
+                    },
+                ),
+                FullDocumentExtractionOutput,
+            )
+        except Exception as error:
+            logging.warning(
+                f"[{self.__class__.__name__}:_extract_full_doc_single_doc] "
+                f"Full doc extraction failed for doc {doc_id}: {error}; "
+                "falling back to table-then-attr extraction."
+            )
+            if hasattr(self.loader, "get_doc_text"):
+                doc_text = self.loader.get_doc_text(doc_id)
+            all_tables = [s[SCHEMA_NAME_KEY] for s in schema]
+            table, failed, _reason = self._assign_table_single_doc(
+                doc_id=doc_id,
+                doc_text=doc_text,
+                all_tables=all_tables,
+                prompt_schema=schema,
+                usage_stage="materialized_full_fallback_table_assignment",
+            )
+            if failed or table not in all_tables:
+                return []
+            table_schema = next(s for s in schema if s[SCHEMA_NAME_KEY] == table)
+            attrs = [a[ATTRIBUTE_NAME_KEY] for a in table_schema.get(ATTRIBUTES_KEY, [])]
+            data = self._extract_all_attrs_single_doc(
+                doc_id=doc_id,
+                doc_text=doc_text,
+                attrs=attrs,
+                table_schema=table_schema,
+                usage_stage="materialized_full_fallback_attr_extraction",
+            )
+            return [make_result_record(table, data)]
+        return self._coerce_full_doc_extraction_result(
+            result,
+            allow_multiple=self.multi_record_extraction,
+        )
+
+    def _process_materialized_full_attr_extraction(
+        self,
+        schema_query: List[Dict[str, Any]],
+        res_data: Dict[str, Any],
+        res_path: Path,
+        pgbar_name: str,
+        excluded_doc_ids: Optional[set] = None,
+        query_id: Optional[str] = None,
+        target_doc_ids: Optional[List[str]] = None,
+        **kwargs,
+    ) -> None:
+        """
+        Extract all attributes for the query-independent materialized artifact.
+
+        Unlike query execution, the materialized artifact needs every attribute
+        for the assigned table. Running one LLM call per document/table keeps the
+        artifact semantics while avoiding one request per cell.
+        """
+        del query_id, kwargs
+        all_tables = [s[SCHEMA_NAME_KEY] for s in self.schema_general]
+        table2schema = {s[SCHEMA_NAME_KEY]: s for s in self.schema_general}
+        table2attr: Dict[str, List[str]] = {
+            s[SCHEMA_NAME_KEY]: [a[ATTRIBUTE_NAME_KEY] for a in s.get(ATTRIBUTES_KEY, [])]
+            for s in schema_query
+            if s.get(SCHEMA_NAME_KEY) in all_tables
+        }
+        excluded_doc_ids = excluded_doc_ids or set()
+        target_doc_ids = list(self.loader.doc_ids) if target_doc_ids is None else target_doc_ids
+        use_gt_attr = bool(self.config.get("use_gt_attr_extraction", False) or self.disable_llm)
+
+        pending_docs: List[tuple[str, int, str, Optional[str], List[str]]] = []
+        total_attrs = 0
+        already_processed_attrs = 0
+        for doc_id in target_doc_ids:
+            if doc_id in excluded_doc_ids or doc_id not in res_data:
+                continue
+            for record in active_result_records(res_data[doc_id]):
+                table_assigned = record.get("table")
+                if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
+                    continue
+                attrs_needed = table2attr.get(str(table_assigned), [])
+                total_attrs += len(attrs_needed)
+                existing_data = record.get(RESULT_DATA_KEY, {})
+                if not isinstance(existing_data, dict):
+                    existing_data = {}
+                missing_attrs = [attr for attr in attrs_needed if attr not in existing_data]
+                already_processed_attrs += len(attrs_needed) - len(missing_attrs)
+                if missing_attrs:
+                    pending_docs.append(
+                        (
+                            doc_id,
+                            int(record.get("_record_index") or 0),
+                            str(table_assigned),
+                            record.get(RESULT_RECORD_ID_KEY),
+                            missing_attrs,
+                        )
+                    )
+
+        logging.info(
+            f"[{self.__class__.__name__}:_process_materialized_full_attr_extraction] "
+            f"Total attrs: {total_attrs}, already processed: {already_processed_attrs}, "
+            f"pending docs: {len(pending_docs)}"
+        )
+        progress_bar = tqdm(
+            total=total_attrs,
+            initial=already_processed_attrs,
+            desc=f"Materialized Attr Extraction {pgbar_name}",
+        )
+        if not pending_docs:
+            progress_bar.close()
+            return
+
+        task_to_gt_table: Dict[str, str] = {}
+        attr_name_map: Dict[str, Dict[str, Any]] = {}
+        if use_gt_attr and hasattr(self.loader, "load_name_map"):
+            name_map = self.loader.load_name_map(None)
+            if isinstance(name_map, dict):
+                table_map = name_map.get("table", {})
+                if isinstance(table_map, dict):
+                    task_to_gt_table = dict(table_map)
+                attribute_map = name_map.get("attribute", {})
+                if isinstance(attribute_map, dict):
+                    attr_name_map = dict(attribute_map)
+
+        updated_doc_count = 0
+        for doc_id, record_index, table_assigned, record_id, missing_attrs in pending_docs:
+            self._wait_if_paused(f"materialized-attr-extraction:{doc_id}")
+            if use_gt_attr:
+                extracted = {
+                    attr: self._get_gt_attribute_value(
+                        doc_id=doc_id,
+                        task_table=table_assigned,
+                        task_attribute=attr,
+                        task_to_gt_table=task_to_gt_table,
+                        attr_name_map=attr_name_map,
+                        record_index=record_index,
+                        record_id=record_id,
+                    )
+                    for attr in missing_attrs
+                }
+            else:
+                doc_text = self.loader.get_doc_text(doc_id)
+                extracted = self._extract_all_attrs_single_doc(
+                    doc_id=doc_id,
+                    doc_text=doc_text,
+                    attrs=missing_attrs,
+                    table_schema=table2schema[table_assigned],
+                    query_id=None,
+                    usage_stage="materialized_full_attr_extraction",
+                )
+
+            for attr in missing_attrs:
+                attr_val = extracted.get(attr)
+                attr_val = NULL_VALUE if is_none_value(attr_val) else attr_val
+                update_result_record_data(res_data[doc_id], record_index, attr, attr_val)
+            updated_doc_count += 1
+            self._save_results_progress(res_path, res_data, updated_doc_count)
+            progress_bar.update(len(missing_attrs))
+
+        progress_bar.close()
+        self._save_results_progress(res_path, res_data, updated_doc_count, force=True)
+
+    def _extract_all_attrs_single_doc(
+        self,
+        *,
+        doc_id: str,
+        doc_text: str,
+        attrs: List[str],
+        table_schema: Dict[str, Any],
+        query_id: Optional[str] = None,
+        usage_stage: str = "attribute_extraction",
+    ) -> Dict[str, Any]:
+        if not attrs:
+            return {}
+
+        runtime = getattr(self.prompt_attr, "runtime", None)
+        if runtime is None:
+            return {
+                attr: self._extract_attr_single_doc(
+                    doc_id=doc_id,
+                    doc_text=doc_text,
+                    attr=attr,
+                    table_schema=table_schema,
+                    query_id=query_id,
+                    usage_stage=usage_stage,
+                )
+                for attr in attrs
+            }
+
+        from redd.llm import CompletionRequest
+
+        prompt = (
+            "You are a database expert.\n"
+            "Extract values for every requested attribute from the document under the provided schema.\n"
+            "Return one JSON object whose keys are exactly the requested attribute names.\n"
+            "If an attribute value is not present in the document, return null for that key.\n"
+            "Do not include explanations or extra keys.\n\n"
+            "Input:\n"
+            + json.dumps(
+                {
+                    DOCUMENT_KEY: doc_text,
+                    SCHEMA_KEY: table_schema,
+                    "Target Attributes": attrs,
+                },
+                ensure_ascii=False,
+            )
+        )
+        try:
+            result = runtime.complete_model(
+                CompletionRequest(
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format="json_object",
+                    context={
+                        "stage": usage_stage,
+                        "query_id": query_id,
+                        "doc_id": doc_id,
+                        "table": table_schema.get(SCHEMA_NAME_KEY),
+                        "attributes": list(attrs),
+                    },
+                ),
+                AttributeExtractionOutput,
+            ).root
+        except Exception as error:
+            logging.warning(
+                f"[{self.__class__.__name__}:_extract_all_attrs_single_doc] "
+                f"Batch extraction failed for doc {doc_id}: {error}; falling back to per-attr extraction."
+            )
+            return {
+                attr: self._extract_attr_single_doc(
+                    doc_id=doc_id,
+                    doc_text=doc_text,
+                    attr=attr,
+                    table_schema=table_schema,
+                    query_id=query_id,
+                    usage_stage=usage_stage,
+                )
+                for attr in attrs
+            }
+        if not isinstance(result, dict):
+            return {attr: None for attr in attrs}
+        return {attr: result.get(attr) for attr in attrs}
+
     def _select_query_ids(self, query_dict: Dict[str, Any]) -> List[str]:
         """
         Select query IDs to run from config.
@@ -774,7 +2249,7 @@ class DataExtraction(DataExtractor):
             )
             null_cache_key = (schema_signature, doc_id)
             if cache_enabled and cached_table and cached_table in all_tables:
-                res_data[doc_id] = {RESULT_TABLE_KEY: cached_table, RESULT_DATA_KEY: {}}
+                res_data[doc_id] = make_legacy_result_entry(cached_table, {})
                 updated_result_count += 1
                 self._save_results_progress(
                     res_path,
@@ -785,7 +2260,7 @@ class DataExtraction(DataExtractor):
                 progress_bar.update(1)
                 continue
             if cache_enabled and cached_table:
-                res_data[doc_id] = {RESULT_TABLE_KEY: NULL_VALUE, RESULT_DATA_KEY: {}}
+                res_data[doc_id] = make_legacy_result_entry(NULL_VALUE, {})
                 updated_result_count += 1
                 self._save_results_progress(
                     res_path,
@@ -796,7 +2271,7 @@ class DataExtraction(DataExtractor):
                 progress_bar.update(1)
                 continue
             if cache_enabled and null_cache_key in self._table_assignment_null_cache:
-                res_data[doc_id] = {RESULT_TABLE_KEY: NULL_VALUE, RESULT_DATA_KEY: {}}
+                res_data[doc_id] = make_legacy_result_entry(NULL_VALUE, {})
                 updated_result_count += 1
                 self._save_results_progress(
                     res_path,
@@ -808,6 +2283,7 @@ class DataExtraction(DataExtractor):
                 continue
 
             table_assigned = None
+            gt_result_records: Optional[List[Dict[str, Any]]] = None
             metadata_found = False
             metadata_lookup_enabled = bool(
                 getattr(self, "table_assignment_source_table_metadata", False)
@@ -826,10 +2302,13 @@ class DataExtraction(DataExtractor):
             if metadata_found:
                 pass
             elif use_gt:
-                table_assigned = self._get_gt_table_assignment(
+                gt_result_records = self._get_gt_result_records(
                     doc_id=doc_id,
                     all_tables=cache_tables,
                     gt_to_task_table=gt_to_task_table,
+                )
+                table_assigned = (
+                    gt_result_records[0].get("table") if gt_result_records else None
                 )
             else:
                 if hasattr(self.loader, "get_doc_text"):
@@ -842,6 +2321,7 @@ class DataExtraction(DataExtractor):
                     all_tables=cache_tables,
                     prompt_schema=cache_schema,
                     max_retries=max_table_retries,
+                    query_id=query_id,
                     **kwargs,
                 )
                 if table_failed:
@@ -860,7 +2340,22 @@ class DataExtraction(DataExtractor):
             if table_assigned not in all_tables:
                 table_assigned = NULL_VALUE
             # Initialize entry with table assignment and empty data
-            res_data[doc_id] = {RESULT_TABLE_KEY: table_assigned, RESULT_DATA_KEY: {}}
+            if gt_result_records is not None:
+                records_for_output = (
+                    gt_result_records
+                    if self.multi_record_extraction
+                    else gt_result_records[:1]
+                )
+                res_data[doc_id] = make_result_entry(
+                    [
+                        record
+                        for record in records_for_output
+                        if record.get("table") in all_tables
+                    ],
+                    include_records_for_single=True,
+                )
+            else:
+                res_data[doc_id] = make_legacy_result_entry(table_assigned, {})
             updated_result_count += 1
             self._save_results_progress(
                 res_path,
@@ -1018,6 +2513,44 @@ class DataExtraction(DataExtractor):
             save_results_fn=lambda p, d: self.save_results(str(p), d),
         )
 
+    def _get_gt_result_records(
+        self,
+        doc_id: str,
+        all_tables: List[str],
+        gt_to_task_table: Dict[str, str],
+    ) -> List[Dict[str, Any]]:
+        """Get all task-schema records for a document from ground truth."""
+        if not hasattr(self.loader, "get_doc_info"):
+            raise RuntimeError(
+                "use_gt_table_assignment requires loader with get_doc_info"
+            )
+        doc_info = self.loader.get_doc_info(doc_id)
+        if not doc_info:
+            return []
+        data_records = doc_info.get("data_records") or []
+        if not data_records and doc_info.get("table"):
+            data_records = [{"table_name": doc_info.get("table"), "data": doc_info.get("data", {})}]
+
+        records = []
+        for index, gt_record in enumerate(data_records):
+            if not isinstance(gt_record, dict):
+                continue
+            gt_table = gt_record.get("table_name") or gt_record.get("table")
+            if not gt_table:
+                continue
+            task_table = gt_to_task_table.get(gt_table, gt_table)
+            if task_table not in all_tables:
+                continue
+            record_id = (
+                gt_record.get(RESULT_RECORD_ID_KEY)
+                or gt_record.get("row_id")
+                or gt_record.get("source_row_id")
+            )
+            if record_id is None and len(data_records) > 1:
+                record_id = f"{doc_id}#{index}"
+            records.append(make_result_record(task_table, {}, record_id=record_id))
+        return records
+
     def _get_gt_table_assignment(
         self,
         doc_id: str,
@@ -1030,27 +2563,8 @@ class DataExtraction(DataExtractor):
         Returns task schema table name, or None if doc has no GT record or
         GT table doesn't match any task table.
         """
-        if not hasattr(self.loader, "get_doc_info"):
-            raise RuntimeError(
-                "use_gt_table_assignment requires loader with get_doc_info"
-            )
-        doc_info = self.loader.get_doc_info(doc_id)
-        if not doc_info:
-            return None
-        data_records = doc_info.get("data_records") or []
-        if not data_records:
-            return None
-        gt_table = data_records[0].get("table_name")
-        if not gt_table:
-            return None
-        # Map GT table name to task schema name
-        task_table = gt_to_task_table.get(gt_table)
-        if task_table and task_table in all_tables:
-            return task_table
-        # No mapping: try direct match (GT name might equal task name)
-        if gt_table in all_tables:
-            return gt_table
-        return None
+        records = self._get_gt_result_records(doc_id, all_tables, gt_to_task_table)
+        return records[0].get("table") if records else None
 
     def _assign_table_single_doc(
         self,
@@ -1060,6 +2574,8 @@ class DataExtraction(DataExtractor):
         prompt_schema: Optional[List[Dict[str, Any]]] = None,
         max_retries: int = DEFAULT_MAX_TABLE_RETRIES,
         max_consecutive_unknown: int = MAX_CONSECUTIVE_UNKNOWN_SCHEMA,
+        query_id: Optional[str] = None,
+        usage_stage: str = "table_assignment",
         **kwargs,
     ) -> tuple:
         """
@@ -1092,10 +2608,18 @@ class DataExtraction(DataExtractor):
             }
             tbl_input = json.dumps(tbl_input, ensure_ascii=False)
             try:
+                call_kwargs = {
+                    **self.retry_params,
+                    "usage_context": {
+                        "stage": usage_stage,
+                        "query_id": query_id,
+                        "doc_id": doc_id,
+                    },
+                }
                 res_tbl = self.prompt_table.complete_model(
                     tbl_input,
                     TableAssignmentOutput,
-                    **self.retry_params,
+                    **call_kwargs,
                 )
             except Exception as error:
                 last_raw_text = str(error)
@@ -1166,7 +2690,7 @@ class DataExtraction(DataExtractor):
                 f"Excluding {len(excluded_doc_ids)} documents"
             )
 
-        # Build pending tasks: list of (doc_id, attr) pairs that need processing
+        # Build pending tasks: list of (doc_id, record_index, table, record_id, attr).
         # Also count already processed attrs for progress tracking
         pending_tasks: List[tuple] = []
         total_attrs = 0
@@ -1183,27 +2707,31 @@ class DataExtraction(DataExtractor):
             if doc_id not in res_data:
                 continue
 
-            table_assigned = res_data[doc_id].get(RESULT_TABLE_KEY)
+            for record in active_result_records(res_data[doc_id]):
+                table_assigned = record.get("table")
+                if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
+                    continue
 
-            # Skip if table is None/NULL
-            if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
-                continue
+                attrs_needed = table2attr.get(str(table_assigned), [])
+                total_attrs += len(attrs_needed)
 
-            # Get attributes needed for this table
-            attrs_needed = table2attr.get(table_assigned, [])
-            total_attrs += len(attrs_needed)
+                existing_data = record.get(RESULT_DATA_KEY, {})
+                if not isinstance(existing_data, dict):
+                    existing_data = {}
 
-            # Check which attrs are already extracted for this doc
-            existing_data = res_data[doc_id].get(RESULT_DATA_KEY, {})
-            if not isinstance(existing_data, dict):
-                existing_data = {}
-                res_data[doc_id][RESULT_DATA_KEY] = existing_data
-
-            for attr in attrs_needed:
-                if attr in existing_data:
-                    already_processed_attrs += 1
-                else:
-                    pending_tasks.append((doc_id, attr))
+                for attr in attrs_needed:
+                    if attr in existing_data:
+                        already_processed_attrs += 1
+                    else:
+                        pending_tasks.append(
+                            (
+                                doc_id,
+                                int(record.get("_record_index") or 0),
+                                str(table_assigned),
+                                record.get(RESULT_RECORD_ID_KEY),
+                                attr,
+                            )
+                        )
 
         logging.info(f"[{self.__class__.__name__}:_process_attr_extraction] "
                      f"Total attrs: {total_attrs}, already processed: {already_processed_attrs}, "
@@ -1221,18 +2749,27 @@ class DataExtraction(DataExtractor):
             progress_bar.close()
             return
 
-        # Process each (doc_id, attr) pair
+        # Process each (doc_id, record_index, table, record_id, attr) tuple.
         updated_attr_count = 0
-        for doc_id, attr in pending_tasks:
+        for doc_id, record_index, table_assigned, record_id, attr in pending_tasks:
             self._wait_if_paused(f"attr-extraction:{doc_id}:{attr}")
-            table_assigned = res_data[doc_id].get(RESULT_TABLE_KEY)
             if use_gt_attr:
                 attr_val = self._get_gt_attribute_value(
                     doc_id=doc_id,
-                    task_table=str(table_assigned),
+                    task_table=table_assigned,
                     task_attribute=attr,
                     task_to_gt_table=task_to_gt_table,
                     attr_name_map=attr_name_map,
+                    record_index=record_index,
+                    record_id=record_id,
+                )
+            elif self._materialized_full_extraction_data is not None:
+                attr_val = self._lookup_materialized_attribute(
+                    doc_id,
+                    attr,
+                    record_index=record_index,
+                    table=table_assigned,
+                    record_id=record_id,
                 )
             else:
                 doc_text = self.loader.get_doc_text(doc_id)
@@ -1242,6 +2779,7 @@ class DataExtraction(DataExtractor):
                     attr=attr,
                     table_schema=table2schema[table_assigned],
                     max_retries=max_attr_retries,
+                    query_id=query_id,
                     **kwargs,
                 )
 
@@ -1249,7 +2787,7 @@ class DataExtraction(DataExtractor):
             if isinstance(attr_val, str) and len(attr_val) > MAX_ATTRIBUTE_VALUE_LENGTH:
                 logging.info(f"[{self.__class__.__name__}:_process_attr_extraction] Attr too long "
                              f"(>{len(attr_val)}): doc {doc_id} attr {attr}")
-            res_data[doc_id][RESULT_DATA_KEY][attr] = attr_val
+            update_result_record_data(res_data[doc_id], record_index, attr, attr_val)
 
             # Save after each attr extraction
             updated_attr_count += 1
@@ -1298,33 +2836,51 @@ class DataExtraction(DataExtractor):
         for doc_result in res_data.values():
             if not isinstance(doc_result, dict):
                 continue
-            table_assigned = doc_result.get(RESULT_TABLE_KEY)
-            data = doc_result.get(RESULT_DATA_KEY, {})
-            if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
-                continue
-            if not isinstance(data, dict):
-                data = {}
 
-            passed = True
-            for attr, predicate_fn in predicate_fns:
-                if not predicate_fn(data.get(attr)):
-                    passed = False
-                    break
-            if not passed:
-                doc_result[RESULT_TABLE_KEY] = NULL_VALUE
-                doc_result[RESULT_DATA_KEY] = {}
-                changed = True
+            records = active_result_records(doc_result)
+            if not records:
                 continue
 
-            if output_attrs:
-                projected = {
-                    attr: data[attr]
-                    for attr in output_attrs
-                    if attr in data and not is_none_value(data.get(attr))
-                }
-                if projected != data:
-                    doc_result[RESULT_DATA_KEY] = projected
+            projected_records = []
+            for record in records:
+                data = record.get(RESULT_DATA_KEY, {})
+                if not isinstance(data, dict):
+                    data = {}
+
+                passed = True
+                for attr, predicate_fn in predicate_fns:
+                    if not predicate_fn(data.get(attr)):
+                        passed = False
+                        break
+                if not passed:
                     changed = True
+                    continue
+
+                if output_attrs:
+                    projected = {
+                        attr: data[attr]
+                        for attr in output_attrs
+                        if attr in data and not is_none_value(data.get(attr))
+                    }
+                    if projected != data:
+                        data = projected
+                        changed = True
+                projected_records.append(
+                    make_result_record(
+                        record.get("table"),
+                        data,
+                        record_id=record.get(RESULT_RECORD_ID_KEY),
+                    )
+                )
+
+            new_entry = make_result_entry(
+                projected_records,
+                include_records_for_single=True,
+            )
+            if new_entry != doc_result:
+                doc_result.clear()
+                doc_result.update(new_entry)
+                changed = True
 
         if changed:
             self.save_results(res_path, res_data)
@@ -1348,6 +2904,8 @@ class DataExtraction(DataExtractor):
         task_attribute: str,
         task_to_gt_table: Dict[str, str],
         attr_name_map: Dict[str, Dict[str, Any]],
+        record_index: int = 0,
+        record_id: Optional[str] = None,
     ) -> Any:
         """
         Get attribute value from ground truth records (no LLM call).
@@ -1373,6 +2931,24 @@ class DataExtraction(DataExtractor):
             target_records = [r for r in data_records if r.get("table_name") == task_table]
         if not target_records:
             return None
+        if record_id is not None:
+            matching_records = [
+                record
+                for record in target_records
+                if str(
+                    record.get(RESULT_RECORD_ID_KEY)
+                    or record.get("row_id")
+                    or record.get("source_row_id")
+                    or ""
+                )
+                == str(record_id)
+            ]
+            if matching_records:
+                target_records = matching_records
+            elif 0 <= record_index < len(target_records):
+                target_records = [target_records[record_index]]
+        elif 0 <= record_index < len(target_records):
+            target_records = [target_records[record_index]]
 
         mapped_attrs = attr_name_map.get(gt_table, {}).get(task_attribute, task_attribute)
         if isinstance(mapped_attrs, list):
@@ -1408,6 +2984,8 @@ class DataExtraction(DataExtractor):
         attr: str,
         table_schema: Dict[str, Any],
         max_retries: int = DEFAULT_MAX_ATTR_RETRIES,
+        query_id: Optional[str] = None,
+        usage_stage: str = "attribute_extraction",
         **kwargs,
     ) -> Any:
         """
@@ -1430,10 +3008,20 @@ class DataExtraction(DataExtractor):
             }
             attr_input = json.dumps(attr_input, ensure_ascii=False)
             try:
+                call_kwargs = {
+                    **self.retry_params,
+                    "usage_context": {
+                        "stage": usage_stage,
+                        "query_id": query_id,
+                        "doc_id": doc_id,
+                        "table": table_schema.get(SCHEMA_NAME_KEY),
+                        "attribute": attr,
+                    },
+                }
                 res_attr = self.prompt_attr.complete_model(
                     attr_input,
                     AttributeExtractionOutput,
-                    **self.retry_params,
+                    **call_kwargs,
                 ).root
             except Exception:
                 attr_attempt += 1

@@ -38,6 +38,7 @@ from .config import (
     select_experiment,
 )
 from .core.data_loader.data_loader_hf_manifest import build_default_query_records
+from .core.utils.extraction_records import active_result_records
 from .core.utils.progress import progress_event_sink
 from .diagnostics.dataset_consistency import (
     build_dataset_consistency_audit,
@@ -1867,18 +1868,45 @@ def _json_result_stats(content: dict[str, Any]) -> dict[str, Any]:
     columns: set[str] = set()
     preview: list[dict[str, Any]] = []
     fallback_preview: list[dict[str, Any]] = []
+    records_count = 0
     for doc_id, record in content.items():
         if not isinstance(record, dict):
             if len(fallback_preview) < 5:
                 fallback_preview.append({"id": str(doc_id), "value": record})
             continue
+        expanded_records = active_result_records(record)
+        if expanded_records:
+            records_count += len(expanded_records)
+            for index, result_record in enumerate(expanded_records):
+                table = result_record.get("table")
+                data = (
+                    result_record.get("data")
+                    if isinstance(result_record.get("data"), dict)
+                    else None
+                )
+                if table and table != "None":
+                    tables.add(str(table))
+                if data:
+                    columns.update(str(key) for key in data.keys())
+                item = {
+                    "id": str(doc_id),
+                    "record_id": result_record.get("record_id") or f"{doc_id}#{index}",
+                    "table": table,
+                    "data": data,
+                }
+                if len(preview) < 5:
+                    preview.append(item)
+            continue
+
         table = record.get("res")
         data = record.get("data") if isinstance(record.get("data"), dict) else None
         has_tuple = bool((table and table != "None") or data)
-        if table and table != "None":
-            tables.add(str(table))
-        if data:
-            columns.update(str(key) for key in data.keys())
+        if has_tuple:
+            records_count += 1
+            if table and table != "None":
+                tables.add(str(table))
+            if data:
+                columns.update(str(key) for key in data.keys())
         item = {
             "id": str(doc_id),
             "table": table,
@@ -1889,7 +1917,7 @@ def _json_result_stats(content: dict[str, Any]) -> dict[str, Any]:
         elif len(fallback_preview) < 5:
             fallback_preview.append(item)
     return {
-        "records_count": len(content),
+        "records_count": records_count,
         "tables": sorted(tables),
         "columns": sorted(columns),
         "preview": preview or fallback_preview,

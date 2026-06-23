@@ -1,6 +1,9 @@
 import logging
-import os
+import re
 from datetime import datetime
+from pathlib import Path
+
+_LOG_COMPONENT_PATTERN = re.compile(r"[^A-Za-z0-9_.-]+")
 
 
 def get_log_level(level_str):
@@ -28,7 +31,27 @@ class NoHTTPRequestFilter(logging.Filter):
         return "HTTP Request" not in record.getMessage()
 
 
-def setup_logging(exp=None, log_dir="logs", console_log_level=logging.WARNING):
+def _safe_log_component(value):
+    slug = _LOG_COMPONENT_PATTERN.sub("-", str(value).strip()).strip(".-")
+    return slug or "run"
+
+
+def _create_log_path(log_dir, exp, timestamp):
+    base_dir = Path(log_dir) / "runs" / _safe_log_component(exp) / timestamp.strftime("%Y-%m-%d")
+    time_slug = timestamp.strftime("%H-%M-%S")
+    for index in range(1, 1000):
+        suffix = "" if index == 1 else f"-{index:02d}"
+        log_path = base_dir / f"{time_slug}{suffix}.log"
+        try:
+            base_dir.mkdir(parents=True, exist_ok=True)
+            log_path.touch(exist_ok=False)
+            return log_path
+        except FileExistsError:
+            continue
+    raise RuntimeError(f"Unable to create a unique log file under {base_dir}")
+
+
+def setup_logging(exp=None, log_dir="outputs/logs", console_log_level=logging.WARNING, timestamp=None):
     """
     Set up logging configuration with different levels for console and file outputs.
     """
@@ -44,12 +67,10 @@ def setup_logging(exp=None, log_dir="logs", console_log_level=logging.WARNING):
     console_handler.setFormatter(console_formatter)
     logger.addHandler(console_handler)
 
-    # File handler with all levels (DEBUG and above)
+    # File handler for this run.
     if exp:
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        log_filename = f"{exp}-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S.log")
-        log_filepath = os.path.join(log_dir, log_filename)
+        timestamp = timestamp or datetime.now()
+        log_filepath = _create_log_path(log_dir, exp, timestamp)
         file_handler = logging.FileHandler(log_filepath, mode="w", encoding="utf-8")
         file_handler.setLevel(logging.INFO)  # Log everything to the file
         file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
@@ -57,6 +78,7 @@ def setup_logging(exp=None, log_dir="logs", console_log_level=logging.WARNING):
         logger.addHandler(file_handler)
         logging.info(f"Logs will be saved to: {log_filepath}")
     else:
+        log_filepath = None
         logging.info("File logging is disabled")
 
     # for handler in logger.handlers:
@@ -64,6 +86,7 @@ def setup_logging(exp=None, log_dir="logs", console_log_level=logging.WARNING):
 
     # Test logging
     logging.info("Logging initialized")
+    return log_filepath
 
 
 if __name__ == "__main__":

@@ -103,59 +103,6 @@
       }
     },
     {
-      "query_id": "Q_gen_schools_website_in_005_http_cds_ouhsd_org",
-      "question": "List school from schools where website is one of http://cds.ouhsd.org, www.paradiseintermediate.pusdk12.org.",
-      "sql": "SELECT \"school\" FROM \"schools\" WHERE \"website\" IN ('http://cds.ouhsd.org', 'www.paradiseintermediate.pusdk12.org');",
-      "required_tables": [
-        "schools"
-      ],
-      "required_columns": [
-        "schools.website",
-        "schools.school"
-      ],
-      "output_columns": [
-        "schools.school"
-      ],
-      "tags": [
-        "query_curation",
-        "generated_sql_first",
-        "bucket_candidate"
-      ],
-      "difficulty": null,
-      "meta": {
-        "generated_by": "scripts/query_curation.py",
-        "coverage_bucket": 0.05,
-        "target_doc_coverage": 0.05,
-        "actual_doc_coverage": 0.04,
-        "actual_table_doc_coverage": 0.3333333333333333,
-        "result_docs": 2,
-        "total_docs": 50,
-        "table_total_docs": 6,
-        "predicate_table": "schools",
-        "predicate_column": "schools.website",
-        "operator": "IN",
-        "value": [
-          "http://cds.ouhsd.org",
-          "www.paradiseintermediate.pusdk12.org"
-        ],
-        "is_join": false,
-        "candidate_source_round": "v4",
-        "dataset_id": "bird.schools_demo",
-        "source_dataset_id": "bird.schools_demo",
-        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/bird.schools_demo",
-        "source_query_id": "Q_gen_schools_website_in_005_http_cds_ouhsd_org",
-        "curation_status": "keep",
-        "profile_all_relevant_docs": 2,
-        "profile_all_required_cells": 4,
-        "profile_all_relevant_doc_rate": 0.04,
-        "profile_eval_relevant_docs": 2,
-        "profile_eval_required_cells": 4,
-        "profile_eval_relevant_doc_rate": 0.08,
-        "profile_provenance_status": "ok",
-        "applied_to_source": true
-      }
-    },
-    {
       "query_id": "Q_gen_schools_school_value_010_castlemont_high",
       "question": "List district from schools where school does not equal Castlemont High.",
       "sql": "SELECT \"district\" FROM \"schools\" WHERE \"school\" <> 'Castlemont High';",
@@ -350,56 +297,6 @@
         "source_dataset_id": "bird.schools_demo",
         "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/bird.schools_demo",
         "source_query_id": "Q_gen_schools_city_value_010_chico",
-        "curation_status": "keep",
-        "profile_all_relevant_docs": 5,
-        "profile_all_required_cells": 10,
-        "profile_all_relevant_doc_rate": 0.1,
-        "profile_eval_relevant_docs": 2,
-        "profile_eval_required_cells": 4,
-        "profile_eval_relevant_doc_rate": 0.08,
-        "profile_provenance_status": "ok",
-        "applied_to_source": true
-      }
-    },
-    {
-      "query_id": "Q_gen_schools_doc_value_010_52",
-      "question": "List school from schools where doc does not equal 52.",
-      "sql": "SELECT \"school\" FROM \"schools\" WHERE \"doc\" <> 52;",
-      "required_tables": [
-        "schools"
-      ],
-      "required_columns": [
-        "schools.doc",
-        "schools.school"
-      ],
-      "output_columns": [
-        "schools.school"
-      ],
-      "tags": [
-        "query_curation",
-        "generated_sql_first",
-        "bucket_candidate"
-      ],
-      "difficulty": null,
-      "meta": {
-        "generated_by": "scripts/query_curation.py",
-        "coverage_bucket": 0.1,
-        "target_doc_coverage": 0.1,
-        "actual_doc_coverage": 0.1,
-        "actual_table_doc_coverage": 0.8333333333333334,
-        "result_docs": 5,
-        "total_docs": 50,
-        "table_total_docs": 6,
-        "predicate_table": "schools",
-        "predicate_column": "schools.doc",
-        "operator": "!=",
-        "value": "52",
-        "is_join": false,
-        "candidate_source_round": "v4",
-        "dataset_id": "bird.schools_demo",
-        "source_dataset_id": "bird.schools_demo",
-        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/bird.schools_demo",
-        "source_query_id": "Q_gen_schools_doc_value_010_52",
         "curation_status": "keep",
         "profile_all_relevant_docs": 5,
         "profile_all_required_cells": 10,

@@ -180,7 +180,7 @@ def _base_config(prepared: list[PreparedDataset], variant: str) -> dict[str, Any
         "project": {"name": f"deepseek-query-curation-{variant}", "seed": 42},
         "runtime": {
             "output_dir": str(OUTPUT_ROOT.relative_to(ROOT)),
-            "log_dir": "logs",
+            "log_dir": "outputs/logs",
             "output_layout": "dataset_stage",
             "artifact_id": artifact_id,
             "console_log_level": "WARNING",

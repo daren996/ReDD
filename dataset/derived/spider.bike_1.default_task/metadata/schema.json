@@ -96,7 +96,7 @@
           "column_id": "status.time",
           "name": "time",
           "type": "string",
-          "description": "Timestamp for the status record.",
+          "description": "Exact status timestamp. Preserve seconds when present and do not round or default missing seconds to :00 unless explicitly stated.",
           "nullable": true,
           "examples": []
         }
@@ -130,7 +130,7 @@
           "column_id": "trip.end_date",
           "name": "end_date",
           "type": "string",
-          "description": "Timestamp indicating when the trip ended.",
+          "description": "Exact trip end timestamp. Preserve the date and time exactly as stated, including minute/second precision; do not collapse to date-only.",
           "nullable": true,
           "examples": []
         },
@@ -146,7 +146,7 @@
           "column_id": "trip.start_date",
           "name": "start_date",
           "type": "string",
-          "description": "Timestamp indicating when the trip started.",
+          "description": "Exact trip start timestamp. Preserve the date and time exactly as stated, including minute/second precision; do not collapse to date-only.",
           "nullable": true,
           "examples": []
         },
@@ -185,18 +185,10 @@
       ],
       "columns": [
         {
-          "column_id": "weather.cloud_cover",
-          "name": "cloud_cover",
-          "type": "string",
-          "description": "Cloud cover on a scale from 0 (clear) to 10 (overcast).",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "weather.date",
           "name": "date",
           "type": "string",
-          "description": "Date for the weather record.",
+          "description": "Exact calendar date of the weather record.",
           "nullable": true,
           "examples": []
         },
@@ -357,14 +349,6 @@
           "name": "precipitation_inches",
           "type": "string",
           "description": "Amount of precipitation recorded in inches.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "weather.wind_dir_degrees",
-          "name": "wind_dir_degrees",
-          "type": "string",
-          "description": "Average wind direction in degrees.",
           "nullable": true,
           "examples": []
         },

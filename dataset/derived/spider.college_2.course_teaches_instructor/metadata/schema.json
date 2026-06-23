@@ -11,14 +11,6 @@
       ],
       "columns": [
         {
-          "column_id": "course_information.course_description",
-          "name": "course_description",
-          "type": "string",
-          "description": "Briefly describes the key thematic intersections and academic focus of the course, particularly emphasizing interdisciplinary aspects.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "course_information.course_title",
           "name": "course_title",
           "type": "string",

@@ -1,0 +1,1456 @@
+{
+  "dataset": "college_2/course-teaches-instructor",
+  "source": "spider_sqlite",
+  "database": "college_2",
+  "task_db": "course-teaches-instructor.db",
+  "gt_db": "gt_data.db",
+  "schema_db": "course-teaches-instructor_schema.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "Find the names of instructors who teach courses in the 'Fall' semester of the year 2006 and whose salary is greater than $50000.",
+      "sql": "SELECT DISTINCT T1.name FROM instructor AS T1 JOIN teaches AS T2 ON T1.name = T2.instructor_name WHERE T2.semester = 'Fall' AND T2.year = '2006' AND T1.salary > '50000';",
+      "golden_schema": {
+        "tables": [
+          "instructor",
+          "teaches"
+        ],
+        "columns": [
+          "instructor.name",
+          "teaches.instructor_name",
+          "teaches.semester",
+          "teaches.year",
+          "instructor.salary"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name"
+      ],
+      "result_rows": [
+        [
+          "Gustafsson"
+        ],
+        [
+          "DAgostino"
+        ]
+      ],
+      "result_count": 2,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "List the names of courses taught by instructors in the 'Comp. Sci.' department.",
+      "sql": "SELECT DISTINCT T1.course_title FROM teaches AS T1 JOIN instructor AS T2 ON T1.instructor_name = T2.name WHERE T2.dept_name = 'Comp. Sci.';",
+      "golden_schema": {
+        "tables": [
+          "teaches",
+          "instructor"
+        ],
+        "columns": [
+          "teaches.course_title",
+          "teaches.instructor_name",
+          "instructor.name",
+          "instructor.dept_name"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "course_title"
+      ],
+      "result_rows": [
+        [
+          "Japanese"
+        ],
+        [
+          "Tort Law"
+        ],
+        [
+          "Corporate Law"
+        ],
+        [
+          "International Practicum"
+        ],
+        [
+          "Plastics"
+        ]
+      ],
+      "result_count": 5,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "Find the titles of courses that have 4 credits.",
+      "sql": "SELECT title FROM course WHERE credits = '4';",
+      "golden_schema": {
+        "tables": [
+          "course"
+        ],
+        "columns": [
+          "course.title",
+          "course.credits"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Astronomy"
+        ],
+        [
+          "Logic"
+        ],
+        [
+          "Petroleum Engineering"
+        ],
+        [
+          "Visual BASIC"
+        ],
+        [
+          "Networking"
+        ],
+        [
+          "Groups and Rings"
+        ],
+        [
+          "UNIX System Programmming"
+        ],
+        [
+          "Tort Law"
+        ],
+        [
+          "Plasma Physics"
+        ],
+        [
+          "International Practicum"
+        ],
+        [
+          "Topology"
+        ],
+        [
+          "FOCAL Programming"
+        ],
+        [
+          "UNIX System Programmming"
+        ],
+        [
+          "Greek Tragedy"
+        ],
+        [
+          "Plastics"
+        ],
+        [
+          "Music of the 90s"
+        ],
+        [
+          "Electron Microscopy"
+        ],
+        [
+          "Corporate Law"
+        ],
+        [
+          "Thermal Physics"
+        ],
+        [
+          "Game Programming"
+        ],
+        [
+          "Music of the 80s"
+        ],
+        [
+          "Aquatic Chemistry"
+        ],
+        [
+          "Antidisestablishmentarianism in Modern America"
+        ],
+        [
+          "Sanitary Engineering"
+        ],
+        [
+          "Quantum Mechanics"
+        ],
+        [
+          "Bacteriology"
+        ],
+        [
+          "Introduction to Burglary"
+        ],
+        [
+          "Fractal Geometry"
+        ],
+        [
+          "Virology"
+        ],
+        [
+          "Elastic Structures"
+        ],
+        [
+          "Game Programming"
+        ],
+        [
+          "The Music of the Ramones"
+        ],
+        [
+          "Number Theory"
+        ],
+        [
+          "Environmental Law"
+        ],
+        [
+          "Differential Geometry"
+        ],
+        [
+          "The Music of the Ramones"
+        ],
+        [
+          "Composition and Literature"
+        ],
+        [
+          "Heat Transfer"
+        ],
+        [
+          "Multimedia Design"
+        ],
+        [
+          "Quantum Mechanics"
+        ],
+        [
+          "Creative Writing"
+        ],
+        [
+          "Environmental Law"
+        ],
+        [
+          "Number Theory"
+        ],
+        [
+          "The Renaissance"
+        ],
+        [
+          "Organic Chemistry"
+        ],
+        [
+          "The Monkeys"
+        ],
+        [
+          "Calculus"
+        ],
+        [
+          "Journalism"
+        ],
+        [
+          "International Trade"
+        ],
+        [
+          "International Communication"
+        ],
+        [
+          "World History"
+        ],
+        [
+          "The Music of Dave Edmunds"
+        ],
+        [
+          "Thermodynamics"
+        ],
+        [
+          "Embedded Systems"
+        ],
+        [
+          "Journalism"
+        ],
+        [
+          "Sensor Networks"
+        ],
+        [
+          "Automobile Mechanics"
+        ],
+        [
+          "The Music of Donovan"
+        ],
+        [
+          "Differential Geometry"
+        ],
+        [
+          "Drama"
+        ],
+        [
+          "The Music of Donovan"
+        ],
+        [
+          "Greek Tragedy"
+        ],
+        [
+          "Composition and Literature"
+        ],
+        [
+          "Sailing"
+        ],
+        [
+          "Race Car Driving"
+        ],
+        [
+          "Fractal Geometry"
+        ],
+        [
+          "C  Programming"
+        ],
+        [
+          "Compiler Design"
+        ],
+        [
+          "Music 2 New for your Instructor"
+        ],
+        [
+          "Marine Mammals"
+        ],
+        [
+          "How to Succeed in Business Without Really Trying"
+        ],
+        [
+          "Database System Concepts"
+        ],
+        [
+          "Industrial Organization"
+        ],
+        [
+          "Groups and Rings"
+        ],
+        [
+          "Shakespeare"
+        ],
+        [
+          "RPG Programming"
+        ],
+        [
+          "Hydraulics"
+        ],
+        [
+          "Microeconomics"
+        ],
+        [
+          "Immunology"
+        ],
+        [
+          "Geology"
+        ],
+        [
+          "Medieval Civilization or Lack Thereof"
+        ],
+        [
+          "Compiler Design"
+        ],
+        [
+          "Stream Processing"
+        ],
+        [
+          "Recursive Function Theory"
+        ],
+        [
+          "Numerical Methods"
+        ],
+        [
+          "Service-Oriented Architectures"
+        ],
+        [
+          "Game Design"
+        ],
+        [
+          "Cost Accounting"
+        ],
+        [
+          "Mechanics"
+        ],
+        [
+          "The Monkeys"
+        ],
+        [
+          "World History"
+        ],
+        [
+          "Image Processing"
+        ]
+      ],
+      "result_count": 92,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "What are the names of instructors who teach courses in both the 'Fall' and 'Spring' semesters?",
+      "sql": "SELECT DISTINCT T1.instructor_name FROM teaches AS T1 WHERE T1.semester = 'Fall' INTERSECT SELECT DISTINCT T1.instructor_name FROM teaches AS T1 WHERE T1.semester = 'Spring';",
+      "golden_schema": {
+        "tables": [
+          "teaches"
+        ],
+        "columns": [
+          "teaches.instructor_name",
+          "teaches.semester"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "instructor_name"
+      ],
+      "result_rows": [
+        [
+          "Atanassov"
+        ],
+        [
+          "Bondi"
+        ],
+        [
+          "DAgostino"
+        ],
+        [
+          "Dale"
+        ],
+        [
+          "Gustafsson"
+        ],
+        [
+          "Jaekel"
+        ],
+        [
+          "Lembr"
+        ],
+        [
+          "Mahmoud"
+        ],
+        [
+          "Mingoz"
+        ],
+        [
+          "Morris"
+        ],
+        [
+          "Sakurai"
+        ],
+        [
+          "Tung"
+        ],
+        [
+          "Ullman "
+        ],
+        [
+          "Valtchev"
+        ],
+        [
+          "Voronina"
+        ],
+        [
+          "Wieland"
+        ]
+      ],
+      "result_count": 16,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "Find the department names where the average salary of instructors is greater than $60000.",
+      "sql": "SELECT dept_name FROM instructor GROUP BY dept_name HAVING AVG(salary) > 60000;",
+      "golden_schema": {
+        "tables": [
+          "instructor"
+        ],
+        "columns": [
+          "instructor.dept_name",
+          "instructor.salary"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "dept_name"
+      ],
+      "result_rows": [
+        [
+          "Astronomy"
+        ],
+        [
+          "Athletics"
+        ],
+        [
+          "Biology"
+        ],
+        [
+          "Comp. Sci."
+        ],
+        [
+          "Cybernetics"
+        ],
+        [
+          "Elec. Eng."
+        ],
+        [
+          "English"
+        ],
+        [
+          "Finance"
+        ],
+        [
+          "Geology"
+        ],
+        [
+          "Marketing"
+        ],
+        [
+          "Mech. Eng."
+        ],
+        [
+          "Physics"
+        ],
+        [
+          "Pol. Sci."
+        ],
+        [
+          "Psychology"
+        ],
+        [
+          "Statistics"
+        ]
+      ],
+      "result_count": 15,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "List the course titles and instructor names for courses taught in the year 2006 or 2007.",
+      "sql": "SELECT course_title, instructor_name FROM teaches WHERE year = '2006' OR year = '2007';",
+      "golden_schema": {
+        "tables": [
+          "teaches"
+        ],
+        "columns": [
+          "teaches.course_title",
+          "teaches.instructor_name",
+          "teaches.year"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "course_title",
+        "instructor_name"
+      ],
+      "result_rows": [
+        [
+          "Embedded Systems",
+          "Mingoz"
+        ],
+        [
+          "Graph Theory",
+          "DAgostino"
+        ],
+        [
+          "Compiler Design",
+          "DAgostino"
+        ],
+        [
+          "Plasma Physics",
+          "Gustafsson"
+        ],
+        [
+          "Mobile Computing",
+          "Voronina"
+        ],
+        [
+          "The Music of the Ramones",
+          "Lembr"
+        ],
+        [
+          "Marine Mammals",
+          "Gustafsson"
+        ],
+        [
+          "Multimedia Design",
+          "Lent"
+        ],
+        [
+          "Graph Theory",
+          "DAgostino"
+        ],
+        [
+          "Visual BASIC",
+          "DAgostino"
+        ],
+        [
+          "Japanese",
+          "Bourrier"
+        ],
+        [
+          "Bankruptcy",
+          "Ullman "
+        ],
+        [
+          "Fractal Geometry",
+          "Shuming"
+        ],
+        [
+          "Systems Software",
+          "Dale"
+        ],
+        [
+          "Operating Systems",
+          "Morris"
+        ],
+        [
+          "Heat Transfer",
+          "Mahmoud"
+        ],
+        [
+          "Tort Law",
+          "Sakurai"
+        ],
+        [
+          "Colloid and Surface Chemistry",
+          "Sakurai"
+        ],
+        [
+          "The Music of the Ramones",
+          "Voronina"
+        ],
+        [
+          "Cost Accounting",
+          "Voronina"
+        ],
+        [
+          "Journalism",
+          "Romero"
+        ],
+        [
+          "Video Gaming",
+          "Mingoz"
+        ],
+        [
+          "Bacteriology",
+          "Voronina"
+        ],
+        [
+          "The Music of Donovan",
+          "Gustafsson"
+        ],
+        [
+          "The IBM 360 Architecture",
+          "DAgostino"
+        ]
+      ],
+      "result_count": 25,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "Find the names of instructors who teach 'Graph Theory'.",
+      "sql": "SELECT instructor_name FROM teaches WHERE course_title = 'Graph Theory';",
+      "golden_schema": {
+        "tables": [
+          "teaches"
+        ],
+        "columns": [
+          "teaches.instructor_name",
+          "teaches.course_title"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "instructor_name"
+      ],
+      "result_rows": [
+        [
+          "DAgostino"
+        ],
+        [
+          "DAgostino"
+        ]
+      ],
+      "result_count": 2,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "List the department names and the number of instructors in each department, only for departments with more than 2 instructors.",
+      "sql": "SELECT dept_name, COUNT(*) FROM instructor GROUP BY dept_name HAVING COUNT(*) > 2;",
+      "golden_schema": {
+        "tables": [
+          "instructor"
+        ],
+        "columns": [
+          "instructor.dept_name"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "dept_name",
+        "count"
+      ],
+      "result_rows": [
+        [
+          "Accounting",
+          4
+        ],
+        [
+          "Athletics",
+          5
+        ],
+        [
+          "Cybernetics",
+          4
+        ],
+        [
+          "Elec. Eng.",
+          4
+        ],
+        [
+          "English",
+          4
+        ],
+        [
+          "Languages",
+          3
+        ],
+        [
+          "Marketing",
+          4
+        ],
+        [
+          "Pol. Sci.",
+          3
+        ],
+        [
+          "Statistics",
+          6
+        ]
+      ],
+      "result_count": 9,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "Find the courses that are taught by instructors who earn more than $70000 and have 4 credits.",
+      "sql": "SELECT DISTINCT T1.title FROM course AS T1 JOIN teaches AS T2 ON T1.title = T2.course_title JOIN instructor AS T3 ON T2.instructor_name = T3.name WHERE T3.salary > '70000' AND T1.credits = '4';",
+      "golden_schema": {
+        "tables": [
+          "course",
+          "teaches",
+          "instructor"
+        ],
+        "columns": [
+          "course.title",
+          "course.credits",
+          "teaches.course_title",
+          "teaches.instructor_name",
+          "instructor.name",
+          "instructor.salary"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "UNIX System Programmming"
+        ],
+        [
+          "Tort Law"
+        ],
+        [
+          "Plasma Physics"
+        ],
+        [
+          "Greek Tragedy"
+        ],
+        [
+          "Aquatic Chemistry"
+        ],
+        [
+          "Elastic Structures"
+        ],
+        [
+          "Differential Geometry"
+        ],
+        [
+          "Heat Transfer"
+        ],
+        [
+          "Journalism"
+        ],
+        [
+          "International Communication"
+        ],
+        [
+          "The Music of Donovan"
+        ],
+        [
+          "Drama"
+        ],
+        [
+          "Marine Mammals"
+        ],
+        [
+          "Numerical Methods"
+        ],
+        [
+          "Image Processing"
+        ]
+      ],
+      "result_count": 15,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "List the instructor names who teach courses with titles containing the word 'Engineering'.",
+      "sql": "SELECT DISTINCT T2.instructor_name FROM course AS T1 JOIN teaches AS T2 ON T1.title = T2.course_title WHERE T1.title LIKE '%Engineering%';",
+      "golden_schema": {
+        "tables": [
+          "course",
+          "teaches"
+        ],
+        "columns": [
+          "course.title",
+          "teaches.instructor_name",
+          "teaches.course_title"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "instructor_name"
+      ],
+      "result_rows": [
+        [
+          "Tung"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "Find the department names where all instructors earn more than $40000.",
+      "sql": "SELECT dept_name FROM instructor GROUP BY dept_name HAVING MIN(salary) > '40000';",
+      "golden_schema": {
+        "tables": [
+          "instructor"
+        ],
+        "columns": [
+          "instructor.dept_name",
+          "instructor.salary"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "dept_name"
+      ],
+      "result_rows": [
+        [
+          "Astronomy"
+        ],
+        [
+          "Biology"
+        ],
+        [
+          "Geology"
+        ],
+        [
+          "Psychology"
+        ]
+      ],
+      "result_count": 4,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "What are the course titles that are taught in the 'Fall' semester of 2006 and have 4 credits?",
+      "sql": "SELECT T1.title FROM course AS T1 JOIN teaches AS T2 ON T1.title = T2.course_title WHERE T2.semester = 'Fall' AND T2.year = '2006' AND T1.credits = '4';",
+      "golden_schema": {
+        "tables": [
+          "course",
+          "teaches"
+        ],
+        "columns": [
+          "course.title",
+          "course.credits",
+          "teaches.course_title",
+          "teaches.semester",
+          "teaches.year"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Tort Law"
+        ],
+        [
+          "Bacteriology"
+        ],
+        [
+          "The Music of the Ramones"
+        ],
+        [
+          "The Music of the Ramones"
+        ],
+        [
+          "Multimedia Design"
+        ],
+        [
+          "Embedded Systems"
+        ],
+        [
+          "The Music of Donovan"
+        ],
+        [
+          "The Music of Donovan"
+        ],
+        [
+          "Cost Accounting"
+        ]
+      ],
+      "result_count": 9,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "List the names of instructors who teach a course that has the same title as a course offered by the 'Cybernetics' department.",
+      "sql": "SELECT DISTINCT T2.instructor_name FROM course AS T1 JOIN teaches AS T2 ON T1.title = T2.course_title WHERE T1.title IN (SELECT title FROM course WHERE dept_name = 'Cybernetics');",
+      "golden_schema": {
+        "tables": [
+          "course",
+          "teaches"
+        ],
+        "columns": [
+          "course.title",
+          "teaches.instructor_name",
+          "teaches.course_title",
+          "course.dept_name"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "instructor_name"
+      ],
+      "result_rows": [
+        [
+          "Bourrier"
+        ],
+        [
+          "Dale"
+        ],
+        [
+          "Sakurai"
+        ],
+        [
+          "DAgostino"
+        ],
+        [
+          "Tung"
+        ],
+        [
+          "Bietzk"
+        ],
+        [
+          "Gustafsson"
+        ],
+        [
+          "Mahmoud"
+        ],
+        [
+          "Jaekel"
+        ],
+        [
+          "Morris"
+        ],
+        [
+          "Bawa"
+        ],
+        [
+          "Pimenta"
+        ]
+      ],
+      "result_count": 12,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find the department names that have at least one instructor earning more than $75000 and offer courses with 3 credits.",
+      "sql": "SELECT DISTINCT T1.dept_name FROM instructor AS T1 JOIN teaches AS T2 ON T1.name = T2.instructor_name JOIN course AS T3 ON T2.course_title = T3.title WHERE T1.salary > '75000' AND T3.credits = '3';",
+      "golden_schema": {
+        "tables": [
+          "instructor",
+          "teaches",
+          "course"
+        ],
+        "columns": [
+          "instructor.dept_name",
+          "instructor.salary",
+          "instructor.name",
+          "teaches.instructor_name",
+          "teaches.course_title",
+          "course.title",
+          "course.credits"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "dept_name"
+      ],
+      "result_rows": [
+        [
+          "Biology"
+        ],
+        [
+          "Cybernetics"
+        ],
+        [
+          "Pol. Sci."
+        ],
+        [
+          "Astronomy"
+        ],
+        [
+          "Geology"
+        ],
+        [
+          "Elec. Eng."
+        ],
+        [
+          "Comp. Sci."
+        ],
+        [
+          "Statistics"
+        ],
+        [
+          "English"
+        ]
+      ],
+      "result_count": 9,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "List the average salary of instructors in each department for departments having more than 2 instructors.",
+      "sql": "SELECT dept_name, AVG(salary) FROM instructor GROUP BY dept_name HAVING COUNT(*) > 2;",
+      "golden_schema": {
+        "tables": [
+          "instructor"
+        ],
+        "columns": [
+          "instructor.dept_name",
+          "instructor.salary"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "dept_name",
+        "avg_salary"
+      ],
+      "result_rows": [
+        [
+          "Accounting",
+          48716.5925
+        ],
+        [
+          "Athletics",
+          77098.198
+        ],
+        [
+          "Cybernetics",
+          96346.5675
+        ],
+        [
+          "Elec. Eng.",
+          74162.73999999999
+        ],
+        [
+          "English",
+          72089.05
+        ],
+        [
+          "Languages",
+          57421.85666666667
+        ],
+        [
+          "Marketing",
+          84097.4375
+        ],
+        [
+          "Pol. Sci.",
+          100053.07333333332
+        ],
+        [
+          "Statistics",
+          67795.44166666667
+        ]
+      ],
+      "result_count": 9,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find the names of instructors who do not teach any courses.",
+      "sql": "SELECT name FROM instructor EXCEPT SELECT instructor_name FROM teaches;",
+      "golden_schema": {
+        "tables": [
+          "instructor",
+          "teaches"
+        ],
+        "columns": [
+          "instructor.name",
+          "teaches.instructor_name"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "name"
+      ],
+      "result_rows": [
+        [
+          "Arias"
+        ],
+        [
+          "Arinb"
+        ],
+        [
+          "Bancilhon"
+        ],
+        [
+          "Bertolino"
+        ],
+        [
+          "Desyl"
+        ],
+        [
+          "Dusserre"
+        ],
+        [
+          "Gutierrez"
+        ],
+        [
+          "Hau"
+        ],
+        [
+          "Kenje"
+        ],
+        [
+          "Konstantinides"
+        ],
+        [
+          "Levine"
+        ],
+        [
+          "McKinnon"
+        ],
+        [
+          "Mird"
+        ],
+        [
+          "Moreira"
+        ],
+        [
+          "Murata"
+        ],
+        [
+          "Pingr"
+        ],
+        [
+          "Soisalon-Soininen"
+        ],
+        [
+          "Yazdi"
+        ],
+        [
+          "Yin"
+        ]
+      ],
+      "result_count": 19,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "List courses taught in the 'Fall' semester by instructors in the 'Comp. Sci.' department whose salary is below $60000.",
+      "sql": "SELECT DISTINCT T1.course_title FROM teaches AS T1 JOIN instructor AS T2 ON T1.instructor_name = T2.name WHERE T2.dept_name = 'Comp. Sci.' AND T1.semester = 'Fall' AND T2.salary < '60000';",
+      "golden_schema": {
+        "tables": [
+          "teaches",
+          "instructor"
+        ],
+        "columns": [
+          "teaches.course_title",
+          "teaches.instructor_name",
+          "teaches.semester",
+          "instructor.name",
+          "instructor.dept_name",
+          "instructor.salary"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "course_title"
+      ],
+      "result_rows": [
+        [
+          "Corporate Law"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "Find the titles of courses that are taught by more than one instructor.",
+      "sql": "SELECT course_title FROM teaches GROUP BY course_title HAVING COUNT(*) > 1;",
+      "golden_schema": {
+        "tables": [
+          "teaches"
+        ],
+        "columns": [
+          "teaches.course_title"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "course_title"
+      ],
+      "result_rows": [
+        [
+          "Aquatic Chemistry"
+        ],
+        [
+          "Bankruptcy"
+        ],
+        [
+          "Elastic Structures"
+        ],
+        [
+          "Embedded Systems"
+        ],
+        [
+          "Fractal Geometry"
+        ],
+        [
+          "Graph Theory"
+        ],
+        [
+          "Greek Tragedy"
+        ],
+        [
+          "Heat Transfer"
+        ],
+        [
+          "Image Processing"
+        ],
+        [
+          "International Practicum"
+        ],
+        [
+          "International Trade"
+        ],
+        [
+          "Journalism"
+        ],
+        [
+          "Marine Mammals"
+        ],
+        [
+          "Surfing"
+        ],
+        [
+          "Systems Software"
+        ],
+        [
+          "The IBM 360 Architecture"
+        ],
+        [
+          "The Music of the Ramones"
+        ],
+        [
+          "Tort Law"
+        ],
+        [
+          "Video Gaming"
+        ],
+        [
+          "Visual BASIC"
+        ],
+        [
+          "World History"
+        ]
+      ],
+      "result_count": 21,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find the departments where the maximum salary is greater than $75000 and the minimum salary is less than $40000.",
+      "sql": "SELECT dept_name FROM instructor GROUP BY dept_name HAVING MAX(salary) > '75000' AND MIN(salary) < '40000';",
+      "golden_schema": {
+        "tables": [
+          "instructor"
+        ],
+        "columns": [
+          "instructor.dept_name",
+          "instructor.salary"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "dept_name"
+      ],
+      "result_rows": [
+        [
+          "Athletics"
+        ],
+        [
+          "Comp. Sci."
+        ],
+        [
+          "Cybernetics"
+        ],
+        [
+          "Elec. Eng."
+        ],
+        [
+          "English"
+        ],
+        [
+          "Languages"
+        ],
+        [
+          "Pol. Sci."
+        ],
+        [
+          "Statistics"
+        ]
+      ],
+      "result_count": 8,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "List the course titles that are taught in either the 'Fall' of '2006' or 'Spring' of '2007', and have either 3 or 4 credits.",
+      "sql": "SELECT DISTINCT T1.title FROM course AS T1 JOIN teaches AS T2 ON T1.title = T2.course_title WHERE (T2.semester = 'Fall' AND T2.year = '2006') OR (T2.semester = 'Spring' AND T2.year = '2007') AND (T1.credits = '3' OR T1.credits = '4');",
+      "golden_schema": {
+        "tables": [
+          "course",
+          "teaches"
+        ],
+        "columns": [
+          "course.title",
+          "course.credits",
+          "teaches.course_title",
+          "teaches.semester",
+          "teaches.year"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "college_2/course-teaches-instructor",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "title"
+      ],
+      "result_rows": [
+        [
+          "Visual BASIC"
+        ],
+        [
+          "Tort Law"
+        ],
+        [
+          "Plasma Physics"
+        ],
+        [
+          "Bacteriology"
+        ],
+        [
+          "The Music of the Ramones"
+        ],
+        [
+          "The IBM 360 Architecture"
+        ],
+        [
+          "Multimedia Design"
+        ],
+        [
+          "Marine Mammals"
+        ],
+        [
+          "Embedded Systems"
+        ],
+        [
+          "The Music of Donovan"
+        ],
+        [
+          "Graph Theory"
+        ],
+        [
+          "Bankruptcy"
+        ],
+        [
+          "Cost Accounting"
+        ]
+      ],
+      "result_count": 13,
+      "has_more_rows": false
+    }
+  ]
+}

@@ -6,7 +6,7 @@ project:
 
 runtime:
   output_dir: outputs/doc_filter_predicate_proxy_eval
-  log_dir: logs
+  log_dir: outputs/logs
   output_layout: dataset_stage
   artifact_id: proxy-bijoin-short-cache-tablecache-heuristic-v7
   console_log_level: WARNING

@@ -190,12 +190,12 @@ def resolve_dataset_roots(
 def setup_runtime_logging(config: dict[str, Any], exp: str) -> Path:
     log_dir = resolve_log_dir(config)
     console_log_level = logging_utils.get_log_level(config.get("console_log_level", "WARNING"))
-    logging_utils.setup_logging(
+    log_path = logging_utils.setup_logging(
         exp=exp,
         log_dir=str(log_dir),
         console_log_level=console_log_level,
     )
-    return log_dir
+    return log_path if log_path is not None else log_dir
 
 
 def configure_stage_logging(config: Mapping[str, Any], exp: str | None = None) -> Path:

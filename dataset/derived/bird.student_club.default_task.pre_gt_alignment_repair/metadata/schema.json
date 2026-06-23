@@ -1,0 +1,463 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "bird.student_club.default_task",
+  "tables": [
+    {
+      "table_id": "attendance",
+      "name": "attendance",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "attendance.event_date",
+          "name": "event_date",
+          "type": "string",
+          "description": "Date and time of the event in ISO 8601 format (YYYY-MM-DDTHH:MM:SS).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "attendance.event_name",
+          "name": "event_name",
+          "type": "string",
+          "description": "Name of the event attended.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "attendance.member_first_name",
+          "name": "member_first_name",
+          "type": "string",
+          "description": "First name of the member who attended the event.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "attendance.member_last_name",
+          "name": "member_last_name",
+          "type": "string",
+          "description": "Last name of the member who attended the event.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "budget",
+      "name": "budget",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "budget.amount",
+          "name": "amount",
+          "type": "string",
+          "description": "Total allocated budget amount.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.category",
+          "name": "category",
+          "type": "string",
+          "description": "Budget category (e.g., Food).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.event_date",
+          "name": "event_date",
+          "type": "string",
+          "description": "Date and time of the event in ISO 8601 format (YYYY-MM-DDTHH:MM:SS).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.event_name",
+          "name": "event_name",
+          "type": "string",
+          "description": "Name of the event associated with the budget.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.event_status",
+          "name": "event_status",
+          "type": "string",
+          "description": "Status of the event (e.g., Closed).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.remaining",
+          "name": "remaining",
+          "type": "string",
+          "description": "Remaining budget amount after spending.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "budget.spent",
+          "name": "spent",
+          "type": "string",
+          "description": "Amount spent in the budget category.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "event",
+      "name": "event",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "event.event_date",
+          "name": "event_date",
+          "type": "string",
+          "description": "Date and time of the event in ISO 8601 format (YYYY-MM-DDTHH:MM:SS).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.event_name",
+          "name": "event_name",
+          "type": "string",
+          "description": "Name of the event.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.location",
+          "name": "location",
+          "type": "string",
+          "description": "Location where the event is held.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.notes",
+          "name": "notes",
+          "type": "string",
+          "description": "Additional notes about the event, if any.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.status",
+          "name": "status",
+          "type": "string",
+          "description": "Status of the event (e.g., Open).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "event.type",
+          "name": "type",
+          "type": "string",
+          "description": "Type of event (e.g., Meeting).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "expense",
+      "name": "expense",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "expense.approved",
+          "name": "approved",
+          "type": "string",
+          "description": "Approval status of the expense (true or false).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.budget_category",
+          "name": "budget_category",
+          "type": "string",
+          "description": "Budget category associated with the expense (e.g., Food).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.cost",
+          "name": "cost",
+          "type": "string",
+          "description": "Cost of the expense.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.expense_date",
+          "name": "expense_date",
+          "type": "string",
+          "description": "Date of the expense in YYYY-MM-DD format.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.expense_description",
+          "name": "expense_description",
+          "type": "string",
+          "description": "Description of the expense (e.g., Pizza).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.member_first_name",
+          "name": "member_first_name",
+          "type": "string",
+          "description": "First name of the member who incurred the expense.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "expense.member_last_name",
+          "name": "member_last_name",
+          "type": "string",
+          "description": "Last name of the member who incurred the expense.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "income",
+      "name": "income",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "income.amount",
+          "name": "amount",
+          "type": "string",
+          "description": "Amount of income received.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.date_received",
+          "name": "date_received",
+          "type": "string",
+          "description": "Date the income was received in YYYY-MM-DD format.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.member_first_name",
+          "name": "member_first_name",
+          "type": "string",
+          "description": "First name of the member who contributed the income.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.member_last_name",
+          "name": "member_last_name",
+          "type": "string",
+          "description": "Last name of the member who contributed the income.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "income.source",
+          "name": "source",
+          "type": "string",
+          "description": "Source of the income (e.g., Dues).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "major",
+      "name": "major",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "major.college",
+          "name": "college",
+          "type": "string",
+          "description": "Name of the college housing the department.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "major.department",
+          "name": "department",
+          "type": "string",
+          "description": "Name of the department offering the major.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "major.major_name",
+          "name": "major_name",
+          "type": "string",
+          "description": "Name of the academic major.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "member",
+      "name": "member",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "member.email",
+          "name": "email",
+          "type": "string",
+          "description": "Email address of the club member.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.first_name",
+          "name": "first_name",
+          "type": "string",
+          "description": "First name of the club member.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.last_name",
+          "name": "last_name",
+          "type": "string",
+          "description": "Last name of the club member.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.major_department",
+          "name": "major_department",
+          "type": "string",
+          "description": "Department of the club member's major.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.major_name",
+          "name": "major_name",
+          "type": "string",
+          "description": "Academic major of the club member.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.member_city",
+          "name": "member_city",
+          "type": "string",
+          "description": "City where the club member resides.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.member_state",
+          "name": "member_state",
+          "type": "string",
+          "description": "State where the club member resides.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.phone",
+          "name": "phone",
+          "type": "string",
+          "description": "Contact phone number of the club member.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.position",
+          "name": "position",
+          "type": "string",
+          "description": "Role or position of the member in the club (e.g., Member).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "member.t_shirt_size",
+          "name": "t_shirt_size",
+          "type": "string",
+          "description": "T-shirt size preference for club merchandise.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "zip_code",
+      "name": "zip_code",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "zip_code.city",
+          "name": "city",
+          "type": "string",
+          "description": "City associated with the zip code.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.county",
+          "name": "county",
+          "type": "string",
+          "description": "County where the city is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.short_state",
+          "name": "short_state",
+          "type": "string",
+          "description": "Abbreviated state code (e.g., NH for New Hampshire).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.state",
+          "name": "state",
+          "type": "string",
+          "description": "Full name of the state.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "zip_code.type",
+          "name": "type",
+          "type": "string",
+          "description": "Type of zip code area (e.g., Standard).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

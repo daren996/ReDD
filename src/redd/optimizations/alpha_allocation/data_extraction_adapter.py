@@ -898,13 +898,15 @@ class DataExtractionAlphaAllocator:
         if not data_records:
             return None
 
-        gt_table = data_records[0].get("table_name")
-        if not gt_table:
-            return None
-
-        task_table = gt_to_task_table.get(gt_table)
-        if task_table and task_table in all_tables:
-            return task_table
-        if gt_table in all_tables:
-            return str(gt_table)
+        for record in data_records:
+            if not isinstance(record, dict):
+                continue
+            gt_table = record.get("table_name") or record.get("table")
+            if not gt_table:
+                continue
+            task_table = gt_to_task_table.get(gt_table)
+            if task_table and task_table in all_tables:
+                return task_table
+            if gt_table in all_tables:
+                return str(gt_table)
         return None

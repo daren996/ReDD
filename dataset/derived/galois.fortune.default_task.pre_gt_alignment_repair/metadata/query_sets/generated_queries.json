@@ -1,0 +1,3870 @@
+{
+  "dataset": "fortune/default_task",
+  "source": "galois_sqlite",
+  "database": "fortune",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "schema_db": "default_task_schema.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "List Sector, Is_Profitable (boolean), Change_in_Rank from fortune500_companies where Sector equals 'Retailing'.",
+      "sql": "SELECT \"sector\", \"is_profitable_boolean\", \"change_in_rank\" FROM \"fortune500_companies\" WHERE (\"sector\" = 'Retailing');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.is_profitable_boolean",
+          "fortune500_companies.change_in_rank"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "is_profitable_boolean",
+        "change_in_rank"
+      ],
+      "result_rows": [
+        [
+          "Retailing",
+          "1",
+          "-3"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-13"
+        ],
+        [
+          "Retailing",
+          "1",
+          "27"
+        ],
+        [
+          "Retailing",
+          "1",
+          "1"
+        ],
+        [
+          "Retailing",
+          "1",
+          "22"
+        ],
+        [
+          "Retailing",
+          "1",
+          "38"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-14"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-13"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-2"
+        ],
+        [
+          "Retailing",
+          "1",
+          "30"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-3"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-37"
+        ],
+        [
+          "Retailing",
+          "1",
+          "1"
+        ],
+        [
+          "Retailing",
+          "1",
+          "0"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-32"
+        ],
+        [
+          "Retailing",
+          "1",
+          "23"
+        ],
+        [
+          "Retailing",
+          "1",
+          "27"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-69"
+        ],
+        [
+          "Retailing",
+          "1",
+          "0"
+        ],
+        [
+          "Retailing",
+          "1",
+          "42"
+        ],
+        [
+          "Retailing",
+          "1",
+          "18"
+        ],
+        [
+          "Retailing",
+          "1",
+          "10"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-4"
+        ],
+        [
+          "Retailing",
+          "0",
+          "-28"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-23"
+        ],
+        [
+          "Retailing",
+          "1",
+          "1"
+        ],
+        [
+          "Retailing",
+          "1",
+          "23"
+        ],
+        [
+          "Retailing",
+          "1",
+          "22"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-19"
+        ],
+        [
+          "Retailing",
+          "1",
+          "7"
+        ],
+        [
+          "Retailing",
+          "0",
+          "-26"
+        ],
+        [
+          "Retailing",
+          "1",
+          "5"
+        ],
+        [
+          "Retailing",
+          "1",
+          "3"
+        ],
+        [
+          "Retailing",
+          "1",
+          "21"
+        ],
+        [
+          "Retailing",
+          "1",
+          "1"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-9"
+        ],
+        [
+          "Retailing",
+          "0",
+          "-10"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-6"
+        ],
+        [
+          "Retailing",
+          "1",
+          "5"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-17"
+        ],
+        [
+          "Retailing",
+          "1",
+          "50"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-4"
+        ],
+        [
+          "Retailing",
+          "1",
+          "40"
+        ],
+        [
+          "Retailing",
+          "1",
+          "-10"
+        ],
+        [
+          "Retailing",
+          "0",
+          "1"
+        ],
+        [
+          "Retailing",
+          "1",
+          "26"
+        ],
+        [
+          "Retailing",
+          "1",
+          "7"
+        ]
+      ],
+      "result_count": 47,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "List Sector, ProfitsPercentChange, MarketCap_Updated_M from fortune500_companies where Sector equals 'Health Care'.",
+      "sql": "SELECT \"sector\", \"profits_percent_change\", \"market_cap_updated_m\" FROM \"fortune500_companies\" WHERE (\"sector\" = 'Health Care');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.profits_percent_change",
+          "fortune500_companies.market_cap_updated_m"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "profits_percent_change",
+        "market_cap_updated_m"
+      ],
+      "result_rows": [
+        [
+          "Health Care",
+          "-22.7",
+          "9705.0"
+        ],
+        [
+          "Health Care",
+          "124.8",
+          "35221.0"
+        ],
+        [
+          "Health Care",
+          "-61.9",
+          "31344.0"
+        ],
+        [
+          "Health Care",
+          "101.1",
+          "73653.0"
+        ],
+        [
+          "Health Care",
+          "-58.9",
+          "296719.0"
+        ],
+        [
+          "Health Care",
+          "-93.2",
+          "164898.0"
+        ],
+        [
+          "Health Care",
+          "34.2",
+          "136159.0"
+        ],
+        [
+          "Health Care",
+          null,
+          "41397.0"
+        ],
+        [
+          "Health Care",
+          "-97.5",
+          "324503.0"
+        ],
+        [
+          "Health Care",
+          "-0.6",
+          "123335.0"
+        ],
+        [
+          "Health Care",
+          "23.4",
+          "12107.0"
+        ],
+        [
+          "Health Care",
+          "2.5",
+          "152373.0"
+        ],
+        [
+          "Health Care",
+          "-67.3",
+          "18373.0"
+        ],
+        [
+          "Health Care",
+          "6.2",
+          "12265.0"
+        ],
+        [
+          "Health Care",
+          "11.2",
+          "474339.0"
+        ],
+        [
+          "Health Care",
+          "-8.9",
+          "105645.0"
+        ],
+        [
+          "Health Care",
+          "24.5",
+          "46029.0"
+        ],
+        [
+          "Health Care",
+          "-11.3",
+          "46298.0"
+        ],
+        [
+          "Health Care",
+          "342.5",
+          "27117.0"
+        ],
+        [
+          "Health Care",
+          "-284.5",
+          "2123.0"
+        ],
+        [
+          "Health Care",
+          "36.0",
+          "141457.0"
+        ],
+        [
+          "Health Care",
+          "219.6",
+          "75007.0"
+        ],
+        [
+          "Health Care",
+          "26.8",
+          "81388.0"
+        ],
+        [
+          "Health Care",
+          "23.4",
+          "91341.0"
+        ],
+        [
+          "Health Care",
+          "-16.1",
+          "903322.0"
+        ],
+        [
+          "Health Care",
+          "-97.4",
+          "14180.0"
+        ],
+        [
+          "Health Care",
+          "-33.9",
+          "184929.0"
+        ],
+        [
+          "Health Care",
+          null,
+          "1861.0"
+        ],
+        [
+          "Health Care",
+          null,
+          "22832.0"
+        ],
+        [
+          "Health Care",
+          "-22.6",
+          "94148.0"
+        ],
+        [
+          "Health Care",
+          "2.7",
+          "43758.0"
+        ],
+        [
+          "Health Care",
+          "-9.7",
+          "14783.0"
+        ],
+        [
+          "Health Care",
+          "-389.1",
+          "486.0"
+        ],
+        [
+          "Health Care",
+          "9.0",
+          "107975.0"
+        ],
+        [
+          "Health Care",
+          null,
+          "21705.0"
+        ],
+        [
+          "Health Care",
+          "37.8",
+          "16755.0"
+        ],
+        [
+          "Health Care",
+          "95.9",
+          "359173.0"
+        ],
+        [
+          "Health Care",
+          "-7.1",
+          "83022.0"
+        ],
+        [
+          "Health Care",
+          "10.9",
+          "77476.0"
+        ],
+        [
+          "Health Care",
+          "-16.6",
+          "71489.0"
+        ],
+        [
+          "Health Care",
+          "128.1",
+          "100673.0"
+        ],
+        [
+          "Health Care",
+          "48.7",
+          "10511.0"
+        ],
+        [
+          "Health Care",
+          "-17.5",
+          "179113.0"
+        ]
+      ],
+      "result_count": 43,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "List Sector, ProfitsPercentChange, Industry from fortune500_companies where Sector contains 'care'.",
+      "sql": "SELECT \"sector\", \"profits_percent_change\", \"industry\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%care%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.profits_percent_change",
+          "fortune500_companies.industry"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "profits_percent_change",
+        "industry"
+      ],
+      "result_rows": [
+        [
+          "Health Care",
+          "-22.7",
+          "Wholesalers: Health Care"
+        ],
+        [
+          "Health Care",
+          "124.8",
+          "Health Care: Insurance and Managed Care"
+        ],
+        [
+          "Health Care",
+          "-61.9",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "101.1",
+          "Health Care: Pharmacy and Other Services"
+        ],
+        [
+          "Health Care",
+          "-58.9",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-93.2",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "34.2",
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          null,
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          "-97.5",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-0.6",
+          "Health Care: Insurance and Managed Care"
+        ],
+        [
+          "Health Care",
+          "23.4",
+          "Health Care: Medical Facilities"
+        ],
+        [
+          "Health Care",
+          "2.5",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-67.3",
+          "Health Care: Pharmacy and Other Services"
+        ],
+        [
+          "Health Care",
+          "6.2",
+          "Health Care: Medical Facilities"
+        ],
+        [
+          "Health Care",
+          "11.2",
+          "Health Care: Insurance and Managed Care"
+        ],
+        [
+          "Health Care",
+          "-8.9",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "24.5",
+          "Health Care: Pharmacy and Other Services"
+        ],
+        [
+          "Health Care",
+          "-11.3",
+          "Health Care: Insurance and Managed Care"
+        ],
+        [
+          "Health Care",
+          "342.5",
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          "-284.5",
+          "Wholesalers: Health Care"
+        ],
+        [
+          "Health Care",
+          "36.0",
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          "219.6",
+          "Wholesalers: Health Care"
+        ],
+        [
+          "Health Care",
+          "26.8",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "23.4",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-16.1",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-97.4",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-33.9",
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          null,
+          "Health Care: Pharmacy and Other Services"
+        ],
+        [
+          "Health Care",
+          null,
+          "Wholesalers: Health Care"
+        ],
+        [
+          "Health Care",
+          "-22.6",
+          "Health Care: Pharmacy and Other Services"
+        ],
+        [
+          "Health Care",
+          "2.7",
+          "Wholesalers: Health Care"
+        ],
+        [
+          "Health Care",
+          "-9.7",
+          "Health Care: Pharmacy and Other Services"
+        ],
+        [
+          "Health Care",
+          "-389.1",
+          "Health Care: Medical Facilities"
+        ],
+        [
+          "Health Care",
+          "9.0",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          null,
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          "37.8",
+          "Health Care: Insurance and Managed Care"
+        ],
+        [
+          "Health Care",
+          "95.9",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-7.1",
+          "Health Care: Medical Facilities"
+        ],
+        [
+          "Health Care",
+          "10.9",
+          "Pharmaceuticals"
+        ],
+        [
+          "Health Care",
+          "-16.6",
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          "128.1",
+          "Medical Products and Equipment"
+        ],
+        [
+          "Health Care",
+          "48.7",
+          "Health Care: Medical Facilities"
+        ],
+        [
+          "Health Care",
+          "-17.5",
+          "Medical Products and Equipment"
+        ]
+      ],
+      "result_count": 43,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "List Sector, Rank (integer), Revenues_M from fortune500_companies where Sector contains 'health'.",
+      "sql": "SELECT \"sector\", \"rank_integer\", \"revenues_m\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%health%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.rank_integer",
+          "fortune500_companies.revenues_m"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "rank_integer",
+        "revenues_m"
+      ],
+      "result_rows": [
+        [
+          "Health Care",
+          "333",
+          "12339.0"
+        ],
+        [
+          "Health Care",
+          "22",
+          "153999.0"
+        ],
+        [
+          "Health Care",
+          "401",
+          "9835.6"
+        ],
+        [
+          "Health Care",
+          "6",
+          "357776.0"
+        ],
+        [
+          "Health Care",
+          "77",
+          "54318.0"
+        ],
+        [
+          "Health Care",
+          "69",
+          "58496.0"
+        ],
+        [
+          "Health Care",
+          "197",
+          "20498.0"
+        ],
+        [
+          "Health Care",
+          "206",
+          "19552.0"
+        ],
+        [
+          "Health Care",
+          "67",
+          "60115.0"
+        ],
+        [
+          "Health Care",
+          "20",
+          "171340.0"
+        ],
+        [
+          "Health Care",
+          "341",
+          "12140.1"
+        ],
+        [
+          "Health Care",
+          "151",
+          "28190.0"
+        ],
+        [
+          "Health Care",
+          "309",
+          "13668.2"
+        ],
+        [
+          "Health Care",
+          "299",
+          "14282.0"
+        ],
+        [
+          "Health Care",
+          "4",
+          "371622.0"
+        ],
+        [
+          "Health Care",
+          "311",
+          "13117.2"
+        ],
+        [
+          "Health Care",
+          "275",
+          "14984.0"
+        ],
+        [
+          "Health Care",
+          "38",
+          "106374.0"
+        ],
+        [
+          "Health Care",
+          "484",
+          "7394.2"
+        ],
+        [
+          "Health Care",
+          "388",
+          "10334.0"
+        ],
+        [
+          "Health Care",
+          "497",
+          "7124.1"
+        ],
+        [
+          "Health Care",
+          "9",
+          "276711.0"
+        ],
+        [
+          "Health Care",
+          "98",
+          "45006.0"
+        ],
+        [
+          "Health Care",
+          "154",
+          "27116.0"
+        ],
+        [
+          "Health Care",
+          "127",
+          "34124.1"
+        ],
+        [
+          "Health Care",
+          "267",
+          "15426.9"
+        ],
+        [
+          "Health Care",
+          "153",
+          "27602.0"
+        ],
+        [
+          "Health Care",
+          "436",
+          "8826.2"
+        ],
+        [
+          "Health Care",
+          "14",
+          "205012.0"
+        ],
+        [
+          "Health Care",
+          "16",
+          "195265.0"
+        ],
+        [
+          "Health Care",
+          "10",
+          "262173.4"
+        ],
+        [
+          "Health Care",
+          "423",
+          "9252.0"
+        ],
+        [
+          "Health Care",
+          "330",
+          "12490.0"
+        ],
+        [
+          "Health Care",
+          "400",
+          "9869.2"
+        ],
+        [
+          "Health Care",
+          "270",
+          "15282.0"
+        ],
+        [
+          "Health Care",
+          "128",
+          "34072.0"
+        ],
+        [
+          "Health Care",
+          "42",
+          "95195.0"
+        ],
+        [
+          "Health Care",
+          "61",
+          "64968.0"
+        ],
+        [
+          "Health Care",
+          "445",
+          "8544.0"
+        ],
+        [
+          "Health Care",
+          "211",
+          "19372.0"
+        ],
+        [
+          "Health Care",
+          "300",
+          "14240.0"
+        ],
+        [
+          "Health Care",
+          "195",
+          "20548.0"
+        ],
+        [
+          "Health Care",
+          "108",
+          "40109.0"
+        ]
+      ],
+      "result_count": 43,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "List Industry, HeadquartersState, Sector from fortune500_companies where Industry contains 'other'.",
+      "sql": "SELECT \"industry\", \"headquarters_state\", \"sector\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"industry\" AS TEXT)) LIKE '%other%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.industry",
+          "fortune500_companies.headquarters_state",
+          "fortune500_companies.sector"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "industry",
+        "headquarters_state",
+        "sector"
+      ],
+      "result_rows": [
+        [
+          "Specialty Retailers: Other",
+          "Georgia",
+          "Retailing"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Tennessee",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Tennessee",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "California",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Ohio",
+          "Retailing"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "Rhode Island",
+          "Health Care"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Arkansas",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Illinois",
+          "Retailing"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "North Carolina",
+          "Health Care"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Iowa",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "North Carolina",
+          "Retailing"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "North Carolina",
+          "Health Care"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Florida",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Tennessee",
+          "Retailing"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Virginia",
+          "Retailing"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Pennsylvania",
+          "Retailing"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "Kentucky",
+          "Health Care"
+        ],
+        [
+          "Network and Other Communications Equipment",
+          "Connecticut",
+          "Technology"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "Massachusetts",
+          "Technology"
+        ],
+        [
+          "Network and Other Communications Equipment",
+          "Illinois",
+          "Technology"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "Connecticut",
+          "Health Care"
+        ],
+        [
+          "Network and Other Communications Equipment",
+          "California",
+          "Technology"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "New Jersey",
+          "Health Care"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "Arizona",
+          "Technology"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Minnesota",
+          "Retailing"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "Arizona",
+          "Technology"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "Texas",
+          "Technology"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "Florida",
+          "Technology"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "Idaho",
+          "Technology"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "North Carolina",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Virginia",
+          "Retailing"
+        ],
+        [
+          "Specialty Retailers: Other",
+          "Missouri",
+          "Retailing"
+        ],
+        [
+          "Semiconductors and Other Electronic Components",
+          "California",
+          "Technology"
+        ]
+      ],
+      "result_count": 41,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "List HeadquartersCity, Dropped_in_Rank, Gained_in_Rank from fortune500_companies where HeadquartersCity contains 'york'.",
+      "sql": "SELECT \"headquarters_city\", \"dropped_in_rank\", \"gained_in_rank\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"headquarters_city\" AS TEXT)) LIKE '%york%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.headquarters_city",
+          "fortune500_companies.dropped_in_rank",
+          "fortune500_companies.gained_in_rank"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "headquarters_city",
+        "dropped_in_rank",
+        "gained_in_rank"
+      ],
+      "result_rows": [
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "0",
+          "1"
+        ],
+        [
+          "New York",
+          "1",
+          "0"
+        ]
+      ],
+      "result_count": 40,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "List Industry, Global500, Revenues_M from fortune500_companies where Industry contains 'health'.",
+      "sql": "SELECT \"industry\", \"global500\", \"revenues_m\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"industry\" AS TEXT)) LIKE '%health%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.industry",
+          "fortune500_companies.global500",
+          "fortune500_companies.revenues_m"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "industry",
+        "global500",
+        "revenues_m"
+      ],
+      "result_rows": [
+        [
+          "Wholesalers: Health Care",
+          "0",
+          "12339.0"
+        ],
+        [
+          "Health Care: Insurance and Managed Care",
+          "1",
+          "153999.0"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "10528.0"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "13665.8"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "7488.0"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "14802.0"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "1",
+          "357776.0"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "1",
+          "66905.0"
+        ],
+        [
+          "Health Care: Insurance and Managed Care",
+          "1",
+          "171340.0"
+        ],
+        [
+          "Health Care: Medical Facilities",
+          "0",
+          "12140.1"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "1",
+          "54317.2"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "1",
+          "45734.8"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "0",
+          "13668.2"
+        ],
+        [
+          "Health Care: Medical Facilities",
+          "0",
+          "14282.0"
+        ],
+        [
+          "Health Care: Insurance and Managed Care",
+          "1",
+          "371622.0"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "0",
+          "14984.0"
+        ],
+        [
+          "Health Care: Insurance and Managed Care",
+          "1",
+          "106374.0"
+        ],
+        [
+          "Wholesalers: Health Care",
+          "0",
+          "10334.0"
+        ],
+        [
+          "Wholesalers: Health Care",
+          "1",
+          "276711.0"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "1",
+          "42641.4"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "0",
+          "9720.3"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "0",
+          "8826.2"
+        ],
+        [
+          "Wholesalers: Health Care",
+          "1",
+          "205012.0"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "1",
+          "195265.0"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "12385.9"
+        ],
+        [
+          "Wholesalers: Health Care",
+          "1",
+          "262173.4"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "1",
+          "53979.0"
+        ],
+        [
+          "Health Care: Pharmacy and Other Services",
+          "0",
+          "9252.0"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "0",
+          "13855.8"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "18701.0"
+        ],
+        [
+          "Health Care: Medical Facilities",
+          "0",
+          "12490.0"
+        ],
+        [
+          "Health Care: Insurance and Managed Care",
+          "1",
+          "34072.0"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "11645.0"
+        ],
+        [
+          "Health Care: Medical Facilities",
+          "1",
+          "64968.0"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "0",
+          "16137.0"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "1",
+          "38788.1"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "8067.0"
+        ],
+        [
+          "Insurance: Life, Health (stock)",
+          "0",
+          "18567.0"
+        ],
+        [
+          "Insurance: Life, Health (Mutual)",
+          "0",
+          "14775.1"
+        ],
+        [
+          "Health Care: Medical Facilities",
+          "0",
+          "20548.0"
+        ]
+      ],
+      "result_count": 40,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "List HeadquartersCity, HeadquartersState, Newcomer_to_the_Fortune500 from fortune500_companies where HeadquartersCity equals 'New York'.",
+      "sql": "SELECT \"headquarters_city\", \"headquarters_state\", \"newcomer_to_the_fortune500\" FROM \"fortune500_companies\" WHERE (\"headquarters_city\" = 'New York');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.headquarters_city",
+          "fortune500_companies.headquarters_state",
+          "fortune500_companies.newcomer_to_the_fortune500"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "headquarters_city",
+        "headquarters_state",
+        "newcomer_to_the_fortune500"
+      ],
+      "result_rows": [
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "1"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "1"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ],
+        [
+          "New York",
+          "New York",
+          "0"
+        ]
+      ],
+      "result_count": 40,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "Find Sector, Industry, Growth_in_Jobs from fortune500_companies where Sector equals 'Health Care' and Sector contains 'care'.",
+      "sql": "SELECT \"sector\", \"industry\", \"growth_in_jobs\" FROM \"fortune500_companies\" WHERE (\"sector\" = 'Health Care') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%care%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.industry",
+          "fortune500_companies.growth_in_jobs"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "industry",
+        "growth_in_jobs"
+      ],
+      "result_rows": [
+        [
+          "Health Care",
+          "Wholesalers: Health Care",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Insurance and Managed Care",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Health Care: Pharmacy and Other Services",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Insurance and Managed Care",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Medical Facilities",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Pharmacy and Other Services",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Health Care: Medical Facilities",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Insurance and Managed Care",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Pharmacy and Other Services",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Insurance and Managed Care",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Wholesalers: Health Care",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Wholesalers: Health Care",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Health Care: Pharmacy and Other Services",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Wholesalers: Health Care",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Pharmacy and Other Services",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Wholesalers: Health Care",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Pharmacy and Other Services",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Health Care: Medical Facilities",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Health Care: Insurance and Managed Care",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Health Care: Medical Facilities",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Health Care: Medical Facilities",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Medical Products and Equipment",
+          "0"
+        ]
+      ],
+      "result_count": 43,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "Find Sector, Change_in_Rank, HeadquartersState from fortune500_companies where Sector contains 'care' and Sector contains 'health'.",
+      "sql": "SELECT \"sector\", \"change_in_rank\", \"headquarters_state\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%care%') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%health%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.change_in_rank",
+          "fortune500_companies.headquarters_state"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "change_in_rank",
+        "headquarters_state"
+      ],
+      "result_rows": [
+        [
+          "Health Care",
+          "-8",
+          "New York"
+        ],
+        [
+          "Health Care",
+          "3",
+          "Missouri"
+        ],
+        [
+          "Health Care",
+          "-15",
+          "Massachusetts"
+        ],
+        [
+          "Health Care",
+          "0",
+          "Rhode Island"
+        ],
+        [
+          "Health Care",
+          "-4",
+          "Illinois"
+        ],
+        [
+          "Health Care",
+          "-31",
+          "New York"
+        ],
+        [
+          "Health Care",
+          "27",
+          "Michigan"
+        ],
+        [
+          "Health Care",
+          "0",
+          "Illinois"
+        ],
+        [
+          "Health Care",
+          "2",
+          "New Jersey"
+        ],
+        [
+          "Health Care",
+          "2",
+          "Indiana"
+        ],
+        [
+          "Health Care",
+          "16",
+          "Colorado"
+        ],
+        [
+          "Health Care",
+          "3",
+          "California"
+        ],
+        [
+          "Health Care",
+          "-31",
+          "North Carolina"
+        ],
+        [
+          "Health Care",
+          "12",
+          "Pennsylvania"
+        ],
+        [
+          "Health Care",
+          "1",
+          "Minnesota"
+        ],
+        [
+          "Health Care",
+          "28",
+          "New York"
+        ],
+        [
+          "Health Care",
+          "11",
+          "North Carolina"
+        ],
+        [
+          "Health Care",
+          "4",
+          "Kentucky"
+        ],
+        [
+          "Health Care",
+          "25",
+          "Indiana"
+        ],
+        [
+          "Health Care",
+          "2",
+          "Virginia"
+        ],
+        [
+          "Health Care",
+          "63",
+          "California"
+        ],
+        [
+          "Health Care",
+          "0",
+          "Texas"
+        ],
+        [
+          "Health Care",
+          "-3",
+          "New Jersey"
+        ],
+        [
+          "Health Care",
+          "-4",
+          "California"
+        ],
+        [
+          "Health Care",
+          "15",
+          "Indiana"
+        ],
+        [
+          "Health Care",
+          "-11",
+          "Pennsylvania"
+        ],
+        [
+          "Health Care",
+          "-21",
+          "District Of Columbia"
+        ],
+        [
+          "Health Care",
+          "0",
+          "Kentucky"
+        ],
+        [
+          "Health Care",
+          "0",
+          "Ohio"
+        ],
+        [
+          "Health Care",
+          "-1",
+          "Connecticut"
+        ],
+        [
+          "Health Care",
+          "1",
+          "Pennsylvania"
+        ],
+        [
+          "Health Care",
+          "-32",
+          "New Jersey"
+        ],
+        [
+          "Health Care",
+          "7",
+          "Tennessee"
+        ],
+        [
+          "Health Care",
+          "27",
+          "Massachusetts"
+        ],
+        [
+          "Health Care",
+          "4",
+          "Illinois"
+        ],
+        [
+          "Health Care",
+          "-2",
+          "California"
+        ],
+        [
+          "Health Care",
+          "-2",
+          "New Jersey"
+        ],
+        [
+          "Health Care",
+          "5",
+          "Tennessee"
+        ],
+        [
+          "Health Care",
+          "18",
+          "New Jersey"
+        ],
+        [
+          "Health Care",
+          "-2",
+          "New Jersey"
+        ],
+        [
+          "Health Care",
+          "23",
+          "Massachusetts"
+        ],
+        [
+          "Health Care",
+          "20",
+          "Texas"
+        ],
+        [
+          "Health Care",
+          "-9",
+          "Illinois"
+        ]
+      ],
+      "result_count": 43,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "Find Sector, Company, Best_Companies_to_Work_For (boolean) from fortune500_companies where Sector equals 'Health Care' and Sector contains 'health'.",
+      "sql": "SELECT \"sector\", \"company\", \"best_companies_to_work_for_boolean\" FROM \"fortune500_companies\" WHERE (\"sector\" = 'Health Care') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%health%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.company",
+          "fortune500_companies.best_companies_to_work_for_boolean"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "company",
+        "best_companies_to_work_for_boolean"
+      ],
+      "result_rows": [
+        [
+          "Health Care",
+          "Henry Schein",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Centene",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Biogen",
+          "0"
+        ],
+        [
+          "Health Care",
+          "CVS Health",
+          "0"
+        ],
+        [
+          "Health Care",
+          "AbbVie",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Pfizer",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Stryker",
+          "1"
+        ],
+        [
+          "Health Care",
+          "GE HealthCare Technologies",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Merck",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Elevance Health",
+          "1"
+        ],
+        [
+          "Health Care",
+          "DaVita",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Amgen",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Labcorp Holdings",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Universal Health Services",
+          "0"
+        ],
+        [
+          "Health Care",
+          "UnitedHealth Group",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Regeneron Pharmaceuticals",
+          "0"
+        ],
+        [
+          "Health Care",
+          "IQVIA Holdings",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Humana",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Zimmer Biomet Holdings",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Owens & Minor",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Intuitive Surgical",
+          "0"
+        ],
+        [
+          "Health Care",
+          "McKesson",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Bristol-Myers Squibb",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Gilead Sciences",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Eli Lilly",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Viatris",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Danaher",
+          "0"
+        ],
+        [
+          "Health Care",
+          "BrightSpring Health Services",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Cardinal Health",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Cigna",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Cencora",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Quest Diagnostics",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Community Health Systems",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Vertex Pharmaceuticals",
+          "1"
+        ],
+        [
+          "Health Care",
+          "Baxter International",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Molina Healthcare",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Johnson & Johnson",
+          "0"
+        ],
+        [
+          "Health Care",
+          "HCA Healthcare",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Zoetis",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Becton Dickinson",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Boston Scientific",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Tenet Healthcare",
+          "0"
+        ],
+        [
+          "Health Care",
+          "Abbott Laboratories",
+          "0"
+        ]
+      ],
+      "result_count": 43,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "Find HeadquartersCity, row_id, Gained_in_Rank from fortune500_companies where HeadquartersCity equals 'New York' and HeadquartersCity contains 'york'.",
+      "sql": "SELECT \"headquarters_city\", \"row_id\", \"gained_in_rank\" FROM \"fortune500_companies\" WHERE (\"headquarters_city\" = 'New York') AND (LOWER(CAST(\"headquarters_city\" AS TEXT)) LIKE '%york%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.headquarters_city",
+          "fortune500_companies.row_id",
+          "fortune500_companies.gained_in_rank"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "headquarters_city",
+        "row_id",
+        "gained_in_rank"
+      ],
+      "result_rows": [
+        [
+          "New York",
+          "18",
+          "0"
+        ],
+        [
+          "New York",
+          "28",
+          "0"
+        ],
+        [
+          "New York",
+          "33",
+          "0"
+        ],
+        [
+          "New York",
+          "35",
+          "1"
+        ],
+        [
+          "New York",
+          "56",
+          "1"
+        ],
+        [
+          "New York",
+          "62",
+          "1"
+        ],
+        [
+          "New York",
+          "92",
+          "1"
+        ],
+        [
+          "New York",
+          "98",
+          "1"
+        ],
+        [
+          "New York",
+          "105",
+          "1"
+        ],
+        [
+          "New York",
+          "116",
+          "0"
+        ],
+        [
+          "New York",
+          "121",
+          "1"
+        ],
+        [
+          "New York",
+          "143",
+          "0"
+        ],
+        [
+          "New York",
+          "149",
+          "1"
+        ],
+        [
+          "New York",
+          "167",
+          "1"
+        ],
+        [
+          "New York",
+          "174",
+          "0"
+        ],
+        [
+          "New York",
+          "178",
+          "1"
+        ],
+        [
+          "New York",
+          "183",
+          "1"
+        ],
+        [
+          "New York",
+          "192",
+          "0"
+        ],
+        [
+          "New York",
+          "202",
+          "1"
+        ],
+        [
+          "New York",
+          "204",
+          "0"
+        ],
+        [
+          "New York",
+          "226",
+          "1"
+        ],
+        [
+          "New York",
+          "242",
+          "0"
+        ],
+        [
+          "New York",
+          "254",
+          "0"
+        ],
+        [
+          "New York",
+          "257",
+          "0"
+        ],
+        [
+          "New York",
+          "265",
+          "0"
+        ],
+        [
+          "New York",
+          "304",
+          "0"
+        ],
+        [
+          "New York",
+          "308",
+          "1"
+        ],
+        [
+          "New York",
+          "369",
+          "0"
+        ],
+        [
+          "New York",
+          "374",
+          "1"
+        ],
+        [
+          "New York",
+          "380",
+          "1"
+        ],
+        [
+          "New York",
+          "387",
+          "1"
+        ],
+        [
+          "New York",
+          "397",
+          "0"
+        ],
+        [
+          "New York",
+          "417",
+          "0"
+        ],
+        [
+          "New York",
+          "419",
+          "1"
+        ],
+        [
+          "New York",
+          "423",
+          "0"
+        ],
+        [
+          "New York",
+          "424",
+          "0"
+        ],
+        [
+          "New York",
+          "453",
+          "1"
+        ],
+        [
+          "New York",
+          "458",
+          "1"
+        ],
+        [
+          "New York",
+          "462",
+          "1"
+        ],
+        [
+          "New York",
+          "470",
+          "0"
+        ]
+      ],
+      "result_count": 40,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "Find HeadquartersState, ProfitsPercentChange, Company from fortune500_companies where HeadquartersState equals 'Illinois' and HeadquartersState contains 'illinois'.",
+      "sql": "SELECT \"headquarters_state\", \"profits_percent_change\", \"company\" FROM \"fortune500_companies\" WHERE (\"headquarters_state\" = 'Illinois') AND (LOWER(CAST(\"headquarters_state\" AS TEXT)) LIKE '%illinois%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.headquarters_state",
+          "fortune500_companies.profits_percent_change",
+          "fortune500_companies.company"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "headquarters_state",
+        "profits_percent_change",
+        "company"
+      ],
+      "result_rows": [
+        [
+          "Illinois",
+          null,
+          "State Farm Insurance"
+        ],
+        [
+          "Illinois",
+          "18.2",
+          "Grainger"
+        ],
+        [
+          "Illinois",
+          "37.1",
+          "McDonald's"
+        ],
+        [
+          "Illinois",
+          "20.8",
+          "Kraft Heinz"
+        ],
+        [
+          "Illinois",
+          "-13.0",
+          "Arthur J. Gallagher"
+        ],
+        [
+          "Illinois",
+          "42.6",
+          "Deere"
+        ],
+        [
+          "Illinois",
+          "-58.9",
+          "AbbVie"
+        ],
+        [
+          "Illinois",
+          "-0.9",
+          "Kellanova"
+        ],
+        [
+          "Illinois",
+          "3.9",
+          "Ulta Beauty"
+        ],
+        [
+          "Illinois",
+          "30.7",
+          "Ingredion"
+        ],
+        [
+          "Illinois",
+          "90.9",
+          "US Foods Holding"
+        ],
+        [
+          "Illinois",
+          null,
+          "GE HealthCare Technologies"
+        ],
+        [
+          "Illinois",
+          "255.2",
+          "United Airlines Holdings"
+        ],
+        [
+          "Illinois",
+          "-19.7",
+          "Archer Daniels Midland"
+        ],
+        [
+          "Illinois",
+          "-0.9",
+          "CDW"
+        ],
+        [
+          "Illinois",
+          "-18.5",
+          "LKQ"
+        ],
+        [
+          "Illinois",
+          "-23.0",
+          "Conagra Brands"
+        ],
+        [
+          "Illinois",
+          null,
+          "Allstate"
+        ],
+        [
+          "Illinois",
+          "-65.6",
+          "Jones Lang LaSalle"
+        ],
+        [
+          "Illinois",
+          "-25.7",
+          "Packaging Corp. of America"
+        ],
+        [
+          "Illinois",
+          "-2.5",
+          "Illinois Tool Works"
+        ],
+        [
+          "Illinois",
+          "25.4",
+          "Motorola Solutions"
+        ],
+        [
+          "Illinois",
+          null,
+          "Baxter International"
+        ],
+        [
+          "Illinois",
+          "82.5",
+          "Mondelez International"
+        ],
+        [
+          "Illinois",
+          "-0.8",
+          "Dover"
+        ],
+        [
+          "Illinois",
+          null,
+          "Molson Coors Beverage"
+        ],
+        [
+          "Illinois",
+          "7.3",
+          "Exelon"
+        ],
+        [
+          "Illinois",
+          "-33.1",
+          "Discover Financial Services"
+        ],
+        [
+          "Illinois",
+          "-171.0",
+          "Walgreens Boots Alliance"
+        ],
+        [
+          "Illinois",
+          "-17.1",
+          "Northern Trust"
+        ],
+        [
+          "Illinois",
+          "-12.8",
+          "Old Republic International"
+        ],
+        [
+          "Illinois",
+          "-17.5",
+          "Abbott Laboratories"
+        ]
+      ],
+      "result_count": 32,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find CompanyType, Number_of_employees (integer), Country from fortune500_companies where CompanyType equals 'Private' and CompanyType contains 'private'.",
+      "sql": "SELECT \"company_type\", \"number_of_employees_integer\", \"country\" FROM \"fortune500_companies\" WHERE (\"company_type\" = 'Private') AND (LOWER(CAST(\"company_type\" AS TEXT)) LIKE '%private%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.company_type",
+          "fortune500_companies.number_of_employees_integer",
+          "fortune500_companies.country"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "company_type",
+        "number_of_employees_integer",
+        "country"
+      ],
+      "result_rows": [
+        [
+          "Private",
+          "65054",
+          "U.S."
+        ],
+        [
+          "Private",
+          "4181",
+          "U.S."
+        ],
+        [
+          "Private",
+          "9685",
+          "U.S."
+        ],
+        [
+          "Private",
+          "54000",
+          "U.S."
+        ],
+        [
+          "Private",
+          "9000",
+          "U.S."
+        ],
+        [
+          "Private",
+          "15384",
+          "U.S."
+        ],
+        [
+          "Private",
+          "31100",
+          "U.S."
+        ],
+        [
+          "Private",
+          "16023",
+          "U.S."
+        ],
+        [
+          "Private",
+          "10609",
+          "U.S."
+        ],
+        [
+          "Private",
+          "45000",
+          "U.S."
+        ],
+        [
+          "Private",
+          "12417",
+          "U.S."
+        ],
+        [
+          "Private",
+          "2213",
+          "U.S."
+        ],
+        [
+          "Private",
+          "37376",
+          "U.S."
+        ],
+        [
+          "Private",
+          "1457",
+          "U.S."
+        ],
+        [
+          "Private",
+          "9500",
+          "U.S."
+        ],
+        [
+          "Private",
+          "253000",
+          "U.S."
+        ],
+        [
+          "Private",
+          "11323",
+          "U.S."
+        ],
+        [
+          "Private",
+          "3810",
+          "U.S."
+        ],
+        [
+          "Private",
+          "24118",
+          "U.S."
+        ],
+        [
+          "Private",
+          "6231",
+          "U.S."
+        ],
+        [
+          "Private",
+          "5667",
+          "U.S."
+        ],
+        [
+          "Private",
+          "7561",
+          "U.S."
+        ],
+        [
+          "Private",
+          "8239",
+          "U.S."
+        ],
+        [
+          "Private",
+          "56100",
+          "U.S."
+        ],
+        [
+          "Private",
+          "6946",
+          "U.S."
+        ],
+        [
+          "Private",
+          "5565",
+          "U.S."
+        ],
+        [
+          "Private",
+          "2669",
+          "U.S."
+        ],
+        [
+          "Private",
+          "6510",
+          "U.S."
+        ]
+      ],
+      "result_count": 28,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "Find HeadquartersState, MarketCap_March28_M, Rank (integer) from fortune500_companies where HeadquartersState equals 'Ohio' and HeadquartersState contains 'ohio'.",
+      "sql": "SELECT \"headquarters_state\", \"market_cap_march28_m\", \"rank_integer\" FROM \"fortune500_companies\" WHERE (\"headquarters_state\" = 'Ohio') AND (LOWER(CAST(\"headquarters_state\" AS TEXT)) LIKE '%ohio%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.headquarters_state",
+          "fortune500_companies.market_cap_march28_m",
+          "fortune500_companies.rank_integer"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "headquarters_state",
+        "market_cap_march28_m",
+        "rank_integer"
+      ],
+      "result_rows": [
+        [
+          "Ohio",
+          "25434.9",
+          "321"
+        ],
+        [
+          "Ohio",
+          "22226.4",
+          "331"
+        ],
+        [
+          "Ohio",
+          "1953.4",
+          "285"
+        ],
+        [
+          "Ohio",
+          "69695.1",
+          "437"
+        ],
+        [
+          "Ohio",
+          "11249.3",
+          "481"
+        ],
+        [
+          "Ohio",
+          "20308.6",
+          "375"
+        ],
+        [
+          "Ohio",
+          "45339.4",
+          "217"
+        ],
+        [
+          "Ohio",
+          "381777.7",
+          "50"
+        ],
+        [
+          "Ohio",
+          "1840.9",
+          "379"
+        ],
+        [
+          "Ohio",
+          "13364.3",
+          "446"
+        ],
+        [
+          "Ohio",
+          "14510.2",
+          "407"
+        ],
+        [
+          "Ohio",
+          "121134.1",
+          "62"
+        ],
+        [
+          "Ohio",
+          "15329.3",
+          "492"
+        ],
+        [
+          "Ohio",
+          "19456.1",
+          "393"
+        ],
+        [
+          "Ohio",
+          "11418.1",
+          "470"
+        ],
+        [
+          "Ohio",
+          "14663.3",
+          "386"
+        ],
+        [
+          "Ohio",
+          "71369.5",
+          "216"
+        ],
+        [
+          "Ohio",
+          "41100.7",
+          "25"
+        ],
+        [
+          "Ohio",
+          "27217.8",
+          "14"
+        ],
+        [
+          "Ohio",
+          "72607.7",
+          "24"
+        ],
+        [
+          "Ohio",
+          null,
+          "75"
+        ],
+        [
+          "Ohio",
+          "17976.2",
+          "450"
+        ],
+        [
+          "Ohio",
+          "11331.1",
+          "185"
+        ],
+        [
+          "Ohio",
+          "2549.4",
+          "500"
+        ],
+        [
+          "Ohio",
+          "3901.3",
+          "204"
+        ],
+        [
+          "Ohio",
+          null,
+          "284"
+        ],
+        [
+          "Ohio",
+          "88255.4",
+          "176"
+        ]
+      ],
+      "result_count": 27,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find Sector, Ticker, Global500 from fortune500_companies where Sector equals 'Food, Beverages & Tobacco' and Sector contains 'food'.",
+      "sql": "SELECT \"sector\", \"ticker\", \"global500\" FROM \"fortune500_companies\" WHERE (\"sector\" = 'Food, Beverages & Tobacco') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%food%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.ticker",
+          "fortune500_companies.global500"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "ticker",
+        "global500"
+      ],
+      "result_rows": [
+        [
+          "Food, Beverages & Tobacco",
+          "STZ",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "ANDE",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "CTVA",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "KHC",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "PEP",
+          "1"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "MNST",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "MO",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "K",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          null,
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "INGR",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "HRL",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "PM",
+          "1"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "CPB",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "ADM",
+          "1"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          null,
+          "1"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "KO",
+          "1"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "SJM",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "TSN",
+          "1"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "KDP",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "CAG",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "SEB",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "MDLZ",
+          "1"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "GIS",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "TAP",
+          "0"
+        ],
+        [
+          "Food, Beverages & Tobacco",
+          "HSY",
+          "0"
+        ]
+      ],
+      "result_count": 25,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "Find Industry, Is_Profitable (boolean), Worlds_Most_Admired_Companies from fortune500_companies where Industry equals 'Food Consumer Products', Industry contains 'consumer', and Sector contains 'food'.",
+      "sql": "SELECT \"industry\", \"is_profitable_boolean\", \"worlds_most_admired_companies\" FROM \"fortune500_companies\" WHERE (\"industry\" = 'Food Consumer Products') AND (LOWER(CAST(\"industry\" AS TEXT)) LIKE '%consumer%') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%food%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.industry",
+          "fortune500_companies.is_profitable_boolean",
+          "fortune500_companies.worlds_most_admired_companies",
+          "fortune500_companies.sector"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "industry",
+        "is_profitable_boolean",
+        "worlds_most_admired_companies"
+      ],
+      "result_rows": [
+        [
+          "Food Consumer Products",
+          "1",
+          "0"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "1"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "0"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "0"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "1"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "0"
+        ],
+        [
+          "Food Consumer Products",
+          "0",
+          "0"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "0"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "1"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "1"
+        ],
+        [
+          "Food Consumer Products",
+          "1",
+          "0"
+        ]
+      ],
+      "result_count": 11,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "Find Industry, Newcomer_to_the_Fortune500, Revenues_M from fortune500_companies where Industry contains 'motor', Sector contains 'parts', and Sector contains 'vehicles'.",
+      "sql": "SELECT \"industry\", \"newcomer_to_the_fortune500\", \"revenues_m\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"industry\" AS TEXT)) LIKE '%motor%') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%parts%') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%vehicles%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.industry",
+          "fortune500_companies.newcomer_to_the_fortune500",
+          "fortune500_companies.revenues_m",
+          "fortune500_companies.sector"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "industry",
+        "newcomer_to_the_fortune500",
+        "revenues_m"
+      ],
+      "result_rows": [
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "96773.0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "15921.0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "35127.4"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "11121.6"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "171842.0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "10555.0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "176191.0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "23466.9"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "20066.0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "10475.0"
+        ]
+      ],
+      "result_count": 10,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find Sector, CompanyType, Newcomer_to_the_Fortune500 from fortune500_companies where Sector contains 'wholesalers', Industry contains 'wholesalers', and Industry contains 'diversified'.",
+      "sql": "SELECT \"sector\", \"company_type\", \"newcomer_to_the_fortune500\" FROM \"fortune500_companies\" WHERE (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%wholesalers%') AND (LOWER(CAST(\"industry\" AS TEXT)) LIKE '%wholesalers%') AND (LOWER(CAST(\"industry\" AS TEXT)) LIKE '%diversified%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.sector",
+          "fortune500_companies.company_type",
+          "fortune500_companies.newcomer_to_the_fortune500",
+          "fortune500_companies.industry"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "sector",
+        "company_type",
+        "newcomer_to_the_fortune500"
+      ],
+      "result_rows": [
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "1"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Private",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ],
+        [
+          "Wholesalers",
+          "Public",
+          "0"
+        ]
+      ],
+      "result_count": 10,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "Find Industry, Worlds_Most_Admired_Companies, Newcomer_to_the_Fortune500 from fortune500_companies where Industry equals 'Motor Vehicles & Parts', Sector contains 'motor', and Sector contains 'vehicles'.",
+      "sql": "SELECT \"industry\", \"worlds_most_admired_companies\", \"newcomer_to_the_fortune500\" FROM \"fortune500_companies\" WHERE (\"industry\" = 'Motor Vehicles & Parts') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%motor%') AND (LOWER(CAST(\"sector\" AS TEXT)) LIKE '%vehicles%');",
+      "golden_schema": {
+        "tables": [
+          "fortune500_companies"
+        ],
+        "columns": [
+          "fortune500_companies.industry",
+          "fortune500_companies.worlds_most_admired_companies",
+          "fortune500_companies.newcomer_to_the_fortune500",
+          "fortune500_companies.sector"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "fortune/default_task",
+      "source": "galois_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "industry",
+        "worlds_most_admired_companies",
+        "newcomer_to_the_fortune500"
+      ],
+      "result_rows": [
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "1",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "1",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ],
+        [
+          "Motor Vehicles & Parts",
+          "0",
+          "0"
+        ]
+      ],
+      "result_count": 10,
+      "has_more_rows": false
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.wine_1.wine_appellations",
+  "tables": [
+    {
+      "table_id": "appellation",
+      "name": "appellation",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "appellation.appellation",
+          "name": "appellation",
+          "type": "string",
+          "description": "Specific officially recognized area for wine production within the broader region.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellation.ava_status",
+          "name": "ava_status",
+          "type": "string",
+          "description": "Whether the region is recognized as an American Viticultural Area (AVA).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellation.main_location",
+          "name": "main_location",
+          "type": "string",
+          "description": "The primary county or state where the wine-producing area is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellation.region_name",
+          "name": "region_name",
+          "type": "string",
+          "description": "General or broad name of the wine-producing area.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "appellation.terroir_description",
+          "name": "terroir_description",
+          "type": "string",
+          "description": "Details about soil, climate, and topography defining the region's characteristics for viticulture.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "wines",
+      "name": "wines",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "wines.appellation",
+          "name": "appellation",
+          "type": "string",
+          "description": "Specific terroir or recognized quality region.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.drinking_window",
+          "name": "drinking_window",
+          "type": "string",
+          "description": "Suggested period when wine should be consumed for optimal experience.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.grape_variety",
+          "name": "grape_variety",
+          "type": "string",
+          "description": "Name of the grape variety used to produce the wine.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.price",
+          "name": "price",
+          "type": "string",
+          "description": "Suggested retail price of the wine.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.production_volume",
+          "name": "production_volume",
+          "type": "string",
+          "description": "Total number of cases produced.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.region",
+          "name": "region",
+          "type": "string",
+          "description": "Geographical area where the wine is produced.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.score",
+          "name": "score",
+          "type": "string",
+          "description": "Evaluation score given to the wine.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.vineyard_name",
+          "name": "vineyard_name",
+          "type": "string",
+          "description": "Specific vineyard within a region where the wine's grapes are sourced.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.vintage_year",
+          "name": "vintage_year",
+          "type": "string",
+          "description": "Year of the wine's production.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.wine_name",
+          "name": "wine_name",
+          "type": "string",
+          "description": "Specific name or label of the wine, alongside vintage as necessary.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "wines.winery_name",
+          "name": "winery_name",
+          "type": "string",
+          "description": "Name of the winery producing the wine.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

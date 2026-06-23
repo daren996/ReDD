@@ -1,0 +1,241 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "galois.fortune.default_task",
+  "tables": [
+    {
+      "table_id": "fortune500_companies",
+      "name": "fortune500_companies",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "fortune500_companies.assets_m",
+          "name": "assets_m",
+          "type": "string",
+          "description": "Total assets held by the company, in millions of USD, as reported in the latest balance sheet.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.best_companies_to_work_for",
+          "name": "best_companies_to_work_for",
+          "type": "string",
+          "description": "A boolean value that indicates whether the company is recognized as one of the best employers by Fortune (true or false).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.ceo",
+          "name": "ceo",
+          "type": "string",
+          "description": "The full name of the company’s current Chief Executive Officer.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.change_in_rank",
+          "name": "change_in_rank",
+          "type": "string",
+          "description": "The numeric change in the company's rank on the Fortune 500 list compared to the previous year. A positive number indicates a move up the list.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.company",
+          "name": "company",
+          "type": "string",
+          "description": "The full legal name of the company ranked on the Fortune 500 list.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.company_type",
+          "name": "company_type",
+          "type": "string",
+          "description": "The ownership or listing status of the company (e.g., Public, Private).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.country",
+          "name": "country",
+          "type": "string",
+          "description": "The country in which the company’s headquarters is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.dropped_in_rank",
+          "name": "dropped_in_rank",
+          "type": "string",
+          "description": "Indicates whether the company moved down in ranking compared to last year (true or false).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.founder_is_ceo",
+          "name": "founder_is_ceo",
+          "type": "string",
+          "description": "A boolean flag indicating if the company’s CEO is also its founder (true or false).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.gained_in_rank",
+          "name": "gained_in_rank",
+          "type": "string",
+          "description": "Indicates whether the company moved up in ranking compared to last year (true or false).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.global500",
+          "name": "global500",
+          "type": "string",
+          "description": "Indicates if the company is also listed on the Fortune Global 500, which ranks the world’s largest companies by revenue.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.growth_in_jobs",
+          "name": "growth_in_jobs",
+          "type": "string",
+          "description": "The percentage growth or decline in the company’s workforce compared to the previous year.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.headquarters_city",
+          "name": "headquarters_city",
+          "type": "string",
+          "description": "The city where the company's main corporate offices or headquarters are situated.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.headquarters_state",
+          "name": "headquarters_state",
+          "type": "string",
+          "description": "If located in the U.S., the state in which the company's headquarters resides.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.industry",
+          "name": "industry",
+          "type": "string",
+          "description": "The specific industry classification that best describes the company’s main line of business.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.is_female_ceo",
+          "name": "is_female_ceo",
+          "type": "string",
+          "description": "Indicates whether the company is led by a female CEO (true or false).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.is_profitable",
+          "name": "is_profitable",
+          "type": "string",
+          "description": "Indicates whether the company reported a positive net income in its most recent fiscal year (true or false).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.market_cap_march28_m",
+          "name": "market_cap_march28_m",
+          "type": "string",
+          "description": "The company's market capitalization in millions of USD as of March 28, 2024, reflecting investor valuation.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.market_cap_updated_m",
+          "name": "market_cap_updated_m",
+          "type": "string",
+          "description": "The most recently updated market capitalization of the company, in millions of USD.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.newcomer_to_the_fortune500",
+          "name": "newcomer_to_the_fortune500",
+          "type": "string",
+          "description": "A boolean flag indicating if the company is appearing on the Fortune 500 list for the first time.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.number_of_employees",
+          "name": "number_of_employees",
+          "type": "string",
+          "description": "The total number of employees working at the company worldwide, based on the latest available data.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.profits_percent_change",
+          "name": "profits_percent_change",
+          "type": "string",
+          "description": "The percentage change in net profit compared to the previous fiscal year.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.profits_m",
+          "name": "profits_m",
+          "type": "string",
+          "description": "Net profit or net income reported by the company for the most recent fiscal year, in millions of USD.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.revenue_percent_change",
+          "name": "revenue_percent_change",
+          "type": "string",
+          "description": "The year-over-year percentage change in total revenue compared to the prior fiscal year.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.revenues_m",
+          "name": "revenues_m",
+          "type": "string",
+          "description": "Total revenues earned by the company in the most recent fiscal year, measured in millions of USD.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.sector",
+          "name": "sector",
+          "type": "string",
+          "description": "The broader economic sector in which the company primarily operates, such as Technology, Energy, or Retail.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.ticker",
+          "name": "ticker",
+          "type": "string",
+          "description": "The stock market symbol under which the company is traded on a major U.S. exchange.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "fortune500_companies.worlds_most_admired_companies",
+          "name": "worlds_most_admired_companies",
+          "type": "string",
+          "description": "Indicates if the company is featured in Fortune’s 'World's Most Admired Companies' list.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

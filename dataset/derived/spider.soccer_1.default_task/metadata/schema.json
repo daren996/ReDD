@@ -199,30 +199,6 @@
           "examples": []
         },
         {
-          "column_id": "player_attributes.gk_kicking",
-          "name": "gk_kicking",
-          "type": "string",
-          "description": "The goalkeeper's ability to accurately and powerfully kick the ball.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "player_attributes.gk_positioning",
-          "name": "gk_positioning",
-          "type": "string",
-          "description": "The goalkeeper’s sense of positioning to effectively guard the goal.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "player_attributes.gk_reflexes",
-          "name": "gk_reflexes",
-          "type": "string",
-          "description": "The goalkeeper’s speed of reaction to shots and deflections.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "player_attributes.heading_accuracy",
           "name": "heading_accuracy",
           "type": "string",

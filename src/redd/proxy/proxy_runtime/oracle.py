@@ -7,8 +7,11 @@ import logging
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from redd.core.utils.constants import RESULT_DATA_KEY, SCHEMA_NAME_KEY
+from redd.core.utils.extraction_records import active_result_records
 from redd.core.utils.prompt_registry import DATA_EXTRACTION_ATTR_PROMPT_ID
 from redd.core.utils.structured_outputs import AttributeExtractionOutput
+from redd.core.utils.utils import is_none_value
 
 
 class GoldenOracle:
@@ -41,17 +44,32 @@ class GoldenOracle:
         if not doc_info:
             return {attr: None for attr in attributes}
 
-        merged = {}
-        for rec in doc_info.get("data_records", []) or []:
+        table_name = schema.get(SCHEMA_NAME_KEY) or schema.get("table") or schema.get("table_name")
+        data_records = doc_info.get("data_records", []) or []
+        if table_name:
+            data_records = [
+                rec
+                for rec in data_records
+                if isinstance(rec, dict)
+                and (rec.get("table_name") or rec.get("table")) == table_name
+            ]
+
+        record_values: List[Dict[str, Any]] = []
+        for rec in data_records:
             data = rec.get("data", {})
             if isinstance(data, dict):
-                merged.update(data)
-        if "row_id" not in merged and doc_info.get("source_row_id") is not None:
-            merged["row_id"] = doc_info.get("source_row_id")
+                values = {attr: data.get(attr) for attr in attributes}
+                if "row_id" not in values and doc_info.get("source_row_id") is not None:
+                    values["row_id"] = doc_info.get("source_row_id")
+                record_values.append(values)
+        if not record_values and isinstance(doc_info.get("data"), dict):
+            record_values.append({attr: doc_info["data"].get(attr) for attr in attributes})
 
         result = {}
+        primary_values = record_values[0] if record_values else {}
         for attr in attributes:
-            result[attr] = merged.get(attr)
+            result[attr] = primary_values.get(attr)
+        result["__records"] = record_values
         return result
 
     def check_predicates(
@@ -59,12 +77,133 @@ class GoldenOracle:
         extracted_values: Dict[str, Any],
         predicates: Dict[str, Callable[[Any], bool]],
     ) -> Tuple[bool, Dict[str, bool]]:
+        record_values = extracted_values.get("__records")
+        if isinstance(record_values, list) and record_values:
+            best_per_attr: Dict[str, bool] = {}
+            for record in record_values:
+                if not isinstance(record, dict):
+                    continue
+                passed, per_attr = self.check_predicates(
+                    {key: value for key, value in record.items() if key != "__records"},
+                    predicates,
+                )
+                for attr_name, attr_passed in per_attr.items():
+                    best_per_attr[attr_name] = best_per_attr.get(attr_name, False) or attr_passed
+                if passed:
+                    return True, per_attr
+            return False, {
+                attr_name: best_per_attr.get(attr_name, False)
+                for attr_name in predicates
+            }
+
         per_attr = {}
         all_passed = True
         for attr_name, predicate_fn in predicates.items():
             value = extracted_values.get(attr_name)
             try:
                 passed = predicate_fn(value) if value is not None else False
+            except Exception:
+                passed = False
+            per_attr[attr_name] = passed
+            if not passed:
+                all_passed = False
+        return all_passed, per_attr
+
+    @property
+    def call_count(self) -> int:
+        return self._extract_count
+
+
+class MaterializedExtractionOracle:
+    """
+    Oracle backed by a query-independent full extraction artifact.
+
+    This is used by experiment-run materialized mode: query execution still runs,
+    but oracle extraction reads precomputed doc/table/attr values instead of
+    calling an LLM.
+    """
+
+    def __init__(self, materialized_data: Dict[str, Any] | str | Path):
+        if isinstance(materialized_data, (str, Path)):
+            with Path(materialized_data).open("r", encoding="utf-8") as file:
+                payload = json.load(file)
+            self.materialized_data = payload if isinstance(payload, dict) else {}
+        else:
+            self.materialized_data = materialized_data
+        self._extract_count = 0
+
+    def extract(
+        self,
+        document: str,
+        schema: Dict[str, Any],
+        attributes: List[str],
+        doc_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        del document
+        self._extract_count += 1
+        if not doc_id:
+            logging.warning(
+                "[MaterializedExtractionOracle] extract called without doc_id, returning empty"
+            )
+            return {attr: None for attr in attributes}
+
+        entry = self.materialized_data.get(str(doc_id))
+        if not isinstance(entry, dict):
+            return {attr: None for attr in attributes}
+        table_name = schema.get(SCHEMA_NAME_KEY) or schema.get("table") or schema.get("table_name")
+        records = active_result_records(entry)
+        if table_name:
+            records = [record for record in records if record.get("table") == table_name]
+        if not records:
+            return {attr: None for attr in attributes}
+
+        record_values = []
+        for record in records:
+            data = record.get(RESULT_DATA_KEY, {})
+            if not isinstance(data, dict):
+                continue
+            record_values.append(
+                {
+                    attr: None if is_none_value(data.get(attr)) else data.get(attr)
+                    for attr in attributes
+                }
+            )
+        primary_values = record_values[0] if record_values else {}
+        return {
+            **{attr: primary_values.get(attr) for attr in attributes},
+            "__records": record_values,
+        }
+
+    def check_predicates(
+        self,
+        extracted_values: Dict[str, Any],
+        predicates: Dict[str, Callable[[Any], bool]],
+    ) -> Tuple[bool, Dict[str, bool]]:
+        record_values = extracted_values.get("__records")
+        if isinstance(record_values, list) and record_values:
+            best_per_attr: Dict[str, bool] = {}
+            for record in record_values:
+                if not isinstance(record, dict):
+                    continue
+                passed, per_attr = self.check_predicates(
+                    {key: value for key, value in record.items() if key != "__records"},
+                    predicates,
+                )
+                for attr_name, attr_passed in per_attr.items():
+                    best_per_attr[attr_name] = best_per_attr.get(attr_name, False) or attr_passed
+                if passed:
+                    return True, per_attr
+            return False, {
+                attr_name: best_per_attr.get(attr_name, False)
+                for attr_name in predicates
+            }
+
+        per_attr = {}
+        all_passed = True
+        for attr_name, predicate_fn in predicates.items():
+            value = extracted_values.get(attr_name)
+            try:
+                passed = predicate_fn(value) if not is_none_value(value) else False
             except Exception:
                 passed = False
             per_attr[attr_name] = passed
@@ -89,7 +228,8 @@ class DataExtractionOracle:
         mode: str = "gemini",
         llm_model: str = "gemini-2.5-flash-lite",
         api_key: Optional[str] = None,
-        prompt_attr_path: str = DATA_EXTRACTION_ATTR_PROMPT_ID
+        prompt_attr_path: str = DATA_EXTRACTION_ATTR_PROMPT_ID,
+        query_id: Optional[str] = None,
     ):
         """
         Initialize data-extraction oracle.
@@ -103,6 +243,7 @@ class DataExtractionOracle:
         self.mode = mode
         self.llm_model = llm_model
         self.api_key = api_key
+        self.query_id = query_id
         
         # Resolve prompt path
         if not Path(prompt_attr_path).exists():
@@ -174,6 +315,13 @@ class DataExtractionOracle:
             extracted = self._prompt_attr.complete_model(
                 json.dumps(extract_input, ensure_ascii=False),
                 AttributeExtractionOutput,
+                usage_context={
+                    "stage": "proxy_runtime_oracle",
+                    "query_id": self.query_id,
+                    "doc_id": doc_id,
+                    "table": schema.get(SCHEMA_NAME_KEY) or schema.get("table") or schema.get("table_name"),
+                    "attributes": list(attributes),
+                },
             ).root
             return extracted
             

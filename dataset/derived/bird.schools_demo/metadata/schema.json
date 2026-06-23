@@ -158,7 +158,7 @@
           "column_id": "frpm.percent_eligible_frpm_ages_5_17",
           "name": "percent_eligible_frpm_ages_5_17",
           "type": "string",
-          "description": "Percentage of students aged 5-17 eligible for FRPM. Type: TEXT (decimal 0-1). Examples: '0.842' (~84.2%).",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -166,7 +166,7 @@
           "column_id": "frpm.percent_eligible_frpm_k_12",
           "name": "percent_eligible_frpm_k_12",
           "type": "string",
-          "description": "Percentage of K-12 students eligible for FRPM. Type: TEXT (decimal 0-1). Examples: '0.843' (~84.3%).",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -174,7 +174,7 @@
           "column_id": "frpm.percent_eligible_free_ages_5_17",
           "name": "percent_eligible_free_ages_5_17",
           "type": "string",
-          "description": "Percentage of students aged 5-17 eligible for Free Meals. Type: TEXT (decimal 0-1).",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -182,7 +182,7 @@
           "column_id": "frpm.percent_eligible_free_k_12",
           "name": "percent_eligible_free_k_12",
           "type": "string",
-          "description": "Percentage of K-12 students eligible for Free Meals. Type: TEXT (decimal 0-1).",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -311,42 +311,10 @@
           "examples": []
         },
         {
-          "column_id": "schools.adm_email2",
-          "name": "adm_email2",
-          "type": "string",
-          "description": "Email address of the secondary administrator. Type: TEXT. Often empty.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.adm_email3",
-          "name": "adm_email3",
-          "type": "string",
-          "description": "Email address of the third administrator. Type: TEXT. Often empty.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.adm_f_name1",
           "name": "adm_f_name1",
           "type": "string",
           "description": "First name of the primary administrator. Type: TEXT. Examples: 'Laura', 'Michael'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.adm_f_name2",
-          "name": "adm_f_name2",
-          "type": "string",
-          "description": "First name of the secondary administrator. Type: TEXT. Often empty.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.adm_f_name3",
-          "name": "adm_f_name3",
-          "type": "string",
-          "description": "First name of the third administrator. Type: TEXT. Often empty.",
           "nullable": true,
           "examples": []
         },
@@ -359,34 +327,10 @@
           "examples": []
         },
         {
-          "column_id": "schools.adm_l_name2",
-          "name": "adm_l_name2",
-          "type": "string",
-          "description": "Last name of the secondary administrator. Type: TEXT. Often empty.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.adm_l_name3",
-          "name": "adm_l_name3",
-          "type": "string",
-          "description": "Last name of the third administrator. Type: TEXT. Often empty.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.charter",
           "name": "charter",
           "type": "string",
           "description": "Whether the school is a charter school. Type: TEXT. Values: '0.0' (no) or '1.0' (yes).",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.charter_num",
-          "name": "charter_num",
-          "type": "string",
-          "description": "Charter school number. Type: TEXT. Empty if not a charter. Examples: '0067'.",
           "nullable": true,
           "examples": []
         },
@@ -399,34 +343,10 @@
           "examples": []
         },
         {
-          "column_id": "schools.closed_date",
-          "name": "closed_date",
-          "type": "string",
-          "description": "Date when the school was closed. Type: TEXT. Empty if the school is still active.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.county",
           "name": "county",
           "type": "string",
           "description": "County where the school is located. Type: TEXT. Examples: 'Butte', 'Alameda'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.doc",
-          "name": "doc",
-          "type": "string",
-          "description": "District Ownership Code. Type: TEXT (numeric). Examples: '54'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.doc_type",
-          "name": "doc_type",
-          "type": "string",
-          "description": "District Ownership Code type description. Type: TEXT. Examples: 'Unified School District'.",
           "nullable": true,
           "examples": []
         },
@@ -439,14 +359,6 @@
           "examples": []
         },
         {
-          "column_id": "schools.eil_code",
-          "name": "eil_code",
-          "type": "string",
-          "description": "Educational Instruction Level code. Type: TEXT. Values: 'ELEM', 'ELEMHIGH', 'HS', 'INTRMDT'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.eil_name",
           "name": "eil_name",
           "type": "string",
@@ -455,50 +367,10 @@
           "examples": []
         },
         {
-          "column_id": "schools.ed_ops_code",
-          "name": "ed_ops_code",
-          "type": "string",
-          "description": "Educational Operations code. Type: TEXT. Values: 'TRAD' (Traditional), 'CON' (Continuation), etc.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.ed_ops_name",
           "name": "ed_ops_name",
           "type": "string",
           "description": "Educational Operations name. Type: TEXT. Examples: 'Traditional', 'Continuation School'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.ext",
-          "name": "ext",
-          "type": "string",
-          "description": "Phone extension number for the school. Type: TEXT. Often empty.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.funding_type",
-          "name": "funding_type",
-          "type": "string",
-          "description": "Funding type for charter schools. Type: TEXT. Values: 'Directly funded', 'Locally funded', or empty.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.g_soffered",
-          "name": "g_soffered",
-          "type": "string",
-          "description": "Grade span offered by the school. Type: TEXT. Examples: 'K-5', 'K-12', '9-12'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.g_sserved",
-          "name": "g_sserved",
-          "type": "string",
-          "description": "Grade span actually served. Type: TEXT. Examples: 'K-5', 'K-12', '11-12'.",
           "nullable": true,
           "examples": []
         },
@@ -535,46 +407,6 @@
           "examples": []
         },
         {
-          "column_id": "schools.mail_city",
-          "name": "mail_city",
-          "type": "string",
-          "description": "Mailing address city. Type: TEXT.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_state",
-          "name": "mail_state",
-          "type": "string",
-          "description": "Mailing address state abbreviation. Type: TEXT. Value: 'CA'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_str_abr",
-          "name": "mail_str_abr",
-          "type": "string",
-          "description": "Abbreviated mailing street address. Type: TEXT.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_street",
-          "name": "mail_street",
-          "type": "string",
-          "description": "Full mailing street address. Type: TEXT.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_zip",
-          "name": "mail_zip",
-          "type": "string",
-          "description": "Mailing address ZIP code (with optional +4 extension). Type: TEXT. Examples: '95954-9152', '95969-3271'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.nces_dist",
           "name": "nces_dist",
           "type": "string",
@@ -587,38 +419,6 @@
           "name": "nces_school",
           "type": "string",
           "description": "NCES school identifier. Type: TEXT. Examples: '05712', '04345', '12325'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.open_date",
-          "name": "open_date",
-          "type": "string",
-          "description": "Date when the school was opened. Type: TEXT (YYYY-MM-DD). Examples: '1996-08-28', '1994-08-31'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.phone",
-          "name": "phone",
-          "type": "string",
-          "description": "School phone number. Type: TEXT. Examples: '(530) 873-3785', '(530) 872-1171'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.soc",
-          "name": "soc",
-          "type": "string",
-          "description": "School Ownership Code (numeric). Type: TEXT. Examples: '60', '65', '68'.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.soc_type",
-          "name": "soc_type",
-          "type": "string",
-          "description": "School Ownership Code type description. Type: TEXT. Examples: 'Elementary Schools (Public)', 'K-12 Schools (Public)', 'Continuation High Schools'.",
           "nullable": true,
           "examples": []
         },
@@ -655,26 +455,10 @@
           "examples": []
         },
         {
-          "column_id": "schools.street_abr",
-          "name": "street_abr",
-          "type": "string",
-          "description": "Abbreviated physical street address. Type: TEXT.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.virtual",
           "name": "virtual",
           "type": "string",
           "description": "Whether the school operates virtually. Type: TEXT. Values: 'N' (no), 'P' (partial), 'Y' (yes), 'F' (full).",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.website",
-          "name": "website",
-          "type": "string",
-          "description": "School website URL. Type: TEXT. May be empty. Examples: 'www.cedarwood.pusdk12.org', 'www.hometech.org'.",
           "nullable": true,
           "examples": []
         },

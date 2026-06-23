@@ -14,7 +14,7 @@ from redd.core.utils.prompt_registry import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_DIR = PROJECT_ROOT / "configs"
-DEFAULT_LOG_DIR = PROJECT_ROOT / "logs"
+DEFAULT_LOG_DIR = PROJECT_ROOT / "outputs" / "logs"
 CONFIG_VERSION = "2.1.1"
 DEFAULT_DOC_FILTER_THRESHOLD = 0.585
 DEFAULT_DOC_FILTER_ENABLE_CALIBRATE = False
@@ -43,6 +43,14 @@ def load_yaml(config_path: str | Path) -> tuple[dict[str, Any], Path]:
     import yaml
 
     resolved_path = resolve_repo_path(config_path)
+    if not resolved_path.exists():
+        requested_path = Path(config_path)
+        if not requested_path.is_absolute():
+            parts = requested_path.parts
+            if len(parts) >= 3 and parts[0] == "configs" and parts[1] == "examples":
+                legacy_path = PROJECT_ROOT / "configs" / "legacy" / Path(*parts[2:])
+                if legacy_path.exists():
+                    resolved_path = legacy_path
     with resolved_path.open("r", encoding="utf-8") as file:
         config = yaml.safe_load(file) or {}
     if not isinstance(config, dict):
@@ -66,6 +74,12 @@ class RuntimeConfig(StrictModel):
     output_layout: Literal["dataset_stage"] = "dataset_stage"
     console_log_level: str = "WARNING"
     force_rerun: bool = False
+    materialized_full_extraction: bool = False
+    materialized_full_extraction_only: bool = False
+    materialized_full_extraction_batch_size: int = 16
+    materialized_full_extraction_batch_max_chars: int = 24000
+    materialized_full_extraction_concurrency: int = 1
+    multi_record_extraction: bool = False
 
 
 class LLMConfigModel(StrictModel):
@@ -250,6 +264,18 @@ class ExperimentRuntime(StrictModel):
             "console_log_level": self.runtime.console_log_level,
             "out_main": str(resolve_repo_path(self.runtime.output_dir)),
             "data_main": str(first_dataset.root.parent),
+            "materialized_full_extraction": self.runtime.materialized_full_extraction,
+            "materialized_full_extraction_only": self.runtime.materialized_full_extraction_only,
+            "materialized_full_extraction_batch_size": (
+                self.runtime.materialized_full_extraction_batch_size
+            ),
+            "materialized_full_extraction_batch_max_chars": (
+                self.runtime.materialized_full_extraction_batch_max_chars
+            ),
+            "materialized_full_extraction_concurrency": (
+                self.runtime.materialized_full_extraction_concurrency
+            ),
+            "multi_record_extraction": self.runtime.multi_record_extraction,
             "exp_dn_fn_list": self.dataset_ids(),
             "datasets": self.dataset_ids(),
             "_runtime_contexts": [

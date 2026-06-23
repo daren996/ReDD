@@ -22,7 +22,7 @@
           "column_id": "fortune500_companies.best_companies_to_work_for",
           "name": "best_companies_to_work_for",
           "type": "string",
-          "description": "A boolean value that indicates whether the company is recognized as one of the best employers by Fortune (true or false).",
+          "description": "Closed-world boolean for Fortune Best Companies to Work For membership. Output false/0 when the document states the company is not on the list or does not recognize it as being on the list; do not leave blank for ordinary non-membership.",
           "nullable": true,
           "examples": []
         },
@@ -70,7 +70,7 @@
           "column_id": "fortune500_companies.dropped_in_rank",
           "name": "dropped_in_rank",
           "type": "string",
-          "description": "Indicates whether the company moved down in ranking compared to last year (true or false).",
+          "description": "Closed-world boolean indicating whether rank declined. Derive from the change in rank when stated: negative change means true; otherwise false.",
           "nullable": true,
           "examples": []
         },
@@ -78,7 +78,7 @@
           "column_id": "fortune500_companies.founder_is_ceo",
           "name": "founder_is_ceo",
           "type": "string",
-          "description": "A boolean flag indicating if the company’s CEO is also its founder (true or false).",
+          "description": "Closed-world boolean indicating whether the CEO is also the founder. Output false/0 when the document does not identify the CEO as the founder.",
           "nullable": true,
           "examples": []
         },
@@ -86,7 +86,7 @@
           "column_id": "fortune500_companies.gained_in_rank",
           "name": "gained_in_rank",
           "type": "string",
-          "description": "Indicates whether the company moved up in ranking compared to last year (true or false).",
+          "description": "Closed-world boolean indicating whether rank improved. Derive from the change in rank when stated: positive change means true; otherwise false.",
           "nullable": true,
           "examples": []
         },
@@ -94,7 +94,7 @@
           "column_id": "fortune500_companies.global500",
           "name": "global500",
           "type": "string",
-          "description": "Indicates if the company is also listed on the Fortune Global 500, which ranks the world’s largest companies by revenue.",
+          "description": "Closed-world boolean for Fortune Global 500 membership. Output false/0 for ordinary non-membership rather than null.",
           "nullable": true,
           "examples": []
         },
@@ -102,7 +102,7 @@
           "column_id": "fortune500_companies.growth_in_jobs",
           "name": "growth_in_jobs",
           "type": "string",
-          "description": "The percentage growth or decline in the company’s workforce compared to the previous year.",
+          "description": "Closed-world boolean indicating whether the company shows growth in jobs or workforce expansion. Output true/1 when the document states job growth, job creation, employment growth, workforce expansion, or increased employment; otherwise output false/0 rather than null.",
           "nullable": true,
           "examples": []
         },
@@ -134,7 +134,7 @@
           "column_id": "fortune500_companies.is_female_ceo",
           "name": "is_female_ceo",
           "type": "string",
-          "description": "Indicates whether the company is led by a female CEO (true or false).",
+          "description": "Closed-world boolean indicating whether the CEO is female. Output false/0 unless the CEO is identified as female.",
           "nullable": true,
           "examples": []
         },
@@ -142,7 +142,7 @@
           "column_id": "fortune500_companies.is_profitable",
           "name": "is_profitable",
           "type": "string",
-          "description": "Indicates whether the company reported a positive net income in its most recent fiscal year (true or false).",
+          "description": "Closed-world boolean indicating whether profits are positive. Derive from the profits value when stated: positive profits mean true, negative or zero means false.",
           "nullable": true,
           "examples": []
         },
@@ -166,7 +166,7 @@
           "column_id": "fortune500_companies.newcomer_to_the_fortune500",
           "name": "newcomer_to_the_fortune500",
           "type": "string",
-          "description": "A boolean flag indicating if the company is appearing on the Fortune 500 list for the first time.",
+          "description": "Closed-world boolean indicating whether the company is a newcomer to the Fortune 500. Output false/0 when the document indicates it is not a newcomer or gives an ordinary prior ranking/history.",
           "nullable": true,
           "examples": []
         },
@@ -230,7 +230,7 @@
           "column_id": "fortune500_companies.worlds_most_admired_companies",
           "name": "worlds_most_admired_companies",
           "type": "string",
-          "description": "Indicates if the company is featured in Fortune’s 'World's Most Admired Companies' list.",
+          "description": "Closed-world boolean for World's Most Admired Companies membership. Output false/0 for ordinary non-membership rather than null.",
           "nullable": true,
           "examples": []
         }

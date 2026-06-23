@@ -1,0 +1,1628 @@
+{
+  "dataset": "apartment_rentals/default_task",
+  "source": "spider_sqlite",
+  "database": "apartment_rentals",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "schema_db": "default_task_schema.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "Find the full names of buildings that have both 'Gym' and 'Swimming Pool' facilities available.",
+      "sql": "SELECT DISTINCT T1.building_full_name FROM apartments AS T1 INNER JOIN apartment_facilities AS T2 ON T1.apt_number = T2.apt_number WHERE T2.facility_code = 'Gym' INTERSECT SELECT DISTINCT T1.building_full_name FROM apartments AS T1 INNER JOIN apartment_facilities AS T2 ON T1.apt_number = T2.apt_number WHERE T2.facility_code = 'Swimming Pool';",
+      "golden_schema": {
+        "tables": [
+          "apartments",
+          "apartment_facilities"
+        ],
+        "columns": [
+          "apartments.building_full_name",
+          "apartments.apt_number",
+          "apartment_facilities.apt_number",
+          "apartment_facilities.facility_code"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "building_full_name"
+      ],
+      "result_rows": [
+        [
+          "Coleman-Martin"
+        ],
+        [
+          "Coleman-Wells"
+        ],
+        [
+          "Doyle, English "
+        ],
+        [
+          "Price Group"
+        ],
+        [
+          "Ramirez Ltd"
+        ],
+        [
+          "Thompson-Farrel"
+        ]
+      ],
+      "result_count": 6,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "List the apartment numbers and their types for apartments located in buildings managed by 'Jonathan' and have more than 4 rooms.",
+      "sql": "SELECT T1.apt_number, T1.apt_type_code FROM apartments AS T1 INNER JOIN apartment_buildings AS T2 ON T1.building_full_name = T2.building_full_name WHERE T2.building_manager = 'Jonathan' AND CAST(T1.room_count AS INTEGER) > 4;",
+      "golden_schema": {
+        "tables": [
+          "apartments",
+          "apartment_buildings"
+        ],
+        "columns": [
+          "apartments.apt_number",
+          "apartments.apt_type_code",
+          "apartments.building_full_name",
+          "apartment_buildings.building_full_name",
+          "apartment_buildings.building_manager"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_number",
+        "apt_type_code"
+      ],
+      "result_rows": [
+        [
+          "Apt. 957",
+          "Duplex"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "Find the first and last names of guests who have booked 'Studio' type apartments and whose booking status is 'Confirmed'.",
+      "sql": "SELECT DISTINCT T1.guest_first_name, T1.guest_last_name FROM apartment_bookings AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T2.apt_type_code = 'Studio' AND T1.booking_status_code = 'Confirmed';",
+      "golden_schema": {
+        "tables": [
+          "apartment_bookings",
+          "apartments"
+        ],
+        "columns": [
+          "apartment_bookings.guest_first_name",
+          "apartment_bookings.guest_last_name",
+          "apartment_bookings.apt_number",
+          "apartments.apt_number",
+          "apartments.apt_type_code"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "guest_first_name",
+        "guest_last_name"
+      ],
+      "result_rows": [
+        [
+          "Stacy",
+          "Miller"
+        ],
+        [
+          "Daniel",
+          "Robinson"
+        ],
+        [
+          "Wendy",
+          "Ward"
+        ],
+        [
+          "Tara",
+          "Nguyen"
+        ],
+        [
+          "Derek",
+          "Santos"
+        ],
+        [
+          "Nikki",
+          "Lehner"
+        ],
+        [
+          "Louvenia",
+          "Crona"
+        ],
+        [
+          "Aaron",
+          "Gross"
+        ]
+      ],
+      "result_count": 8,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "List building addresses where all apartments have at least 2 bathrooms.",
+      "sql": "SELECT DISTINCT T2.building_address FROM apartments AS T1 INNER JOIN apartment_buildings AS T2 ON T1.building_full_name = T2.building_full_name WHERE CAST(T1.bathroom_count AS INTEGER) >= 2 EXCEPT SELECT DISTINCT T2.building_address FROM apartments AS T1 INNER JOIN apartment_buildings AS T2 ON T1.building_full_name = T2.building_full_name WHERE CAST(T1.bathroom_count AS INTEGER) < 2;",
+      "golden_schema": {
+        "tables": [
+          "apartments",
+          "apartment_buildings"
+        ],
+        "columns": [
+          "apartments.bathroom_count",
+          "apartments.building_full_name",
+          "apartment_buildings.building_full_name",
+          "apartment_buildings.building_address"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "building_address"
+      ],
+      "result_rows": [
+        [
+          "016 Phyllis Inlet North Erin, NH 78398"
+        ],
+        [
+          "019 Michael Expressway Kellymouth, MT 06114"
+        ],
+        [
+          "02662 Dean Landing Apt. 890 Andrewchester, OK 16444"
+        ],
+        [
+          "04230 Robinson Haven Traviston, CA 76871"
+        ],
+        [
+          "058 Elliott Hills Amytown, IN 64112"
+        ],
+        [
+          "0746 Callahan Manors Suite 376 Ericksonfort, ND 47875"
+        ],
+        [
+          "09504 Christopher Station Apt. 750 Deannaview, DE 24601"
+        ],
+        [
+          "1414 Megan Forge Brendaland, MO 45453"
+        ],
+        [
+          "157 Hill Crescent Mathewmouth, LA 76473"
+        ],
+        [
+          "15754 White Landing Suite 617 North Melindaborough, RI 23364"
+        ],
+        [
+          "1579 Runte Forges Apt. 548\nLeuschkeland, OK 12009-8683"
+        ],
+        [
+          "1769 Burnett River Apt. 316 West Michael, PA 58128"
+        ],
+        [
+          "1844 Armstrong Stravenue Suite 853\nMyrnatown, CT 13528"
+        ],
+        [
+          "22970 Gerald Terrace East Michael, TX 71980"
+        ],
+        [
+          "321 Shelby Springs Hudsonfort, NH 60032"
+        ],
+        [
+          "354 Otto Villages\nCharliefort, VT 71664"
+        ],
+        [
+          "355 Walker Forks North William, AK 27329"
+        ],
+        [
+          "43180 Jody Row Heatherland, MT 19442"
+        ],
+        [
+          "432 Lane Greens Carterland, ME 62136"
+        ],
+        [
+          "44459 Jeffrey Square South Dorisberg, OK 01271"
+        ],
+        [
+          "4584 Romero Walks Apt. 465 Scottberg, MI 95888"
+        ],
+        [
+          "48976 Joseph Run Port Williechester, NY 32531"
+        ],
+        [
+          "4949 Oliver Viaduct Apt. 441 New Kelly, KS 31915"
+        ],
+        [
+          "5417 Cristian Crescent Duncanmouth, VT 66392"
+        ],
+        [
+          "55327 Justin Hills East Susanhaven, AR 53624"
+        ],
+        [
+          "5660 Campbell Trail Apt. 688 North Billy, MT 17886"
+        ],
+        [
+          "6675 Smith Light Ryanville, NH 97709"
+        ],
+        [
+          "698 Mendoza Mountains Lake Sherylside, CT 21582"
+        ],
+        [
+          "69969 Mitchell Plaza Stewartbury, GA 46323"
+        ],
+        [
+          "7061 Joseph Roads New Michael, MO 58223"
+        ],
+        [
+          "71537 Gorczany Inlet\nWisozkburgh, AL 08256"
+        ],
+        [
+          "7634 Brianna Turnpike Trujillotown, NV 25323"
+        ],
+        [
+          "85035 Castro Valley Torresfurt, KS 57844"
+        ],
+        [
+          "9489 Catherine Mill Suite 880 New Donald, ME 07606"
+        ],
+        [
+          "975 Payne Causeway Meyersborough, WA 31500"
+        ],
+        [
+          "PSC 9707, Box 6345 APO AE 84251"
+        ],
+        [
+          "USCGC Frazier FPO AE 22463"
+        ],
+        [
+          "USNS Cook FPO AE 77894"
+        ]
+      ],
+      "result_count": 38,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "What are the apartment numbers that have cable TV and a balcony?",
+      "sql": "SELECT apt_number FROM apartment_facilities WHERE facility_code = 'Cable TV' INTERSECT SELECT apt_number FROM apartment_facilities WHERE facility_code = 'Balcony';",
+      "golden_schema": {
+        "tables": [
+          "apartment_facilities"
+        ],
+        "columns": [
+          "apartment_facilities.apt_number",
+          "apartment_facilities.facility_code"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_number"
+      ],
+      "result_rows": [
+        [
+          "Apt. 211"
+        ],
+        [
+          "Apt. 698"
+        ],
+        [
+          "Apt. 815"
+        ]
+      ],
+      "result_count": 3,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "Find the apartment numbers which are of type 'Duplex' and have more than 5 bedrooms.",
+      "sql": "SELECT apt_number FROM apartments WHERE apt_type_code = 'Duplex' AND CAST(bedroom_count AS INTEGER) > 5;",
+      "golden_schema": {
+        "tables": [
+          "apartments"
+        ],
+        "columns": [
+          "apartments.apt_number",
+          "apartments.apt_type_code",
+          "apartments.bedroom_count"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_number"
+      ],
+      "result_rows": [
+        [
+          "Apt. 852"
+        ],
+        [
+          "Suite 634"
+        ],
+        [
+          "Apt. 196"
+        ],
+        [
+          "Apt. 983"
+        ],
+        [
+          "Apt. 955"
+        ],
+        [
+          "Apt. 477"
+        ],
+        [
+          "Apt. 199"
+        ],
+        [
+          "Apt. 702"
+        ],
+        [
+          "Apt. 925"
+        ],
+        [
+          "Apt. 516"
+        ]
+      ],
+      "result_count": 10,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "List building full names and the number of apartments each building has.",
+      "sql": "SELECT building_full_name, COUNT(apt_number) FROM apartments GROUP BY building_full_name;",
+      "golden_schema": {
+        "tables": [
+          "apartments"
+        ],
+        "columns": [
+          "apartments.building_full_name",
+          "apartments.apt_number"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "building_full_name",
+        "count_apt_number"
+      ],
+      "result_rows": [
+        [
+          "Allen Ltd",
+          1
+        ],
+        [
+          "Baker LLC",
+          1
+        ],
+        [
+          "Barclay Tower",
+          2
+        ],
+        [
+          "Biltmore Plaza",
+          5
+        ],
+        [
+          "Bradford LLC",
+          2
+        ],
+        [
+          "Bradley-Sulliva",
+          1
+        ],
+        [
+          "Brown and Sons",
+          1
+        ],
+        [
+          "Brown-Herring",
+          2
+        ],
+        [
+          "Brown-Turner",
+          1
+        ],
+        [
+          "Butler Inc",
+          2
+        ],
+        [
+          "Chambers-Terrel",
+          1
+        ],
+        [
+          "Coleman-Martin",
+          2
+        ],
+        [
+          "Coleman-Wells",
+          3
+        ],
+        [
+          "Collins Inc",
+          1
+        ],
+        [
+          "Columbus Square",
+          5
+        ],
+        [
+          "Conway, Howard ",
+          2
+        ],
+        [
+          "Daugherty and S",
+          2
+        ],
+        [
+          "Dickson-Lane",
+          1
+        ],
+        [
+          "Dorsey, Becker ",
+          2
+        ],
+        [
+          "Doyle, English ",
+          1
+        ],
+        [
+          "Evans-Oneill",
+          1
+        ],
+        [
+          "Finley, Simon a",
+          1
+        ],
+        [
+          "Fisher-Wood",
+          2
+        ],
+        [
+          "Franklin, Rodri",
+          1
+        ],
+        [
+          "Gilbert-Snow",
+          1
+        ],
+        [
+          "Golden, Kelley ",
+          1
+        ],
+        [
+          "Gonzalez Inc",
+          1
+        ],
+        [
+          "Green, Cohen an",
+          1
+        ],
+        [
+          "Green, Wong and",
+          1
+        ],
+        [
+          "Green, Wright a",
+          3
+        ],
+        [
+          "Gregory-Webb",
+          2
+        ],
+        [
+          "Harvey Inc",
+          2
+        ],
+        [
+          "Hinton-Morris",
+          1
+        ],
+        [
+          "Ingram and Sons",
+          2
+        ],
+        [
+          "Johnson, Bell a",
+          1
+        ],
+        [
+          "Jones-Watkins",
+          1
+        ],
+        [
+          "Larson, Mills a",
+          1
+        ],
+        [
+          "Lee Inc",
+          3
+        ],
+        [
+          "Lopez, Salinas ",
+          1
+        ],
+        [
+          "Manning, Pollar",
+          1
+        ],
+        [
+          "Maynard, Robins",
+          1
+        ],
+        [
+          "Mercedes House",
+          1
+        ],
+        [
+          "Miller Group",
+          3
+        ],
+        [
+          "Mills, Carpente",
+          1
+        ],
+        [
+          "Mitchell Ltd",
+          2
+        ],
+        [
+          "Nguyen LLC",
+          4
+        ],
+        [
+          "Obrien-Benjamin",
+          2
+        ],
+        [
+          "Orozco-Wu",
+          1
+        ],
+        [
+          "Osborn Group",
+          2
+        ],
+        [
+          "Pearson-Ferrell",
+          2
+        ],
+        [
+          "Petersfield",
+          1
+        ],
+        [
+          "Phillips Ltd",
+          1
+        ],
+        [
+          "Phillips-White",
+          2
+        ],
+        [
+          "Pittman Inc",
+          1
+        ],
+        [
+          "Price Group",
+          2
+        ],
+        [
+          "Ramirez Ltd",
+          2
+        ],
+        [
+          "Ramos LLC",
+          2
+        ],
+        [
+          "Riley-Hill",
+          1
+        ],
+        [
+          "Roman-Lee",
+          1
+        ],
+        [
+          "Russell LLC",
+          1
+        ],
+        [
+          "Silva-Davis",
+          1
+        ],
+        [
+          "Silver Towers",
+          2
+        ],
+        [
+          "Stuyvesant Town",
+          3
+        ],
+        [
+          "The Eugene",
+          2
+        ],
+        [
+          "Thomas-Clayton",
+          2
+        ],
+        [
+          "Thompson-Farrel",
+          3
+        ],
+        [
+          "Wells and Sons",
+          1
+        ],
+        [
+          "Windsor Court",
+          2
+        ]
+      ],
+      "result_count": 68,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "Find the first names of guests who have a booking status of 'Cancelled'.",
+      "sql": "SELECT guest_first_name FROM apartment_bookings WHERE booking_status_code = 'Cancelled';",
+      "golden_schema": {
+        "tables": [
+          "apartment_bookings"
+        ],
+        "columns": [
+          "apartment_bookings.guest_first_name",
+          "apartment_bookings.booking_status_code"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "guest_first_name"
+      ],
+      "result_rows": [
+        [
+          "Kip"
+        ],
+        [
+          "Nikki"
+        ],
+        [
+          "Lou"
+        ],
+        [
+          "Derek"
+        ],
+        [
+          "Scott"
+        ],
+        [
+          "Ryan"
+        ],
+        [
+          "Molly"
+        ],
+        [
+          "Casey"
+        ],
+        [
+          "Angel"
+        ],
+        [
+          "Arthur"
+        ],
+        [
+          "Gabe"
+        ],
+        [
+          "Lou"
+        ],
+        [
+          "Josefina"
+        ],
+        [
+          "Angel"
+        ],
+        [
+          "John"
+        ],
+        [
+          "Timothy"
+        ],
+        [
+          "David"
+        ],
+        [
+          "Christian"
+        ],
+        [
+          "Michael"
+        ],
+        [
+          "Gabe"
+        ],
+        [
+          "Keith"
+        ],
+        [
+          "Kathleen"
+        ],
+        [
+          "Angel"
+        ],
+        [
+          "Jennifer"
+        ],
+        [
+          "Deborah"
+        ],
+        [
+          "Scott"
+        ],
+        [
+          "Christopher"
+        ],
+        [
+          "Christopher"
+        ],
+        [
+          "Susan"
+        ],
+        [
+          "Kevin"
+        ],
+        [
+          "Denise"
+        ],
+        [
+          "Christopher"
+        ]
+      ],
+      "result_count": 32,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "Find building addresses that contain the word 'Street'.",
+      "sql": "SELECT building_address FROM apartment_buildings WHERE building_address LIKE '%Street%';",
+      "golden_schema": {
+        "tables": [
+          "apartment_buildings"
+        ],
+        "columns": [
+          "apartment_buildings.building_address"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "building_address"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "For each apartment type, what is the average number of rooms?",
+      "sql": "SELECT apt_type_code, AVG(CAST(room_count AS REAL)) FROM apartments GROUP BY apt_type_code;",
+      "golden_schema": {
+        "tables": [
+          "apartments"
+        ],
+        "columns": [
+          "apartments.apt_type_code",
+          "apartments.room_count"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_type_code",
+        "avg_cast_room_count_as_real"
+      ],
+      "result_rows": [
+        [
+          "Duplex",
+          6.622222222222222
+        ],
+        [
+          "Flat",
+          6.525
+        ],
+        [
+          "Studio",
+          6.833333333333333
+        ]
+      ],
+      "result_count": 3,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "List the building managers who manage buildings with 'Flat' descriptions, along with the count of buildings they manage.",
+      "sql": "SELECT building_manager, COUNT(*) FROM apartment_buildings WHERE building_description = 'Flat' GROUP BY building_manager;",
+      "golden_schema": {
+        "tables": [
+          "apartment_buildings"
+        ],
+        "columns": [
+          "apartment_buildings.building_manager",
+          "apartment_buildings.building_description"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "building_manager",
+        "count"
+      ],
+      "result_rows": [
+        [
+          "Bethany",
+          1
+        ],
+        [
+          "Christopher",
+          1
+        ],
+        [
+          "Claude",
+          1
+        ],
+        [
+          "Darlene",
+          1
+        ],
+        [
+          "David",
+          1
+        ],
+        [
+          "Ewald",
+          1
+        ],
+        [
+          "Gary",
+          1
+        ],
+        [
+          "Greg",
+          1
+        ],
+        [
+          "Hannah",
+          1
+        ],
+        [
+          "Hayley",
+          1
+        ],
+        [
+          "Holly",
+          1
+        ],
+        [
+          "James",
+          1
+        ],
+        [
+          "Jennifer",
+          1
+        ],
+        [
+          "Jessica",
+          1
+        ],
+        [
+          "Joseph",
+          2
+        ],
+        [
+          "Justin",
+          2
+        ],
+        [
+          "Kyle",
+          1
+        ],
+        [
+          "Madeline",
+          1
+        ],
+        [
+          "Marvin",
+          1
+        ],
+        [
+          "Mary",
+          1
+        ],
+        [
+          "Melissa",
+          1
+        ],
+        [
+          "Melyssa",
+          1
+        ],
+        [
+          "Monique",
+          1
+        ],
+        [
+          "Patrick",
+          1
+        ],
+        [
+          "Rebecca",
+          1
+        ],
+        [
+          "Rogers",
+          1
+        ],
+        [
+          "Thomas",
+          1
+        ],
+        [
+          "Traci",
+          1
+        ],
+        [
+          "Travis",
+          1
+        ],
+        [
+          "Veronica",
+          1
+        ]
+      ],
+      "result_count": 30,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "Find the apartment numbers that have bookings ending in '2019' and a booking status code that is not 'Confirmed'.",
+      "sql": "SELECT apt_number FROM apartment_bookings WHERE booking_end_date LIKE '2019%' AND booking_status_code <> 'Confirmed';",
+      "golden_schema": {
+        "tables": [
+          "apartment_bookings"
+        ],
+        "columns": [
+          "apartment_bookings.apt_number",
+          "apartment_bookings.booking_end_date",
+          "apartment_bookings.booking_status_code"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_number"
+      ],
+      "result_rows": [
+        [
+          "Apt. 270"
+        ],
+        [
+          "Apt. 199"
+        ],
+        [
+          "Apt. 763"
+        ],
+        [
+          "Apt. 503"
+        ],
+        [
+          "Apt. 199"
+        ],
+        [
+          "Apt. 342"
+        ],
+        [
+          "Apt. 262"
+        ],
+        [
+          "Apt. 524"
+        ],
+        [
+          "Apt. 001"
+        ],
+        [
+          "Apt. 615"
+        ],
+        [
+          "Apt. 892"
+        ],
+        [
+          "Apt. 928"
+        ],
+        [
+          "Apt. 708"
+        ],
+        [
+          "Apt. 262"
+        ],
+        [
+          "Apt. 505"
+        ],
+        [
+          "Suite 088"
+        ],
+        [
+          "Apt. 503"
+        ]
+      ],
+      "result_count": 17,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "List the apartment numbers which are available (available_yn = '1') and have a booking start date before '2017-01-01'.",
+      "sql": "SELECT apt_number FROM view_unit_status WHERE available_yn = '1' AND booking_start_date < '2017-01-01';",
+      "golden_schema": {
+        "tables": [
+          "view_unit_status"
+        ],
+        "columns": [
+          "view_unit_status.apt_number",
+          "view_unit_status.available_yn",
+          "view_unit_status.booking_start_date"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_number"
+      ],
+      "result_rows": [
+        [
+          "Apt. 411"
+        ],
+        [
+          "Suite 645"
+        ],
+        [
+          "Apt. 187"
+        ],
+        [
+          "Suite 307"
+        ],
+        [
+          "Apt. 794"
+        ],
+        [
+          "Apt. 585"
+        ],
+        [
+          "Suite 749"
+        ],
+        [
+          "Apt. 477"
+        ],
+        [
+          "Apt. 837"
+        ],
+        [
+          "Apt. 187"
+        ],
+        [
+          "Apt. 940"
+        ],
+        [
+          "Apt. 859"
+        ]
+      ],
+      "result_count": 12,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find apartment numbers that have both 'Balcony' and 'Boardband' facilities, and are also of type 'Studio'.",
+      "sql": "SELECT T1.apt_number FROM apartment_facilities AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T1.facility_code = 'Balcony' INTERSECT SELECT T1.apt_number FROM apartment_facilities AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number WHERE T1.facility_code = 'Boardband' AND T2.apt_type_code = 'Studio';",
+      "golden_schema": {
+        "tables": [
+          "apartment_facilities",
+          "apartments"
+        ],
+        "columns": [
+          "apartment_facilities.apt_number",
+          "apartment_facilities.facility_code",
+          "apartments.apt_number",
+          "apartments.apt_type_code"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_number"
+      ],
+      "result_rows": [
+        [
+          "Apt. 149"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "Find the building manager and full name of buildings that have at least one apartment with 3 bathrooms and 6 bedrooms.",
+      "sql": "SELECT DISTINCT T1.building_manager, T1.building_full_name FROM apartment_buildings AS T1 INNER JOIN apartments AS T2 ON T1.building_full_name = T2.building_full_name WHERE T2.bathroom_count = '3' AND T2.bedroom_count = '6';",
+      "golden_schema": {
+        "tables": [
+          "apartment_buildings",
+          "apartments"
+        ],
+        "columns": [
+          "apartment_buildings.building_manager",
+          "apartment_buildings.building_full_name",
+          "apartments.bathroom_count",
+          "apartments.bedroom_count",
+          "apartments.building_full_name"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "building_manager",
+        "building_full_name"
+      ],
+      "result_rows": [
+        [
+          "Timothy",
+          "Butler Inc"
+        ],
+        [
+          "Sydni",
+          "Biltmore Plaza"
+        ],
+        [
+          "Madeline",
+          "Nguyen LLC"
+        ],
+        [
+          "David",
+          "Ramos LLC"
+        ],
+        [
+          "Greg",
+          "Gregory-Webb"
+        ],
+        [
+          "Jennifer",
+          "Green, Wong and"
+        ],
+        [
+          "Ashley",
+          "Collins Inc"
+        ],
+        [
+          "Rogers",
+          "Barclay Tower"
+        ],
+        [
+          "Michael",
+          "Chambers-Terrel"
+        ],
+        [
+          "Ryan",
+          "Jones-Watkins"
+        ],
+        [
+          "Robert",
+          "Johnson, Bell a"
+        ]
+      ],
+      "result_count": 11,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find the apartment numbers which have the most number of bookings.",
+      "sql": "SELECT apt_number FROM apartment_bookings GROUP BY apt_number ORDER BY COUNT(*) DESC LIMIT 1;",
+      "golden_schema": {
+        "tables": [
+          "apartment_bookings"
+        ],
+        "columns": [
+          "apartment_bookings.apt_number"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "apt_number"
+      ],
+      "result_rows": [
+        [
+          "Apt. 859"
+        ]
+      ],
+      "result_count": 1,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "List the building full name and the average number of bedrooms for buildings with more than 5 rooms on average.",
+      "sql": "SELECT T1.building_full_name, AVG(CAST(T2.bedroom_count AS REAL)) FROM apartment_buildings AS T1 INNER JOIN apartments AS T2 ON T1.building_full_name = T2.building_full_name GROUP BY T1.building_full_name HAVING AVG(CAST(T2.room_count AS REAL)) > 5;",
+      "golden_schema": {
+        "tables": [
+          "apartment_buildings",
+          "apartments"
+        ],
+        "columns": [
+          "apartment_buildings.building_full_name",
+          "apartments.bedroom_count",
+          "apartments.room_count",
+          "apartments.building_full_name"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "building_full_name",
+        "avg_cast_t2.bedroom_count_as_real"
+      ],
+      "result_rows": [
+        [
+          "Allen Ltd",
+          1.0
+        ],
+        [
+          "Baker LLC",
+          5.0
+        ],
+        [
+          "Barclay Tower",
+          6.0
+        ],
+        [
+          "Biltmore Plaza",
+          3.8
+        ],
+        [
+          "Bradford LLC",
+          2.5
+        ],
+        [
+          "Bradley-Sulliva",
+          4.0
+        ],
+        [
+          "Brown-Herring",
+          6.0
+        ],
+        [
+          "Brown-Turner",
+          6.0
+        ],
+        [
+          "Butler Inc",
+          4.0
+        ],
+        [
+          "Chambers-Terrel",
+          6.0
+        ],
+        [
+          "Coleman-Martin",
+          3.0
+        ],
+        [
+          "Coleman-Wells",
+          2.3333333333333335
+        ],
+        [
+          "Collins Inc",
+          6.0
+        ],
+        [
+          "Columbus Square",
+          4.0
+        ],
+        [
+          "Conway, Howard ",
+          5.5
+        ],
+        [
+          "Daugherty and S",
+          1.5
+        ],
+        [
+          "Dickson-Lane",
+          4.0
+        ],
+        [
+          "Dorsey, Becker ",
+          3.5
+        ],
+        [
+          "Finley, Simon a",
+          5.0
+        ],
+        [
+          "Fisher-Wood",
+          4.5
+        ],
+        [
+          "Franklin, Rodri",
+          5.0
+        ],
+        [
+          "Golden, Kelley ",
+          5.0
+        ],
+        [
+          "Gonzalez Inc",
+          4.0
+        ],
+        [
+          "Green, Wong and",
+          6.0
+        ],
+        [
+          "Green, Wright a",
+          3.0
+        ],
+        [
+          "Gregory-Webb",
+          5.0
+        ],
+        [
+          "Harvey Inc",
+          2.5
+        ],
+        [
+          "Hinton-Morris",
+          6.0
+        ],
+        [
+          "Johnson, Bell a",
+          6.0
+        ],
+        [
+          "Jones-Watkins",
+          6.0
+        ],
+        [
+          "Lee Inc",
+          3.6666666666666665
+        ],
+        [
+          "Mercedes House",
+          3.0
+        ],
+        [
+          "Miller Group",
+          3.6666666666666665
+        ],
+        [
+          "Mitchell Ltd",
+          3.0
+        ],
+        [
+          "Nguyen LLC",
+          4.0
+        ],
+        [
+          "Obrien-Benjamin",
+          2.5
+        ],
+        [
+          "Orozco-Wu",
+          4.0
+        ],
+        [
+          "Osborn Group",
+          4.0
+        ],
+        [
+          "Pearson-Ferrell",
+          3.5
+        ],
+        [
+          "Petersfield",
+          3.0
+        ],
+        [
+          "Phillips Ltd",
+          2.0
+        ],
+        [
+          "Phillips-White",
+          2.5
+        ],
+        [
+          "Price Group",
+          4.0
+        ],
+        [
+          "Ramos LLC",
+          6.0
+        ],
+        [
+          "Riley-Hill",
+          5.0
+        ],
+        [
+          "Roman-Lee",
+          6.0
+        ],
+        [
+          "Silva-Davis",
+          2.0
+        ],
+        [
+          "Silver Towers",
+          4.5
+        ],
+        [
+          "Stuyvesant Town",
+          4.666666666666667
+        ],
+        [
+          "The Eugene",
+          3.5
+        ],
+        [
+          "Thomas-Clayton",
+          5.5
+        ],
+        [
+          "Thompson-Farrel",
+          4.333333333333333
+        ],
+        [
+          "Wells and Sons",
+          2.0
+        ]
+      ],
+      "result_count": 53,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "Find the first name of guests who booked apartments managed by 'Marie' and whose booking status is 'Provisional'.",
+      "sql": "SELECT DISTINCT T1.guest_first_name FROM apartment_bookings AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number INNER JOIN apartment_buildings AS T3 ON T2.building_full_name = T3.building_full_name WHERE T3.building_manager = 'Marie' AND T1.booking_status_code = 'Provisional';",
+      "golden_schema": {
+        "tables": [
+          "apartment_bookings",
+          "apartments",
+          "apartment_buildings"
+        ],
+        "columns": [
+          "apartment_bookings.guest_first_name",
+          "apartment_bookings.apt_number",
+          "apartment_bookings.booking_status_code",
+          "apartments.apt_number",
+          "apartments.building_full_name",
+          "apartment_buildings.building_full_name",
+          "apartment_buildings.building_manager"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "guest_first_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "List all distinct gender codes of guests who have booked an apartment in a building with building description as 'Studio'",
+      "sql": "SELECT DISTINCT T1.gender_code FROM guests AS T1 INNER JOIN apartment_bookings AS T2 ON T1.guest_first_name = T2.guest_first_name AND T1.guest_last_name = T2.guest_last_name INNER JOIN apartments AS T3 ON T2.apt_number = T3.apt_number INNER JOIN apartment_buildings AS T4 ON T3.building_full_name = T4.building_full_name WHERE T4.building_description = 'Studio';",
+      "golden_schema": {
+        "tables": [
+          "guests",
+          "apartment_bookings",
+          "apartments",
+          "apartment_buildings"
+        ],
+        "columns": [
+          "guests.gender_code",
+          "guests.guest_first_name",
+          "guests.guest_last_name",
+          "apartment_bookings.guest_first_name",
+          "apartment_bookings.guest_last_name",
+          "apartment_bookings.apt_number",
+          "apartments.apt_number",
+          "apartments.building_full_name",
+          "apartment_buildings.building_full_name",
+          "apartment_buildings.building_description"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "gender_code"
+      ],
+      "result_rows": [
+        [
+          "Unknown"
+        ],
+        [
+          "Female"
+        ],
+        [
+          "Male"
+        ]
+      ],
+      "result_count": 3,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "Find all guest first names and last names who have booked apartments with more than 3 bathrooms and start date before 2019",
+      "sql": "SELECT T1.guest_first_name, T1.guest_last_name FROM apartment_bookings AS T1 INNER JOIN apartments AS T2 ON T1.apt_number = T2.apt_number WHERE CAST(T2.bathroom_count AS INTEGER) > 3 AND T1.booking_start_date < '2019';",
+      "golden_schema": {
+        "tables": [
+          "apartment_bookings",
+          "apartments"
+        ],
+        "columns": [
+          "apartment_bookings.guest_first_name",
+          "apartment_bookings.guest_last_name",
+          "apartment_bookings.apt_number",
+          "apartments.apt_number",
+          "apartments.bathroom_count"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "apartment_rentals/default_task",
+      "source": "spider_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "guest_first_name",
+        "guest_last_name"
+      ],
+      "result_rows": [],
+      "result_count": 0,
+      "has_more_rows": false
+    }
+  ]
+}

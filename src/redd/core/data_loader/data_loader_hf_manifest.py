@@ -84,11 +84,13 @@ class DataLoaderHFManifest(DataLoaderBase):
         *,
         manifest: str | Path = "manifest.yaml",
         filemap: Dict[str, str] | None = None,
+        expose_document_metadata: bool = False,
         encoding: str = "utf-8",
         **_: Any,
     ) -> None:
         super().__init__(data_root)
         self._encoding = encoding
+        self._expose_document_metadata = bool(expose_document_metadata)
         self._manifest_path = self._resolve_path(manifest)
         with self._manifest_path.open("r", encoding=encoding) as file:
             self.manifest = yaml.safe_load(file) or {}
@@ -151,35 +153,34 @@ class DataLoaderHFManifest(DataLoaderBase):
         row = self._documents_by_id.get(str(doc_id))
         if row is None:
             return ("", str(doc_id), {})
-        schema_tables = sorted(
-            {
-                str(table_name)
-                for table_name, _values in self._gt_by_doc.get(str(doc_id), [])
-                if str(table_name).strip()
-            }
-        )
-        metadata = {
-            "source_file": self._clean_scalar(row.get("source_id")),
-            "table_name": self._clean_scalar(row.get("source_table")),
-            "parent_doc_id": self._clean_scalar(row.get("parent_doc_id")),
-            "chunk_index": self._clean_scalar(row.get("chunk_index")),
-            "is_chunked": bool(row.get("is_chunked")) if "is_chunked" in row else False,
-            "source_row_id": self._clean_scalar(row.get("source_row_id")),
-            "split": self._clean_scalar(row.get("split")),
-            "schema_table": schema_tables[0] if len(schema_tables) == 1 else None,
-            "schema_tables": schema_tables,
-        }
+        metadata = self._document_metadata(row)
         return (str(row.get("doc_text") or ""), str(doc_id), metadata)
 
     def get_doc_info(self, doc_id: str) -> Optional[Dict[str, Any]]:
-        doc_text, resolved_doc_id, metadata = self.get_doc(doc_id)
+        row = self._documents_by_id.get(str(doc_id))
+        if row is None:
+            return None
+        doc_text = str(row.get("doc_text") or "")
+        resolved_doc_id = str(row.get("doc_id") or doc_id)
+        metadata = self._raw_document_metadata(row)
         if not metadata and not doc_text:
             return None
 
         records = self._gt_by_doc.get(str(doc_id), [])
         data_records: List[Dict[str, Any]] = []
-        for table_name, values in records:
-            data_records.append({"table_name": table_name, "data": values})
+        for record in records:
+            if not isinstance(record, dict):
+                continue
+            table_name = record.get("table_name")
+            values = record.get("data", {})
+            data_record = {
+                "table_name": table_name,
+                "data": values if isinstance(values, dict) else {},
+            }
+            for key in ("record_id", "row_id", "source_row_id"):
+                if record.get(key) is not None:
+                    data_record[key] = record.get(key)
+            data_records.append(data_record)
 
         info = {
             "doc": doc_text,
@@ -276,6 +277,8 @@ class DataLoaderHFManifest(DataLoaderBase):
         reloaded = DataLoaderHFManifest(
             self.data_root,
             manifest=self._manifest_path,
+            filemap=self._filemap,
+            expose_document_metadata=self._expose_document_metadata,
             encoding=self._encoding,
         )
         self.__dict__.update(reloaded.__dict__)
@@ -305,6 +308,42 @@ class DataLoaderHFManifest(DataLoaderBase):
         if pd.isna(value):
             return None
         return value
+
+    def _document_metadata(self, row: pd.Series) -> Dict[str, Any]:
+        """Return metadata exposed by ordinary document reads.
+
+        The manifest parquet keeps provenance columns that are useful for
+        dataset construction and evaluation, but some of them identify the
+        source table/row and can leak label information. Ordinary runtime
+        access therefore exposes no parquet metadata unless a caller opts into
+        full metadata with ``expose_document_metadata=True``.
+        """
+        if self._expose_document_metadata:
+            return self._raw_document_metadata(row)
+        return {}
+
+    def _raw_document_metadata(self, row: pd.Series) -> Dict[str, Any]:
+        doc_id = str(row.get("doc_id"))
+        schema_tables = sorted(
+            {
+                str(record.get("table_name"))
+                for record in self._gt_by_doc.get(doc_id, [])
+                if isinstance(record, dict)
+                and record.get("table_name") is not None
+                and str(record.get("table_name")).strip()
+            }
+        )
+        return {
+            "source_file": self._clean_scalar(row.get("source_id")),
+            "table_name": self._clean_scalar(row.get("source_table")),
+            "parent_doc_id": self._clean_scalar(row.get("parent_doc_id")),
+            "chunk_index": self._clean_scalar(row.get("chunk_index")),
+            "is_chunked": bool(row.get("is_chunked")) if "is_chunked" in row else False,
+            "source_row_id": self._clean_scalar(row.get("source_row_id")),
+            "split": self._clean_scalar(row.get("split")),
+            "schema_table": schema_tables[0] if len(schema_tables) == 1 else None,
+            "schema_tables": schema_tables,
+        }
 
     @staticmethod
     def _normalize_query_records(
@@ -451,7 +490,7 @@ class DataLoaderHFManifest(DataLoaderBase):
                     mapping[column_id] = f"{table_name}.{attr_name}"
         return mapping
 
-    def _build_ground_truth_index(self) -> Dict[str, List[Tuple[str, Dict[str, Any]]]]:
+    def _build_ground_truth_index(self) -> Dict[str, List[Dict[str, Any]]]:
         if self._ground_truth_df.empty:
             return {}
         table_lookup = self._table_id_to_legacy_name()
@@ -472,7 +511,15 @@ class DataLoaderHFManifest(DataLoaderBase):
             key = (doc_id, table_name, record_id)
             grouped.setdefault(key, {})[column_name] = self._clean_scalar(row.get("value"))
 
-        by_doc: Dict[str, List[Tuple[str, Dict[str, Any]]]] = {}
-        for (doc_id, table_name, _record_id), values in grouped.items():
-            by_doc.setdefault(doc_id, []).append((table_name, values))
+        by_doc: Dict[str, List[Dict[str, Any]]] = {}
+        for (doc_id, table_name, record_id), values in grouped.items():
+            by_doc.setdefault(doc_id, []).append(
+                {
+                    "table_name": table_name,
+                    "record_id": record_id,
+                    "row_id": record_id,
+                    "source_row_id": record_id,
+                    "data": values,
+                }
+            )
         return by_doc

@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
-from .constants import TABLE_ASSIGNMENT_KEY
+from .constants import DATA_EXTRACTED_KEY, TABLE_ASSIGNMENT_KEY
 
 
 class TableAssignmentOutput(BaseModel):
@@ -14,6 +14,26 @@ class TableAssignmentOutput(BaseModel):
 
 
 class AttributeExtractionOutput(RootModel[dict[str, Any]]):
+    pass
+
+
+class ExtractionRecordOutput(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
+
+    table_assignment: str | None = Field(default=None, alias=TABLE_ASSIGNMENT_KEY)
+    data_extracted: dict[str, Any] = Field(default_factory=dict, alias=DATA_EXTRACTED_KEY)
+    record_id: str | None = Field(default=None, alias="Record ID")
+
+
+class FullDocumentExtractionOutput(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
+
+    table_assignment: str | None = Field(default=None, alias=TABLE_ASSIGNMENT_KEY)
+    data_extracted: dict[str, Any] = Field(default_factory=dict, alias=DATA_EXTRACTED_KEY)
+    records: list[ExtractionRecordOutput] = Field(default_factory=list, alias="Records")
+
+
+class FullDocumentExtractionBatchOutput(RootModel[dict[str, FullDocumentExtractionOutput]]):
     pass
 
 
@@ -32,6 +52,9 @@ class SchemaGenDocumentOutput(BaseModel):
 
 __all__ = [
     "AttributeExtractionOutput",
+    "ExtractionRecordOutput",
+    "FullDocumentExtractionBatchOutput",
+    "FullDocumentExtractionOutput",
     "SchemaGenDocumentOutput",
     "SchemaUpdateOutput",
     "TableAssignmentOutput",

@@ -41,14 +41,6 @@
           "description": "General or broad name of the wine-producing area.",
           "nullable": true,
           "examples": []
-        },
-        {
-          "column_id": "appellation.terroir_description",
-          "name": "terroir_description",
-          "type": "string",
-          "description": "Details about soil, climate, and topography defining the region's characteristics for viticulture.",
-          "nullable": true,
-          "examples": []
         }
       ]
     },
@@ -113,14 +105,6 @@
           "name": "score",
           "type": "string",
           "description": "Evaluation score given to the wine.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "wines.vineyard_name",
-          "name": "vineyard_name",
-          "type": "string",
-          "description": "Specific vineyard within a region where the wine's grapes are sourced.",
           "nullable": true,
           "examples": []
         },

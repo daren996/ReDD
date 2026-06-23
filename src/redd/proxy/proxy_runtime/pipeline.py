@@ -55,7 +55,11 @@ from redd.embedding import (
 )
 from redd.proxy.predicate_proxy.factory import PredicateProxyFactory
 from redd.proxy.predicate_proxy.heuristic_proxy import UNKNOWN_EVIDENCE_SCORE
-from redd.proxy.proxy_runtime.oracle import DataExtractionOracle, GoldenOracle
+from redd.proxy.proxy_runtime.oracle import (
+    DataExtractionOracle,
+    GoldenOracle,
+    MaterializedExtractionOracle,
+)
 from redd.proxy.proxy_runtime.types import PipelineResults, ProxyPipelineConfig
 
 from .executor import (
@@ -71,6 +75,7 @@ __all__ = [
     "PipelineResults",
     "DataExtractionOracle",
     "GoldenOracle",
+    "MaterializedExtractionOracle",
 ]
 
 
@@ -98,7 +103,9 @@ class ProxyPipeline:
         # Components (lazy-loaded)
         self._data_loader: Optional[DataLoaderBase] = None
         self._sql_parser: Optional[SQLFilterParser] = None
-        self._oracle: Optional[DataExtractionOracle] = None
+        self._oracle: Optional[
+            DataExtractionOracle | GoldenOracle | MaterializedExtractionOracle
+        ] = None
         self._embedding_manager: Optional[EmbeddingManager] = None
         self._proxy_factory: Optional[PredicateProxyFactory] = None
         
@@ -140,7 +147,7 @@ class ProxyPipeline:
         return self._sql_parser
     
     @property
-    def oracle(self) -> DataExtractionOracle | GoldenOracle:
+    def oracle(self) -> DataExtractionOracle | GoldenOracle | MaterializedExtractionOracle:
         """Get or create extraction oracle (LLM or ground truth)."""
         if self._oracle is None:
             if str(self.config.llm_mode).lower() in {"ground_truth", "gt"}:
@@ -149,7 +156,8 @@ class ProxyPipeline:
                 self._oracle = DataExtractionOracle(
                     mode=self.config.llm_mode,
                     llm_model=self.config.llm_model,
-                    api_key=self.config.api_key
+                    api_key=self.config.api_key,
+                    query_id=self.config.query_id,
                 )
         return self._oracle
     
@@ -886,6 +894,8 @@ class ProxyPipeline:
                     and all(attr in cached for attr in attributes)
                 ):
                     extracted = {attr: cached.get(attr) for attr in attributes}
+                    if "__records" in cached:
+                        extracted["__records"] = cached.get("__records")
                     results.cache_hit_doc_ids.append(doc_id)
                     results.documents_reused_from_cache += 1
                 else:

@@ -107,6 +107,7 @@ class PromptTemplate:
         return [{"role": "user", "content": self.prompt + "\n\n" + msg}]
 
     def __call__(self, msg: str, **kwargs: Any) -> str:
+        usage_context = kwargs.get("usage_context") or kwargs.get("context")
         request = CompletionRequest(
             messages=self._messages(msg),
             response_format=kwargs.get("response_format", "json_object"),
@@ -114,10 +115,12 @@ class PromptTemplate:
             top_p=kwargs.get("top_p"),
             max_tokens=kwargs.get("max_tokens"),
             seed=kwargs.get("seed"),
+            context=usage_context,
         )
         return self.runtime.complete_text(request).text
 
     def complete_model(self, msg: str, response_model: type[ModelT], **kwargs: Any) -> ModelT:
+        usage_context = kwargs.get("usage_context") or kwargs.get("context")
         request = CompletionRequest(
             messages=self._messages(msg),
             response_format="json_object",
@@ -125,6 +128,7 @@ class PromptTemplate:
             top_p=kwargs.get("top_p"),
             max_tokens=kwargs.get("max_tokens"),
             seed=kwargs.get("seed"),
+            context=usage_context,
         )
         return self.runtime.complete_model(request, response_model)
 

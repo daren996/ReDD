@@ -1,0 +1,221 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.flight_4.routes_airports_airlines",
+  "tables": [
+    {
+      "table_id": "airlines",
+      "name": "airlines",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "airlines.active",
+          "name": "active",
+          "type": "string",
+          "description": "Operational status of the airline, indicating whether it is active or inactive.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.airline_name",
+          "name": "airline_name",
+          "type": "string",
+          "description": "Name of the airline representing its unique identity.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.callsign",
+          "name": "callsign",
+          "type": "string",
+          "description": "Unique callsign used to identify the airline during radio communications.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.country",
+          "name": "country",
+          "type": "string",
+          "description": "Country where the airline is based or registered.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.iata_code",
+          "name": "iata_code",
+          "type": "string",
+          "description": "IATA code associated with the airline, used for ticketing and identification.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airlines.icao_code",
+          "name": "icao_code",
+          "type": "string",
+          "description": "ICAO code associated with the airline for international identification.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "airports",
+      "name": "airports",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "airports.airport_name",
+          "name": "airport_name",
+          "type": "string",
+          "description": "Name of the airport or facility serving travelers and cargo.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.city",
+          "name": "city",
+          "type": "string",
+          "description": "City where the airport is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.country",
+          "name": "country",
+          "type": "string",
+          "description": "Country where the airport is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.elevation",
+          "name": "elevation",
+          "type": "string",
+          "description": "Height of the airport above sea level, measured in feet.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.iata_code",
+          "name": "iata_code",
+          "type": "string",
+          "description": "IATA code uniquely identifying the airport, including heliports.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.icao_code",
+          "name": "icao_code",
+          "type": "string",
+          "description": "ICAO code providing international identification for the airport.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.latitude",
+          "name": "latitude",
+          "type": "string",
+          "description": "Geographical coordinate indicating the north-south position of the airport.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "airports.longitude",
+          "name": "longitude",
+          "type": "string",
+          "description": "Geographical coordinate indicating the east-west position of the airport.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "flight_routes",
+      "name": "flight_routes",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "flight_routes.airline_name",
+          "name": "airline_name",
+          "type": "string",
+          "description": "Name of the airline operating the route.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.arrival_airport_code",
+          "name": "arrival_airport_code",
+          "type": "string",
+          "description": "IATA code of the airport where the flight terminates.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.arrival_airport_name",
+          "name": "arrival_airport_name",
+          "type": "string",
+          "description": "Name of the airport where the flight terminates.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.arrival_country",
+          "name": "arrival_country",
+          "type": "string",
+          "description": "Country where the arrival airport is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.departure_airport_code",
+          "name": "departure_airport_code",
+          "type": "string",
+          "description": "IATA code of the airport where the flight commences.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.departure_airport_name",
+          "name": "departure_airport_name",
+          "type": "string",
+          "description": "Name of the airport where the flight commences.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.departure_country",
+          "name": "departure_country",
+          "type": "string",
+          "description": "Country where the departure airport is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.operation_focus",
+          "name": "operation_focus",
+          "type": "string",
+          "description": "Operational emphasis of the route, such as passenger transport or cargo logistics.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "flight_routes.route_type",
+          "name": "route_type",
+          "type": "string",
+          "description": "Nature of the route, specifying whether it is domestic or international.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

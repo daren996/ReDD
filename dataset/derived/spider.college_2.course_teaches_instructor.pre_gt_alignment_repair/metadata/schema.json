@@ -1,0 +1,125 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.college_2.course_teaches_instructor",
+  "tables": [
+    {
+      "table_id": "course_information",
+      "name": "course_information",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "course_information.course_description",
+          "name": "course_description",
+          "type": "string",
+          "description": "Briefly describes the key thematic intersections and academic focus of the course, particularly emphasizing interdisciplinary aspects.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course_information.course_title",
+          "name": "course_title",
+          "type": "string",
+          "description": "Title of the course, providing an overview of its content and emphasis.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course_information.credits",
+          "name": "credits",
+          "type": "string",
+          "description": "Number of academic credits earned upon successful completion of the course.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course_information.department",
+          "name": "department",
+          "type": "string",
+          "description": "The academic department offering the course, e.g., Math, Economics.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "course_instructor_assignments",
+      "name": "course_instructor_assignments",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "course_instructor_assignments.course_title",
+          "name": "course_title",
+          "type": "string",
+          "description": "Title of the course indicating its academic focus.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course_instructor_assignments.instructor_name",
+          "name": "instructor_name",
+          "type": "string",
+          "description": "Unique identifier of the instructor or faculty member teaching the course.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course_instructor_assignments.offering_year",
+          "name": "offering_year",
+          "type": "string",
+          "description": "Year in which the course is scheduled or conducted.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "course_instructor_assignments.semester",
+          "name": "semester",
+          "type": "string",
+          "description": "Academic term during which the course is offered, such as 'Fall 2006'.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "instructors",
+      "name": "instructors",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "instructors.annual_salary",
+          "name": "annual_salary",
+          "type": "string",
+          "description": "Annual salary received by the instructor, reflecting their role and responsibilities.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "instructors.department",
+          "name": "department",
+          "type": "string",
+          "description": "Department within the institution where the instructor teaches.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "instructors.instructor_name",
+          "name": "instructor_name",
+          "type": "string",
+          "description": "Full name of the instructor.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

@@ -12,9 +12,9 @@ Conversion Logic:
 3. For chunked documents, merge chunks with same parent_doc_id
 4. Create output database with tables matching schema structure
 
-TODO:
-- [ ] Handle single doc -> multiple rows/tables (1:N mapping)
-- [ ] Handle multiple docs -> single row update (N:1 mapping)
+Multi-record output is supported via the optional ``records`` list on each
+document result. Multiple docs updating the same logical row still requires a
+stable shared ``record_id`` in the result artifact.
 """
 
 from __future__ import annotations
@@ -31,9 +31,12 @@ from ..utils.constants import (
     ATTRIBUTES_KEY,
     NULL_VALUE,
     RESULT_DATA_KEY,
+    RESULT_RECORD_ID_KEY,
+    RESULT_RECORDS_KEY,
     RESULT_TABLE_KEY,
     SCHEMA_NAME_KEY,
 )
+from ..utils.extraction_records import active_result_records
 
 __all__ = ["ResToDBConverter"]
 
@@ -212,7 +215,10 @@ class ResToDBConverter:
 
         doc_metadata = {}
         try:
-            loader = create_data_loader(self.source_db_path)
+            loader = create_data_loader(
+                self.source_db_path,
+                loader_config={"expose_document_metadata": True},
+            )
             for _doc_text, doc_id, metadata in loader.iter_docs():
                 doc_metadata[str(doc_id)] = {
                     "parent_doc_id": metadata.get("parent_doc_id"),
@@ -268,19 +274,27 @@ class ResToDBConverter:
         table_data: Dict[str, Dict[str, Dict[str, Any]]] = defaultdict(dict)
         
         for doc_id, doc_result in result_data.items():
-            table_name = doc_result.get(RESULT_TABLE_KEY)
-            data = doc_result.get(RESULT_DATA_KEY, {})
-            
-            if not table_name or table_name == NULL_VALUE:
-                continue
-            
             # Use parent_doc_id as row_id if available
             meta = doc_metadata.get(doc_id, {})
-            row_id = meta.get("parent_doc_id", doc_id)
-            if row_id is None:
-                row_id = doc_id
-            
-            table_data[table_name][str(row_id)] = data
+            base_row_id = meta.get("parent_doc_id", doc_id)
+            if base_row_id is None:
+                base_row_id = doc_id
+
+            records = active_result_records(doc_result)
+            for index, record in enumerate(records):
+                table_name = record.get("table")
+                data = record.get(RESULT_DATA_KEY, {})
+                if not table_name or table_name == NULL_VALUE:
+                    continue
+                record_id = record.get(RESULT_RECORD_ID_KEY)
+                if record_id is not None:
+                    row_id = str(record_id)
+                elif RESULT_RECORDS_KEY in doc_result and len(records) > 1:
+                    row_id = f"{base_row_id}#{index}"
+                else:
+                    row_id = str(base_row_id)
+
+                table_data[str(table_name)][row_id] = data
         
         logging.info(f"[{self.__class__.__name__}:_group_no_chunking] "
                     f"Grouped {sum(len(v) for v in table_data.values())} rows "
@@ -299,7 +313,7 @@ class ResToDBConverter:
         If chunks from the same parent have different table assignments, they
         become separate rows in their respective tables.
         """
-        # Group chunks by (parent_doc_id, table_name): {(parent, table): [(chunk_idx, data), ...]}
+        # Group chunks by (parent_doc_id, table_name, record_key).
         parent_table_chunks: Dict[tuple, List[tuple]] = defaultdict(list)
         
         for doc_id, doc_result in result_data.items():
@@ -309,27 +323,37 @@ class ResToDBConverter:
                 parent_doc_id = doc_id
             
             chunk_index = meta.get("chunk_index", 0)
-            table_name = doc_result.get(RESULT_TABLE_KEY)
-            data = doc_result.get(RESULT_DATA_KEY, {})
-            
-            # Skip if no table assignment or NULL
-            if not table_name or table_name == NULL_VALUE:
-                continue
-            
-            # Group by (parent_doc_id, table_name)
-            key = (str(parent_doc_id), table_name)
-            parent_table_chunks[key].append((chunk_index, data))
+            records = active_result_records(doc_result)
+            for index, record in enumerate(records):
+                table_name = record.get("table")
+                data = record.get(RESULT_DATA_KEY, {})
+
+                # Skip if no table assignment or NULL
+                if not table_name or table_name == NULL_VALUE:
+                    continue
+
+                record_id = record.get(RESULT_RECORD_ID_KEY)
+                if record_id is not None:
+                    record_key = str(record_id)
+                elif len(records) > 1:
+                    record_key = f"{doc_id}#{index}"
+                else:
+                    record_key = "__single__"
+
+                key = (str(parent_doc_id), table_name, str(record_key))
+                parent_table_chunks[key].append((chunk_index, data))
         
         # Merge chunks for each (parent, table) group
         table_data: Dict[str, Dict[str, Dict[str, Any]]] = defaultdict(dict)
         
-        for (parent_doc_id, table_name), chunks in parent_table_chunks.items():
+        for (parent_doc_id, table_name, record_key), chunks in parent_table_chunks.items():
             # Sort by chunk_index
             chunks.sort(key=lambda x: x[0] if x[0] is not None else 0)
             
             # Merge attribute values from all chunks with same table
             merged_attrs = self._merge_attributes_simple(chunks)
-            table_data[table_name][parent_doc_id] = merged_attrs
+            row_id = parent_doc_id if record_key == "__single__" else f"{parent_doc_id}#{record_key}"
+            table_data[table_name][row_id] = merged_attrs
         
         logging.info(f"[{self.__class__.__name__}:_group_with_chunking] "
                     f"Grouped {len(parent_table_chunks)} (parent, table) pairs into "

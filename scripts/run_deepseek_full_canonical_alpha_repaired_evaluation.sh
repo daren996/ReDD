@@ -11,7 +11,7 @@ if [ -f ".env" ]; then
   set +a
 fi
 
-LOG_DIR="logs/deepseek_full_canonical_alpha"
+LOG_DIR="outputs/logs/deepseek_full_canonical_alpha"
 mkdir -p "$LOG_DIR"
 
 STATUS_FILE="$LOG_DIR/repaired_evaluation_status.tsv"

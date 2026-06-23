@@ -128,10 +128,12 @@ class BaseChunker(ABC):
                     f"Processing: {full_data_path}")
         
         # Create data loader
+        loader_config = dict(self.config.get("data_loader_config") or {})
+        loader_config.setdefault("expose_document_metadata", True)
         self.loader = create_data_loader(
             full_data_path,
             loader_type=self.loader_type,
-            loader_config=self.config.get("data_loader_config"),
+            loader_config=loader_config,
         )
         
         logging.info(f"[{self.__class__.__name__}:_process_dataset] "
@@ -599,9 +601,12 @@ class BaseChunker(ABC):
             loader = self.loader
         elif data_path is not None:
             full_data_path = Path(self.data_main) / data_path
+            loader_config = dict(self.config.get("data_loader_config") or {})
+            loader_config.setdefault("expose_document_metadata", True)
             loader = create_data_loader(
                 full_data_path,
                 loader_type=self.loader_type,
+                loader_config=loader_config,
             )
         else:
             raise ValueError(

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
 from redd.core.data_loader import DataLoaderBase
+from redd.core.utils.constants import RESULT_DATA_KEY, RESULT_RECORDS_KEY, RESULT_TABLE_KEY
 from redd.exp.evaluation import EvalDataExtraction
 
 
@@ -205,6 +207,222 @@ def test_query_aware_semantic_cell_accuracy_uses_required_attrvalue_cells() -> N
     assert stats["semantic_cell_accuracy"]["llm_judged"] == 1
     assert stats["semantic_cell_accuracy"]["accuracy"] == 1.0
     assert {cell["attr"] for cell in stats["semantic_cell_accuracy"]["cells"]} == {"title", "credits"}
+
+
+def test_query_aware_recall_reads_multi_record_prediction_entries() -> None:
+    loader = QueryAwareLoader()
+    loader._doc_ids = ["bundle-1"]
+    loader._gt = {
+        "bundle-1": {
+            "doc": "",
+            "table": "course",
+            "data": {"title": "Algorithms", "credits": "4"},
+            "data_records": [
+                {"table_name": "course", "data": {"title": "Algorithms", "credits": "4"}},
+                {"table_name": "course", "data": {"title": "Databases", "credits": "3"}},
+            ],
+        }
+    }
+    evaluator = EvalDataExtraction({"res_param_str": "unit", "training_data_count": 0})
+    query_info = {
+        "query": "",
+        "sql": "",
+        "tables": ["course"],
+        "attributes": ["course.title", "course.credits"],
+    }
+    result = {
+        "bundle-1": {
+            RESULT_TABLE_KEY: "course",
+            RESULT_DATA_KEY: {"title": "Algorithms", "credits": "4"},
+            RESULT_RECORDS_KEY: [
+                {
+                    "table": "course",
+                    "record_id": "course-a",
+                    "data": {"title": "Algorithms", "credits": "4"},
+                },
+                {
+                    "table": "course",
+                    "record_id": "course-b",
+                    "data": {"title": "Databases", "credits": "3"},
+                },
+            ],
+        }
+    }
+
+    stats = evaluator.compute_query_aware_statistics(loader, result, "q1", query_info).to_dict()
+
+    assert stats["table_assignment"]["covered"] == 2
+    assert stats["table_assignment"]["total"] == 2
+    assert stats["cell_recall"]["covered"] == 4
+    assert stats["cell_recall"]["total"] == 4
+    assert stats["summary"]["can_answer_query"] is True
+
+
+def test_query_optimization_summary_reads_usage_and_stage_artifacts(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("REDD_LLM_USAGE_LOG", raising=False)
+    out_root = tmp_path
+    usage_path = out_root / "llm_usage.jsonl"
+    usage_rows = [
+        {
+            "provider": "deepseek",
+            "configured_model": "deepseek-chat",
+            "usage": {"prompt_tokens": 80, "completion_tokens": 20, "total_tokens": 100},
+            "context": {"stage": "table_assignment", "query_id": "q1", "doc_id": "d1"},
+        },
+        {
+            "provider": "deepseek",
+            "configured_model": "deepseek-chat",
+            "usage": {"prompt_tokens": 40, "completion_tokens": 10, "total_tokens": 50},
+            "context": {"stage": "proxy_runtime_oracle", "query_id": "q1", "doc_id": "d1"},
+        },
+        {
+            "provider": "deepseek",
+            "configured_model": "deepseek-chat",
+            "usage": {"prompt_tokens": 15, "completion_tokens": 5, "total_tokens": 20},
+            "context": {"stage": "semantic_evaluation", "query_id": "q1"},
+        },
+        {
+            "provider": "deepseek",
+            "configured_model": "deepseek-chat",
+            "usage": {"prompt_tokens": 999, "completion_tokens": 1, "total_tokens": 1000},
+            "context": {"stage": "table_assignment", "query_id": "q2"},
+        },
+    ]
+    usage_path.write_text("\n".join(json.dumps(row) for row in usage_rows), encoding="utf-8")
+
+    doc_filter_dir = out_root / "doc_filter"
+    doc_filter_dir.mkdir()
+    (doc_filter_dir / "doc_filter_q1.json").write_text(
+        json.dumps(
+            {
+                "query_id": "q1",
+                "excluded_doc_ids": ["d3"],
+                "kept_doc_ids": ["d1", "d2"],
+                "metadata": {
+                    "num_docs_input": 3,
+                    "num_docs_kept": 2,
+                    "num_docs_excluded": 1,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (out_root / "table_assignment_cache.json").write_text(
+        json.dumps(
+            {
+                "events": [
+                    {
+                        "query_id": "q1",
+                        "input_docs": 3,
+                        "excluded": 0,
+                        "cache_hits": 2,
+                        "cache_misses": 1,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (out_root / "res_tabular_data_q1_demo_proxy_decisions.json").write_text(
+        json.dumps(
+            {
+                "course": {
+                    "all_doc_ids": ["d1", "d2", "d3"],
+                    "passed_doc_ids": ["d1"],
+                    "extracted_doc_ids": ["d1"],
+                    "proxy_stats": {"p": {"evaluated": 3, "passed": 1, "rejected": 2}},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    evaluator = EvalDataExtraction({"res_param_str": "demo", "training_data_count": 0})
+    evaluator.out_root = out_root
+
+    summary = evaluator._collect_query_optimization_summary("q1")
+
+    assert summary["has_metrics"] is True
+    assert summary["llm_usage"]["calls"] == 3
+    assert summary["llm_usage"]["total_tokens"] == 170
+    assert summary["llm_usage"]["by_stage"]["table_assignment"]["calls"] == 1
+    assert summary["doc_call_optimization"]["calls_before"] == 9
+    assert summary["doc_call_optimization"]["calls_after"] == 4
+    assert summary["doc_call_optimization"]["calls_saved"] == 5
+    assert summary["doc_call_optimization"]["by_stage"]["doc_filter"]["calls_saved"] == 1
+    assert summary["doc_call_optimization"]["by_stage"]["table_assignment_cache"]["calls_saved"] == 2
+    assert summary["doc_call_optimization"]["by_stage"]["proxy_runtime"]["calls_saved"] == 2
+    assert summary["token_optimization"]["status"] == "estimated"
+    assert summary["token_optimization"]["estimated_tokens_saved"] > 0
+    enabled = {item["id"]: item for item in summary["enabled_optimizations"]}
+    assert set(enabled) == {"doc_filter", "table_assignment_cache", "proxy_runtime"}
+    assert enabled["doc_filter"]["optimized_part"].startswith("Phase 0")
+    assert enabled["table_assignment_cache"]["optimized_part"] == "Phase 1: table assignment"
+    assert enabled["proxy_runtime"]["optimized_part"].startswith("Phase 2")
+    assert enabled["proxy_runtime"]["doc_call_savings"]["calls_saved"] == 2
+    assert enabled["proxy_runtime"]["token_savings"]["estimated_tokens_saved"] > 0
+    assert "summary" in enabled["doc_filter"]
+
+
+def test_query_aware_sql_provenance_filters_multi_record_gt_rows() -> None:
+    loader = QueryAwareLoader()
+    loader._doc_ids = ["bundle-1"]
+    loader._gt = {
+        "bundle-1": {
+            "doc": "",
+            "table": "course",
+            "data": {"title": "Algorithms", "credits": "4"},
+            "data_records": [
+                {
+                    "table_name": "course",
+                    "record_id": "course-a",
+                    "row_id": "course-a",
+                    "data": {"title": "Algorithms", "credits": "4"},
+                },
+                {
+                    "table_name": "course",
+                    "record_id": "course-b",
+                    "row_id": "course-b",
+                    "data": {"title": "Databases", "credits": "3"},
+                },
+            ],
+        }
+    }
+    evaluator = EvalDataExtraction({"res_param_str": "unit", "training_data_count": 0})
+    query_info = {
+        "query": "",
+        "sql": "SELECT title FROM course WHERE credits = '4';",
+        "tables": ["course"],
+        "attributes": ["course.title", "course.credits"],
+        "output_columns": ["course.title"],
+    }
+    result = {
+        "bundle-1": {
+            RESULT_TABLE_KEY: "course",
+            RESULT_DATA_KEY: {"title": "Algorithms", "credits": "4"},
+            RESULT_RECORDS_KEY: [
+                {
+                    "table": "course",
+                    "record_id": "course-a",
+                    "data": {"title": "Algorithms", "credits": "4"},
+                },
+                {
+                    "table": "course",
+                    "record_id": "course-b",
+                    "data": {"title": "Databases", "credits": "3"},
+                },
+            ],
+        }
+    }
+
+    stats = evaluator.compute_query_aware_statistics(loader, result, "q1", query_info).to_dict()
+
+    assert stats["table_assignment"]["covered"] == 1
+    assert stats["table_assignment"]["total"] == 1
+    assert stats["cell_recall"]["covered"] == 2
+    assert stats["cell_recall"]["total"] == 2
+    assert stats["answer_recall"]["recall"] == 1.0
+    assert stats["summary"]["can_answer_query"] is True
 
 
 def test_full_table_semantic_can_be_disabled_independently() -> None:

@@ -1,0 +1,12 @@
+schema_version: redd.manifest.v1
+dataset_id: spider.wine_1.wine_appellations
+kind: derived
+version: 0.1.0
+source:
+  legacy_dataset_root: /Users/drchao/CursorSpace/ReDD/ReDD/dataset/spider_sqlite/wine_1
+  legacy_task: wine-appellations
+paths:
+  documents: data/documents.parquet
+  ground_truth: data/ground_truth.parquet
+  schema: metadata/schema.json
+  queries: metadata/queries.json

@@ -18,7 +18,7 @@ from redd.proxy.proxy_runtime.config import (
     resolve_proxy_flag,
     resolve_proxy_threshold,
 )
-from redd.proxy.proxy_runtime.oracle import GoldenOracle
+from redd.proxy.proxy_runtime.oracle import GoldenOracle, MaterializedExtractionOracle
 from redd.proxy.proxy_runtime.pipeline import ProxyPipeline
 from redd.proxy.proxy_runtime.types import ProxyPipelineConfig
 
@@ -27,6 +27,7 @@ from ...utils.constants import (
     ATTRIBUTES_KEY,
     NULL_VALUE,
     RESULT_DATA_KEY,
+    RESULT_RECORD_ID_KEY,
     RESULT_TABLE_KEY,
     SCHEMA_NAME_KEY,
 )
@@ -34,6 +35,11 @@ from ...utils.data_split import (
     resolve_training_data_count,
     resolve_training_data_split,
     resolve_training_data_split_seed,
+)
+from ...utils.extraction_records import (
+    active_result_records,
+    sync_legacy_primary_fields,
+    update_result_record_data,
 )
 from ...utils.progress import emit_progress_event
 from ...utils.sql_filter_parser import (
@@ -387,12 +393,15 @@ class ProxyRuntimeExtractionStrategy:
             if doc_id not in res_data:
                 continue
             entry = res_data[doc_id]
-            table_assigned = entry.get(RESULT_TABLE_KEY)
-            if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
-                continue
-            if table_assigned not in all_tables:
-                continue
-            table_to_doc_ids.setdefault(table_assigned, []).append(doc_id)
+            seen_tables: set[str] = set()
+            for record in active_result_records(entry):
+                table_assigned = record.get("table")
+                if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
+                    continue
+                if table_assigned not in all_tables or table_assigned in seen_tables:
+                    continue
+                table_to_doc_ids.setdefault(str(table_assigned), []).append(doc_id)
+                seen_tables.add(str(table_assigned))
         
         logging.info(
             f"[{self.__class__.__name__}] Grouped docs by table: "
@@ -486,7 +495,16 @@ class ProxyRuntimeExtractionStrategy:
             all_doc_ids_for_proxy_runtime.update(doc_ids)
         for doc_id in all_doc_ids_for_proxy_runtime:
             if doc_id in res_data:
-                res_data[doc_id][RESULT_DATA_KEY] = {}
+                records = active_result_records(res_data[doc_id])
+                if len(records) <= 1:
+                    res_data[doc_id][RESULT_DATA_KEY] = {}
+                else:
+                    logging.info(
+                        "[%s] Preserve multi-record data for doc %s during proxy runtime; "
+                        "doc-level proxy extraction cannot safely clear row-level values.",
+                        self.__class__.__name__,
+                        doc_id,
+                    )
         if all_doc_ids_for_proxy_runtime and save_results_fn:
             save_results_fn(res_path, res_data)
 
@@ -504,7 +522,14 @@ class ProxyRuntimeExtractionStrategy:
         pipeline._data_loader = self.loader
         pipeline._query_info = query_info
         pipeline._schema = schema_query
-        if use_oracle:
+        materialized_full_path = self.extraction_config.get("materialized_full_extraction_path")
+        if self.extraction_config.get("materialized_full_extraction") and materialized_full_path:
+            pipeline._oracle = MaterializedExtractionOracle(str(materialized_full_path))
+            logging.info(
+                f"[{self.__class__.__name__}] Materialized full extraction mode: "
+                f"using {materialized_full_path} as the query oracle"
+            )
+        elif use_oracle:
             pipeline._oracle = GoldenOracle(self.loader)
             logging.info(
                 f"[{self.__class__.__name__}] Oracle mode: using GoldenOracle "
@@ -773,11 +798,11 @@ class ProxyRuntimeExtractionStrategy:
             # 6. Merge extractions into res_data
             for doc_id, extracted in results.extractions.items():
                 if doc_id in res_data:
-                    existing = res_data[doc_id].get(RESULT_DATA_KEY, {})
-                    if not isinstance(existing, dict):
-                        existing = {}
-                    existing.update(extracted)
-                    res_data[doc_id][RESULT_DATA_KEY] = existing
+                    self._merge_proxy_extraction(
+                        res_data[doc_id],
+                        table_name=table_name,
+                        extracted=extracted,
+                    )
 
             if (
                 join_graph
@@ -824,6 +849,51 @@ class ProxyRuntimeExtractionStrategy:
                 self._print_proxy_performance_summary(all_proxy_decisions)
 
         logging.info(f"[{self.__class__.__name__}] Done proxy runtime per table for query {qid}")
+
+    def _merge_proxy_extraction(
+        self,
+        entry: Dict[str, Any],
+        *,
+        table_name: str,
+        extracted: Dict[str, Any],
+    ) -> None:
+        """Merge a doc-level proxy extraction without corrupting multi-row data."""
+        if not isinstance(extracted, dict):
+            return
+        extracted = {
+            key: value
+            for key, value in extracted.items()
+            if not str(key).startswith("__")
+        }
+        if not extracted:
+            return
+
+        records = active_result_records(entry)
+        if len(records) > 1:
+            matching_records = [
+                record
+                for record in records
+                if record.get("table") == table_name
+            ]
+            if len(matching_records) != 1:
+                logging.info(
+                    "[%s] Skip ambiguous proxy merge for table %s with %s matching records.",
+                    self.__class__.__name__,
+                    table_name,
+                    len(matching_records),
+                )
+                return
+            record_index = int(matching_records[0].get("_record_index") or 0)
+            for attr, value in extracted.items():
+                update_result_record_data(entry, record_index, attr, value)
+            sync_legacy_primary_fields(entry)
+            return
+
+        existing = entry.get(RESULT_DATA_KEY, {})
+        if not isinstance(existing, dict):
+            existing = {}
+        existing.update(extracted)
+        entry[RESULT_DATA_KEY] = existing
 
     def _full_table_schema(
         self,
@@ -1071,14 +1141,20 @@ class ProxyRuntimeExtractionStrategy:
         selected: List[str] = []
         for doc_id in self.train_doc_ids:
             if doc_id in res_data:
-                table_assigned = res_data[doc_id].get(RESULT_TABLE_KEY)
+                tables_assigned = {
+                    str(record.get("table"))
+                    for record in active_result_records(res_data[doc_id])
+                    if not is_none_value(record.get("table"))
+                    and record.get("table") != NULL_VALUE
+                }
             else:
                 table_assigned = self._get_gt_table_for_doc(
                     doc_id, all_tables, gt_to_task_table
                 )
-            if is_none_value(table_assigned) or table_assigned == NULL_VALUE:
+                tables_assigned = {str(table_assigned)} if table_assigned else set()
+            if not tables_assigned:
                 continue
-            if table_assigned != table_name:
+            if table_name not in tables_assigned:
                 continue
             selected.append(doc_id)
 
@@ -1103,14 +1179,17 @@ class ProxyRuntimeExtractionStrategy:
         data_records = doc_info.get("data_records") or []
         if not data_records:
             return None
-        gt_table = data_records[0].get("table_name") if data_records else None
-        if not gt_table:
-            return None
-        task_table = gt_to_task_table.get(gt_table)
-        if task_table and task_table in all_tables:
-            return task_table
-        if gt_table in all_tables:
-            return gt_table
+        for record in data_records:
+            if not isinstance(record, dict):
+                continue
+            gt_table = record.get("table_name") or record.get("table")
+            if not gt_table:
+                continue
+            task_table = gt_to_task_table.get(gt_table)
+            if task_table and task_table in all_tables:
+                return task_table
+            if gt_table in all_tables:
+                return str(gt_table)
         return None
 
     def _extract_gt_values(
@@ -1149,6 +1228,21 @@ class ProxyRuntimeExtractionStrategy:
                     schema_attrs.append(name)
             ts_to_gt = attr_map.get(gt_table, {})
 
+            def build_extracted(gt_data: Dict[str, Any]) -> Dict[str, Any]:
+                extracted: Dict[str, Any] = {}
+                for ts_attr in schema_attrs:
+                    gt_attr = ts_to_gt.get(ts_attr, ts_attr)
+                    if isinstance(gt_attr, list):
+                        vals = [gt_data.get(a) for a in gt_attr if a in gt_data]
+                        extracted[ts_attr] = (
+                            " | ".join(str(v) for v in vals if v is not None)
+                            if vals
+                            else None
+                        )
+                    else:
+                        extracted[ts_attr] = gt_data.get(gt_attr)
+                return extracted
+
             for doc_id in doc_ids:
                 if doc_id not in res_data:
                     continue
@@ -1156,28 +1250,59 @@ class ProxyRuntimeExtractionStrategy:
                 if not doc_info:
                     continue
                 data_records = doc_info.get("data_records") or []
-                gt_data = {}
-                for rec in data_records:
-                    if rec.get("table_name") == gt_table:
-                        gt_data = rec.get("data") or {}
-                        break
-                if not isinstance(gt_data, dict):
+                matching_gt_records = [
+                    rec
+                    for rec in data_records
+                    if isinstance(rec, dict)
+                    and (rec.get("table_name") or rec.get("table")) == gt_table
+                ]
+                if not matching_gt_records:
                     continue
 
-                extracted = {}
-                for ts_attr in schema_attrs:
-                    gt_attr = ts_to_gt.get(ts_attr, ts_attr)
-                    if isinstance(gt_attr, list):
-                        vals = [gt_data.get(a) for a in gt_attr if a in gt_data]
-                        extracted[ts_attr] = " | ".join(str(v) for v in vals if v is not None) if vals else None
-                    else:
-                        extracted[ts_attr] = gt_data.get(gt_attr)
+                entry = res_data[doc_id]
+                result_records = active_result_records(entry)
+                if result_records:
+                    used_gt_indices: set[int] = set()
+                    for result_record in result_records:
+                        if result_record.get("table") != table_name:
+                            continue
+                        result_record_id = result_record.get(RESULT_RECORD_ID_KEY)
+                        gt_index = None
+                        if result_record_id is not None:
+                            for index, gt_record in enumerate(matching_gt_records):
+                                gt_record_id = (
+                                    gt_record.get(RESULT_RECORD_ID_KEY)
+                                    or gt_record.get("record_id")
+                                    or gt_record.get("row_id")
+                                    or gt_record.get("source_row_id")
+                                )
+                                if str(gt_record_id) == str(result_record_id):
+                                    gt_index = index
+                                    break
+                        if gt_index is None:
+                            for index in range(len(matching_gt_records)):
+                                if index not in used_gt_indices:
+                                    gt_index = index
+                                    break
+                        if gt_index is None:
+                            continue
+                        used_gt_indices.add(gt_index)
+                        gt_data = matching_gt_records[gt_index].get("data") or {}
+                        if not isinstance(gt_data, dict):
+                            continue
+                        record_index = int(result_record.get("_record_index") or 0)
+                        for attr, value in build_extracted(gt_data).items():
+                            update_result_record_data(entry, record_index, attr, value)
+                    continue
 
-                existing = res_data[doc_id].get(RESULT_DATA_KEY, {})
+                gt_data = matching_gt_records[0].get("data") or {}
+                if not isinstance(gt_data, dict):
+                    continue
+                existing = entry.get(RESULT_DATA_KEY, {})
                 if not isinstance(existing, dict):
                     existing = {}
-                existing.update(extracted)
-                res_data[doc_id][RESULT_DATA_KEY] = existing
+                existing.update(build_extracted(gt_data))
+                entry[RESULT_DATA_KEY] = existing
 
             if save_results_fn:
                 save_results_fn(res_path, res_data)

@@ -71,6 +71,9 @@ REASONING_KEY = "Reasoning"
 RESULT_TABLE_KEY = "res"
 RESULT_DATA_KEY = "data"
 RESULT_REASON_KEY = "reason"
+RESULT_RECORDS_KEY = "records"
+RESULT_RECORD_TABLE_KEY = "table"
+RESULT_RECORD_ID_KEY = "record_id"
 
 # Evaluation field names
 PREDICTION_KEY = "Prediction"
@@ -106,6 +109,8 @@ class FilePathTemplates:
     
     # ============ Data Extraction Templates ============
     DATA_EXTRACTION_RESULT = "res_tabular_data_{qid}_{param_str}.json"
+    DATA_EXTRACTION_MATERIALIZED_FULL = "materialized_full_extraction_{param_str}.json"
+    DATA_EXTRACTION_MATERIALIZED_FULL_META = "materialized_full_extraction_{param_str}.meta.json"
     HIDDEN_STATES_DIR = "hidden_states_{qid}_{param_str}"
 
     # ============ Doc Filtering Templates ============
@@ -137,6 +142,16 @@ class FilePathTemplates:
     def data_extraction_result(cls, qid: str, param_str: str) -> str:
         """Generate data extraction result filename."""
         return cls.DATA_EXTRACTION_RESULT.format(qid=qid, param_str=param_str)
+
+    @classmethod
+    def materialized_full_extraction(cls, param_str: str) -> str:
+        """Generate query-independent full extraction artifact filename."""
+        return cls.DATA_EXTRACTION_MATERIALIZED_FULL.format(param_str=param_str)
+
+    @classmethod
+    def materialized_full_extraction_meta(cls, param_str: str) -> str:
+        """Generate query-independent full extraction metadata filename."""
+        return cls.DATA_EXTRACTION_MATERIALIZED_FULL_META.format(param_str=param_str)
     
     @classmethod
     def hidden_states_dir(cls, qid: str, param_str: str) -> str:

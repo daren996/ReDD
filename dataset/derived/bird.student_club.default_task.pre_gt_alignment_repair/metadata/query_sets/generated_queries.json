@@ -1,0 +1,9790 @@
+{
+  "dataset": "student_club/default_task",
+  "source": "bird_sqlite",
+  "database": "student_club",
+  "task_db": "default_task.db",
+  "gt_db": "gt_data.db",
+  "schema_db": "default_task_schema.db",
+  "num_queries": 20,
+  "queries": [
+    {
+      "id": "Q1",
+      "natural_language": "List row_id, major_name, college from major where row_id is <= 89.",
+      "sql": "SELECT \"row_id\", \"major_name\", \"college\" FROM \"major\" WHERE (CAST(\"row_id\" AS REAL) <= 89);",
+      "golden_schema": {
+        "tables": [
+          "major"
+        ],
+        "columns": [
+          "major.row_id",
+          "major.major_name",
+          "major.college"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "row_id",
+        "major_name",
+        "college"
+      ],
+      "result_rows": [
+        [
+          "0",
+          "Political Science",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "1",
+          "International Studies",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "2",
+          "Economics",
+          "School of Business"
+        ],
+        [
+          "3",
+          "Fisheries and Aquatic Sciences",
+          "College of Natural Resources"
+        ],
+        [
+          "4",
+          "Computer Engineering",
+          "College of Engineering"
+        ],
+        [
+          "5",
+          "Accounting",
+          "School of Business"
+        ],
+        [
+          "6",
+          "Recreation Administration",
+          "College of Education & Human Services"
+        ],
+        [
+          "7",
+          "Agricultural Communication",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "8",
+          "Medical Laboratory Technician",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "9",
+          "History",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "10",
+          "Management and Restoration of Aquatic Ecosystems",
+          "College of Natural Resources"
+        ],
+        [
+          "11",
+          "Animal, Dairy, and Veterinary Sciences",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "12",
+          "Agribusiness",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "13",
+          "Environmental and Natural Resource Economics",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "14",
+          "RN to BSN Completion Program",
+          "College of Education & Human Services"
+        ],
+        [
+          "15",
+          "Wildlife Ecology and Management",
+          "College of Natural Resources"
+        ],
+        [
+          "16",
+          "Aircraft Maintenance Technician - Airframe and Powerplant",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "17",
+          "Religious Studies",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "18",
+          "Chinese",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "19",
+          "Interior Design",
+          "College of the Arts"
+        ],
+        [
+          "20",
+          "Ornamental Horticulture Certificate",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "21",
+          "Early Childhood Education",
+          "College of Education & Human Services"
+        ],
+        [
+          "22",
+          "Music",
+          "College of the Arts"
+        ],
+        [
+          "23",
+          "Climate Science",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "24",
+          "Journalism",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "25",
+          "Cosmetology",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "26",
+          "Anthropology",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "27",
+          "Applied Economics",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "28",
+          "Art",
+          "College of the Arts"
+        ],
+        [
+          "29",
+          "International Business",
+          "School of Business"
+        ],
+        [
+          "30",
+          "Nutrition Science",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "31",
+          "Public Health",
+          "College of Science"
+        ],
+        [
+          "32",
+          "Agricultural Machinery Technology",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "33",
+          "Management",
+          "School of Business"
+        ],
+        [
+          "34",
+          "Environmental Engineering",
+          "College of Engineering"
+        ],
+        [
+          "35",
+          "Human Experience Design and Interaction",
+          "College of Education & Human Services"
+        ],
+        [
+          "36",
+          "Portuguese",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "37",
+          "American Studies",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "38",
+          "Art History",
+          "College of the Arts"
+        ],
+        [
+          "39",
+          "Statistics",
+          "College of Science"
+        ],
+        [
+          "40",
+          "Management Information Systems",
+          "School of Business"
+        ],
+        [
+          "41",
+          "French",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "42",
+          "Music Therapy",
+          "College of the Arts"
+        ],
+        [
+          "43",
+          "Secondary Education",
+          "College of Education & Human Services"
+        ],
+        [
+          "44",
+          "Liberal Arts",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "45",
+          "IT Support and Web Development",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "46",
+          "Nursing",
+          "College of Education & Human Services"
+        ],
+        [
+          "47",
+          "Business",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "48",
+          "Military Science",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "49",
+          "Environmental Studies",
+          "College of Natural Resources"
+        ],
+        [
+          "50",
+          "Welding Technology",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "51",
+          "Psychology",
+          "College of Education & Human Services"
+        ],
+        [
+          "52",
+          "Conservation and Restoration Ecology",
+          "College of Natural Resources"
+        ],
+        [
+          "53",
+          "Theatre Arts",
+          "College of the Arts"
+        ],
+        [
+          "54",
+          "Special Education",
+          "College of Education & Human Services"
+        ],
+        [
+          "55",
+          "Human Development and Family Studies",
+          "College of Education & Human Services"
+        ],
+        [
+          "56",
+          "Biology",
+          "College of Science"
+        ],
+        [
+          "57",
+          "Mathematics",
+          "College of Science"
+        ],
+        [
+          "58",
+          "Philosophy",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "59",
+          "Forest Ecology and Management",
+          "College of Natural Resources"
+        ],
+        [
+          "60",
+          "Agricultural Systems Technology",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "61",
+          "Geography",
+          "College of Natural Resources"
+        ],
+        [
+          "62",
+          "Spanish",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "63",
+          "Technology Systems",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "64",
+          "Biochemistry",
+          "College of Science"
+        ],
+        [
+          "65",
+          "Mathematics Education",
+          "College of Science"
+        ],
+        [
+          "66",
+          "Electrical Engineering",
+          "College of Engineering"
+        ],
+        [
+          "67",
+          "Aerospace Studies",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "68",
+          "Communicative Disorders and Deaf Education",
+          "College of Education & Human Services"
+        ],
+        [
+          "69",
+          "Finance",
+          "School of Business"
+        ],
+        [
+          "70",
+          "Agricultural Education",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "71",
+          "Recreation Resource Management",
+          "College of Natural Resources"
+        ],
+        [
+          "72",
+          "Technology and Engineering Education",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "73",
+          "Chemistry Teaching",
+          "College of Science"
+        ],
+        [
+          "74",
+          "Dietetics",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "75",
+          "Soils and Sustainable Land Systems",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "76",
+          "Interdisciplinary Studies",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "77",
+          "Food Science",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "78",
+          "Family and Consumer Sciences Education",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "79",
+          "Horticulture",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "80",
+          "Physics Teaching",
+          "College of Science"
+        ],
+        [
+          "81",
+          "Asian Studies",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "82",
+          "Civil Engineering",
+          "College of Engineering"
+        ],
+        [
+          "83",
+          "Elementary Education",
+          "College of Education & Human Services"
+        ],
+        [
+          "84",
+          "Social Work",
+          "College of Humanities and Social Sciences"
+        ],
+        [
+          "85",
+          "Landscape Architecture",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "86",
+          "Health Education and Promotion",
+          "College of Education & Human Services"
+        ],
+        [
+          "87",
+          "Diesel and Heavy Equipment Mechanics",
+          "College of Agriculture and Applied Sciences"
+        ],
+        [
+          "88",
+          "Marketing",
+          "School of Business"
+        ],
+        [
+          "89",
+          "Agricultural Science",
+          "College of Agriculture and Applied Sciences"
+        ]
+      ],
+      "result_count": 90,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q2",
+      "natural_language": "List row_id, college, department from major where row_id is >= 22.",
+      "sql": "SELECT \"row_id\", \"college\", \"department\" FROM \"major\" WHERE (CAST(\"row_id\" AS REAL) >= 22);",
+      "golden_schema": {
+        "tables": [
+          "major"
+        ],
+        "columns": [
+          "major.row_id",
+          "major.college",
+          "major.department"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "row_id",
+        "college",
+        "department"
+      ],
+      "result_rows": [
+        [
+          "22",
+          "College of the Arts",
+          "Music Department"
+        ],
+        [
+          "23",
+          "College of Agriculture and Applied Sciences",
+          "Plants, Soils, and Climate Department"
+        ],
+        [
+          "24",
+          "College of Humanities and Social Sciences",
+          "Journalism and Communication Department"
+        ],
+        [
+          "25",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "26",
+          "College of Humanities and Social Sciences",
+          "Sociology, Social Work and Anthropology Department"
+        ],
+        [
+          "27",
+          "College of Agriculture and Applied Sciences",
+          "Applied Economics Department"
+        ],
+        [
+          "28",
+          "College of the Arts",
+          "Art and Design Department"
+        ],
+        [
+          "29",
+          "School of Business",
+          "Marketing and Strategy Department"
+        ],
+        [
+          "30",
+          "College of Agriculture and Applied Sciences",
+          "Nutrition, Dietetics, and Food Sciences Department"
+        ],
+        [
+          "31",
+          "College of Science",
+          "Biology Department"
+        ],
+        [
+          "32",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "33",
+          "School of Business",
+          "Management Department"
+        ],
+        [
+          "34",
+          "College of Engineering",
+          "Civil and Environmental Engineering Department"
+        ],
+        [
+          "35",
+          "College of Education & Human Services",
+          "Instructional Technology and Learning Sciences Department"
+        ],
+        [
+          "36",
+          "College of Humanities and Social Sciences",
+          "Languages, Philosophy and Communication Studies Department"
+        ],
+        [
+          "37",
+          "College of Humanities and Social Sciences",
+          "English Department"
+        ],
+        [
+          "38",
+          "College of the Arts",
+          "Art and Design Department"
+        ],
+        [
+          "39",
+          "College of Science",
+          "Mathematics and Statistics Department"
+        ],
+        [
+          "40",
+          "School of Business",
+          "Management Information Systems Department"
+        ],
+        [
+          "41",
+          "College of Humanities and Social Sciences",
+          "Languages, Philosophy and Communication Studies Department"
+        ],
+        [
+          "42",
+          "College of the Arts",
+          "Music Department"
+        ],
+        [
+          "43",
+          "College of Education & Human Services",
+          "School of Teacher Education and Leadership"
+        ],
+        [
+          "44",
+          "College of Humanities and Social Sciences",
+          "Liberal Arts Program"
+        ],
+        [
+          "45",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "46",
+          "College of Education & Human Services",
+          "Nursing and Health Professions"
+        ],
+        [
+          "47",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "48",
+          "College of Humanities and Social Sciences",
+          "Military Science Program"
+        ],
+        [
+          "49",
+          "College of Natural Resources",
+          "Environment and Society Department"
+        ],
+        [
+          "50",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "51",
+          "College of Education & Human Services",
+          "Psychology Department"
+        ],
+        [
+          "52",
+          "College of Natural Resources",
+          "Wildland Resources Department"
+        ],
+        [
+          "53",
+          "College of the Arts",
+          "Theatre Arts Department"
+        ],
+        [
+          "54",
+          "College of Education & Human Services",
+          "Special Education and Rehabilitation Counseling Department"
+        ],
+        [
+          "55",
+          "College of Education & Human Services",
+          "Human Development and Family Studies Department"
+        ],
+        [
+          "56",
+          "College of Science",
+          "Biology Department"
+        ],
+        [
+          "57",
+          "College of Science",
+          "Mathematics and Statistics Department"
+        ],
+        [
+          "58",
+          "College of Humanities and Social Sciences",
+          "Languages, Philosophy and Communication Studies Department"
+        ],
+        [
+          "59",
+          "College of Natural Resources",
+          "Wildland Resources Department"
+        ],
+        [
+          "60",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "61",
+          "College of Natural Resources",
+          "Environment and Society Department"
+        ],
+        [
+          "62",
+          "College of Humanities and Social Sciences",
+          "Languages, Philosophy and Communication Studies Department"
+        ],
+        [
+          "63",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "64",
+          "College of Science",
+          "Chemistry and Biochemistry Department"
+        ],
+        [
+          "65",
+          "College of Science",
+          "Mathematics and Statistics Department"
+        ],
+        [
+          "66",
+          "College of Engineering",
+          "Electrical and Computer Engineering Department"
+        ],
+        [
+          "67",
+          "College of Humanities and Social Sciences",
+          "Aerospace Studies Program"
+        ],
+        [
+          "68",
+          "College of Education & Human Services",
+          "Communicative Disorders and Deaf Education Department"
+        ],
+        [
+          "69",
+          "School of Business",
+          "Economics and Finance Department"
+        ],
+        [
+          "70",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "71",
+          "College of Natural Resources",
+          "Environment and Society Department"
+        ],
+        [
+          "72",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "73",
+          "College of Science",
+          "Chemistry and Biochemistry Department"
+        ],
+        [
+          "74",
+          "College of Agriculture and Applied Sciences",
+          "Nutrition, Dietetics, and Food Sciences Department"
+        ],
+        [
+          "75",
+          "College of Agriculture and Applied Sciences",
+          "Plants, Soils, and Climate Department"
+        ],
+        [
+          "76",
+          "College of Agriculture and Applied Sciences",
+          "Interdisciplinary Studies Program"
+        ],
+        [
+          "77",
+          "College of Agriculture and Applied Sciences",
+          "Nutrition, Dietetics, and Food Sciences Department"
+        ],
+        [
+          "78",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "79",
+          "College of Agriculture and Applied Sciences",
+          "Plants, Soils, and Climate Department"
+        ],
+        [
+          "80",
+          "College of Science",
+          "Physics Department"
+        ],
+        [
+          "81",
+          "College of Humanities and Social Sciences",
+          "Asian Studies Program"
+        ],
+        [
+          "82",
+          "College of Engineering",
+          "Civil and Environmental Engineering Department"
+        ],
+        [
+          "83",
+          "College of Education & Human Services",
+          "School of Teacher Education and Leadership"
+        ],
+        [
+          "84",
+          "College of Humanities and Social Sciences",
+          "Sociology, Social Work and Anthropology Department"
+        ],
+        [
+          "85",
+          "College of Agriculture and Applied Sciences",
+          "Landscape Architecture and Environmental Planning Department"
+        ],
+        [
+          "86",
+          "College of Education & Human Services",
+          "Kinesiology and Health Science Department"
+        ],
+        [
+          "87",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "88",
+          "School of Business",
+          "Marketing and Strategy Department"
+        ],
+        [
+          "89",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "90",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "91",
+          "College of Natural Resources",
+          "Wildland Resources Department"
+        ],
+        [
+          "92",
+          "College of Science",
+          "Chemistry and Biochemistry Department"
+        ],
+        [
+          "93",
+          "College of Humanities and Social Sciences",
+          "Languages, Philosophy and Communication Studies Department"
+        ],
+        [
+          "94",
+          "College of Engineering",
+          "Biological Engineering Department"
+        ],
+        [
+          "95",
+          "College of Science",
+          "Geosciences Department"
+        ],
+        [
+          "96",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "97",
+          "College of Agriculture and Applied Sciences",
+          "Plants, Soils, and Climate Department"
+        ],
+        [
+          "98",
+          "College of Humanities and Social Sciences",
+          "Languages, Philosophy and Communication Studies Department"
+        ],
+        [
+          "99",
+          "College of Humanities and Social Sciences",
+          "Sociology, Social Work and Anthropology Department"
+        ],
+        [
+          "100",
+          "College of Humanities and Social Sciences",
+          "Languages, Philosophy and Communication Studies Department"
+        ],
+        [
+          "101",
+          "College of Humanities and Social Sciences",
+          "Political Science Department"
+        ],
+        [
+          "102",
+          "College of Engineering",
+          "Mechanical and Aerospace Engineering Department"
+        ],
+        [
+          "103",
+          "College of Education & Human Services",
+          "Human Development and Family Studies Department"
+        ],
+        [
+          "104",
+          "College of Humanities and Social Sciences",
+          "Sociology, Social Work and Anthropology Department"
+        ],
+        [
+          "105",
+          "College of Science",
+          "Physics Department"
+        ],
+        [
+          "106",
+          "College of Agriculture and Applied Sciences",
+          "Plants, Soils, and Climate Department"
+        ],
+        [
+          "107",
+          "College of Science",
+          "Computer Science Department"
+        ],
+        [
+          "108",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "109",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "110",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ],
+        [
+          "111",
+          "College of Humanities and Social Sciences",
+          "English Department"
+        ],
+        [
+          "112",
+          "College of Agriculture and Applied Sciences",
+          "School of Applied Sciences, Technology and Education"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q3",
+      "natural_language": "List event_name, member_first_name, member_last_name from attendance where event_name contains 'speaker'.",
+      "sql": "SELECT \"event_name\", \"member_first_name\", \"member_last_name\" FROM \"attendance\" WHERE (LOWER(CAST(\"event_name\" AS TEXT)) LIKE '%speaker%');",
+      "golden_schema": {
+        "tables": [
+          "attendance"
+        ],
+        "columns": [
+          "attendance.event_name",
+          "attendance.member_first_name",
+          "attendance.member_last_name"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "event_name",
+        "member_first_name",
+        "member_last_name"
+      ],
+      "result_rows": [
+        [
+          "September Speaker",
+          "Kevin",
+          "Pierce"
+        ],
+        [
+          "September Speaker",
+          "Garrett",
+          "Gerke"
+        ],
+        [
+          "October Speaker",
+          "Keaton",
+          "Mccray"
+        ],
+        [
+          "November Speaker",
+          "Garrett",
+          "Gerke"
+        ],
+        [
+          "September Speaker",
+          "Keith",
+          "Dunlop"
+        ],
+        [
+          "September Speaker",
+          "Annabella",
+          "Warren"
+        ],
+        [
+          "October Speaker",
+          "Adele",
+          "Deleon"
+        ],
+        [
+          "October Speaker",
+          "Maya",
+          "Mclean"
+        ],
+        [
+          "September Speaker",
+          "Carlo",
+          "Jacobs"
+        ],
+        [
+          "November Speaker",
+          "Grant",
+          "Gilmour"
+        ],
+        [
+          "November Speaker",
+          "Mccauley",
+          "Nash"
+        ],
+        [
+          "October Speaker",
+          "Matthew",
+          "Snay"
+        ],
+        [
+          "November Speaker",
+          "Casey",
+          "Mason"
+        ],
+        [
+          "November Speaker",
+          "Luisa",
+          "Guidi"
+        ],
+        [
+          "October Speaker",
+          "Emily",
+          "Jaquith"
+        ],
+        [
+          "November Speaker",
+          "Sherri",
+          "Ramsey"
+        ],
+        [
+          "October Speaker",
+          "Casey",
+          "Mason"
+        ],
+        [
+          "September Speaker",
+          "Mccauley",
+          "Nash"
+        ],
+        [
+          "September Speaker",
+          "Luisa",
+          "Guidi"
+        ],
+        [
+          "October Speaker",
+          "Vincent",
+          "Ratcliffe"
+        ],
+        [
+          "November Speaker",
+          "Vincent",
+          "Ratcliffe"
+        ],
+        [
+          "October Speaker",
+          "Madelyn",
+          "Nicholson"
+        ],
+        [
+          "September Speaker",
+          "Phillip",
+          "Cullen"
+        ],
+        [
+          "October Speaker",
+          "Carlo",
+          "Jacobs"
+        ],
+        [
+          "September Speaker",
+          "Maya",
+          "Mclean"
+        ],
+        [
+          "September Speaker",
+          "Sherri",
+          "Ramsey"
+        ],
+        [
+          "October Speaker",
+          "Edwardo",
+          "Ing"
+        ],
+        [
+          "November Speaker",
+          "Edwardo",
+          "Ing"
+        ],
+        [
+          "November Speaker",
+          "Emily",
+          "Jaquith"
+        ],
+        [
+          "November Speaker",
+          "Keaton",
+          "Mccray"
+        ],
+        [
+          "November Speaker",
+          "Elijah",
+          "Allen"
+        ],
+        [
+          "September Speaker",
+          "Emily",
+          "Jaquith"
+        ],
+        [
+          "September Speaker",
+          "Elijah",
+          "Allen"
+        ],
+        [
+          "October Speaker",
+          "Keith",
+          "Dunlop"
+        ],
+        [
+          "October Speaker",
+          "Rafi",
+          "Mckee"
+        ],
+        [
+          "November Speaker",
+          "Keith",
+          "Dunlop"
+        ],
+        [
+          "September Speaker",
+          "Tyler",
+          "Hewitt"
+        ],
+        [
+          "October Speaker",
+          "Sacha",
+          "Harrison"
+        ],
+        [
+          "November Speaker",
+          "Maya",
+          "Mclean"
+        ],
+        [
+          "September Speaker",
+          "Trent",
+          "Smith"
+        ],
+        [
+          "October Speaker",
+          "Elijah",
+          "Allen"
+        ],
+        [
+          "November Speaker",
+          "Katy",
+          "Balentine"
+        ],
+        [
+          "November Speaker",
+          "Kevin",
+          "Pierce"
+        ],
+        [
+          "October Speaker",
+          "Dean",
+          "O'Reilly"
+        ],
+        [
+          "October Speaker",
+          "Grant",
+          "Gilmour"
+        ],
+        [
+          "October Speaker",
+          "Katy",
+          "Balentine"
+        ],
+        [
+          "October Speaker",
+          "Trent",
+          "Smith"
+        ],
+        [
+          "November Speaker",
+          "Madelyn",
+          "Nicholson"
+        ],
+        [
+          "October Speaker",
+          "Annabella",
+          "Warren"
+        ],
+        [
+          "November Speaker",
+          "Dean",
+          "O'Reilly"
+        ],
+        [
+          "September Speaker",
+          "Edwardo",
+          "Ing"
+        ],
+        [
+          "November Speaker",
+          "Connor",
+          "Hilton"
+        ],
+        [
+          "October Speaker",
+          "Mccauley",
+          "Nash"
+        ],
+        [
+          "September Speaker",
+          "Adele",
+          "Deleon"
+        ],
+        [
+          "October Speaker",
+          "Connor",
+          "Hilton"
+        ],
+        [
+          "October Speaker",
+          "Sherri",
+          "Ramsey"
+        ],
+        [
+          "October Speaker",
+          "Adela",
+          "O'Gallagher"
+        ],
+        [
+          "November Speaker",
+          "Trent",
+          "Smith"
+        ],
+        [
+          "September Speaker",
+          "Keaton",
+          "Mccray"
+        ],
+        [
+          "October Speaker",
+          "Kevin",
+          "Pierce"
+        ],
+        [
+          "November Speaker",
+          "Tyler",
+          "Hewitt"
+        ],
+        [
+          "September Speaker",
+          "Rafi",
+          "Mckee"
+        ],
+        [
+          "September Speaker",
+          "Matthew",
+          "Snay"
+        ],
+        [
+          "November Speaker",
+          "Sacha",
+          "Harrison"
+        ],
+        [
+          "November Speaker",
+          "Amy",
+          "Firth"
+        ],
+        [
+          "November Speaker",
+          "Rafi",
+          "Mckee"
+        ],
+        [
+          "October Speaker",
+          "Luisa",
+          "Guidi"
+        ],
+        [
+          "October Speaker",
+          "Garrett",
+          "Gerke"
+        ],
+        [
+          "October Speaker",
+          "Phillip",
+          "Cullen"
+        ],
+        [
+          "September Speaker",
+          "Connor",
+          "Hilton"
+        ],
+        [
+          "November Speaker",
+          "Annabella",
+          "Warren"
+        ],
+        [
+          "November Speaker",
+          "Phillip",
+          "Cullen"
+        ],
+        [
+          "September Speaker",
+          "Madelyn",
+          "Nicholson"
+        ],
+        [
+          "September Speaker",
+          "Katy",
+          "Balentine"
+        ],
+        [
+          "November Speaker",
+          "Adela",
+          "O'Gallagher"
+        ],
+        [
+          "September Speaker",
+          "Amy",
+          "Firth"
+        ],
+        [
+          "September Speaker",
+          "Adela",
+          "O'Gallagher"
+        ],
+        [
+          "October Speaker",
+          "Tyler",
+          "Hewitt"
+        ],
+        [
+          "October Speaker",
+          "Amy",
+          "Firth"
+        ],
+        [
+          "November Speaker",
+          "Carlo",
+          "Jacobs"
+        ],
+        [
+          "September Speaker",
+          "Sacha",
+          "Harrison"
+        ],
+        [
+          "September Speaker",
+          "Dean",
+          "O'Reilly"
+        ],
+        [
+          "September Speaker",
+          "Grant",
+          "Gilmour"
+        ]
+      ],
+      "result_count": 83,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q4",
+      "natural_language": "List department, row_id, major_name from major where department contains 'and'.",
+      "sql": "SELECT \"department\", \"row_id\", \"major_name\" FROM \"major\" WHERE (LOWER(CAST(\"department\" AS TEXT)) LIKE '%and%');",
+      "golden_schema": {
+        "tables": [
+          "major"
+        ],
+        "columns": [
+          "major.department",
+          "major.row_id",
+          "major.major_name"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "department",
+        "row_id",
+        "major_name"
+      ],
+      "result_rows": [
+        [
+          "Economics and Finance Department",
+          "2",
+          "Economics"
+        ],
+        [
+          "Electrical and Computer Engineering Department",
+          "4",
+          "Computer Engineering"
+        ],
+        [
+          "Kinesiology and Health Science Department",
+          "6",
+          "Recreation Administration"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "7",
+          "Agricultural Communication"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "8",
+          "Medical Laboratory Technician"
+        ],
+        [
+          "Animal, Dairy, and Veterinary Sciences Department",
+          "11",
+          "Animal, Dairy, and Veterinary Sciences"
+        ],
+        [
+          "Nursing and Health Professions",
+          "14",
+          "RN to BSN Completion Program"
+        ],
+        [
+          "Wildland Resources Department",
+          "15",
+          "Wildlife Ecology and Management"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "16",
+          "Aircraft Maintenance Technician - Airframe and Powerplant"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "18",
+          "Chinese"
+        ],
+        [
+          "Art and Design Department",
+          "19",
+          "Interior Design"
+        ],
+        [
+          "Plants, Soils, and Climate Department",
+          "20",
+          "Ornamental Horticulture Certificate"
+        ],
+        [
+          "School of Teacher Education and Leadership",
+          "21",
+          "Early Childhood Education"
+        ],
+        [
+          "Plants, Soils, and Climate Department",
+          "23",
+          "Climate Science"
+        ],
+        [
+          "Journalism and Communication Department",
+          "24",
+          "Journalism"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "25",
+          "Cosmetology"
+        ],
+        [
+          "Sociology, Social Work and Anthropology Department",
+          "26",
+          "Anthropology"
+        ],
+        [
+          "Art and Design Department",
+          "28",
+          "Art"
+        ],
+        [
+          "Marketing and Strategy Department",
+          "29",
+          "International Business"
+        ],
+        [
+          "Nutrition, Dietetics, and Food Sciences Department",
+          "30",
+          "Nutrition Science"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "32",
+          "Agricultural Machinery Technology"
+        ],
+        [
+          "Civil and Environmental Engineering Department",
+          "34",
+          "Environmental Engineering"
+        ],
+        [
+          "Instructional Technology and Learning Sciences Department",
+          "35",
+          "Human Experience Design and Interaction"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "36",
+          "Portuguese"
+        ],
+        [
+          "Art and Design Department",
+          "38",
+          "Art History"
+        ],
+        [
+          "Mathematics and Statistics Department",
+          "39",
+          "Statistics"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "41",
+          "French"
+        ],
+        [
+          "School of Teacher Education and Leadership",
+          "43",
+          "Secondary Education"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "45",
+          "IT Support and Web Development"
+        ],
+        [
+          "Nursing and Health Professions",
+          "46",
+          "Nursing"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "47",
+          "Business"
+        ],
+        [
+          "Environment and Society Department",
+          "49",
+          "Environmental Studies"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "50",
+          "Welding Technology"
+        ],
+        [
+          "Wildland Resources Department",
+          "52",
+          "Conservation and Restoration Ecology"
+        ],
+        [
+          "Special Education and Rehabilitation Counseling Department",
+          "54",
+          "Special Education"
+        ],
+        [
+          "Human Development and Family Studies Department",
+          "55",
+          "Human Development and Family Studies"
+        ],
+        [
+          "Mathematics and Statistics Department",
+          "57",
+          "Mathematics"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "58",
+          "Philosophy"
+        ],
+        [
+          "Wildland Resources Department",
+          "59",
+          "Forest Ecology and Management"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "60",
+          "Agricultural Systems Technology"
+        ],
+        [
+          "Environment and Society Department",
+          "61",
+          "Geography"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "62",
+          "Spanish"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "63",
+          "Technology Systems"
+        ],
+        [
+          "Chemistry and Biochemistry Department",
+          "64",
+          "Biochemistry"
+        ],
+        [
+          "Mathematics and Statistics Department",
+          "65",
+          "Mathematics Education"
+        ],
+        [
+          "Electrical and Computer Engineering Department",
+          "66",
+          "Electrical Engineering"
+        ],
+        [
+          "Communicative Disorders and Deaf Education Department",
+          "68",
+          "Communicative Disorders and Deaf Education"
+        ],
+        [
+          "Economics and Finance Department",
+          "69",
+          "Finance"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "70",
+          "Agricultural Education"
+        ],
+        [
+          "Environment and Society Department",
+          "71",
+          "Recreation Resource Management"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "72",
+          "Technology and Engineering Education"
+        ],
+        [
+          "Chemistry and Biochemistry Department",
+          "73",
+          "Chemistry Teaching"
+        ],
+        [
+          "Nutrition, Dietetics, and Food Sciences Department",
+          "74",
+          "Dietetics"
+        ],
+        [
+          "Plants, Soils, and Climate Department",
+          "75",
+          "Soils and Sustainable Land Systems"
+        ],
+        [
+          "Nutrition, Dietetics, and Food Sciences Department",
+          "77",
+          "Food Science"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "78",
+          "Family and Consumer Sciences Education"
+        ],
+        [
+          "Plants, Soils, and Climate Department",
+          "79",
+          "Horticulture"
+        ],
+        [
+          "Civil and Environmental Engineering Department",
+          "82",
+          "Civil Engineering"
+        ],
+        [
+          "School of Teacher Education and Leadership",
+          "83",
+          "Elementary Education"
+        ],
+        [
+          "Sociology, Social Work and Anthropology Department",
+          "84",
+          "Social Work"
+        ],
+        [
+          "Landscape Architecture and Environmental Planning Department",
+          "85",
+          "Landscape Architecture"
+        ],
+        [
+          "Kinesiology and Health Science Department",
+          "86",
+          "Health Education and Promotion"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "87",
+          "Diesel and Heavy Equipment Mechanics"
+        ],
+        [
+          "Marketing and Strategy Department",
+          "88",
+          "Marketing"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "89",
+          "Agricultural Science"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "90",
+          "Outdoor Product Design and Development"
+        ],
+        [
+          "Wildland Resources Department",
+          "91",
+          "Rangeland Ecology and Management"
+        ],
+        [
+          "Chemistry and Biochemistry Department",
+          "92",
+          "Chemistry"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "93",
+          "Global Communication"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "96",
+          "Surgical Technician"
+        ],
+        [
+          "Plants, Soils, and Climate Department",
+          "97",
+          "Residential Landscape Design and Construction"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "98",
+          "Communication Studies"
+        ],
+        [
+          "Sociology, Social Work and Anthropology Department",
+          "99",
+          "Sociology"
+        ],
+        [
+          "Languages, Philosophy and Communication Studies Department",
+          "100",
+          "German"
+        ],
+        [
+          "Mechanical and Aerospace Engineering Department",
+          "102",
+          "Mechanical Engineering"
+        ],
+        [
+          "Human Development and Family Studies Department",
+          "103",
+          "Family Life Studies"
+        ],
+        [
+          "Sociology, Social Work and Anthropology Department",
+          "104",
+          "Criminal Justice"
+        ],
+        [
+          "Plants, Soils, and Climate Department",
+          "106",
+          "Plant Science"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "108",
+          "Automotive Technology"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "109",
+          "Business Education"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "110",
+          "Aviation Technology - Maintenance Management"
+        ],
+        [
+          "School of Applied Sciences, Technology and Education",
+          "112",
+          "Aviation Technology - Professional Pilot"
+        ]
+      ],
+      "result_count": 82,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q5",
+      "natural_language": "List row_id, event_date, member_last_name from attendance where row_id is <= 97.",
+      "sql": "SELECT \"row_id\", \"event_date\", \"member_last_name\" FROM \"attendance\" WHERE (CAST(\"row_id\" AS REAL) <= 97);",
+      "golden_schema": {
+        "tables": [
+          "attendance"
+        ],
+        "columns": [
+          "attendance.row_id",
+          "attendance.event_date",
+          "attendance.member_last_name"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "row_id",
+        "event_date",
+        "member_last_name"
+      ],
+      "result_rows": [
+        [
+          "0",
+          "2019-10-10T06:00:00",
+          "Cullen"
+        ],
+        [
+          "1",
+          "2019-09-12T06:00:00",
+          "Cullen"
+        ],
+        [
+          "2",
+          "2019-10-12T06:00:00",
+          "Ing"
+        ],
+        [
+          "3",
+          "2020-04-07T09:30:00",
+          "Harrison"
+        ],
+        [
+          "4",
+          "2019-10-10T06:00:00",
+          "Hilton"
+        ],
+        [
+          "5",
+          "2019-11-21T02:00:00",
+          "Warren"
+        ],
+        [
+          "6",
+          "2019-09-01T07:00:00",
+          "Smith"
+        ],
+        [
+          "7",
+          "2019-09-19T02:00:00",
+          "Ing"
+        ],
+        [
+          "8",
+          "2019-10-08T12:00:00",
+          "O'Gallagher"
+        ],
+        [
+          "9",
+          "2019-09-07T03:00:00",
+          "Nicholson"
+        ],
+        [
+          "10",
+          "2019-09-24T12:00:00",
+          "Pierce"
+        ],
+        [
+          "11",
+          "2019-09-10T12:00:00",
+          "Gerke"
+        ],
+        [
+          "12",
+          "2019-09-12T06:00:00",
+          "Mclean"
+        ],
+        [
+          "13",
+          "2019-09-24T12:00:00",
+          "Gerke"
+        ],
+        [
+          "14",
+          "2019-11-05T12:00:00",
+          "Allen"
+        ],
+        [
+          "15",
+          "2019-10-12T06:00:00",
+          "Harrison"
+        ],
+        [
+          "16",
+          "2019-09-01T07:00:00",
+          "Gerke"
+        ],
+        [
+          "17",
+          "2019-09-03T12:00:00",
+          "Jaquith"
+        ],
+        [
+          "18",
+          "2019-09-12T06:00:00",
+          "Guidi"
+        ],
+        [
+          "19",
+          "2019-09-01T07:00:00",
+          "Hilton"
+        ],
+        [
+          "20",
+          "2019-09-01T07:00:00",
+          "Guidi"
+        ],
+        [
+          "21",
+          "2019-09-03T12:00:00",
+          "Gilmour"
+        ],
+        [
+          "22",
+          "2019-10-08T12:00:00",
+          "Mckee"
+        ],
+        [
+          "23",
+          "2019-11-05T12:00:00",
+          "Harrison"
+        ],
+        [
+          "24",
+          "2019-10-24T13:00:00",
+          "Ing"
+        ],
+        [
+          "25",
+          "2019-09-10T12:00:00",
+          "Allen"
+        ],
+        [
+          "26",
+          "2019-11-21T02:00:00",
+          "Gerke"
+        ],
+        [
+          "27",
+          "2019-09-03T12:00:00",
+          "Gerke"
+        ],
+        [
+          "28",
+          "2019-09-03T12:00:00",
+          "Cullen"
+        ],
+        [
+          "29",
+          "2019-10-22T12:00:00",
+          "Mccray"
+        ],
+        [
+          "30",
+          "2019-09-01T07:00:00",
+          "Harrison"
+        ],
+        [
+          "31",
+          "2019-11-19T12:00:00",
+          "Gerke"
+        ],
+        [
+          "32",
+          "2019-09-24T12:00:00",
+          "Dunlop"
+        ],
+        [
+          "33",
+          "2019-10-08T12:00:00",
+          "Gerke"
+        ],
+        [
+          "34",
+          "2019-09-01T07:00:00",
+          "Jacobs"
+        ],
+        [
+          "35",
+          "2019-09-01T07:00:00",
+          "Nash"
+        ],
+        [
+          "36",
+          "2019-09-24T12:00:00",
+          "Warren"
+        ],
+        [
+          "37",
+          "2019-09-01T07:00:00",
+          "Ramsey"
+        ],
+        [
+          "38",
+          "2019-10-22T12:00:00",
+          "Deleon"
+        ],
+        [
+          "39",
+          "2019-10-22T12:00:00",
+          "Mclean"
+        ],
+        [
+          "40",
+          "2019-09-01T07:00:00",
+          "Mckee"
+        ],
+        [
+          "41",
+          "2019-10-12T06:00:00",
+          "Smith"
+        ],
+        [
+          "42",
+          "2019-10-05T12:00:00",
+          "Ing"
+        ],
+        [
+          "43",
+          "2019-09-24T12:00:00",
+          "Jacobs"
+        ],
+        [
+          "44",
+          "2019-11-05T12:00:00",
+          "Ing"
+        ],
+        [
+          "45",
+          "2019-11-05T12:00:00",
+          "O'Gallagher"
+        ],
+        [
+          "46",
+          "2019-09-19T02:00:00",
+          "Mclean"
+        ],
+        [
+          "47",
+          "2019-09-12T06:00:00",
+          "Harrison"
+        ],
+        [
+          "48",
+          "2019-09-03T12:00:00",
+          "Warren"
+        ],
+        [
+          "49",
+          "2019-11-19T12:00:00",
+          "Gilmour"
+        ],
+        [
+          "50",
+          "2019-11-21T02:00:00",
+          "Jacobs"
+        ],
+        [
+          "51",
+          "2019-10-24T13:00:00",
+          "Snay"
+        ],
+        [
+          "52",
+          "2019-10-12T06:00:00",
+          "Snay"
+        ],
+        [
+          "53",
+          "2019-09-01T07:00:00",
+          "Gilmour"
+        ],
+        [
+          "54",
+          "2019-11-05T12:00:00",
+          "Mckee"
+        ],
+        [
+          "55",
+          "2019-11-05T12:00:00",
+          "Ramsey"
+        ],
+        [
+          "56",
+          "2019-11-19T12:00:00",
+          "Nash"
+        ],
+        [
+          "57",
+          "2019-11-21T02:00:00",
+          "Guidi"
+        ],
+        [
+          "58",
+          "2019-10-22T12:00:00",
+          "Snay"
+        ],
+        [
+          "59",
+          "2019-11-19T12:00:00",
+          "Mason"
+        ],
+        [
+          "60",
+          "2019-10-24T13:00:00",
+          "Nicholson"
+        ],
+        [
+          "61",
+          "2019-11-19T12:00:00",
+          "Guidi"
+        ],
+        [
+          "62",
+          "2019-10-22T12:00:00",
+          "Jaquith"
+        ],
+        [
+          "63",
+          "2019-09-12T06:00:00",
+          "Firth"
+        ],
+        [
+          "64",
+          "2019-10-10T06:00:00",
+          "Warren"
+        ],
+        [
+          "65",
+          "2019-10-08T12:00:00",
+          "O'Reilly"
+        ],
+        [
+          "66",
+          "2019-09-03T12:00:00",
+          "Jacobs"
+        ],
+        [
+          "67",
+          "2019-11-19T12:00:00",
+          "Ramsey"
+        ],
+        [
+          "68",
+          "2019-10-22T12:00:00",
+          "Mason"
+        ],
+        [
+          "69",
+          "2019-09-24T12:00:00",
+          "Nash"
+        ],
+        [
+          "70",
+          "2019-09-01T07:00:00",
+          "Firth"
+        ],
+        [
+          "71",
+          "2019-09-03T12:00:00",
+          "Snay"
+        ],
+        [
+          "72",
+          "2019-09-24T12:00:00",
+          "Guidi"
+        ],
+        [
+          "73",
+          "2019-10-22T12:00:00",
+          "Ratcliffe"
+        ],
+        [
+          "74",
+          "2019-09-19T02:00:00",
+          "Allen"
+        ],
+        [
+          "75",
+          "2019-11-19T12:00:00",
+          "Ratcliffe"
+        ],
+        [
+          "76",
+          "2019-10-08T12:00:00",
+          "Pierce"
+        ],
+        [
+          "77",
+          "2019-10-22T12:00:00",
+          "Nicholson"
+        ],
+        [
+          "78",
+          "2019-09-24T12:00:00",
+          "Cullen"
+        ],
+        [
+          "79",
+          "2019-09-19T02:00:00",
+          "Harrison"
+        ],
+        [
+          "80",
+          "2019-09-03T12:00:00",
+          "Ratcliffe"
+        ],
+        [
+          "81",
+          "2019-09-07T03:00:00",
+          "Allen"
+        ],
+        [
+          "82",
+          "2019-10-22T12:00:00",
+          "Jacobs"
+        ],
+        [
+          "83",
+          "2019-10-12T06:00:00",
+          "Cullen"
+        ],
+        [
+          "84",
+          "2019-11-05T12:00:00",
+          "Nicholson"
+        ],
+        [
+          "85",
+          "2019-09-24T12:00:00",
+          "Mclean"
+        ],
+        [
+          "86",
+          "2019-11-05T12:00:00",
+          "Smith"
+        ],
+        [
+          "87",
+          "2019-09-03T12:00:00",
+          "Allen"
+        ],
+        [
+          "88",
+          "2019-09-01T07:00:00",
+          "Mason"
+        ],
+        [
+          "89",
+          "2019-09-01T07:00:00",
+          "Ratcliffe"
+        ],
+        [
+          "90",
+          "2019-10-08T12:00:00",
+          "Guidi"
+        ],
+        [
+          "91",
+          "2019-09-24T12:00:00",
+          "Ramsey"
+        ],
+        [
+          "92",
+          "2019-10-22T12:00:00",
+          "Ing"
+        ],
+        [
+          "93",
+          "2019-11-19T12:00:00",
+          "Ing"
+        ],
+        [
+          "94",
+          "2019-10-12T06:00:00",
+          "Balentine"
+        ],
+        [
+          "95",
+          "2019-10-10T06:00:00",
+          "Ratcliffe"
+        ],
+        [
+          "96",
+          "2019-09-10T12:00:00",
+          "Cullen"
+        ],
+        [
+          "97",
+          "2019-11-05T12:00:00",
+          "O'Reilly"
+        ]
+      ],
+      "result_count": 98,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q6",
+      "natural_language": "List row_id, member_last_name, event_name from attendance where row_id is >= 227.",
+      "sql": "SELECT \"row_id\", \"member_last_name\", \"event_name\" FROM \"attendance\" WHERE (CAST(\"row_id\" AS REAL) >= 227);",
+      "golden_schema": {
+        "tables": [
+          "attendance"
+        ],
+        "columns": [
+          "attendance.row_id",
+          "attendance.member_last_name",
+          "attendance.event_name"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "row_id",
+        "member_last_name",
+        "event_name"
+      ],
+      "result_rows": [
+        [
+          "227",
+          "Hewitt",
+          "November Speaker"
+        ],
+        [
+          "228",
+          "Pierce",
+          "Registration"
+        ],
+        [
+          "229",
+          "Mckee",
+          "September Speaker"
+        ],
+        [
+          "230",
+          "Snay",
+          "September Meeting"
+        ],
+        [
+          "231",
+          "Mason",
+          "Laugh Out Loud"
+        ],
+        [
+          "232",
+          "Deleon",
+          "November Meeting"
+        ],
+        [
+          "233",
+          "Snay",
+          "September Speaker"
+        ],
+        [
+          "234",
+          "O'Gallagher",
+          "Football game"
+        ],
+        [
+          "235",
+          "Snay",
+          "Registration"
+        ],
+        [
+          "236",
+          "Harrison",
+          "November Speaker"
+        ],
+        [
+          "237",
+          "Snay",
+          "Football game"
+        ],
+        [
+          "238",
+          "Ing",
+          "Yearly Kickoff"
+        ],
+        [
+          "239",
+          "Harrison",
+          "Food Bank"
+        ],
+        [
+          "240",
+          "Nicholson",
+          "Yearly Kickoff"
+        ],
+        [
+          "241",
+          "Mason",
+          "October Meeting"
+        ],
+        [
+          "242",
+          "Mason",
+          "Yearly Kickoff"
+        ],
+        [
+          "243",
+          "Firth",
+          "November Speaker"
+        ],
+        [
+          "244",
+          "Allen",
+          "Community Theater"
+        ],
+        [
+          "245",
+          "Warren",
+          "September Meeting"
+        ],
+        [
+          "246",
+          "Mckee",
+          "November Speaker"
+        ],
+        [
+          "247",
+          "Mclean",
+          "Food Bank"
+        ],
+        [
+          "248",
+          "Mccray",
+          "Women's Soccer"
+        ],
+        [
+          "249",
+          "Jacobs",
+          "September Meeting"
+        ],
+        [
+          "250",
+          "Firth",
+          "September Meeting"
+        ],
+        [
+          "251",
+          "Nicholson",
+          "October Meeting"
+        ],
+        [
+          "252",
+          "Smith",
+          "Yearly Kickoff"
+        ],
+        [
+          "253",
+          "Cullen",
+          "October Meeting"
+        ],
+        [
+          "254",
+          "Mclean",
+          "Registration"
+        ],
+        [
+          "255",
+          "Smith",
+          "September Meeting"
+        ],
+        [
+          "256",
+          "Balentine",
+          "October Meeting"
+        ],
+        [
+          "257",
+          "Nash",
+          "Laugh Out Loud"
+        ],
+        [
+          "258",
+          "Warren",
+          "Women's Soccer"
+        ],
+        [
+          "259",
+          "Guidi",
+          "Yearly Kickoff"
+        ],
+        [
+          "260",
+          "Ratcliffe",
+          "Community Theater"
+        ],
+        [
+          "261",
+          "Guidi",
+          "October Speaker"
+        ],
+        [
+          "262",
+          "Harrison",
+          "October Meeting"
+        ],
+        [
+          "263",
+          "Jaquith",
+          "Laugh Out Loud"
+        ],
+        [
+          "264",
+          "Guidi",
+          "Laugh Out Loud"
+        ],
+        [
+          "265",
+          "Gilmour",
+          "November Meeting"
+        ],
+        [
+          "266",
+          "Ing",
+          "Football game"
+        ],
+        [
+          "267",
+          "Balentine",
+          "Laugh Out Loud"
+        ],
+        [
+          "268",
+          "Hilton",
+          "September Meeting"
+        ],
+        [
+          "269",
+          "Warren",
+          "Football game"
+        ],
+        [
+          "270",
+          "Jaquith",
+          "Community Theater"
+        ],
+        [
+          "271",
+          "Nash",
+          "Yearly Kickoff"
+        ],
+        [
+          "272",
+          "Dunlop",
+          "October Meeting"
+        ],
+        [
+          "273",
+          "Gerke",
+          "October Speaker"
+        ],
+        [
+          "274",
+          "Mclean",
+          "Women's Soccer"
+        ],
+        [
+          "275",
+          "Balentine",
+          "September Meeting"
+        ],
+        [
+          "276",
+          "Deleon",
+          "October Meeting"
+        ],
+        [
+          "277",
+          "Ramsey",
+          "September Meeting"
+        ],
+        [
+          "278",
+          "Jaquith",
+          "Women's Soccer"
+        ],
+        [
+          "279",
+          "Deleon",
+          "Registration"
+        ],
+        [
+          "280",
+          "Hewitt",
+          "October Meeting"
+        ],
+        [
+          "281",
+          "Nicholson",
+          "September Meeting"
+        ],
+        [
+          "282",
+          "Cullen",
+          "October Speaker"
+        ],
+        [
+          "283",
+          "Jacobs",
+          "Football game"
+        ],
+        [
+          "284",
+          "Hilton",
+          "September Speaker"
+        ],
+        [
+          "285",
+          "Allen",
+          "Food Bank"
+        ],
+        [
+          "286",
+          "Deleon",
+          "Yearly Kickoff"
+        ],
+        [
+          "287",
+          "Warren",
+          "November Speaker"
+        ],
+        [
+          "288",
+          "Hewitt",
+          "Football game"
+        ],
+        [
+          "289",
+          "Pierce",
+          "September Meeting"
+        ],
+        [
+          "290",
+          "Cullen",
+          "November Speaker"
+        ],
+        [
+          "291",
+          "Deleon",
+          "Laugh Out Loud"
+        ],
+        [
+          "292",
+          "Jaquith",
+          "Registration"
+        ],
+        [
+          "293",
+          "Allen",
+          "Officers meeting - April"
+        ],
+        [
+          "294",
+          "Nicholson",
+          "September Speaker"
+        ],
+        [
+          "295",
+          "Allen",
+          "Football game"
+        ],
+        [
+          "296",
+          "Snay",
+          "November Meeting"
+        ],
+        [
+          "297",
+          "Dunlop",
+          "September Meeting"
+        ],
+        [
+          "298",
+          "Jacobs",
+          "November Meeting"
+        ],
+        [
+          "299",
+          "Gilmour",
+          "September Meeting"
+        ],
+        [
+          "300",
+          "O'Reilly",
+          "Yearly Kickoff"
+        ],
+        [
+          "301",
+          "Ramsey",
+          "Laugh Out Loud"
+        ],
+        [
+          "302",
+          "Cullen",
+          "Fall Budget Review"
+        ],
+        [
+          "303",
+          "O'Gallagher",
+          "Women's Soccer"
+        ],
+        [
+          "304",
+          "Woodard",
+          "Registration"
+        ],
+        [
+          "305",
+          "Snay",
+          "Food Bank"
+        ],
+        [
+          "306",
+          "Balentine",
+          "September Speaker"
+        ],
+        [
+          "307",
+          "Guidi",
+          "September Meeting"
+        ],
+        [
+          "308",
+          "O'Gallagher",
+          "November Speaker"
+        ],
+        [
+          "309",
+          "Balentine",
+          "Yearly Kickoff"
+        ],
+        [
+          "310",
+          "Mckee",
+          "September Meeting"
+        ],
+        [
+          "311",
+          "Firth",
+          "September Speaker"
+        ],
+        [
+          "312",
+          "O'Gallagher",
+          "September Speaker"
+        ],
+        [
+          "313",
+          "Mckee",
+          "Women's Soccer"
+        ],
+        [
+          "314",
+          "Ratcliffe",
+          "November Meeting"
+        ],
+        [
+          "315",
+          "Hewitt",
+          "October Speaker"
+        ],
+        [
+          "316",
+          "Firth",
+          "October Speaker"
+        ],
+        [
+          "317",
+          "Dunlop",
+          "Yearly Kickoff"
+        ],
+        [
+          "318",
+          "Jacobs",
+          "November Speaker"
+        ],
+        [
+          "319",
+          "Harrison",
+          "September Speaker"
+        ],
+        [
+          "320",
+          "Balentine",
+          "Registration"
+        ],
+        [
+          "321",
+          "O'Reilly",
+          "September Speaker"
+        ],
+        [
+          "322",
+          "Guidi",
+          "November Meeting"
+        ],
+        [
+          "323",
+          "Guidi",
+          "Women's Soccer"
+        ],
+        [
+          "324",
+          "Cullen",
+          "Registration"
+        ],
+        [
+          "325",
+          "Gilmour",
+          "September Speaker"
+        ]
+      ],
+      "result_count": 99,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q7",
+      "natural_language": "List type, row_id, city from zip_code where type contains 'box'.",
+      "sql": "SELECT \"type\", \"row_id\", \"city\" FROM \"zip_code\" WHERE (LOWER(CAST(\"type\" AS TEXT)) LIKE '%box%');",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.type",
+          "zip_code.row_id",
+          "zip_code.city"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "type",
+        "row_id",
+        "city"
+      ],
+      "result_rows": [
+        [
+          "PO Box",
+          "1",
+          "Whately"
+        ],
+        [
+          "PO Box",
+          "17",
+          "Thorndike"
+        ],
+        [
+          "PO Box",
+          "21",
+          "Amherst"
+        ],
+        [
+          "PO Box",
+          "24",
+          "Holyoke"
+        ],
+        [
+          "PO Box",
+          "25",
+          "Manomet"
+        ],
+        [
+          "PO Box",
+          "50",
+          "Passumpsic"
+        ],
+        [
+          "PO Box",
+          "53",
+          "West Millbury"
+        ],
+        [
+          "PO Box",
+          "65",
+          "San Juan"
+        ],
+        [
+          "PO Box",
+          "66",
+          "Coventry"
+        ],
+        [
+          "PO Box",
+          "70",
+          "West Peterborough"
+        ],
+        [
+          "PO Box",
+          "76",
+          "Silver Beach"
+        ],
+        [
+          "PO Box",
+          "82",
+          "East Derry"
+        ],
+        [
+          "PO Box",
+          "91",
+          "Raynham Center"
+        ],
+        [
+          "PO Box",
+          "92",
+          "North Eastham"
+        ],
+        [
+          "PO Box",
+          "97",
+          "Springfield"
+        ],
+        [
+          "PO Box",
+          "106",
+          "Winchendon Springs"
+        ],
+        [
+          "PO Box",
+          "109",
+          "Ponce"
+        ],
+        [
+          "PO Box",
+          "117",
+          "Westport Point"
+        ],
+        [
+          "PO Box",
+          "128",
+          "Palmer"
+        ],
+        [
+          "PO Box",
+          "129",
+          "Forestdale"
+        ],
+        [
+          "PO Box",
+          "133",
+          "North Turner"
+        ],
+        [
+          "PO Box",
+          "135",
+          "North Bridgton"
+        ],
+        [
+          "PO Box",
+          "140",
+          "Green Harbor"
+        ],
+        [
+          "PO Box",
+          "142",
+          "Bangor"
+        ],
+        [
+          "PO Box",
+          "144",
+          "Bondsville"
+        ],
+        [
+          "PO Box",
+          "147",
+          "East Middlebury"
+        ],
+        [
+          "PO Box",
+          "159",
+          "East Vassalboro"
+        ],
+        [
+          "PO Box",
+          "160",
+          "Bar Mills"
+        ],
+        [
+          "PO Box",
+          "161",
+          "Brookline Village"
+        ],
+        [
+          "PO Box",
+          "165",
+          "Kearsarge"
+        ],
+        [
+          "PO Box",
+          "169",
+          "West Hyannisport"
+        ],
+        [
+          "PO Box",
+          "173",
+          "Quechee"
+        ],
+        [
+          "PO Box",
+          "175",
+          "Moody"
+        ],
+        [
+          "PO Box",
+          "180",
+          "Newfield"
+        ],
+        [
+          "PO Box",
+          "192",
+          "Stockbridge"
+        ],
+        [
+          "PO Box",
+          "194",
+          "Pinehurst"
+        ],
+        [
+          "PO Box",
+          "201",
+          "North Waltham"
+        ],
+        [
+          "PO Box",
+          "206",
+          "Montgomery"
+        ],
+        [
+          "PO Box",
+          "211",
+          "North Hatfield"
+        ],
+        [
+          "PO Box",
+          "212",
+          "Wolfeboro Falls"
+        ],
+        [
+          "PO Box",
+          "213",
+          "East Orleans"
+        ],
+        [
+          "PO Box",
+          "231",
+          "Winnisquam"
+        ],
+        [
+          "PO Box",
+          "235",
+          "North Scituate"
+        ],
+        [
+          "PO Box",
+          "243",
+          "Harmony"
+        ],
+        [
+          "PO Box",
+          "252",
+          "Prudence Island"
+        ],
+        [
+          "PO Box",
+          "255",
+          "Woronoco"
+        ],
+        [
+          "PO Box",
+          "256",
+          "North Marshfield"
+        ],
+        [
+          "PO Box",
+          "257",
+          "Humarock"
+        ],
+        [
+          "PO Box",
+          "264",
+          "Bayamon"
+        ],
+        [
+          "PO Box",
+          "265",
+          "South Barre"
+        ],
+        [
+          "PO Box",
+          "266",
+          "Menemsha"
+        ],
+        [
+          "PO Box",
+          "270",
+          "Hinckley"
+        ],
+        [
+          "PO Box",
+          "271",
+          "New Bedford"
+        ],
+        [
+          "PO Box",
+          "273",
+          "Manchaug"
+        ],
+        [
+          "PO Box",
+          "277",
+          "Accord"
+        ],
+        [
+          "PO Box",
+          "283",
+          "San Juan"
+        ],
+        [
+          "PO Box",
+          "284",
+          "West Falmouth"
+        ],
+        [
+          "PO Box",
+          "286",
+          "Chicopee"
+        ],
+        [
+          "PO Box",
+          "291",
+          "Framingham"
+        ],
+        [
+          "PO Box",
+          "296",
+          "Boston"
+        ],
+        [
+          "PO Box",
+          "302",
+          "Elmwood"
+        ],
+        [
+          "PO Box",
+          "305",
+          "Still River"
+        ],
+        [
+          "PO Box",
+          "310",
+          "Brownville Junction"
+        ],
+        [
+          "PO Box",
+          "311",
+          "Jonesville"
+        ],
+        [
+          "PO Box",
+          "315",
+          "Rosario"
+        ],
+        [
+          "PO Box",
+          "316",
+          "East Parsonsfield"
+        ],
+        [
+          "PO Box",
+          "327",
+          "Lebanon"
+        ],
+        [
+          "PO Box",
+          "345",
+          "North Jay"
+        ],
+        [
+          "PO Box",
+          "346",
+          "Chicopee"
+        ],
+        [
+          "PO Box",
+          "353",
+          "Woodstock"
+        ],
+        [
+          "PO Box",
+          "369",
+          "Framingham"
+        ],
+        [
+          "PO Box",
+          "370",
+          "San Juan"
+        ],
+        [
+          "PO Box",
+          "371",
+          "South Lancaster"
+        ],
+        [
+          "PO Box",
+          "373",
+          "Boston"
+        ],
+        [
+          "PO Box",
+          "383",
+          "Lyme Center"
+        ],
+        [
+          "PO Box",
+          "386",
+          "Waterville"
+        ],
+        [
+          "PO Box",
+          "387",
+          "West Groton"
+        ],
+        [
+          "PO Box",
+          "393",
+          "Milton Village"
+        ],
+        [
+          "PO Box",
+          "394",
+          "West Chatham"
+        ],
+        [
+          "PO Box",
+          "395",
+          "West Rockport"
+        ],
+        [
+          "PO Box",
+          "397",
+          "Lenox Dale"
+        ],
+        [
+          "PO Box",
+          "398",
+          "Benson"
+        ],
+        [
+          "PO Box",
+          "407",
+          "Westfield"
+        ],
+        [
+          "PO Box",
+          "418",
+          "New Britain"
+        ],
+        [
+          "PO Box",
+          "420",
+          "West Kennebunk"
+        ],
+        [
+          "PO Box",
+          "424",
+          "West Newbury"
+        ],
+        [
+          "PO Box",
+          "426",
+          "Islesford"
+        ],
+        [
+          "PO Box",
+          "432",
+          "Fort Kent Mills"
+        ],
+        [
+          "PO Box",
+          "438",
+          "West Poland"
+        ],
+        [
+          "PO Box",
+          "445",
+          "South Carver"
+        ],
+        [
+          "PO Box",
+          "450",
+          "Hartford"
+        ],
+        [
+          "PO Box",
+          "451",
+          "East Templeton"
+        ],
+        [
+          "PO Box",
+          "463",
+          "Biddeford Pool"
+        ],
+        [
+          "PO Box",
+          "479",
+          "Winchester Center"
+        ],
+        [
+          "PO Box",
+          "481",
+          "Barnard"
+        ],
+        [
+          "PO Box",
+          "491",
+          "New Town"
+        ],
+        [
+          "PO Box",
+          "493",
+          "Center Lovell"
+        ],
+        [
+          "PO Box",
+          "498",
+          "Brattleboro"
+        ],
+        [
+          "PO Box",
+          "499",
+          "Salem"
+        ]
+      ],
+      "result_count": 99,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q8",
+      "natural_language": "List type, city, county from zip_code where type equals 'PO Box'.",
+      "sql": "SELECT \"type\", \"city\", \"county\" FROM \"zip_code\" WHERE (\"type\" = 'PO Box');",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.type",
+          "zip_code.city",
+          "zip_code.county"
+        ]
+      },
+      "difficulty": "simple",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "type",
+        "city",
+        "county"
+      ],
+      "result_rows": [
+        [
+          "PO Box",
+          "Whately",
+          "Franklin County"
+        ],
+        [
+          "PO Box",
+          "Thorndike",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "Amherst",
+          "Hampshire County"
+        ],
+        [
+          "PO Box",
+          "Holyoke",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "Manomet",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "Passumpsic",
+          "Caledonia County"
+        ],
+        [
+          "PO Box",
+          "West Millbury",
+          "Worcester County"
+        ],
+        [
+          "PO Box",
+          "San Juan",
+          "San Juan"
+        ],
+        [
+          "PO Box",
+          "Coventry",
+          "Orleans County"
+        ],
+        [
+          "PO Box",
+          "West Peterborough",
+          "Hillsborough County"
+        ],
+        [
+          "PO Box",
+          "Silver Beach",
+          "Barnstable County"
+        ],
+        [
+          "PO Box",
+          "East Derry",
+          "Rockingham County"
+        ],
+        [
+          "PO Box",
+          "Raynham Center",
+          "Bristol County"
+        ],
+        [
+          "PO Box",
+          "North Eastham",
+          "Barnstable County"
+        ],
+        [
+          "PO Box",
+          "Springfield",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "Winchendon Springs",
+          "Worcester County"
+        ],
+        [
+          "PO Box",
+          "Ponce",
+          null
+        ],
+        [
+          "PO Box",
+          "Westport Point",
+          "Bristol County"
+        ],
+        [
+          "PO Box",
+          "Palmer",
+          null
+        ],
+        [
+          "PO Box",
+          "Forestdale",
+          "Providence County"
+        ],
+        [
+          "PO Box",
+          "North Turner",
+          "Androscoggin County"
+        ],
+        [
+          "PO Box",
+          "North Bridgton",
+          "Cumberland County"
+        ],
+        [
+          "PO Box",
+          "Green Harbor",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "Bangor",
+          "Penobscot County"
+        ],
+        [
+          "PO Box",
+          "Bondsville",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "East Middlebury",
+          "Addison County"
+        ],
+        [
+          "PO Box",
+          "East Vassalboro",
+          "Kennebec County"
+        ],
+        [
+          "PO Box",
+          "Bar Mills",
+          "York County"
+        ],
+        [
+          "PO Box",
+          "Brookline Village",
+          "Norfolk County"
+        ],
+        [
+          "PO Box",
+          "Kearsarge",
+          "Carroll County"
+        ],
+        [
+          "PO Box",
+          "West Hyannisport",
+          "Barnstable County"
+        ],
+        [
+          "PO Box",
+          "Quechee",
+          "Windsor County"
+        ],
+        [
+          "PO Box",
+          "Moody",
+          "York County"
+        ],
+        [
+          "PO Box",
+          "Newfield",
+          "York County"
+        ],
+        [
+          "PO Box",
+          "Stockbridge",
+          "Berkshire County"
+        ],
+        [
+          "PO Box",
+          "Pinehurst",
+          "Middlesex County"
+        ],
+        [
+          "PO Box",
+          "North Waltham",
+          "Middlesex County"
+        ],
+        [
+          "PO Box",
+          "Montgomery",
+          "Franklin County"
+        ],
+        [
+          "PO Box",
+          "North Hatfield",
+          "Hampshire County"
+        ],
+        [
+          "PO Box",
+          "Wolfeboro Falls",
+          "Carroll County"
+        ],
+        [
+          "PO Box",
+          "East Orleans",
+          "Barnstable County"
+        ],
+        [
+          "PO Box",
+          "Winnisquam",
+          "Belknap County"
+        ],
+        [
+          "PO Box",
+          "North Scituate",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "Harmony",
+          "Providence County"
+        ],
+        [
+          "PO Box",
+          "Prudence Island",
+          "Newport County"
+        ],
+        [
+          "PO Box",
+          "Woronoco",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "North Marshfield",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "Humarock",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "Bayamon",
+          "Bayamon"
+        ],
+        [
+          "PO Box",
+          "South Barre",
+          "Washington County"
+        ],
+        [
+          "PO Box",
+          "Menemsha",
+          "Dukes County"
+        ],
+        [
+          "PO Box",
+          "Hinckley",
+          "Somerset County"
+        ],
+        [
+          "PO Box",
+          "New Bedford",
+          "Bristol County"
+        ],
+        [
+          "PO Box",
+          "Manchaug",
+          "Worcester County"
+        ],
+        [
+          "PO Box",
+          "Accord",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "San Juan",
+          null
+        ],
+        [
+          "PO Box",
+          "West Falmouth",
+          "Barnstable County"
+        ],
+        [
+          "PO Box",
+          "Chicopee",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "Framingham",
+          "Middlesex County"
+        ],
+        [
+          "PO Box",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "PO Box",
+          "Elmwood",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "Still River",
+          "Worcester County"
+        ],
+        [
+          "PO Box",
+          "Brownville Junction",
+          "Piscataquis County"
+        ],
+        [
+          "PO Box",
+          "Jonesville",
+          "Chittenden County"
+        ],
+        [
+          "PO Box",
+          "Rosario",
+          null
+        ],
+        [
+          "PO Box",
+          "East Parsonsfield",
+          "York County"
+        ],
+        [
+          "PO Box",
+          "Lebanon",
+          "Grafton County"
+        ],
+        [
+          "PO Box",
+          "North Jay",
+          "Franklin County"
+        ],
+        [
+          "PO Box",
+          "Chicopee",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "Woodstock",
+          "Grafton County"
+        ],
+        [
+          "PO Box",
+          "Framingham",
+          "Middlesex County"
+        ],
+        [
+          "PO Box",
+          "San Juan",
+          "San Juan"
+        ],
+        [
+          "PO Box",
+          "South Lancaster",
+          "Worcester County"
+        ],
+        [
+          "PO Box",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "PO Box",
+          "Lyme Center",
+          "Grafton County"
+        ],
+        [
+          "PO Box",
+          "Waterville",
+          "Kennebec County"
+        ],
+        [
+          "PO Box",
+          "West Groton",
+          "Middlesex County"
+        ],
+        [
+          "PO Box",
+          "Milton Village",
+          "Norfolk County"
+        ],
+        [
+          "PO Box",
+          "West Chatham",
+          "Barnstable County"
+        ],
+        [
+          "PO Box",
+          "West Rockport",
+          "Knox County"
+        ],
+        [
+          "PO Box",
+          "Lenox Dale",
+          "Berkshire County"
+        ],
+        [
+          "PO Box",
+          "Benson",
+          "Rutland County"
+        ],
+        [
+          "PO Box",
+          "Westfield",
+          "Hampden County"
+        ],
+        [
+          "PO Box",
+          "New Britain",
+          "Hartford County"
+        ],
+        [
+          "PO Box",
+          "West Kennebunk",
+          "York County"
+        ],
+        [
+          "PO Box",
+          "West Newbury",
+          "Orange County"
+        ],
+        [
+          "PO Box",
+          "Islesford",
+          "Hancock County"
+        ],
+        [
+          "PO Box",
+          "Fort Kent Mills",
+          "Aroostook County"
+        ],
+        [
+          "PO Box",
+          "West Poland",
+          "Androscoggin County"
+        ],
+        [
+          "PO Box",
+          "South Carver",
+          "Plymouth County"
+        ],
+        [
+          "PO Box",
+          "Hartford",
+          "Hartford County"
+        ],
+        [
+          "PO Box",
+          "East Templeton",
+          "Worcester County"
+        ],
+        [
+          "PO Box",
+          "Biddeford Pool",
+          "York County"
+        ],
+        [
+          "PO Box",
+          "Winchester Center",
+          "Litchfield County"
+        ],
+        [
+          "PO Box",
+          "Barnard",
+          "Windsor County"
+        ],
+        [
+          "PO Box",
+          "New Town",
+          "Middlesex County"
+        ],
+        [
+          "PO Box",
+          "Center Lovell",
+          "Oxford County"
+        ],
+        [
+          "PO Box",
+          "Brattleboro",
+          "Windham County"
+        ],
+        [
+          "PO Box",
+          "Salem",
+          "Essex County"
+        ]
+      ],
+      "result_count": 99,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q9",
+      "natural_language": "Find state, county, short_state from zip_code where state equals 'Massachusetts' and row_id is <= 249.",
+      "sql": "SELECT \"state\", \"county\", \"short_state\" FROM \"zip_code\" WHERE (\"state\" = 'Massachusetts') AND (CAST(\"row_id\" AS REAL) <= 249);",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.state",
+          "zip_code.county",
+          "zip_code.short_state",
+          "zip_code.row_id"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "state",
+        "county",
+        "short_state"
+      ],
+      "result_rows": [
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Franklin County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Essex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Worcester County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Plymouth County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Norfolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Worcester County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Franklin County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Essex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Franklin County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Berkshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Worcester County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Plymouth County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Norfolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Worcester County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Worcester County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Worcester County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Berkshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Plymouth County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampden County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Norfolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Norfolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Norfolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Essex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Berkshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Essex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Franklin County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Hampshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Essex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Essex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Franklin County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Norfolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Plymouth County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Suffolk County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Essex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Middlesex County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Worcester County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Barnstable County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Berkshire County",
+          "MA"
+        ],
+        [
+          "Massachusetts",
+          "Bristol County",
+          "MA"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q10",
+      "natural_language": "Find state, city, county from zip_code where state contains 'massachusetts' and row_id is <= 249.",
+      "sql": "SELECT \"state\", \"city\", \"county\" FROM \"zip_code\" WHERE (LOWER(CAST(\"state\" AS TEXT)) LIKE '%massachusetts%') AND (CAST(\"row_id\" AS REAL) <= 249);",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.state",
+          "zip_code.city",
+          "zip_code.county",
+          "zip_code.row_id"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "state",
+        "city",
+        "county"
+      ],
+      "result_rows": [
+        [
+          "Massachusetts",
+          "Harwich Port",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Whately",
+          "Franklin County"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Lynn",
+          "Essex County"
+        ],
+        [
+          "Massachusetts",
+          "Ayer",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Thorndike",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Worcester",
+          "Worcester County"
+        ],
+        [
+          "Massachusetts",
+          "Amherst",
+          "Hampshire County"
+        ],
+        [
+          "Massachusetts",
+          "Osterville",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Holyoke",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Manomet",
+          "Plymouth County"
+        ],
+        [
+          "Massachusetts",
+          "North Weymouth",
+          "Norfolk County"
+        ],
+        [
+          "Massachusetts",
+          "Roxbury Crossing",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Bedford",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Leominster",
+          "Worcester County"
+        ],
+        [
+          "Massachusetts",
+          "Heath",
+          "Franklin County"
+        ],
+        [
+          "Massachusetts",
+          "Andover",
+          "Essex County"
+        ],
+        [
+          "Massachusetts",
+          "Somerville",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Sunderland",
+          "Franklin County"
+        ],
+        [
+          "Massachusetts",
+          "Lenox",
+          "Berkshire County"
+        ],
+        [
+          "Massachusetts",
+          "West Millbury",
+          "Worcester County"
+        ],
+        [
+          "Massachusetts",
+          "Ludlow",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Marshfield",
+          "Plymouth County"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Attleboro",
+          "Bristol County"
+        ],
+        [
+          "Massachusetts",
+          "Eastham",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Cummington",
+          "Hampshire County"
+        ],
+        [
+          "Massachusetts",
+          "Silver Beach",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Springfield",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Groton",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Raynham Center",
+          "Bristol County"
+        ],
+        [
+          "Massachusetts",
+          "North Eastham",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Cambridge",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Townsend",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "West Chesterfield",
+          "Hampshire County"
+        ],
+        [
+          "Massachusetts",
+          "Mansfield",
+          "Bristol County"
+        ],
+        [
+          "Massachusetts",
+          "Springfield",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Ashby",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Palmer",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Mashpee",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Wellesley",
+          "Norfolk County"
+        ],
+        [
+          "Massachusetts",
+          "Auburn",
+          "Worcester County"
+        ],
+        [
+          "Massachusetts",
+          "Winchendon Springs",
+          "Worcester County"
+        ],
+        [
+          "Massachusetts",
+          "Reading",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Springfield",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Lowell",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Watertown",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Westport Point",
+          "Bristol County"
+        ],
+        [
+          "Massachusetts",
+          "Dennis",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Sutton",
+          "Worcester County"
+        ],
+        [
+          "Massachusetts",
+          "South Egremont",
+          "Berkshire County"
+        ],
+        [
+          "Massachusetts",
+          "Wayland",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Green Harbor",
+          "Plymouth County"
+        ],
+        [
+          "Massachusetts",
+          "Agawam",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Bondsville",
+          "Hampden County"
+        ],
+        [
+          "Massachusetts",
+          "Foxboro",
+          "Norfolk County"
+        ],
+        [
+          "Massachusetts",
+          "Fall River",
+          "Bristol County"
+        ],
+        [
+          "Massachusetts",
+          "East Mansfield",
+          "Bristol County"
+        ],
+        [
+          "Massachusetts",
+          "Brookline Village",
+          "Norfolk County"
+        ],
+        [
+          "Massachusetts",
+          "Dighton",
+          "Bristol County"
+        ],
+        [
+          "Massachusetts",
+          "West Hyannisport",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Brookline",
+          "Norfolk County"
+        ],
+        [
+          "Massachusetts",
+          "Lynnfield",
+          "Essex County"
+        ],
+        [
+          "Massachusetts",
+          "Dorchester",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "West Roxbury",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Stockbridge",
+          "Berkshire County"
+        ],
+        [
+          "Massachusetts",
+          "Pinehurst",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Byfield",
+          "Essex County"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Conway",
+          "Franklin County"
+        ],
+        [
+          "Massachusetts",
+          "North Waltham",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Worthington",
+          "Hampshire County"
+        ],
+        [
+          "Massachusetts",
+          "North Hatfield",
+          "Hampshire County"
+        ],
+        [
+          "Massachusetts",
+          "East Orleans",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Middleton",
+          "Essex County"
+        ],
+        [
+          "Massachusetts",
+          "Buzzards Bay",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Lawrence",
+          "Essex County"
+        ],
+        [
+          "Massachusetts",
+          "Buckland",
+          "Franklin County"
+        ],
+        [
+          "Massachusetts",
+          "Natick",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "Wellesley Hills",
+          "Norfolk County"
+        ],
+        [
+          "Massachusetts",
+          "Waltham",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "North Scituate",
+          "Plymouth County"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Suffolk County"
+        ],
+        [
+          "Massachusetts",
+          "Lynn",
+          "Essex County"
+        ],
+        [
+          "Massachusetts",
+          "Groton",
+          "Middlesex County"
+        ],
+        [
+          "Massachusetts",
+          "North Brookfield",
+          "Worcester County"
+        ],
+        [
+          "Massachusetts",
+          "Yarmouth Port",
+          "Barnstable County"
+        ],
+        [
+          "Massachusetts",
+          "Ashley Falls",
+          "Berkshire County"
+        ],
+        [
+          "Massachusetts",
+          "Fall River",
+          "Bristol County"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q11",
+      "natural_language": "Find type, state, city from zip_code where type contains 'box' and county contains 'county'.",
+      "sql": "SELECT \"type\", \"state\", \"city\" FROM \"zip_code\" WHERE (LOWER(CAST(\"type\" AS TEXT)) LIKE '%box%') AND (LOWER(CAST(\"county\" AS TEXT)) LIKE '%county%');",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.type",
+          "zip_code.state",
+          "zip_code.city",
+          "zip_code.county"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "type",
+        "state",
+        "city"
+      ],
+      "result_rows": [
+        [
+          "PO Box",
+          "Massachusetts",
+          "Whately"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Thorndike"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Amherst"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Holyoke"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Manomet"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Passumpsic"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "West Millbury"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Coventry"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "West Peterborough"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Silver Beach"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "East Derry"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Raynham Center"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "North Eastham"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Springfield"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Winchendon Springs"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Westport Point"
+        ],
+        [
+          "PO Box",
+          "Rhode Island",
+          "Forestdale"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "North Turner"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "North Bridgton"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Green Harbor"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Bangor"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Bondsville"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "East Middlebury"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "East Vassalboro"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Bar Mills"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Brookline Village"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "Kearsarge"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "West Hyannisport"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Quechee"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Moody"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Newfield"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Stockbridge"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Pinehurst"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "North Waltham"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Montgomery"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "North Hatfield"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "Wolfeboro Falls"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "East Orleans"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "Winnisquam"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "North Scituate"
+        ],
+        [
+          "PO Box",
+          "Rhode Island",
+          "Harmony"
+        ],
+        [
+          "PO Box",
+          "Rhode Island",
+          "Prudence Island"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Woronoco"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "North Marshfield"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Humarock"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "South Barre"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Menemsha"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Hinckley"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "New Bedford"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Manchaug"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Accord"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "West Falmouth"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Chicopee"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Framingham"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Boston"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Elmwood"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Still River"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Brownville Junction"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Jonesville"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "East Parsonsfield"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "Lebanon"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "North Jay"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Chicopee"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "Woodstock"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Framingham"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "South Lancaster"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Boston"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "Lyme Center"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Waterville"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "West Groton"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Milton Village"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "West Chatham"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "West Rockport"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Lenox Dale"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Benson"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Westfield"
+        ],
+        [
+          "PO Box",
+          "Connecticut",
+          "New Britain"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "West Kennebunk"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "West Newbury"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Islesford"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Fort Kent Mills"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "West Poland"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "South Carver"
+        ],
+        [
+          "PO Box",
+          "Connecticut",
+          "Hartford"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "East Templeton"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Biddeford Pool"
+        ],
+        [
+          "PO Box",
+          "Connecticut",
+          "Winchester Center"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Barnard"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "New Town"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "Center Lovell"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "Brattleboro"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "Salem"
+        ]
+      ],
+      "result_count": 92,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q12",
+      "natural_language": "Find type, state, row_id from zip_code where type equals 'PO Box' and county contains 'county'.",
+      "sql": "SELECT \"type\", \"state\", \"row_id\" FROM \"zip_code\" WHERE (\"type\" = 'PO Box') AND (LOWER(CAST(\"county\" AS TEXT)) LIKE '%county%');",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.type",
+          "zip_code.state",
+          "zip_code.row_id",
+          "zip_code.county"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "type",
+        "state",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "PO Box",
+          "Massachusetts",
+          "1"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "17"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "21"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "24"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "25"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "50"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "53"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "66"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "70"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "76"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "82"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "91"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "92"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "97"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "106"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "117"
+        ],
+        [
+          "PO Box",
+          "Rhode Island",
+          "129"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "133"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "135"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "140"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "142"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "144"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "147"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "159"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "160"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "161"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "165"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "169"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "173"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "175"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "180"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "192"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "194"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "201"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "206"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "211"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "212"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "213"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "231"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "235"
+        ],
+        [
+          "PO Box",
+          "Rhode Island",
+          "243"
+        ],
+        [
+          "PO Box",
+          "Rhode Island",
+          "252"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "255"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "256"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "257"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "265"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "266"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "270"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "271"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "273"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "277"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "284"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "286"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "291"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "296"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "302"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "305"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "310"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "311"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "316"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "327"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "345"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "346"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "353"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "369"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "371"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "373"
+        ],
+        [
+          "PO Box",
+          "New Hampshire",
+          "383"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "386"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "387"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "393"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "394"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "395"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "397"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "398"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "407"
+        ],
+        [
+          "PO Box",
+          "Connecticut",
+          "418"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "420"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "424"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "426"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "432"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "438"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "445"
+        ],
+        [
+          "PO Box",
+          "Connecticut",
+          "450"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "451"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "463"
+        ],
+        [
+          "PO Box",
+          "Connecticut",
+          "479"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "481"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "491"
+        ],
+        [
+          "PO Box",
+          "Maine",
+          "493"
+        ],
+        [
+          "PO Box",
+          "Vermont",
+          "498"
+        ],
+        [
+          "PO Box",
+          "Massachusetts",
+          "499"
+        ]
+      ],
+      "result_count": 92,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q13",
+      "natural_language": "Find state, short_state, city from zip_code where state equals 'Maine' and type equals 'Standard'.",
+      "sql": "SELECT \"state\", \"short_state\", \"city\" FROM \"zip_code\" WHERE (\"state\" = 'Maine') AND (\"type\" = 'Standard');",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.state",
+          "zip_code.short_state",
+          "zip_code.city",
+          "zip_code.type"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "state",
+        "short_state",
+        "city"
+      ],
+      "result_rows": [
+        [
+          "Maine",
+          "ME",
+          "Swans Island"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Sebago"
+        ],
+        [
+          "Maine",
+          "ME",
+          "North Anson"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Casco"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Corinna"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Bethel"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Harrington"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Windsor"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Jay"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Skowhegan"
+        ],
+        [
+          "Maine",
+          "ME",
+          "North Yarmouth"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Jonesport"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Levant"
+        ],
+        [
+          "Maine",
+          "ME",
+          "North Monmouth"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Hiram"
+        ],
+        [
+          "Maine",
+          "ME",
+          "West Newfield"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Jackman"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Saco"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Kennebunkport"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Westfield"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Bradley"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Hampden"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Greene"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Wytopitlock"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Porter"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Lisbon Falls"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Surry"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Ashland"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Sinclair"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Wells"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Mapleton"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Hebron"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Milbridge"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Whiting"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Lewiston"
+        ],
+        [
+          "Maine",
+          "ME",
+          "West Paris"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Belgrade Lakes"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Cushing"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Owls Head"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Monticello"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Grand Isle"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Hartland"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Eddington"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Fort Fairfield"
+        ],
+        [
+          "Maine",
+          "ME",
+          "New Harbor"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Wayne"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Canaan"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Ellsworth"
+        ],
+        [
+          "Maine",
+          "ME",
+          "East Millinocket"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Palermo"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Portland"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Clayton Lake"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Franklin"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Naples"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Tenants Harbor"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Limestone"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Monroe"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Wiscasset"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Stonington"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Lovell"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Isle Of Springs"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Sebago Lake"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Oakland"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Livermore"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Eagle Lake"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Peru"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Newport"
+        ],
+        [
+          "Maine",
+          "ME",
+          "North Haven"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Sargentville"
+        ],
+        [
+          "Maine",
+          "ME",
+          "New Sharon"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Harrison"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Brooks"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Walpole"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Athens"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Orrs Island"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Thorndike"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Manchester"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Portland"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Denmark"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Falmouth"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Hanover"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Alfred"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Kennebunk"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Waterboro"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Harborside"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Harmony"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Bowdoinham"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Perham"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Wallagrass"
+        ],
+        [
+          "Maine",
+          "ME",
+          "South Bristol"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Stratton"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Waterford"
+        ],
+        [
+          "Maine",
+          "ME",
+          "Springfield"
+        ]
+      ],
+      "result_count": 93,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q14",
+      "natural_language": "Find short_state, state, row_id from zip_code where short_state equals 'ME' and type contains 'standard'.",
+      "sql": "SELECT \"short_state\", \"state\", \"row_id\" FROM \"zip_code\" WHERE (\"short_state\" = 'ME') AND (LOWER(CAST(\"type\" AS TEXT)) LIKE '%standard%');",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.short_state",
+          "zip_code.state",
+          "zip_code.row_id",
+          "zip_code.type"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "short_state",
+        "state",
+        "row_id"
+      ],
+      "result_rows": [
+        [
+          "ME",
+          "Maine",
+          "6"
+        ],
+        [
+          "ME",
+          "Maine",
+          "12"
+        ],
+        [
+          "ME",
+          "Maine",
+          "13"
+        ],
+        [
+          "ME",
+          "Maine",
+          "14"
+        ],
+        [
+          "ME",
+          "Maine",
+          "26"
+        ],
+        [
+          "ME",
+          "Maine",
+          "27"
+        ],
+        [
+          "ME",
+          "Maine",
+          "31"
+        ],
+        [
+          "ME",
+          "Maine",
+          "35"
+        ],
+        [
+          "ME",
+          "Maine",
+          "39"
+        ],
+        [
+          "ME",
+          "Maine",
+          "41"
+        ],
+        [
+          "ME",
+          "Maine",
+          "42"
+        ],
+        [
+          "ME",
+          "Maine",
+          "44"
+        ],
+        [
+          "ME",
+          "Maine",
+          "45"
+        ],
+        [
+          "ME",
+          "Maine",
+          "51"
+        ],
+        [
+          "ME",
+          "Maine",
+          "55"
+        ],
+        [
+          "ME",
+          "Maine",
+          "59"
+        ],
+        [
+          "ME",
+          "Maine",
+          "71"
+        ],
+        [
+          "ME",
+          "Maine",
+          "78"
+        ],
+        [
+          "ME",
+          "Maine",
+          "81"
+        ],
+        [
+          "ME",
+          "Maine",
+          "90"
+        ],
+        [
+          "ME",
+          "Maine",
+          "105"
+        ],
+        [
+          "ME",
+          "Maine",
+          "116"
+        ],
+        [
+          "ME",
+          "Maine",
+          "121"
+        ],
+        [
+          "ME",
+          "Maine",
+          "125"
+        ],
+        [
+          "ME",
+          "Maine",
+          "132"
+        ],
+        [
+          "ME",
+          "Maine",
+          "137"
+        ],
+        [
+          "ME",
+          "Maine",
+          "145"
+        ],
+        [
+          "ME",
+          "Maine",
+          "149"
+        ],
+        [
+          "ME",
+          "Maine",
+          "155"
+        ],
+        [
+          "ME",
+          "Maine",
+          "164"
+        ],
+        [
+          "ME",
+          "Maine",
+          "166"
+        ],
+        [
+          "ME",
+          "Maine",
+          "170"
+        ],
+        [
+          "ME",
+          "Maine",
+          "181"
+        ],
+        [
+          "ME",
+          "Maine",
+          "182"
+        ],
+        [
+          "ME",
+          "Maine",
+          "190"
+        ],
+        [
+          "ME",
+          "Maine",
+          "200"
+        ],
+        [
+          "ME",
+          "Maine",
+          "203"
+        ],
+        [
+          "ME",
+          "Maine",
+          "204"
+        ],
+        [
+          "ME",
+          "Maine",
+          "215"
+        ],
+        [
+          "ME",
+          "Maine",
+          "217"
+        ],
+        [
+          "ME",
+          "Maine",
+          "219"
+        ],
+        [
+          "ME",
+          "Maine",
+          "221"
+        ],
+        [
+          "ME",
+          "Maine",
+          "224"
+        ],
+        [
+          "ME",
+          "Maine",
+          "238"
+        ],
+        [
+          "ME",
+          "Maine",
+          "246"
+        ],
+        [
+          "ME",
+          "Maine",
+          "259"
+        ],
+        [
+          "ME",
+          "Maine",
+          "261"
+        ],
+        [
+          "ME",
+          "Maine",
+          "263"
+        ],
+        [
+          "ME",
+          "Maine",
+          "281"
+        ],
+        [
+          "ME",
+          "Maine",
+          "288"
+        ],
+        [
+          "ME",
+          "Maine",
+          "295"
+        ],
+        [
+          "ME",
+          "Maine",
+          "300"
+        ],
+        [
+          "ME",
+          "Maine",
+          "301"
+        ],
+        [
+          "ME",
+          "Maine",
+          "307"
+        ],
+        [
+          "ME",
+          "Maine",
+          "309"
+        ],
+        [
+          "ME",
+          "Maine",
+          "317"
+        ],
+        [
+          "ME",
+          "Maine",
+          "323"
+        ],
+        [
+          "ME",
+          "Maine",
+          "324"
+        ],
+        [
+          "ME",
+          "Maine",
+          "328"
+        ],
+        [
+          "ME",
+          "Maine",
+          "330"
+        ],
+        [
+          "ME",
+          "Maine",
+          "332"
+        ],
+        [
+          "ME",
+          "Maine",
+          "347"
+        ],
+        [
+          "ME",
+          "Maine",
+          "348"
+        ],
+        [
+          "ME",
+          "Maine",
+          "355"
+        ],
+        [
+          "ME",
+          "Maine",
+          "357"
+        ],
+        [
+          "ME",
+          "Maine",
+          "359"
+        ],
+        [
+          "ME",
+          "Maine",
+          "366"
+        ],
+        [
+          "ME",
+          "Maine",
+          "376"
+        ],
+        [
+          "ME",
+          "Maine",
+          "377"
+        ],
+        [
+          "ME",
+          "Maine",
+          "399"
+        ],
+        [
+          "ME",
+          "Maine",
+          "404"
+        ],
+        [
+          "ME",
+          "Maine",
+          "410"
+        ],
+        [
+          "ME",
+          "Maine",
+          "412"
+        ],
+        [
+          "ME",
+          "Maine",
+          "414"
+        ],
+        [
+          "ME",
+          "Maine",
+          "421"
+        ],
+        [
+          "ME",
+          "Maine",
+          "423"
+        ],
+        [
+          "ME",
+          "Maine",
+          "427"
+        ],
+        [
+          "ME",
+          "Maine",
+          "430"
+        ],
+        [
+          "ME",
+          "Maine",
+          "435"
+        ],
+        [
+          "ME",
+          "Maine",
+          "436"
+        ],
+        [
+          "ME",
+          "Maine",
+          "437"
+        ],
+        [
+          "ME",
+          "Maine",
+          "446"
+        ],
+        [
+          "ME",
+          "Maine",
+          "447"
+        ],
+        [
+          "ME",
+          "Maine",
+          "458"
+        ],
+        [
+          "ME",
+          "Maine",
+          "460"
+        ],
+        [
+          "ME",
+          "Maine",
+          "462"
+        ],
+        [
+          "ME",
+          "Maine",
+          "470"
+        ],
+        [
+          "ME",
+          "Maine",
+          "471"
+        ],
+        [
+          "ME",
+          "Maine",
+          "478"
+        ],
+        [
+          "ME",
+          "Maine",
+          "483"
+        ],
+        [
+          "ME",
+          "Maine",
+          "489"
+        ],
+        [
+          "ME",
+          "Maine",
+          "495"
+        ],
+        [
+          "ME",
+          "Maine",
+          "497"
+        ]
+      ],
+      "result_count": 93,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q15",
+      "natural_language": "Find state, city, short_state from zip_code where state equals 'Maine' and row_id is >= 99.",
+      "sql": "SELECT \"state\", \"city\", \"short_state\" FROM \"zip_code\" WHERE (\"state\" = 'Maine') AND (CAST(\"row_id\" AS REAL) >= 99);",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.state",
+          "zip_code.city",
+          "zip_code.short_state",
+          "zip_code.row_id"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "state",
+        "city",
+        "short_state"
+      ],
+      "result_rows": [
+        [
+          "Maine",
+          "Bradley",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Hampden",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Greene",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Wytopitlock",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Porter",
+          "ME"
+        ],
+        [
+          "Maine",
+          "North Turner",
+          "ME"
+        ],
+        [
+          "Maine",
+          "North Bridgton",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Lisbon Falls",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Bangor",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Surry",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Ashland",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Sinclair",
+          "ME"
+        ],
+        [
+          "Maine",
+          "East Vassalboro",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Bar Mills",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Wells",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Mapleton",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Hebron",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Moody",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Newfield",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Milbridge",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Whiting",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Lewiston",
+          "ME"
+        ],
+        [
+          "Maine",
+          "West Paris",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Belgrade Lakes",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Cushing",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Owls Head",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Monticello",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Grand Isle",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Hartland",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Eddington",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Fort Fairfield",
+          "ME"
+        ],
+        [
+          "Maine",
+          "New Harbor",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Wayne",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Canaan",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Ellsworth",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Hinckley",
+          "ME"
+        ],
+        [
+          "Maine",
+          "East Millinocket",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Palermo",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Portland",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Clayton Lake",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Franklin",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Naples",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Tenants Harbor",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Brownville Junction",
+          "ME"
+        ],
+        [
+          "Maine",
+          "East Parsonsfield",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Limestone",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Monroe",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Wiscasset",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Stonington",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Lovell",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Isle Of Springs",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Augusta",
+          "ME"
+        ],
+        [
+          "Maine",
+          "North Jay",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Sebago Lake",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Oakland",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Livermore",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Eagle Lake",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Peru",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Newport",
+          "ME"
+        ],
+        [
+          "Maine",
+          "North Haven",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Sargentville",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Waterville",
+          "ME"
+        ],
+        [
+          "Maine",
+          "West Rockport",
+          "ME"
+        ],
+        [
+          "Maine",
+          "New Sharon",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Harrison",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Brooks",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Walpole",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Athens",
+          "ME"
+        ],
+        [
+          "Maine",
+          "West Kennebunk",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Orrs Island",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Thorndike",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Islesford",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Manchester",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Portland",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Fort Kent Mills",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Denmark",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Falmouth",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Hanover",
+          "ME"
+        ],
+        [
+          "Maine",
+          "West Poland",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Alfred",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Kennebunk",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Waterboro",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Harborside",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Harmony",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Biddeford Pool",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Bowdoinham",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Perham",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Wallagrass",
+          "ME"
+        ],
+        [
+          "Maine",
+          "South Bristol",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Stratton",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Center Lovell",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Waterford",
+          "ME"
+        ],
+        [
+          "Maine",
+          "Springfield",
+          "ME"
+        ]
+      ],
+      "result_count": 93,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q16",
+      "natural_language": "Find short_state, state, city from zip_code where short_state equals 'ME' and type equals 'Standard'.",
+      "sql": "SELECT \"short_state\", \"state\", \"city\" FROM \"zip_code\" WHERE (\"short_state\" = 'ME') AND (\"type\" = 'Standard');",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.short_state",
+          "zip_code.state",
+          "zip_code.city",
+          "zip_code.type"
+        ]
+      },
+      "difficulty": "medium",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "short_state",
+        "state",
+        "city"
+      ],
+      "result_rows": [
+        [
+          "ME",
+          "Maine",
+          "Swans Island"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Sebago"
+        ],
+        [
+          "ME",
+          "Maine",
+          "North Anson"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Casco"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Corinna"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Bethel"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Harrington"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Windsor"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Jay"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Skowhegan"
+        ],
+        [
+          "ME",
+          "Maine",
+          "North Yarmouth"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Jonesport"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Levant"
+        ],
+        [
+          "ME",
+          "Maine",
+          "North Monmouth"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Hiram"
+        ],
+        [
+          "ME",
+          "Maine",
+          "West Newfield"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Jackman"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Saco"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Kennebunkport"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Westfield"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Bradley"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Hampden"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Greene"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Wytopitlock"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Porter"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Lisbon Falls"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Surry"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Ashland"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Sinclair"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Wells"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Mapleton"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Hebron"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Milbridge"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Whiting"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Lewiston"
+        ],
+        [
+          "ME",
+          "Maine",
+          "West Paris"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Belgrade Lakes"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Cushing"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Owls Head"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Monticello"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Grand Isle"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Hartland"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Eddington"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Fort Fairfield"
+        ],
+        [
+          "ME",
+          "Maine",
+          "New Harbor"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Wayne"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Canaan"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Ellsworth"
+        ],
+        [
+          "ME",
+          "Maine",
+          "East Millinocket"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Palermo"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Portland"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Clayton Lake"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Franklin"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Naples"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Tenants Harbor"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Limestone"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Monroe"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Wiscasset"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Stonington"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Lovell"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Isle Of Springs"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Sebago Lake"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Oakland"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Livermore"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Eagle Lake"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Peru"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Newport"
+        ],
+        [
+          "ME",
+          "Maine",
+          "North Haven"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Sargentville"
+        ],
+        [
+          "ME",
+          "Maine",
+          "New Sharon"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Harrison"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Brooks"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Walpole"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Athens"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Orrs Island"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Thorndike"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Manchester"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Portland"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Denmark"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Falmouth"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Hanover"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Alfred"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Kennebunk"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Waterboro"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Harborside"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Harmony"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Bowdoinham"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Perham"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Wallagrass"
+        ],
+        [
+          "ME",
+          "Maine",
+          "South Bristol"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Stratton"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Waterford"
+        ],
+        [
+          "ME",
+          "Maine",
+          "Springfield"
+        ]
+      ],
+      "result_count": 93,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q17",
+      "natural_language": "Find state, city, type from zip_code where state contains 'massachusetts', row_id is <= 349, and row_id is >= 99.",
+      "sql": "SELECT \"state\", \"city\", \"type\" FROM \"zip_code\" WHERE (LOWER(CAST(\"state\" AS TEXT)) LIKE '%massachusetts%') AND (CAST(\"row_id\" AS REAL) <= 349) AND (CAST(\"row_id\" AS REAL) >= 99);",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.state",
+          "zip_code.city",
+          "zip_code.type",
+          "zip_code.row_id"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "state",
+        "city",
+        "type"
+      ],
+      "result_rows": [
+        [
+          "Massachusetts",
+          "Palmer",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Mashpee",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Wellesley",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Auburn",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Winchendon Springs",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Reading",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Springfield",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Lowell",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Watertown",
+          "Unique"
+        ],
+        [
+          "Massachusetts",
+          "Westport Point",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Dennis",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Sutton",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "South Egremont",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Wayland",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Green Harbor",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Agawam",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Bondsville",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Foxboro",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Fall River",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "East Mansfield",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Brookline Village",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Dighton",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "West Hyannisport",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Brookline",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Lynnfield",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Dorchester",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Unique"
+        ],
+        [
+          "Massachusetts",
+          "West Roxbury",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Stockbridge",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Pinehurst",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Byfield",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Conway",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "North Waltham",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Worthington",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "North Hatfield",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "East Orleans",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Middleton",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Buzzards Bay",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Lawrence",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Buckland",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Natick",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Wellesley Hills",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Waltham",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "North Scituate",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Lynn",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Groton",
+          "Unique"
+        ],
+        [
+          "Massachusetts",
+          "North Brookfield",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Yarmouth Port",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Ashley Falls",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Fall River",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Chesterfield",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Woronoco",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "North Marshfield",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Humarock",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Winchendon",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "South Hamilton",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Menemsha",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Buzzards Bay",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "New Bedford",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Manchaug",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "North Easton",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Accord",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Chicopee",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "West Falmouth",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "North Falmouth",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Chicopee",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "Unique"
+        ],
+        [
+          "Massachusetts",
+          "Stoneham",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Framingham",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Granby",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Monterey",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Boston",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Elmwood",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Chelsea",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Still River",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Winthrop",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "East Falmouth",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Sandisfield",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "South Chatham",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Milton",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Weymouth",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Belchertown",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Quincy",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Barre",
+          "Standard"
+        ],
+        [
+          "Massachusetts",
+          "Chicopee",
+          "PO Box"
+        ],
+        [
+          "Massachusetts",
+          "Three Rivers",
+          "Standard"
+        ]
+      ],
+      "result_count": 89,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q18",
+      "natural_language": "Find short_state, state, county from zip_code where short_state equals 'MA', type equals 'Standard', and row_id is >= 99.",
+      "sql": "SELECT \"short_state\", \"state\", \"county\" FROM \"zip_code\" WHERE (\"short_state\" = 'MA') AND (\"type\" = 'Standard') AND (CAST(\"row_id\" AS REAL) >= 99);",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.short_state",
+          "zip_code.state",
+          "zip_code.county",
+          "zip_code.type",
+          "zip_code.row_id"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "short_state",
+        "state",
+        "county"
+      ],
+      "result_rows": [
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Norfolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Berkshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Norfolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Norfolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Franklin County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Franklin County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Norfolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Berkshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Berkshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Berkshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Norfolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Norfolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Norfolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Franklin County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Berkshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Berkshire County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Hampden County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Suffolk County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Worcester County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Franklin County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Essex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Nantucket County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Middlesex County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Barnstable County"
+        ],
+        [
+          "MA",
+          "Massachusetts",
+          "Bristol County"
+        ]
+      ],
+      "result_count": 89,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q19",
+      "natural_language": "Find state, short_state, city from zip_code where state equals 'Massachusetts', row_id is between 99 and 399, and row_id is >= 149.",
+      "sql": "SELECT \"state\", \"short_state\", \"city\" FROM \"zip_code\" WHERE (\"state\" = 'Massachusetts') AND (CAST(\"row_id\" AS REAL) >= 99 AND CAST(\"row_id\" AS REAL) <= 399) AND (CAST(\"row_id\" AS REAL) >= 149);",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.state",
+          "zip_code.short_state",
+          "zip_code.city",
+          "zip_code.row_id"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "state",
+        "short_state",
+        "city"
+      ],
+      "result_rows": [
+        [
+          "Massachusetts",
+          "MA",
+          "Foxboro"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Fall River"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "East Mansfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Brookline Village"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Dighton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "West Hyannisport"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Brookline"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Lynnfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Dorchester"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "West Roxbury"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Stockbridge"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Pinehurst"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Byfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Conway"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Waltham"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Worthington"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Hatfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "East Orleans"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Middleton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Buzzards Bay"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Lawrence"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Buckland"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Natick"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Wellesley Hills"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Waltham"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Scituate"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Lynn"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Groton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Brookfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Yarmouth Port"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Ashley Falls"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Fall River"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Chesterfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Woronoco"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Marshfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Humarock"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Winchendon"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "South Hamilton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Menemsha"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Buzzards Bay"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "New Bedford"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Manchaug"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Easton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Accord"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Chicopee"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "West Falmouth"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Falmouth"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Chicopee"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Stoneham"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Framingham"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Granby"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Monterey"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Elmwood"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Chelsea"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Still River"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Winthrop"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "East Falmouth"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Sandisfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "South Chatham"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Milton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Weymouth"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Belchertown"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Quincy"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Barre"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Chicopee"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Three Rivers"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Westborough"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Northfield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Princeton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Sheffield"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Lynn"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Framingham"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "South Lancaster"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Fairhaven"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Boston"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "North Dartmouth"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Chester"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "West Groton"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Haverhill"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Milton Village"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "West Chatham"
+        ],
+        [
+          "Massachusetts",
+          "MA",
+          "Lenox Dale"
+        ]
+      ],
+      "result_count": 91,
+      "has_more_rows": false
+    },
+    {
+      "id": "Q20",
+      "natural_language": "Find short_state, type, county from zip_code where short_state equals 'ME', state equals 'Maine', and row_id is >= 99.",
+      "sql": "SELECT \"short_state\", \"type\", \"county\" FROM \"zip_code\" WHERE (\"short_state\" = 'ME') AND (\"state\" = 'Maine') AND (CAST(\"row_id\" AS REAL) >= 99);",
+      "golden_schema": {
+        "tables": [
+          "zip_code"
+        ],
+        "columns": [
+          "zip_code.short_state",
+          "zip_code.type",
+          "zip_code.county",
+          "zip_code.state",
+          "zip_code.row_id"
+        ]
+      },
+      "difficulty": "complex",
+      "dataset": "student_club/default_task",
+      "source": "bird_sqlite",
+      "sql_valid": true,
+      "result_columns": [
+        "short_state",
+        "type",
+        "county"
+      ],
+      "result_rows": [
+        [
+          "ME",
+          "Standard",
+          "Penobscot County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Penobscot County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Androscoggin County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Androscoggin County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Androscoggin County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Penobscot County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Hancock County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Kennebec County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "York County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Washington County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Washington County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Androscoggin County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Kennebec County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Knox County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Knox County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Somerset County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Penobscot County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Lincoln County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Kennebec County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Somerset County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Hancock County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Somerset County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Penobscot County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Waldo County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Hancock County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Knox County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Piscataquis County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Waldo County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Lincoln County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Hancock County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Lincoln County"
+        ],
+        [
+          "ME",
+          "Unique",
+          "Kennebec County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Franklin County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Kennebec County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Androscoggin County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Penobscot County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Knox County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Hancock County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Kennebec County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Knox County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Franklin County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Waldo County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Lincoln County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Somerset County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Waldo County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Hancock County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Kennebec County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Cumberland County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Androscoggin County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Hancock County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Somerset County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "York County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Sagadahoc County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Aroostook County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Lincoln County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Franklin County"
+        ],
+        [
+          "ME",
+          "PO Box",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Oxford County"
+        ],
+        [
+          "ME",
+          "Standard",
+          "Penobscot County"
+        ]
+      ],
+      "result_count": 93,
+      "has_more_rows": false
+    }
+  ]
+}

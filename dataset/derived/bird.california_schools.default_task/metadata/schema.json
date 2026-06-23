@@ -27,14 +27,6 @@
           "examples": []
         },
         {
-          "column_id": "frpm.charter_school",
-          "name": "charter_school",
-          "type": "string",
-          "description": "Indicator of whether the school is a charter school (0 for No, 1 for Yes).",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "frpm.county_name",
           "name": "county_name",
           "type": "string",
@@ -134,7 +126,7 @@
           "column_id": "frpm.percent_eligible_frpm_ages_5_17",
           "name": "percent_eligible_frpm_ages_5_17",
           "type": "string",
-          "description": "Percentage of students aged 5 to 17 eligible for free or reduced-price meals.",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -142,7 +134,7 @@
           "column_id": "frpm.percent_eligible_frpm_k_12",
           "name": "percent_eligible_frpm_k_12",
           "type": "string",
-          "description": "Percentage of K-12 students eligible for free or reduced-price meals.",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -150,7 +142,7 @@
           "column_id": "frpm.percent_eligible_free_ages_5_17",
           "name": "percent_eligible_free_ages_5_17",
           "type": "string",
-          "description": "Percentage of students aged 5 to 17 eligible for free meals.",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -158,7 +150,7 @@
           "column_id": "frpm.percent_eligible_free_k_12",
           "name": "percent_eligible_free_k_12",
           "type": "string",
-          "description": "Percentage of K-12 students eligible for free meals.",
+          "description": "Eligibility percentage stored as a decimal fraction between 0 and 1. If the document says a percent such as 87.4%, output 0.874, not 87.4.",
           "nullable": true,
           "examples": []
         },
@@ -311,34 +303,10 @@
           "examples": []
         },
         {
-          "column_id": "schools.doc",
-          "name": "doc",
-          "type": "string",
-          "description": "District ownership code.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.doc_type",
-          "name": "doc_type",
-          "type": "string",
-          "description": "Type of district (e.g., Unified School District).",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.district",
           "name": "district",
           "type": "string",
           "description": "Name of the school district.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.eil_code",
-          "name": "eil_code",
-          "type": "string",
-          "description": "Educational instruction level code (e.g., ELEM for Elementary).",
           "nullable": true,
           "examples": []
         },
@@ -351,34 +319,10 @@
           "examples": []
         },
         {
-          "column_id": "schools.ed_ops_code",
-          "name": "ed_ops_code",
-          "type": "string",
-          "description": "Educational operations code (e.g., TRAD for Traditional).",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.ed_ops_name",
           "name": "ed_ops_name",
           "type": "string",
           "description": "Name of the educational operations type (e.g., Traditional).",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.g_soffered",
-          "name": "g_soffered",
-          "type": "string",
-          "description": "Grade span offered by the school (e.g., K-5).",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.g_sserved",
-          "name": "g_sserved",
-          "type": "string",
-          "description": "Grade span served by the school (e.g., K-5).",
           "nullable": true,
           "examples": []
         },
@@ -415,46 +359,6 @@
           "examples": []
         },
         {
-          "column_id": "schools.mail_city",
-          "name": "mail_city",
-          "type": "string",
-          "description": "Mailing city of the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_state",
-          "name": "mail_state",
-          "type": "string",
-          "description": "Mailing state of the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_str_abr",
-          "name": "mail_str_abr",
-          "type": "string",
-          "description": "Abbreviated mailing street address of the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_street",
-          "name": "mail_street",
-          "type": "string",
-          "description": "Mailing street address of the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.mail_zip",
-          "name": "mail_zip",
-          "type": "string",
-          "description": "Mailing zip code of the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "schools.nces_dist",
           "name": "nces_dist",
           "type": "string",
@@ -467,38 +371,6 @@
           "name": "nces_school",
           "type": "string",
           "description": "NCES identifier for the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.open_date",
-          "name": "open_date",
-          "type": "string",
-          "description": "Date when the school was opened.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.phone",
-          "name": "phone",
-          "type": "string",
-          "description": "Contact phone number of the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.soc",
-          "name": "soc",
-          "type": "string",
-          "description": "School ownership code.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.soc_type",
-          "name": "soc_type",
-          "type": "string",
-          "description": "Type of school (e.g., Elementary Schools (Public)).",
           "nullable": true,
           "examples": []
         },
@@ -531,14 +403,6 @@
           "name": "street",
           "type": "string",
           "description": "Street address of the school.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "schools.street_abr",
-          "name": "street_abr",
-          "type": "string",
-          "description": "Abbreviated street address of the school.",
           "nullable": true,
           "examples": []
         },

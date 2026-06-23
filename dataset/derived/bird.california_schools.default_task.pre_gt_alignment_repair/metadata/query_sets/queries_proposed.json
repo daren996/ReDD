@@ -1,0 +1,46 @@
+{
+  "proposals": [
+    {
+      "id": "ST_Q1",
+      "queries": [
+        "Charter == 1",
+        "StatusType == 'Active'",
+        "Magnet == 0"
+      ],
+      "optimal_order": [
+        "Charter == 1",
+        "StatusType == 'Active'",
+        "Magnet == 0"
+      ],
+      "token_cost": 230195,
+      "sql": "SELECT * FROM schools WHERE Charter = 1 AND status_type = 'Active' AND magnet = 0;",
+      "natural_language": "Show me all active charter schools that are not magnet schools.",
+      "attributes": [
+        "Charter",
+        "StatusType",
+        "Magnet"
+      ]
+    },
+    {
+      "id": "ST_Q2",
+      "queries": [
+        "StatusType == 'Active'",
+        "Magnet == 0",
+        "Virtual == 'N'"
+      ],
+      "optimal_order": [
+        "Virtual == 'N'",
+        "Magnet == 0",
+        "StatusType == 'Active'"
+      ],
+      "token_cost": 502335,
+      "sql": "SELECT * FROM schools WHERE status_type = 'Active' AND magnet = 0 AND virtual = 'N';",
+      "natural_language": "Find all active, non-magnet, non-virtual schools (physical campus schools).",
+      "attributes": [
+        "StatusType",
+        "Magnet",
+        "Virtual"
+      ]
+    }
+  ]
+}

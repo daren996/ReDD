@@ -1,0 +1,565 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "bird.california_schools.default_task",
+  "tables": [
+    {
+      "table_id": "frpm",
+      "name": "frpm",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "frpm.2013_14_calpads_fall_1_certification_status",
+          "name": "2013_14_calpads_fall_1_certification_status",
+          "type": "string",
+          "description": "Certification status for the 2013-14 CALPADS Fall 1 data submission (1 for certified, 0 for not certified).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.academic_year",
+          "name": "academic_year",
+          "type": "string",
+          "description": "Academic year for which the data is reported.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.charter_school",
+          "name": "charter_school",
+          "type": "string",
+          "description": "Indicator of whether the school is a charter school (0 for No, 1 for Yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.county_name",
+          "name": "county_name",
+          "type": "string",
+          "description": "Name of the county where the school is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.district_name",
+          "name": "district_name",
+          "type": "string",
+          "description": "Name of the school district.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.district_type",
+          "name": "district_type",
+          "type": "string",
+          "description": "Type of school district (e.g., Unified School District).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.educational_option_type",
+          "name": "educational_option_type",
+          "type": "string",
+          "description": "Educational approach of the school (e.g., Traditional).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.enrollment_ages_5_17",
+          "name": "enrollment_ages_5_17",
+          "type": "string",
+          "description": "Total enrollment of students aged 5 to 17.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.enrollment_k_12",
+          "name": "enrollment_k_12",
+          "type": "string",
+          "description": "Total enrollment of students in grades K-12.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.frpm_count_ages_5_17",
+          "name": "frpm_count_ages_5_17",
+          "type": "string",
+          "description": "Number of students aged 5 to 17 eligible for free or reduced-price meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.frpm_count_k_12",
+          "name": "frpm_count_k_12",
+          "type": "string",
+          "description": "Number of K-12 students eligible for free or reduced-price meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.free_meal_count_ages_5_17",
+          "name": "free_meal_count_ages_5_17",
+          "type": "string",
+          "description": "Number of students aged 5 to 17 eligible for free meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.free_meal_count_k_12",
+          "name": "free_meal_count_k_12",
+          "type": "string",
+          "description": "Number of K-12 students eligible for free meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.high_grade",
+          "name": "high_grade",
+          "type": "string",
+          "description": "Highest grade level offered by the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.low_grade",
+          "name": "low_grade",
+          "type": "string",
+          "description": "Lowest grade level offered by the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_frpm_ages_5_17",
+          "name": "percent_eligible_frpm_ages_5_17",
+          "type": "string",
+          "description": "Percentage of students aged 5 to 17 eligible for free or reduced-price meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_frpm_k_12",
+          "name": "percent_eligible_frpm_k_12",
+          "type": "string",
+          "description": "Percentage of K-12 students eligible for free or reduced-price meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_free_ages_5_17",
+          "name": "percent_eligible_free_ages_5_17",
+          "type": "string",
+          "description": "Percentage of students aged 5 to 17 eligible for free meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.percent_eligible_free_k_12",
+          "name": "percent_eligible_free_k_12",
+          "type": "string",
+          "description": "Percentage of K-12 students eligible for free meals.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.school_name",
+          "name": "school_name",
+          "type": "string",
+          "description": "Name of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "frpm.school_type",
+          "name": "school_type",
+          "type": "string",
+          "description": "Type of school (e.g., Elementary Schools (Public)).",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "satscores",
+      "name": "satscores",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "satscores.avg_scr_math",
+          "name": "avg_scr_math",
+          "type": "string",
+          "description": "Average SAT math score for the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.avg_scr_read",
+          "name": "avg_scr_read",
+          "type": "string",
+          "description": "Average SAT reading score for the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.avg_scr_write",
+          "name": "avg_scr_write",
+          "type": "string",
+          "description": "Average SAT writing score for the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.num_ge1500",
+          "name": "num_ge1500",
+          "type": "string",
+          "description": "Number of students with an SAT score of 1500 or higher.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.num_tst_takr",
+          "name": "num_tst_takr",
+          "type": "string",
+          "description": "Number of students who took the SAT.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.cname",
+          "name": "cname",
+          "type": "string",
+          "description": "Name of the county where the school is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.dname",
+          "name": "dname",
+          "type": "string",
+          "description": "Name of the district overseeing the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.enroll12",
+          "name": "enroll12",
+          "type": "string",
+          "description": "Number of students enrolled in 12th grade.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "satscores.sname",
+          "name": "sname",
+          "type": "string",
+          "description": "Name of the school reporting SAT scores.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "schools",
+      "name": "schools",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "schools.adm_email1",
+          "name": "adm_email1",
+          "type": "string",
+          "description": "Email address of the primary administrator.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_f_name1",
+          "name": "adm_f_name1",
+          "type": "string",
+          "description": "First name of the primary administrator.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.adm_l_name1",
+          "name": "adm_l_name1",
+          "type": "string",
+          "description": "Last name of the primary administrator.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.city",
+          "name": "city",
+          "type": "string",
+          "description": "City where the school is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.county",
+          "name": "county",
+          "type": "string",
+          "description": "Name of the county where the school is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.doc",
+          "name": "doc",
+          "type": "string",
+          "description": "District ownership code.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.doc_type",
+          "name": "doc_type",
+          "type": "string",
+          "description": "Type of district (e.g., Unified School District).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.district",
+          "name": "district",
+          "type": "string",
+          "description": "Name of the school district.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.eil_code",
+          "name": "eil_code",
+          "type": "string",
+          "description": "Educational instruction level code (e.g., ELEM for Elementary).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.eil_name",
+          "name": "eil_name",
+          "type": "string",
+          "description": "Name of the educational instruction level (e.g., Elementary).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.ed_ops_code",
+          "name": "ed_ops_code",
+          "type": "string",
+          "description": "Educational operations code (e.g., TRAD for Traditional).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.ed_ops_name",
+          "name": "ed_ops_name",
+          "type": "string",
+          "description": "Name of the educational operations type (e.g., Traditional).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.g_soffered",
+          "name": "g_soffered",
+          "type": "string",
+          "description": "Grade span offered by the school (e.g., K-5).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.g_sserved",
+          "name": "g_sserved",
+          "type": "string",
+          "description": "Grade span served by the school (e.g., K-5).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.last_update",
+          "name": "last_update",
+          "type": "string",
+          "description": "Date of the last record update.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.latitude",
+          "name": "latitude",
+          "type": "string",
+          "description": "Latitude coordinate of the school's location.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.longitude",
+          "name": "longitude",
+          "type": "string",
+          "description": "Longitude coordinate of the school's location.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.magnet",
+          "name": "magnet",
+          "type": "string",
+          "description": "Indicator of whether the school is a magnet school (0 for No, 1 for Yes).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_city",
+          "name": "mail_city",
+          "type": "string",
+          "description": "Mailing city of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_state",
+          "name": "mail_state",
+          "type": "string",
+          "description": "Mailing state of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_str_abr",
+          "name": "mail_str_abr",
+          "type": "string",
+          "description": "Abbreviated mailing street address of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_street",
+          "name": "mail_street",
+          "type": "string",
+          "description": "Mailing street address of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.mail_zip",
+          "name": "mail_zip",
+          "type": "string",
+          "description": "Mailing zip code of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.nces_dist",
+          "name": "nces_dist",
+          "type": "string",
+          "description": "NCES identifier for the school district.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.nces_school",
+          "name": "nces_school",
+          "type": "string",
+          "description": "NCES identifier for the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.open_date",
+          "name": "open_date",
+          "type": "string",
+          "description": "Date when the school was opened.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.phone",
+          "name": "phone",
+          "type": "string",
+          "description": "Contact phone number of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.soc",
+          "name": "soc",
+          "type": "string",
+          "description": "School ownership code.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.soc_type",
+          "name": "soc_type",
+          "type": "string",
+          "description": "Type of school (e.g., Elementary Schools (Public)).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.school",
+          "name": "school",
+          "type": "string",
+          "description": "Name of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.state",
+          "name": "state",
+          "type": "string",
+          "description": "State where the school is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.status_type",
+          "name": "status_type",
+          "type": "string",
+          "description": "Operational status of the school (e.g., Active).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.street",
+          "name": "street",
+          "type": "string",
+          "description": "Street address of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.street_abr",
+          "name": "street_abr",
+          "type": "string",
+          "description": "Abbreviated street address of the school.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.virtual",
+          "name": "virtual",
+          "type": "string",
+          "description": "Indicator of whether the school is virtual (e.g., N for No).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "schools.zip",
+          "name": "zip",
+          "type": "string",
+          "description": "Zip code of the school's location.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

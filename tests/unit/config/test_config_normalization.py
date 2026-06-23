@@ -24,7 +24,7 @@ project:
   name: demo
 runtime:
   output_dir: outputs/demo
-  log_dir: logs
+  log_dir: outputs/logs
   output_layout: dataset_stage
   artifact_id: run-v1
 models:
@@ -105,6 +105,29 @@ class ConfigV2Tests(unittest.TestCase):
         self.assertEqual(refinement_config["doc_filter"]["target_recall"], 0.95)
         self.assertEqual(refinement_config["doc_filter"]["threshold"], 0.585)
         self.assertFalse(refinement_config["doc_filter"]["enable_calibrate"])
+
+    def test_runtime_materialized_full_extraction_flows_to_stage_config(self) -> None:
+        config_text = textwrap.dedent(VALID_CONFIG).replace(
+            "  artifact_id: run-v1\n",
+            "  artifact_id: run-v1\n"
+            "  materialized_full_extraction: true\n"
+            "  multi_record_extraction: true\n"
+            "  materialized_full_extraction_only: true\n",
+        )
+
+        with TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "config.yaml"
+            config_path.write_text(config_text.strip(), encoding="utf-8")
+
+            runtime, _ = load_experiment_runtime(config_path, "demo")
+            extraction_config = runtime.stage_runtime_dict("data_extraction")
+
+        self.assertTrue(extraction_config["materialized_full_extraction"])
+        self.assertTrue(extraction_config["materialized_full_extraction_only"])
+        self.assertEqual(extraction_config["materialized_full_extraction_batch_size"], 16)
+        self.assertEqual(extraction_config["materialized_full_extraction_batch_max_chars"], 24000)
+        self.assertEqual(extraction_config["materialized_full_extraction_concurrency"], 1)
+        self.assertTrue(extraction_config["multi_record_extraction"])
 
     def test_optimizer_defaults_are_applied_when_enabled_without_thresholds(self) -> None:
         config_text = textwrap.dedent(VALID_CONFIG).replace(

@@ -197,22 +197,6 @@
           "description": "Country where the departure airport is located.",
           "nullable": true,
           "examples": []
-        },
-        {
-          "column_id": "flight_routes.operation_focus",
-          "name": "operation_focus",
-          "type": "string",
-          "description": "Operational emphasis of the route, such as passenger transport or cargo logistics.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "flight_routes.route_type",
-          "name": "route_type",
-          "type": "string",
-          "description": "Nature of the route, specifying whether it is domestic or international.",
-          "nullable": true,
-          "examples": []
         }
       ]
     }

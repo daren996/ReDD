@@ -6,6 +6,7 @@ from pathlib import Path
 from redd.exceptions import ArtifactNotFoundError, PromptExecutionError
 
 from .constants import ASSIGN_THRESHOLD, PATH_TEMPLATES
+from .extraction_records import active_result_records
 from .prompt_registry import GENERAL_SCHEMA_REVISE_PROMPT_ID, SCHEMA_TAILOR_PROMPT_ID
 from .prompt_utils import create_prompt
 from .structured_outputs import SchemaUpdateOutput
@@ -20,6 +21,14 @@ class ResDictName:
 
 
 dict_name = ResDictName()
+
+
+def _entry_assigned_to_schema(entry, schema_name) -> bool:
+    if not isinstance(entry, dict):
+        return False
+    if entry.get(dict_name.res) == schema_name:
+        return True
+    return any(record.get("table") == schema_name for record in active_result_records(entry))
 
 
 def load_json(file_path, encoding="utf-8"):
@@ -124,7 +133,11 @@ def create_general_schema(config, res_dict, doc_dict, out_dn, param_str, qid=Non
         "Example Query": query
     }
     for schema_name in schema_general:
-        schema_docs = [doc_dict[doc_id][0] for doc_id in res_dict if res_dict[doc_id][dict_name.res] == schema_name]
+        schema_docs = [
+            doc_dict[doc_id][0]
+            for doc_id in res_dict
+            if _entry_assigned_to_schema(res_dict[doc_id], schema_name)
+        ]
         prompt_input_json["Schema"].append(
             {
                 "Schema Name": schema_name,
@@ -176,7 +189,11 @@ def create_tailored_schema(config, res_dict, doc_dict, out_dn, param_str, qid, q
         "Query": query
     }
     for schema in res_schema:
-        schema_docs = [doc_dict[doc_id][0] for doc_id in res_dict if res_dict[doc_id][dict_name.res] == schema[dict_name.schema]]
+        schema_docs = [
+            doc_dict[doc_id][0]
+            for doc_id in res_dict
+            if _entry_assigned_to_schema(res_dict[doc_id], schema[dict_name.schema])
+        ]
         prompt_input_json["Schema"].append(
             {
                 "Schema Name": schema[dict_name.schema],

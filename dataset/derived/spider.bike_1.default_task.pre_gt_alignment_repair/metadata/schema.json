@@ -1,0 +1,383 @@
+{
+  "schema_version": "redd.schema.v1",
+  "dataset_id": "spider.bike_1.default_task",
+  "tables": [
+    {
+      "table_id": "station",
+      "name": "station",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "station.city",
+          "name": "city",
+          "type": "string",
+          "description": "City where the bike station is located.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.dock_count",
+          "name": "dock_count",
+          "type": "string",
+          "description": "Total number of docks available at the station.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.installation_date",
+          "name": "installation_date",
+          "type": "string",
+          "description": "Date when the station was installed.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.lat",
+          "name": "lat",
+          "type": "string",
+          "description": "Latitude coordinate of the bike station.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.long",
+          "name": "long",
+          "type": "string",
+          "description": "Longitude coordinate of the bike station.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "station.name",
+          "name": "name",
+          "type": "string",
+          "description": "Name of the bike station.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "status",
+      "name": "status",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "status.bikes_available",
+          "name": "bikes_available",
+          "type": "string",
+          "description": "Number of bikes available at the station at the given time.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "status.docks_available",
+          "name": "docks_available",
+          "type": "string",
+          "description": "Number of docks available at the station at the given time.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "status.station_name",
+          "name": "station_name",
+          "type": "string",
+          "description": "Name of the station associated with the status record.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "status.time",
+          "name": "time",
+          "type": "string",
+          "description": "Timestamp for the status record.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "trip",
+      "name": "trip",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "trip.bike_id",
+          "name": "bike_id",
+          "type": "string",
+          "description": "Unique identifier for the bike used during the trip.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.duration",
+          "name": "duration",
+          "type": "string",
+          "description": "Duration of the trip in seconds.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.end_date",
+          "name": "end_date",
+          "type": "string",
+          "description": "Timestamp indicating when the trip ended.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.end_station_name",
+          "name": "end_station_name",
+          "type": "string",
+          "description": "Name of the station where the trip ended.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.start_date",
+          "name": "start_date",
+          "type": "string",
+          "description": "Timestamp indicating when the trip started.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.start_station_name",
+          "name": "start_station_name",
+          "type": "string",
+          "description": "Name of the station where the trip started.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.subscription_type",
+          "name": "subscription_type",
+          "type": "string",
+          "description": "Type of user subscription (e.g., Subscriber or Customer).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "trip.zip_code",
+          "name": "zip_code",
+          "type": "string",
+          "description": "ZIP code associated with the user who made the trip.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table_id": "weather",
+      "name": "weather",
+      "description": "",
+      "primary_key": [
+        "row_id"
+      ],
+      "columns": [
+        {
+          "column_id": "weather.cloud_cover",
+          "name": "cloud_cover",
+          "type": "string",
+          "description": "Cloud cover on a scale from 0 (clear) to 10 (overcast).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.date",
+          "name": "date",
+          "type": "string",
+          "description": "Date for the weather record.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.events",
+          "name": "events",
+          "type": "string",
+          "description": "Weather events recorded (e.g., rain, snow, fog).",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_dew_point_f",
+          "name": "max_dew_point_f",
+          "type": "string",
+          "description": "Maximum dew point recorded in Fahrenheit.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_gust_speed_mph",
+          "name": "max_gust_speed_mph",
+          "type": "string",
+          "description": "Maximum gust speed recorded in miles per hour.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_humidity",
+          "name": "max_humidity",
+          "type": "string",
+          "description": "Maximum humidity percentage recorded.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_sea_level_pressure_inches",
+          "name": "max_sea_level_pressure_inches",
+          "type": "string",
+          "description": "Maximum sea level pressure recorded in inches.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_temperature_f",
+          "name": "max_temperature_f",
+          "type": "string",
+          "description": "Maximum temperature recorded in Fahrenheit.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_visibility_miles",
+          "name": "max_visibility_miles",
+          "type": "string",
+          "description": "Maximum visibility recorded in miles.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.max_wind_speed_mph",
+          "name": "max_wind_speed_mph",
+          "type": "string",
+          "description": "Maximum wind speed recorded in miles per hour.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_dew_point_f",
+          "name": "mean_dew_point_f",
+          "type": "string",
+          "description": "Average dew point recorded in Fahrenheit.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_humidity",
+          "name": "mean_humidity",
+          "type": "string",
+          "description": "Average humidity percentage recorded.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_sea_level_pressure_inches",
+          "name": "mean_sea_level_pressure_inches",
+          "type": "string",
+          "description": "Average sea level pressure recorded in inches.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_temperature_f",
+          "name": "mean_temperature_f",
+          "type": "string",
+          "description": "Average temperature recorded in Fahrenheit.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_visibility_miles",
+          "name": "mean_visibility_miles",
+          "type": "string",
+          "description": "Average visibility recorded in miles.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.mean_wind_speed_mph",
+          "name": "mean_wind_speed_mph",
+          "type": "string",
+          "description": "Average wind speed recorded in miles per hour.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_dew_point_f",
+          "name": "min_dew_point_f",
+          "type": "string",
+          "description": "Minimum dew point recorded in Fahrenheit.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_humidity",
+          "name": "min_humidity",
+          "type": "string",
+          "description": "Minimum humidity percentage recorded.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_sea_level_pressure_inches",
+          "name": "min_sea_level_pressure_inches",
+          "type": "string",
+          "description": "Minimum sea level pressure recorded in inches.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_temperature_f",
+          "name": "min_temperature_f",
+          "type": "string",
+          "description": "Minimum temperature recorded in Fahrenheit.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.min_visibility_miles",
+          "name": "min_visibility_miles",
+          "type": "string",
+          "description": "Minimum visibility recorded in miles.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.precipitation_inches",
+          "name": "precipitation_inches",
+          "type": "string",
+          "description": "Amount of precipitation recorded in inches.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.wind_dir_degrees",
+          "name": "wind_dir_degrees",
+          "type": "string",
+          "description": "Average wind direction in degrees.",
+          "nullable": true,
+          "examples": []
+        },
+        {
+          "column_id": "weather.zip_code",
+          "name": "zip_code",
+          "type": "string",
+          "description": "ZIP code where the weather data was recorded.",
+          "nullable": true,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "relationships": []
+}

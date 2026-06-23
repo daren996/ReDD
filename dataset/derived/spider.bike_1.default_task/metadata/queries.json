@@ -1697,68 +1697,6 @@
       }
     },
     {
-      "query_id": "Q_join_trip_weather_trip_weather_wind_dir_degrees_020_291",
-      "question": "List end station name from trip records linked to weather where weather wind dir degrees is at least 291.",
-      "sql": "SELECT \"trip\".\"end_station_name\" FROM \"trip\" JOIN \"weather\" ON \"trip\".\"zip_code\" = \"weather\".\"zip_code\" WHERE \"weather\".\"wind_dir_degrees\" >= 291;",
-      "required_tables": [
-        "trip",
-        "weather"
-      ],
-      "required_columns": [
-        "trip.zip_code",
-        "weather.zip_code",
-        "trip.end_station_name",
-        "weather.wind_dir_degrees"
-      ],
-      "output_columns": [
-        "trip.end_station_name"
-      ],
-      "tags": [
-        "query_curation",
-        "generated_sql_first",
-        "bucket_candidate",
-        "join_query"
-      ],
-      "difficulty": null,
-      "meta": {
-        "generated_by": "scripts/query_curation.py",
-        "coverage_bucket": 0.2,
-        "target_doc_coverage": 0.2,
-        "actual_doc_coverage": 0.20063694267515925,
-        "result_docs": 315,
-        "total_docs": 1570,
-        "predicate_table": "weather",
-        "predicate_column": "weather.wind_dir_degrees",
-        "operator": ">=",
-        "value": "291",
-        "is_join": true,
-        "join_tables": [
-          "trip",
-          "weather"
-        ],
-        "join_columns": [
-          "trip.zip_code",
-          "weather.zip_code"
-        ],
-        "join_shared_values": 3,
-        "join_score": 63.108695652173914,
-        "candidate_source_round": "v4",
-        "dataset_id": "spider.bike_1.default_task",
-        "source_dataset_id": "spider.bike_1.default_task",
-        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.bike_1.default_task",
-        "source_query_id": "Q_join_trip_weather_trip_weather_wind_dir_degrees_020_291",
-        "curation_status": "keep",
-        "profile_all_relevant_docs": 315,
-        "profile_all_required_cells": 630,
-        "profile_all_relevant_doc_rate": 0.20063694267515925,
-        "profile_eval_relevant_docs": 310,
-        "profile_eval_required_cells": 620,
-        "profile_eval_relevant_doc_rate": 0.20064724919093851,
-        "profile_provenance_status": "ok",
-        "applied_to_source": true
-      }
-    },
-    {
       "query_id": "Q_join_station_trip_trip_station_lat_020_37_787152",
       "question": "List start station name from trip records linked to station where station lat is at most 37.787152.",
       "sql": "SELECT \"trip\".\"start_station_name\" FROM \"station\" JOIN \"trip\" ON \"station\".\"name\" = \"trip\".\"end_station_name\" WHERE \"station\".\"lat\" <= 37.787152;",
@@ -3148,59 +3086,6 @@
         "profile_eval_relevant_docs": 479,
         "profile_eval_required_cells": 546,
         "profile_eval_relevant_doc_rate": 0.3100323624595469,
-        "profile_provenance_status": "ok",
-        "applied_to_source": true
-      }
-    },
-    {
-      "query_id": "Q_gen_weather_cloud_cover_between_100_0_8",
-      "question": "List events from weather where cloud cover is between 0 and 8.",
-      "sql": "SELECT \"events\" FROM \"weather\" WHERE \"cloud_cover\" BETWEEN 0 AND 8;",
-      "required_tables": [
-        "weather"
-      ],
-      "required_columns": [
-        "weather.cloud_cover",
-        "weather.events"
-      ],
-      "output_columns": [
-        "weather.events"
-      ],
-      "tags": [
-        "query_curation",
-        "generated_sql_first",
-        "bucket_candidate"
-      ],
-      "difficulty": null,
-      "meta": {
-        "generated_by": "scripts/query_curation.py",
-        "coverage_bucket": 1.0,
-        "target_doc_coverage": 1.0,
-        "actual_doc_coverage": 0.3184713375796178,
-        "actual_table_doc_coverage": 1.0,
-        "result_docs": 500,
-        "total_docs": 1570,
-        "table_total_docs": 500,
-        "predicate_table": "weather",
-        "predicate_column": "weather.cloud_cover",
-        "operator": "BETWEEN",
-        "value": [
-          "0",
-          "8"
-        ],
-        "is_join": false,
-        "candidate_source_round": "v5",
-        "dataset_id": "spider.bike_1.default_task",
-        "source_dataset_id": "spider.bike_1.default_task",
-        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.bike_1.default_task",
-        "source_query_id": "Q_gen_weather_cloud_cover_between_100_0_8",
-        "curation_status": "keep",
-        "profile_all_relevant_docs": 500,
-        "profile_all_required_cells": 570,
-        "profile_all_relevant_doc_rate": 0.3184713375796178,
-        "profile_eval_relevant_docs": 489,
-        "profile_eval_required_cells": 556,
-        "profile_eval_relevant_doc_rate": 0.31650485436893205,
         "profile_provenance_status": "ok",
         "applied_to_source": true
       }

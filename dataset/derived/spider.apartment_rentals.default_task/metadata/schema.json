@@ -22,7 +22,7 @@
           "column_id": "apartment_bookings.booking_end_date",
           "name": "booking_end_date",
           "type": "string",
-          "description": "End date and time of the booking period.",
+          "description": "Exact booking end timestamp. Preserve the complete date and time exactly as stated, including hour, minute, and seconds when present; do not truncate to date-only or round seconds.",
           "nullable": true,
           "examples": []
         },
@@ -30,7 +30,7 @@
           "column_id": "apartment_bookings.booking_start_date",
           "name": "booking_start_date",
           "type": "string",
-          "description": "Start date and time of the booking period.",
+          "description": "Exact booking start timestamp. Preserve the complete date and time exactly as stated, including hour, minute, and seconds when present; do not truncate to date-only or round seconds.",
           "nullable": true,
           "examples": []
         },
@@ -72,7 +72,7 @@
           "column_id": "apartment_buildings.building_address",
           "name": "building_address",
           "type": "string",
-          "description": "Physical address of the apartment building.",
+          "description": "Full physical address of the apartment building. Include street number, street name, city, state, and ZIP/postal code exactly as stated; do not omit the postal code or city/state.",
           "nullable": true,
           "examples": []
         },
@@ -105,14 +105,6 @@
           "name": "building_phone",
           "type": "string",
           "description": "Contact phone number for the apartment building or its manager.",
-          "nullable": true,
-          "examples": []
-        },
-        {
-          "column_id": "apartment_buildings.building_short_name",
-          "name": "building_short_name",
-          "type": "string",
-          "description": "Short name used to refer to the apartment building.",
           "nullable": true,
           "examples": []
         }
@@ -193,14 +185,6 @@
           "examples": []
         },
         {
-          "column_id": "apartments.building_short_name",
-          "name": "building_short_name",
-          "type": "string",
-          "description": "Short name of the building the apartment belongs to.",
-          "nullable": true,
-          "examples": []
-        },
-        {
           "column_id": "apartments.room_count",
           "name": "room_count",
           "type": "string",
@@ -222,7 +206,7 @@
           "column_id": "guests.date_of_birth",
           "name": "date_of_birth",
           "type": "string",
-          "description": "Date and time of birth of the guest.",
+          "description": "Exact guest birth date or timestamp as stated. Preserve all provided date and time precision; do not invent or remove seconds.",
           "nullable": true,
           "examples": []
         },
@@ -280,7 +264,7 @@
           "column_id": "view_unit_status.booking_end_date",
           "name": "booking_end_date",
           "type": "string",
-          "description": "End date of a booking associated with the apartment (if any).",
+          "description": "Exact booking end timestamp associated with the unit status. Preserve all provided time precision, including seconds.",
           "nullable": true,
           "examples": []
         },
@@ -288,7 +272,7 @@
           "column_id": "view_unit_status.booking_start_date",
           "name": "booking_start_date",
           "type": "string",
-          "description": "Start date of a booking associated with the apartment (if any).",
+          "description": "Exact booking start timestamp associated with the unit status. Preserve all provided time precision, including seconds.",
           "nullable": true,
           "examples": []
         },
@@ -296,7 +280,7 @@
           "column_id": "view_unit_status.status_date",
           "name": "status_date",
           "type": "string",
-          "description": "Date when the availability status of the unit was recorded.",
+          "description": "Exact status timestamp for the unit. Preserve the full date and time, including seconds when present; do not output date-only if time is stated.",
           "nullable": true,
           "examples": []
         }

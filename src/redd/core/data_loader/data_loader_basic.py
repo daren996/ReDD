@@ -274,7 +274,10 @@ class DataLoaderBase(ABC):
         return doc_info.get(key, default)
 
     def get_doc_table(self, doc_id: str) -> Optional[str]:
-        """Get the table/schema name for a document (handles naming variations).
+        """Get the primary table/schema name for a document.
+
+        For one-to-many datasets this is the legacy primary record only. Use
+        ``get_doc_records()`` when callers need every ground-truth row.
         
         Args:
             doc_id: Document identifier
@@ -298,8 +301,37 @@ class DataLoaderBase(ABC):
         
         return None
 
+    def get_doc_records(self, doc_id: str) -> List[Dict[str, Any]]:
+        """Get all ground-truth records for a document.
+
+        Returns normalized dictionaries with ``table_name`` and ``data`` keys
+        when available. Legacy loaders that expose only ``table``/``data`` are
+        represented as a single record.
+        """
+        doc_info = self.get_doc_info(doc_id)
+        if doc_info is None:
+            return []
+
+        records = doc_info.get("data_records")
+        if isinstance(records, list):
+            return [record for record in records if isinstance(record, dict)]
+
+        table = doc_info.get("table") or doc_info.get("table_name")
+        data = doc_info.get("data")
+        if table is not None or isinstance(data, dict):
+            return [
+                {
+                    "table_name": table,
+                    "data": data if isinstance(data, dict) else {},
+                }
+            ]
+        return []
+
     def get_doc_data(self, doc_id: str) -> Dict[str, Any]:
-        """Get the data dictionary for a document.
+        """Get the primary data dictionary for a document.
+
+        For one-to-many datasets this is the legacy primary record only. Use
+        ``get_doc_records()`` when callers need every ground-truth row.
         
         Args:
             doc_id: Document identifier

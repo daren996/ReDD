@@ -172,7 +172,7 @@ def _base_config(
         "project": {"name": "optimizer-current-sweep", "seed": 42},
         "runtime": {
             "output_dir": output_dir,
-            "log_dir": "logs",
+            "log_dir": "outputs/logs",
             "output_layout": "dataset_stage",
             "artifact_id": artifact_id,
             "console_log_level": "WARNING",

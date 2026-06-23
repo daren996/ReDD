@@ -1,0 +1,172 @@
+config_version: 2.1.1
+project:
+  name: deepseek-materialized-full-extraction-all
+  seed: 42
+runtime:
+  output_dir: outputs/materialized_full_extraction_all
+  log_dir: outputs/logs
+  output_layout: dataset_stage
+  artifact_id: deepseek-materialized-full-extraction-all-v1
+  console_log_level: WARNING
+  materialized_full_extraction_only: true
+  materialized_full_extraction_batch_size: 16
+  materialized_full_extraction_batch_max_chars: 24000
+  materialized_full_extraction_concurrency: 4
+models:
+  llm:
+    provider: deepseek
+    model: deepseek-chat
+    api_key_env: DEEPSEEK_API_KEY
+    structured_backend: auto
+    max_retries: 5
+    wait_time: 10
+
+datasets:
+  spider.apartment_rentals.default_task:
+    loader: hf_manifest
+    root: dataset/derived/spider.apartment_rentals.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  spider.bike_1.default_task:
+    loader: hf_manifest
+    root: dataset/derived/spider.bike_1.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  spider.college_2.course_teaches_instructor:
+    loader: hf_manifest
+    root: dataset/derived/spider.college_2.course_teaches_instructor
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  spider.flight_4.routes_airports_airlines:
+    loader: hf_manifest
+    root: dataset/derived/spider.flight_4.routes_airports_airlines
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  spider.soccer_1.default_task:
+    loader: hf_manifest
+    root: dataset/derived/spider.soccer_1.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  spider.wine_1.wine_appellations:
+    loader: hf_manifest
+    root: dataset/derived/spider.wine_1.wine_appellations
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  bird.california_schools.default_task:
+    loader: hf_manifest
+    root: dataset/derived/bird.california_schools.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  bird.debit_card_specializing.default_task:
+    loader: hf_manifest
+    root: dataset/derived/bird.debit_card_specializing.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  bird.student_club.default_task:
+    loader: hf_manifest
+    root: dataset/derived/bird.student_club.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  galois.fortune.default_task:
+    loader: hf_manifest
+    root: dataset/derived/galois.fortune.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  galois.premierleague.default_task:
+    loader: hf_manifest
+    root: dataset/derived/galois.premierleague.default_task
+    loader_options:
+      manifest: manifest.yaml
+    split:
+      train_count: 0
+  # cuad.cuad.fixed_size_10k:
+  #   loader: hf_manifest
+  #   root: dataset/derived/cuad.cuad.fixed_size_10k
+  #   loader_options:
+  #     manifest: manifest.yaml
+  #   split:
+  #     train_count: 0
+  # cuad.cuad.fixed_size_50k:
+  #   loader: hf_manifest
+  #   root: dataset/derived/cuad.cuad.fixed_size_50k
+  #   loader_options:
+  #     manifest: manifest.yaml
+  #   split:
+  #     train_count: 0
+  # cuad.cuad.no_chunk:
+  #   loader: hf_manifest
+  #   root: dataset/derived/cuad.cuad.no_chunk
+  #   loader_options:
+  #     manifest: manifest.yaml
+  #   split:
+  #     train_count: 0
+  # fda.fda.fixed_size_10k:
+  #   loader: hf_manifest
+  #   root: dataset/derived/fda.fda.fixed_size_10k
+  #   loader_options:
+  #     manifest: manifest.yaml
+  #   split:
+  #     train_count: 0
+  # fda.fda.fixed_size_50k:
+  #   loader: hf_manifest
+  #   root: dataset/derived/fda.fda.fixed_size_50k
+  #   loader_options:
+  #     manifest: manifest.yaml
+  #   split:
+  #     train_count: 0
+  # fda.fda.no_chunk:
+  #   loader: hf_manifest
+  #   root: dataset/derived/fda.fda.no_chunk
+  #   loader_options:
+  #     manifest: manifest.yaml
+  #   split:
+  #     train_count: 0
+
+stages:
+  data_extraction:
+    enabled: true
+    schema_source: ground_truth
+    oracle: llm
+
+experiments:
+  materialize_all:
+    datasets:
+    - spider.apartment_rentals.default_task
+    - spider.bike_1.default_task
+    - spider.college_2.course_teaches_instructor
+    - spider.flight_4.routes_airports_airlines
+    - spider.soccer_1.default_task
+    - spider.wine_1.wine_appellations
+    - bird.california_schools.default_task
+    - bird.debit_card_specializing.default_task
+    - bird.student_club.default_task
+    - galois.fortune.default_task
+    - galois.premierleague.default_task
+    # - cuad.cuad.fixed_size_10k
+    # - cuad.cuad.fixed_size_50k
+    # - cuad.cuad.no_chunk
+    # - fda.fda.fixed_size_10k
+    # - fda.fda.fixed_size_50k
+    # - fda.fda.no_chunk
+    stages:
+    - data_extraction

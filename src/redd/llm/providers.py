@@ -49,6 +49,7 @@ class CompletionRequest:
     top_p: float | None = None
     max_tokens: int | None = None
     seed: int | None = None
+    context: Mapping[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -295,6 +296,7 @@ def _append_usage_log(
     litellm_model: str,
     response_model: str | None,
     usage: Any | None,
+    context: Mapping[str, Any] | None = None,
 ) -> None:
     log_path = os.getenv("REDD_LLM_USAGE_LOG")
     if not log_path:
@@ -307,10 +309,12 @@ def _append_usage_log(
         "response_model": response_model,
         "usage": _usage_as_dict(usage),
     }
+    if context:
+        payload["context"] = dict(context)
     path = Path(log_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as file:
-        file.write(json.dumps(payload, sort_keys=True) + "\n")
+        file.write(json.dumps(payload, sort_keys=True, default=str) + "\n")
 
 
 class LLMRuntime:
@@ -372,11 +376,20 @@ class LLMRuntime:
                 messages=request.messages,
                 max_tokens=request.max_tokens,
             )
+            usage = _response_usage(completion)
+            response_model = _response_model(completion)
+            _append_usage_log(
+                config=self.config,
+                litellm_model=self.config.model,
+                response_model=response_model,
+                usage=usage,
+                context=request.context,
+            )
             return CompletionResult(
                 text=_message_content(completion),
                 raw_response=completion,
-                usage=_response_usage(completion),
-                model=_response_model(completion),
+                usage=usage,
+                model=response_model,
             )
 
         try:
@@ -400,6 +413,7 @@ class LLMRuntime:
             litellm_model=self.litellm_model,
             response_model=response_model,
             usage=usage,
+            context=request.context,
         )
         return CompletionResult(
             text=_message_content(response),
@@ -411,7 +425,15 @@ class LLMRuntime:
     def complete_model(self, request: CompletionRequest, response_model: type[ModelT]) -> ModelT:
         if self.config.structured_backend in {"auto", "instructor"} and not self.spec.is_local:
             try:
-                return self._complete_model_with_instructor(request, response_model)
+                result = self._complete_model_with_instructor(request, response_model)
+                _append_usage_log(
+                    config=self.config,
+                    litellm_model=self.litellm_model,
+                    response_model=getattr(response_model, "__name__", None),
+                    usage=None,
+                    context=request.context,
+                )
+                return result
             except ModuleNotFoundError:
                 if self.config.structured_backend == "instructor":
                     raise

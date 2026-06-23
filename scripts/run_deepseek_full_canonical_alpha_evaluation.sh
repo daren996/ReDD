@@ -12,11 +12,11 @@ export LITELLM_LOG=ERROR
 export LITELLM_LOG_LEVEL=ERROR
 export LITELLM_SET_VERBOSE=False
 export PYTHONUNBUFFERED=1
-export REDD_LLM_USAGE_LOG=logs/deepseek_full_canonical_alpha/eval_llm_usage.jsonl
+export REDD_LLM_USAGE_LOG=outputs/logs/deepseek_full_canonical_alpha/eval_llm_usage.jsonl
 
 CONFIG=configs/examples/deepseek_full_canonical_alpha.yaml
 EXP=full_canonical
-LOGDIR=logs/deepseek_full_canonical_alpha
+LOGDIR=outputs/logs/deepseek_full_canonical_alpha
 
 DATASETS=(
   bird.california_schools

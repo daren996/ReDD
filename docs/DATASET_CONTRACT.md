@@ -144,6 +144,15 @@ schema always lives in `metadata/schema.json`.
 Datasets do not include a separate table/attribute mapping file; table and
 column IDs must already match across schema, queries, and ground truth.
 
+Runtime document reads are text-only by default. The `hf_manifest` loader's
+ordinary `get_doc()`/`iter_docs()` interface exposes `doc_text` and `doc_id`, but
+no parquet metadata. This avoids leaking provenance fields such as
+`source_table`, `source_row_id`, parent IDs that encode source structure, or
+table names inferred from ground truth into model-facing stages. Dataset
+construction or diagnostic code that genuinely needs provenance must opt in with
+`expose_document_metadata: true`; explicit evaluation/oracle paths can still use
+`get_doc_info()` to read ground-truth records.
+
 ## ID Rules
 
 Canonical dataset IDs use `{source}.{dataset}`, for example

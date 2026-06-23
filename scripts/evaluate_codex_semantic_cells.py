@@ -266,7 +266,7 @@ def main() -> int:
     model_safe = safe_model_name(args.model)
     datasets = set(args.dataset) if args.dataset else None
     output_dir_name = f"codex_cli_{model_safe}_query_aware_semantic"
-    cache_path = Path("logs/deepseek_full_canonical_alpha") / f"{output_dir_name}_cache.jsonl"
+    cache_path = Path("outputs/logs/deepseek_full_canonical_alpha") / f"{output_dir_name}_cache.jsonl"
     cache = load_cache(cache_path)
     total_uncached_sent = 0
     global_matches: list[dict[str, Any]] = []

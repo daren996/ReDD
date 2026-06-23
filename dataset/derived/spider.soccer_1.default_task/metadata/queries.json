@@ -5209,59 +5209,6 @@
       }
     },
     {
-      "query_id": "Q_gen_player_attributes_gk_reflexes_between_060_8_0_21_0",
-      "question": "List player name from player_attributes where gk reflexes is between 8.0 and 21.0.",
-      "sql": "SELECT \"player_name\" FROM \"player_attributes\" WHERE \"gk_reflexes\" BETWEEN 8.0 AND 21.0;",
-      "required_tables": [
-        "player_attributes"
-      ],
-      "required_columns": [
-        "player_attributes.gk_reflexes",
-        "player_attributes.player_name"
-      ],
-      "output_columns": [
-        "player_attributes.player_name"
-      ],
-      "tags": [
-        "query_curation",
-        "generated_sql_first",
-        "bucket_candidate"
-      ],
-      "difficulty": null,
-      "meta": {
-        "generated_by": "scripts/query_curation.py",
-        "coverage_bucket": 0.6,
-        "target_doc_coverage": 0.6,
-        "actual_doc_coverage": 0.2755417956656347,
-        "actual_table_doc_coverage": 0.9368421052631579,
-        "result_docs": 89,
-        "total_docs": 323,
-        "table_total_docs": 95,
-        "predicate_table": "player_attributes",
-        "predicate_column": "player_attributes.gk_reflexes",
-        "operator": "BETWEEN",
-        "value": [
-          "8.0",
-          "21.0"
-        ],
-        "is_join": false,
-        "candidate_source_round": "v6_gapfill_quality",
-        "dataset_id": "spider.soccer_1.default_task",
-        "source_dataset_id": "spider.soccer_1.default_task",
-        "source_dataset_root": "/Users/drchao/CursorSpace/ReDD/ReDD/dataset/derived/spider.soccer_1.default_task",
-        "source_query_id": "Q_gen_player_attributes_gk_reflexes_between_060_8_0_21_0",
-        "curation_status": "keep",
-        "profile_all_relevant_docs": 89,
-        "profile_all_required_cells": 178,
-        "profile_all_relevant_doc_rate": 0.2755417956656347,
-        "profile_eval_relevant_docs": 83,
-        "profile_eval_required_cells": 166,
-        "profile_eval_relevant_doc_rate": 0.2785234899328859,
-        "profile_provenance_status": "ok",
-        "applied_to_source": true
-      }
-    },
-    {
       "query_id": "Q_gen_player_weight_between_060_150_185",
       "question": "List player name from player where weight is between 150 and 185.",
       "sql": "SELECT \"player_name\" FROM \"player\" WHERE \"weight\" BETWEEN 150 AND 185;",

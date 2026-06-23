@@ -8,6 +8,8 @@ import torch
 from torch.utils.data import Dataset, Sampler
 
 from redd.core.data_loader import DataLoaderBase
+from redd.core.utils.constants import RESULT_DATA_KEY
+from redd.core.utils.extraction_records import active_result_records
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -192,7 +194,8 @@ class LazyHiddenStatesDataset(Dataset):
 
     def get_table_hidden_state_old(self, did):
         res_data = self.res_data_dict[str(did)]
-        table_name = res_data["res"]
+        records = active_result_records(res_data)
+        table_name = records[0].get("table") if records else res_data.get("res")
         if table_name not in self.table2tokens:
             return None
         res_table_tokens = self.table2tokens[table_name]
@@ -213,12 +216,15 @@ class LazyHiddenStatesDataset(Dataset):
 
     def get_attr_hidden_state_old(self, did, attr):
         res_data = self.res_data_dict[str(did)]
-        table_name = res_data["res"]
+        records = active_result_records(res_data)
+        primary_record = records[0] if records else {}
+        table_name = primary_record.get("table") or res_data.get("res")
         if table_name not in self.table2attr2tokens or attr not in self.table2attr2tokens[table_name]:
             return None
-        if attr not in res_data["data"]:
+        data = primary_record.get(RESULT_DATA_KEY) or res_data.get("data", {})
+        if not isinstance(data, dict) or attr not in data:
             return None
-        res_value = res_data["data"][attr].strip().strip(string.punctuation)
+        res_value = str(data[attr]).strip().strip(string.punctuation)
         res_value = re.sub(r"^€", "", res_value)
         res_value_tokens = self.trainer.tokenizer.encode(res_value, add_special_tokens=False)
         state_file = os.path.join(self.states_dir, f"doc-{did}-attr-{attr}.pt")

@@ -15,6 +15,7 @@ def test_append_usage_log_writes_token_counts_without_prompt_content(tmp_path, m
         litellm_model="deepseek/deepseek-chat",
         response_model="deepseek-v4-flash",
         usage=SimpleNamespace(prompt_tokens=10, completion_tokens=4, total_tokens=14),
+        context={"stage": "table_assignment", "query_id": "q1"},
     )
 
     payload = json.loads(path.read_text().strip())
@@ -22,5 +23,6 @@ def test_append_usage_log_writes_token_counts_without_prompt_content(tmp_path, m
     assert payload["configured_model"] == "deepseek-chat"
     assert payload["response_model"] == "deepseek-v4-flash"
     assert payload["usage"]["prompt_tokens"] == 10
+    assert payload["context"] == {"stage": "table_assignment", "query_id": "q1"}
     assert "messages" not in payload
     assert "api_key" not in payload
