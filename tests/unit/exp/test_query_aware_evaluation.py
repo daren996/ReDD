@@ -15,7 +15,7 @@ class QueryAwareLoader(DataLoaderBase):
         self._doc_ids = ["course-1", "teach-1", "extra-1", "missing-1"]
         self._gt = {
             "course-1": {
-                "doc": "",
+                "doc": "Course catalog note: DB Systems is the short title used for Databases. Credits: 4.",
                 "table": "course",
                 "data": {"title": "Databases", "credits": "4", "dept_name": "CS"},
                 "data_records": [
@@ -69,14 +69,29 @@ class QueryAwareLoader(DataLoaderBase):
         return [
             {
                 "Schema Name": "course",
-                "Attributes": [{"Attribute Name": "title"}, {"Attribute Name": "credits"}],
+                "Description": "University course catalog records.",
+                "Attributes": [
+                    {
+                        "Attribute Name": "title",
+                        "Description": "Canonical course title.",
+                        "type": "string",
+                        "column_id": "course.title",
+                    },
+                    {
+                        "Attribute Name": "credits",
+                        "Description": "Number of credit hours.",
+                        "type": "number",
+                        "column_id": "course.credits",
+                    },
+                ],
             },
             {
                 "Schema Name": "teaches",
+                "Description": "Course offering records.",
                 "Attributes": [
-                    {"Attribute Name": "course_title"},
-                    {"Attribute Name": "semester"},
-                    {"Attribute Name": "year"},
+                    {"Attribute Name": "course_title", "Description": "Title of the taught course."},
+                    {"Attribute Name": "semester", "Description": "Academic semester."},
+                    {"Attribute Name": "year", "Description": "Academic year."},
                 ],
             },
         ]
@@ -93,7 +108,10 @@ class SemanticQueryAwareEvaluator(EvalDataExtraction):
         pred_value: Any,
         gt_attr: str,
         gt_value: Any,
+        context: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        self.seen_contexts = getattr(self, "seen_contexts", [])
+        self.seen_contexts.append(context)
         if self._compare_attribute_values(pred_value, gt_value):
             return {
                 "result": True,
@@ -207,6 +225,48 @@ def test_query_aware_semantic_cell_accuracy_uses_required_attrvalue_cells() -> N
     assert stats["semantic_cell_accuracy"]["llm_judged"] == 1
     assert stats["semantic_cell_accuracy"]["accuracy"] == 1.0
     assert {cell["attr"] for cell in stats["semantic_cell_accuracy"]["cells"]} == {"title", "credits"}
+
+
+def test_query_aware_semantic_cell_accuracy_passes_context() -> None:
+    loader = QueryAwareLoader()
+    evaluator = SemanticQueryAwareEvaluator(
+        {
+            "res_param_str": "unit",
+            "training_data_count": 0,
+            "eval": {
+                "semantic_context": {
+                    "enabled": True,
+                    "include_doc_text": "on_mismatch",
+                    "doc_text_max_chars": 120,
+                }
+            },
+        },
+        api_key="test-key",
+    )
+    query_info = {
+        "question": "Which four-credit courses match the requested title?",
+        "sql": "SELECT title FROM course WHERE credits = '4';",
+        "tables": ["course"],
+        "attributes": ["course.title", "course.credits"],
+        "output_columns": ["course.title"],
+    }
+    result = {
+        "course-1": {"res": "course", "data": {"title": "DB Systems", "credits": "4"}},
+        "missing-1": {"res": "course", "data": {"title": "Compilers", "credits": "4"}},
+    }
+
+    stats = evaluator.compute_query_aware_statistics(loader, result, "q1", query_info).to_dict()
+
+    contexts = [context for context in evaluator.seen_contexts if context]
+    assert len(contexts) == 1
+    context = contexts[0]
+    assert context["Cell Role"] == "answer"
+    assert context["Schema"]["Table Name"] == "course"
+    assert context["Schema"]["Attribute"]["Attribute Description"] == "Canonical course title."
+    assert context["Query"]["Question"] == "Which four-credit courses match the requested title?"
+    assert context["Document"]["Doc ID"] == "course-1"
+    assert "Databases" in context["Document"]["Text Excerpt"]
+    assert stats["semantic_cell_accuracy"]["context"]["include_doc_text"] == "on_mismatch"
 
 
 def test_query_aware_recall_reads_multi_record_prediction_entries() -> None:

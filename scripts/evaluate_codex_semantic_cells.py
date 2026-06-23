@@ -42,6 +42,10 @@ def cache_key(item: dict[str, Any]) -> str:
         "gt_attr": str(item.get("attr") or ""),
         "gt_value": "" if is_null(item.get("gt")) else str(item.get("gt")),
     }
+    context = item.get("context") or item.get("semantic_context")
+    if context:
+        payload["semantic_context_version"] = 1
+        payload["context"] = context
     return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
 
 
@@ -104,8 +108,9 @@ def codex_batch_judge(
     timeout: int,
     attempts: int,
 ) -> list[dict[str, Any]]:
-    compact_items = [
-        {
+    compact_items = []
+    for item in items:
+        compact_item = {
             "id": item["id"],
             "Prediction": {
                 "Attribute Name": str(item.get("attr") or ""),
@@ -116,12 +121,17 @@ def codex_batch_judge(
                 "Attribute Value": "" if is_null(item.get("gt")) else str(item.get("gt")),
             },
         }
-        for item in items
-    ]
+        context = item.get("context") or item.get("semantic_context")
+        if context:
+            compact_item["Context"] = context
+        compact_items.append(compact_item)
     prompt = (
         "You are a database expert evaluating tabular extraction cells. "
         "For each item, decide whether Prediction.Attribute Value semantically matches "
-        "Ground Truth.Attribute Value for the given attribute. Values need not be "
+        "Ground Truth.Attribute Value for the given attribute. Optional Context may include "
+        "schema descriptions, query details, cell role, and a short document excerpt. "
+        "Use Context as supporting evidence for aliases, abbreviations, formats, units, "
+        "and required precision. Values need not be "
         "string-identical, but they must convey the same meaning. Be strict for numeric "
         "differences unless there is a clear unit conversion or harmless formatting difference. "
         "Return ONLY a JSON array with one object per input item, preserving ids and order. "

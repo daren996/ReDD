@@ -9,6 +9,7 @@ Your goal is to determine whether the **predicted attribute value** (as a string
 The input consists of:  
 - **Prediction**: The extracted attribute name and value.  
 - **Ground Truth**: The reference attribute name and value.  
+- **Context** (optional): table/attribute schema descriptions, the query, the cell role, and a short document excerpt. Use this context as supporting evidence when deciding whether two non-identical strings refer to the same value.
 
 Example format:  
 ```json
@@ -20,6 +21,25 @@ Example format:
     "Ground Truth": {
         "Attribute Name": "...",
         "Attribute Value": "..."
+    },
+    "Context": {
+        "Schema": {
+            "Table Name": "...",
+            "Table Description": "...",
+            "Attribute": {
+                "Attribute Name": "...",
+                "Attribute Description": "...",
+                "Attribute Type": "..."
+            }
+        },
+        "Query": {
+            "Question": "...",
+            "SQL": "..."
+        },
+        "Cell Role": "answer|predicate|join|other_required",
+        "Document": {
+            "Text Excerpt": "..."
+        }
     }
 }
 ```
@@ -129,6 +149,16 @@ Example format:
 ```
 
 ## Instruction  
-Compare the given **Prediction** and **Ground Truth**, generate your reasoning, and output the final **Result** in JSON format.  
+Compare the given **Prediction** and **Ground Truth**, generate your reasoning, and output the final **Result** in JSON format.
+
+Guidelines:
+- Use the schema description to understand what precision and format are required for the attribute.
+- Use the query and cell role to understand whether the value is an answer column, predicate value, join key, or another required cell.
+- Use the document excerpt only as evidence. It can justify aliases, abbreviations, unit conversions, spelling variants, or missing qualifiers when the excerpt clearly shows they refer to the same entity/value.
+- Treat harmless formatting differences as correct: case, punctuation, whitespace, leading zeros, thousands separators, equivalent dates, and clear unit conversions.
+- Treat generic field labels or units attached to a value as harmless when the schema says the cell value is the identifier/value itself, such as `Apt. 411` vs `411`, `Room 12` vs `12`, or `$25.50` vs `25.50`.
+- Be strict when schema/query context requires exact precision: timestamps, identifiers, station names with meaningful parenthetical qualifiers, postal codes, financial units, and percentages should only match if the omitted or changed part is not semantically meaningful.
+- If the prediction is broader, shorter, rounded, or normalized in a way that loses required information from the ground truth, return `False`.
+
 Below is the input for this iteration:  
 

@@ -30,7 +30,6 @@ from redd.core.utils.constants import (
     PREDICTION_KEY,
     RESULT_DATA_KEY,
     RESULT_RECORD_ID_KEY,
-    RESULT_TABLE_KEY,
     SCHEMA_NAME_KEY,
 )
 from redd.core.utils.data_split import (
@@ -360,6 +359,23 @@ class EvalDataExtraction(EvalBasic):
         self.eval_llm_model = ""
         self.full_table_semantic_enabled = bool(eval_config.get("full_table_semantic", True))
         self._current_eval_query_id: Optional[str] = None
+        semantic_context_config = eval_config.get("semantic_context", {})
+        if isinstance(semantic_context_config, bool):
+            semantic_context_config = {"enabled": semantic_context_config}
+        if not isinstance(semantic_context_config, dict):
+            semantic_context_config = {}
+        self.semantic_context_enabled = bool(semantic_context_config.get("enabled", True))
+        self.semantic_context_include_schema = bool(semantic_context_config.get("include_schema", True))
+        self.semantic_context_include_query = bool(semantic_context_config.get("include_query", True))
+        self.semantic_context_include_cell_role = bool(semantic_context_config.get("include_cell_role", True))
+        self.semantic_context_include_doc_text = semantic_context_config.get("include_doc_text", False)
+        try:
+            self.semantic_context_doc_text_max_chars = max(
+                0,
+                int(semantic_context_config.get("doc_text_max_chars", 1200) or 0),
+            )
+        except (TypeError, ValueError):
+            self.semantic_context_doc_text_max_chars = 1200
 
         if "committee" in eval_config:
             self._initialize_committee(eval_config, api_key)
@@ -868,6 +884,7 @@ class EvalDataExtraction(EvalBasic):
                     if semantic_eval_enabled:
                         semantic_total += 1
                         layer_stat["semantic_total"] += 1
+                        semantic_context = None
                         if not table_ok:
                             semantic_comparison = {
                                 "result": False,
@@ -876,11 +893,30 @@ class EvalDataExtraction(EvalBasic):
                                 "cached": False,
                             }
                         else:
+                            semantic_context = None
+                            if (
+                                self.semantic_context_enabled
+                                and not self._compare_attribute_values(pred_value, gt_value)
+                                and not is_null(pred_value)
+                                and not is_null(gt_value)
+                            ):
+                                semantic_context = self._semantic_cell_context(
+                                    loader=loader,
+                                    query_id=query_id,
+                                    query_info=query_info,
+                                    doc_id=doc_id,
+                                    table=gt_table,
+                                    attr=str(attr),
+                                    cell_role=role,
+                                    pred_value=pred_value,
+                                    gt_value=gt_value,
+                                )
                             semantic_comparison = self._semantic_match_attribute(
                                 pred_attr=str(attr),
                                 pred_value=pred_value,
                                 gt_attr=str(attr),
                                 gt_value=gt_value,
+                                context=semantic_context,
                             )
                         semantic_ok = bool(semantic_comparison.get("result"))
                         if semantic_ok:
@@ -912,6 +948,8 @@ class EvalDataExtraction(EvalBasic):
                                 **semantic_comparison,
                             }
                         )
+                        if semantic_context:
+                            semantic_cells[-1]["context"] = semantic_context
                     if cell_ok:
                         cell_covered += 1
                         layer_stat["covered"] += 1
@@ -1016,6 +1054,7 @@ class EvalDataExtraction(EvalBasic):
                 "table_mismatched": semantic_table_mismatched,
                 "null_gt_skipped": null_gt_cells_skipped,
                 "llm_judged": semantic_llm_judged,
+                "context": self._semantic_context_summary(),
                 "accuracy": semantic_correct / semantic_total if semantic_total else 1.0,
                 "cells": semantic_cells,
             }
@@ -2116,6 +2155,253 @@ class EvalDataExtraction(EvalBasic):
     def _semantic_eval_enabled(self) -> bool:
         return bool(self.committee_prompts or self.prompts)
 
+    def _semantic_context_summary(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.semantic_context_enabled,
+            "include_schema": self.semantic_context_include_schema,
+            "include_query": self.semantic_context_include_query,
+            "include_cell_role": self.semantic_context_include_cell_role,
+            "include_doc_text": self.semantic_context_include_doc_text,
+            "doc_text_max_chars": self.semantic_context_doc_text_max_chars,
+        }
+
+    def _semantic_cell_context(
+        self,
+        *,
+        loader: DataLoaderBase,
+        query_id: str,
+        query_info: Dict[str, Any],
+        doc_id: str,
+        table: str,
+        attr: str,
+        cell_role: str,
+        pred_value: Any = None,
+        gt_value: Any = None,
+    ) -> Optional[Dict[str, Any]]:
+        if not self.semantic_context_enabled:
+            return None
+
+        context: Dict[str, Any] = {}
+        if self.semantic_context_include_cell_role:
+            context["Cell Role"] = cell_role
+        if self.semantic_context_include_schema:
+            schema_context = self._semantic_schema_context(loader, query_id, table, attr)
+            if schema_context:
+                context["Schema"] = schema_context
+        if self.semantic_context_include_query:
+            query_context = self._semantic_query_context(query_id, query_info)
+            if query_context:
+                context["Query"] = query_context
+        if self._semantic_doc_text_enabled():
+            doc_context = self._semantic_doc_context(
+                loader=loader,
+                doc_id=doc_id,
+                attr=attr,
+                pred_value=pred_value,
+                gt_value=gt_value,
+            )
+            if doc_context:
+                context["Document"] = doc_context
+
+        return self._semantic_cache_context(context)
+
+    def _semantic_schema_context(
+        self,
+        loader: DataLoaderBase,
+        query_id: str,
+        table: str,
+        attr: str,
+    ) -> Optional[Dict[str, Any]]:
+        schemas: List[Dict[str, Any]] = []
+        try:
+            schemas = loader.load_schema_query(query_id)
+        except Exception as exc:
+            logging.debug(
+                "[%s:_semantic_schema_context] Could not load query schema for %s: %s",
+                self.__class__.__name__,
+                query_id,
+                exc,
+            )
+        if not schemas:
+            try:
+                schemas = loader.load_schema_general()
+            except Exception as exc:
+                logging.debug(
+                    "[%s:_semantic_schema_context] Could not load general schema: %s",
+                    self.__class__.__name__,
+                    exc,
+                )
+
+        for schema in schemas or []:
+            if not isinstance(schema, dict):
+                continue
+            schema_name = str(
+                schema.get(SCHEMA_NAME_KEY)
+                or schema.get("table_name")
+                or schema.get("name")
+                or ""
+            )
+            if schema_name != table:
+                continue
+
+            schema_context: Dict[str, Any] = {
+                "Table Name": schema_name,
+                "Table Description": schema.get("Description") or schema.get("description"),
+            }
+            for attr_info in schema.get(ATTRIBUTES_KEY) or schema.get("columns") or []:
+                if not isinstance(attr_info, dict):
+                    continue
+                attr_name = str(
+                    attr_info.get(ATTRIBUTE_NAME_KEY)
+                    or attr_info.get("name")
+                    or attr_info.get("column_id")
+                    or ""
+                )
+                column_id = str(attr_info.get("column_id") or "")
+                if attr_name != attr and column_id != f"{table}.{attr}" and not column_id.endswith(f".{attr}"):
+                    continue
+                schema_context["Attribute"] = {
+                    "Attribute Name": attr_name if attr_name else attr,
+                    "Attribute Description": attr_info.get("Description") or attr_info.get("description"),
+                    "Attribute Type": attr_info.get("type") or attr_info.get("Type"),
+                    "Column ID": column_id,
+                }
+                break
+            return self._semantic_cache_context(schema_context)
+        return None
+
+    @staticmethod
+    def _semantic_query_context(query_id: str, query_info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if not isinstance(query_info, dict):
+            return {"Query ID": str(query_id)}
+        context: Dict[str, Any] = {"Query ID": str(query_id)}
+        question = (
+            query_info.get("question")
+            or query_info.get("query")
+            or query_info.get("natural_language")
+        )
+        if question:
+            context["Question"] = str(question)
+        if query_info.get("sql"):
+            context["SQL"] = str(query_info.get("sql"))
+        for source_key, context_key in (
+            ("tables", "Required Tables"),
+            ("attributes", "Required Attributes"),
+            ("required_columns", "Required Attributes"),
+            ("output_columns", "Output Columns"),
+        ):
+            values = query_info.get(source_key)
+            if values and context_key not in context:
+                context[context_key] = [str(value) for value in values]
+        return EvalDataExtraction._semantic_cache_context(context)
+
+    def _semantic_doc_context(
+        self,
+        *,
+        loader: DataLoaderBase,
+        doc_id: str,
+        attr: str,
+        pred_value: Any,
+        gt_value: Any,
+    ) -> Optional[Dict[str, Any]]:
+        doc_text = ""
+        try:
+            info = loader.get_doc_info(doc_id)
+            if isinstance(info, dict):
+                doc_text = str(info.get("doc") or "")
+        except Exception as exc:
+            logging.debug(
+                "[%s:_semantic_doc_context] Could not load doc_info for %s: %s",
+                self.__class__.__name__,
+                doc_id,
+                exc,
+            )
+        if not doc_text:
+            try:
+                doc_text = str(loader.get_doc(doc_id)[0] or "")
+            except Exception as exc:
+                logging.debug(
+                    "[%s:_semantic_doc_context] Could not load doc text for %s: %s",
+                    self.__class__.__name__,
+                    doc_id,
+                    exc,
+                )
+        if not doc_text:
+            return None
+
+        needles = [gt_value, pred_value, attr.replace("_", " "), attr]
+        excerpt, truncated = self._semantic_doc_text_excerpt(doc_text, needles)
+        if not excerpt:
+            return None
+        return {
+            "Doc ID": str(doc_id),
+            "Text Excerpt": excerpt,
+            "Excerpt Strategy": "focused_around_value_or_attribute",
+            "Excerpt Truncated": truncated,
+        }
+
+    def _semantic_doc_text_enabled(self) -> bool:
+        mode = self.semantic_context_include_doc_text
+        if isinstance(mode, bool):
+            return mode
+        return str(mode).strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "always",
+            "on_mismatch",
+            "mismatch",
+            "focused",
+            "excerpt",
+        }
+
+    def _semantic_doc_text_excerpt(self, doc_text: str, needles: List[Any]) -> Tuple[str, bool]:
+        max_chars = self.semantic_context_doc_text_max_chars
+        if max_chars <= 0:
+            return "", False
+        text = str(doc_text)
+        if len(text) <= max_chars:
+            return text, False
+
+        lowered = text.casefold()
+        spans: List[Tuple[int, int]] = []
+        for needle in needles:
+            needle_text = str(needle or "").strip()
+            if len(needle_text) < 2:
+                continue
+            index = lowered.find(needle_text.casefold())
+            if index < 0:
+                continue
+            half_window = max(80, max_chars // 4)
+            spans.append((max(0, index - half_window), min(len(text), index + len(needle_text) + half_window)))
+
+        if not spans:
+            return text[:max_chars], True
+
+        spans = sorted(spans)
+        merged: List[Tuple[int, int]] = []
+        for start, end in spans:
+            if not merged or start > merged[-1][1] + 40:
+                merged.append((start, end))
+            else:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+
+        parts: List[str] = []
+        used = 0
+        separator = "\n...\n"
+        for start, end in merged:
+            remaining = max_chars - used
+            if remaining <= 0:
+                break
+            snippet = text[start:end]
+            candidate = f"{separator}{snippet}" if parts else snippet
+            if len(candidate) > remaining:
+                candidate = candidate[:remaining]
+            parts.append(candidate)
+            used += len(candidate)
+        excerpt = "".join(parts).strip()
+        return excerpt, True
+
     def compute_semantic_statistics(self) -> Dict[str, Any]:
         """Compute attribute correctness with an LLM semantic judge.
 
@@ -2249,6 +2535,7 @@ class EvalDataExtraction(EvalBasic):
         pred_value: Any,
         gt_attr: str,
         gt_value: Any,
+        context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         if self._compare_attribute_values(pred_value, gt_value):
             return {
@@ -2267,7 +2554,14 @@ class EvalDataExtraction(EvalBasic):
 
         cache_path = self.out_root / PATH_TEMPLATES.eval_comparison_cache()
         cache = self.load_json(cache_path) if cache_path.exists() else {}
-        cache_key = self._semantic_cache_key(pred_attr, pred_value, gt_attr, gt_value)
+        cache_context = self._semantic_cache_context(context)
+        cache_key = self._semantic_cache_key(
+            pred_attr,
+            pred_value,
+            gt_attr,
+            gt_value,
+            context=cache_context,
+        )
         cached = cache.get(cache_key)
         if isinstance(cached, dict):
             return {
@@ -2276,32 +2570,81 @@ class EvalDataExtraction(EvalBasic):
                 "reasoning": cached.get("reasoning", ""),
                 "cached": True,
                 "llm_model": cached.get("llm_model"),
+                "context_used": bool(cached.get("semantic_context")),
             }
 
-        comparison = self._call_semantic_judge(pred_attr, pred_value, gt_attr, gt_value)
+        comparison = self._call_semantic_judge(
+            pred_attr,
+            pred_value,
+            gt_attr,
+            gt_value,
+            context=cache_context,
+        )
+        if cache_context:
+            comparison = {**comparison, "context_used": True}
         cache[cache_key] = {
             **comparison,
             "pred_attr": pred_attr,
             "pred_value": pred_value,
             "gt_attr": gt_attr,
             "gt_value": gt_value,
+            "semantic_context": cache_context,
             "llm_model": self.eval_llm_model,
         }
         self.save_results(cache_path, cache)
         return comparison
 
     @staticmethod
-    def _semantic_cache_key(pred_attr: str, pred_value: Any, gt_attr: str, gt_value: Any) -> str:
-        return json.dumps(
-            {
-                "pred_attr": pred_attr,
-                "pred_value": "" if is_null(pred_value) else str(pred_value),
-                "gt_attr": gt_attr,
-                "gt_value": "" if is_null(gt_value) else str(gt_value),
-            },
-            ensure_ascii=False,
-            sort_keys=True,
-        )
+    def _semantic_cache_context(context: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        def normalize(value: Any) -> Any:
+            if value is None:
+                return None
+            if isinstance(value, dict):
+                normalized_dict = {}
+                for key, item in value.items():
+                    normalized_value = normalize(item)
+                    if normalized_value is not None:
+                        normalized_dict[str(key)] = normalized_value
+                return normalized_dict or None
+            if isinstance(value, list):
+                normalized_list = []
+                for item in value:
+                    normalized_value = normalize(item)
+                    if normalized_value is not None:
+                        normalized_list.append(normalized_value)
+                return normalized_list or None
+            if isinstance(value, tuple):
+                return normalize(list(value))
+            if isinstance(value, str):
+                cleaned = re.sub(r"[ \t\r\f\v]+", " ", value).strip()
+                cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+                return cleaned or None
+            if isinstance(value, (bool, int, float)):
+                return value
+            return str(value)
+
+        normalized = normalize(context)
+        return normalized if isinstance(normalized, dict) else None
+
+    @staticmethod
+    def _semantic_cache_key(
+        pred_attr: str,
+        pred_value: Any,
+        gt_attr: str,
+        gt_value: Any,
+        *,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> str:
+        payload = {
+            "pred_attr": pred_attr,
+            "pred_value": "" if is_null(pred_value) else str(pred_value),
+            "gt_attr": gt_attr,
+            "gt_value": "" if is_null(gt_value) else str(gt_value),
+        }
+        if context:
+            payload["semantic_context_version"] = 1
+            payload["context"] = context
+        return json.dumps(payload, ensure_ascii=False, sort_keys=True)
 
     def _call_semantic_judge(
         self,
@@ -2309,6 +2652,8 @@ class EvalDataExtraction(EvalBasic):
         pred_value: Any,
         gt_attr: str,
         gt_value: Any,
+        *,
+        context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         cmp_input = {
             PREDICTION_KEY: {
@@ -2320,6 +2665,8 @@ class EvalDataExtraction(EvalBasic):
                 ATTRIBUTE_VALUE_KEY: str(gt_value),
             },
         }
+        if context:
+            cmp_input["Context"] = context
         message = json.dumps(cmp_input, ensure_ascii=False)
         if self.committee_prompts:
             return self._committee_semantic_judge(message)

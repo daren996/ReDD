@@ -116,6 +116,13 @@ stages:
         wait_time: 1
         request_timeout: 60
         full_table_semantic: false
+        semantic_context:
+          enabled: true
+          include_schema: true
+          include_query: true
+          include_cell_role: true
+          include_doc_text: on_mismatch
+          doc_text_max_chars: 1200
         prompts:
           data_extraction_cmp_str: data_extraction_cmp_str
 
